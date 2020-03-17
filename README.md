@@ -1,2 +1,2 @@
 # SSM2
-!?!?!?!!?!?1
+Hueman is gay lmaO
