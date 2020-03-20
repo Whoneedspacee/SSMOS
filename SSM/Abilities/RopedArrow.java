@@ -7,15 +7,17 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 public class RopedArrow extends Ability {
 
-    Arrow arrow;
-    Player player;
+    private Arrow arrow;
+    private Player player;
 
-    public RopedArrow() {
+    public RopedArrow(Plugin plugin) {
+        super(plugin);
         this.name = "Roped Arrow";
         this.cooldownTime = 8;
         this.leftClickActivate = true;

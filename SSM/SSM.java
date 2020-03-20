@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -28,16 +29,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.UUID;
 
-
 public class SSM extends JavaPlugin implements Listener {
 
     public static HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
-    public static Kit[] allKits = {
-            new KitCreeper(),
-            new KitIronGolem(),
-            new KitSkeleton(),
-            new KitSlime(),
-            new KitSpider()
+    public Kit[] allKits = {
+            new KitCreeper(this),
+            new KitIronGolem(this),
+            new KitSkeleton(this),
+            new KitSlime(this),
+            new KitSpider(this)
     };
 
     public static void main(String[] args) {
@@ -47,24 +47,11 @@ public class SSM extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
-        for (Kit kit : allKits) {
-            registerKit(kit);
-        }
     }
 
     @Override
     public void onDisable() {
 
-    }
-
-    public void registerKit(Kit kit) {
-        getServer().getPluginManager().registerEvents(kit, this);
-        for (Ability ability : kit.getAbilities()) {
-            if(ability == null) {
-                continue;
-            }
-            getServer().getPluginManager().registerEvents(ability, this);
-        }
     }
 
     @Override
@@ -79,8 +66,7 @@ public class SSM extends JavaPlugin implements Listener {
                     if (check.name.equalsIgnoreCase(args[0])) {
                         Kit kit = null;
                         try {
-                            kit = check.getClass().getDeclaredConstructor().newInstance();
-                            registerKit(kit);
+                            kit = check.getClass().getDeclaredConstructor(Plugin.class).newInstance(this);
                         } catch (InstantiationException e) {
                             e.printStackTrace();
                         } catch (IllegalAccessException e) {

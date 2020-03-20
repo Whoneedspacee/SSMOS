@@ -6,11 +6,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 public class KitSlime extends Kit {
 
-    public KitSlime() {
-        super();
+    public KitSlime(Plugin plugin) {
+        super(plugin);
 
         this.name = "Slime";
 

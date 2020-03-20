@@ -9,34 +9,30 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 
 public class Kit implements Listener {
 
+    /*  You must add your new kits to the allkits list in the main SSM.java file! */
+
     // used for finding the kit to equip on command, ex: /kit name
-    protected String name;
-    protected double damage;
-    protected double knockback;
-    protected double regeneration;
-    protected double speed;
+    protected String name = "";
+    protected double damage = 0;
+    protected double knockback = 0;
+    protected double regeneration = 0;
+    protected double speed = 0;
 
     // list of materials for armor
-    protected ItemStack[] armor;
+    protected ItemStack[] armor = new ItemStack[4];
 
     // list of materials for weapons
-    protected ItemStack[] weapons;
+    protected ItemStack[] weapons = new ItemStack[9];
 
     // assigned to the weapons above by index, ex: 1st ability goes on the 1st weapon, etc
-    protected Ability[] abilities;
+    protected Ability[] abilities = new Ability[9];
 
-    public Kit() {
-        name = "";
-        damage = 0;
-        knockback = 0;
-        regeneration = 0;
-        speed = 0;
-        armor = new ItemStack[4];
-        weapons = new ItemStack[9];
-        abilities = new Ability[9];
+    public Kit(Plugin plugin) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     public void equipKit(Player player) {
@@ -94,7 +90,6 @@ public class Kit implements Listener {
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             using.activateRight(player);
         }
-
     }
 
 }
