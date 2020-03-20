@@ -34,14 +34,3 @@ public class RopedArrow extends Ability {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-

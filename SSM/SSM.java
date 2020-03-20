@@ -30,7 +30,10 @@ public class SSM extends JavaPlugin implements Listener {
 
     HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
     Kit[] allKits = {
+            new KitCreeper(),
+            new KitIronGolem(),
             new KitSkeleton(),
+            new KitSlime(),
             new KitSpider()
     };
 
@@ -45,13 +48,7 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     public static void main(String[] args) {
-        Kit kit = new KitSkeleton();
-        kit.name = "lol";
-        Class<? extends Kit> kitClass = kit.getClass();
-        Constructor<?>[] constructors = kitClass.getConstructors();
-        for (Constructor c : constructors) {
-            System.out.println(c.getParameterCount());
-        }
+        // for testing junk
     }
 
     @Override
