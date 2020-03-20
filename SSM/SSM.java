@@ -4,6 +4,7 @@ import SSM.Kits.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -11,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -28,8 +31,8 @@ import java.util.UUID;
 
 public class SSM extends JavaPlugin implements Listener {
 
-    HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
-    Kit[] allKits = {
+    public static HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
+    public static Kit[] allKits = {
             new KitCreeper(),
             new KitIronGolem(),
             new KitSkeleton(),
@@ -37,9 +40,16 @@ public class SSM extends JavaPlugin implements Listener {
             new KitSpider()
     };
 
+    public static void main(String[] args) {
+        // for testing junk
+    }
+
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
+        for (Kit kit : allKits) {
+            registerKit(kit);
+        }
     }
 
     @Override
@@ -47,8 +57,14 @@ public class SSM extends JavaPlugin implements Listener {
 
     }
 
-    public static void main(String[] args) {
-        // for testing junk
+    public void registerKit(Kit kit) {
+        getServer().getPluginManager().registerEvents(kit, this);
+        for (Ability ability : kit.getAbilities()) {
+            if(ability == null) {
+                continue;
+            }
+            getServer().getPluginManager().registerEvents(ability, this);
+        }
     }
 
     @Override
@@ -64,6 +80,7 @@ public class SSM extends JavaPlugin implements Listener {
                         Kit kit = null;
                         try {
                             kit = check.getClass().getDeclaredConstructor().newInstance();
+                            registerKit(kit);
                         } catch (InstantiationException e) {
                             e.printStackTrace();
                         } catch (IllegalAccessException e) {
@@ -82,9 +99,9 @@ public class SSM extends JavaPlugin implements Listener {
                     }
                 }
             }
-            String finalMessage = "Kit Choices";
+            String finalMessage = "Kit Choices: ";
             for (Kit kit : allKits) {
-                finalMessage += ", " + kit.name;
+                finalMessage += kit.getName() + " ";
             }
             player.sendMessage(finalMessage);
             return true;
@@ -93,41 +110,30 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        Kit kit = playerKit.get(player.getUniqueId());
-        int selected = player.getInventory().getHeldItemSlot();
-        if (kit == null) {
-            return;
-        }
-        if (selected >= kit.abilities.length) {
-            return;
-        }
-        Ability using = kit.abilities[selected];
-        if(using == null) {
-            return;
-        }
-        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-            using.activateLeft(player);
-        }
-        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            using.activateRight(player);
-        }
-
-    }
-
-    @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
-        Block blockOn = e.getTo().getBlock();
+        Block blockIn = e.getTo().getBlock();
+        Block blockOn = e.getFrom().getBlock().getRelative(BlockFace.DOWN);
         if (blockOn.getType() == Material.GOLD_BLOCK) {
             Double x = player.getLocation().getDirection().getX() * 1.2;
             Double z = player.getLocation().getDirection().getZ() * 1.2;
             player.setVelocity(new Vector(x, 1.2, z));
         }
-        if (blockOn.isLiquid()) {
+        if (blockIn.isLiquid()) {
             player.setHealth(0.0);
         }
+    }
+
+    @EventHandler
+    public void stopHealthRegen(EntityRegainHealthEvent e) {
+        if(e.getRegainReason() == EntityRegainHealthEvent.RegainReason.REGEN) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void stopHungerLoss(FoodLevelChangeEvent e) {
+        e.setCancelled(true);
     }
 
     @EventHandler
@@ -141,6 +147,9 @@ public class SSM extends JavaPlugin implements Listener {
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
         Player player = e.getPlayer();
         Entity NPC = e.getRightClicked();
+        if(NPC == null) {
+            return;
+        }
         if (NPC.getCustomName().equalsIgnoreCase("Alchemist")) {
             int potion = (int) (Math.random() * 10) + 1;
             switch (potion) {

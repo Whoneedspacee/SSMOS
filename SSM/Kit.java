@@ -2,17 +2,22 @@ package SSM;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.event.Listener;
 
-public class Kit {
+public class Kit implements Listener {
 
     // used for finding the kit to equip on command, ex: /kit name
-    public String name;
-    public double damage;
-    public double knockback;
-    public double regeneration;
-    public double speed;
+    protected String name;
+    protected double damage;
+    protected double knockback;
+    protected double regeneration;
+    protected double speed;
 
     // list of materials for armor
     protected ItemStack[] armor;
@@ -21,7 +26,7 @@ public class Kit {
     protected ItemStack[] weapons;
 
     // assigned to the weapons above by index, ex: 1st ability goes on the 1st weapon, etc
-    public Ability[] abilities;
+    protected Ability[] abilities;
 
     public Kit() {
         name = "";
@@ -59,6 +64,37 @@ public class Kit {
             item.setItemMeta(meta);
             player.getInventory().addItem(item);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Ability[] getAbilities() {
+        return abilities;
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        int selected = player.getInventory().getHeldItemSlot();
+        if (!SSM.playerKit.get(player.getUniqueId()).equals(this)) {
+            return;
+        }
+        if (selected >= abilities.length) {
+            return;
+        }
+        Ability using = abilities[selected];
+        if (using == null) {
+            return;
+        }
+        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+            using.activateLeft(player);
+        }
+        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            using.activateRight(player);
+        }
+
     }
 
 }
