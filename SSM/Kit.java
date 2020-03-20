@@ -47,12 +47,14 @@ public class Kit {
         player.getInventory().setArmorContents(armor);
         for (int i = 0; i < weapons.length; i++) {
             ItemStack item = weapons[i];
+            Ability ability = abilities[i];
             if (item == null) {
                 continue;
             }
-            Ability ability = abilities[i];
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(ability.name);
+            if (ability != null) {
+                meta.setDisplayName(ability.name);
+            }
             meta.setUnbreakable(true);
             item.setItemMeta(meta);
             player.getInventory().addItem(item);

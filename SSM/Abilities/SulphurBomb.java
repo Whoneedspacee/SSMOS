@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 
 public class SulphurBomb extends Ability {
 
-    public void SulphurBomb() {
+    public SulphurBomb() {
         this.name = "Sulphur Bomb";
         this.cooldownTime = 3;
         this.rightClickActivate = true;

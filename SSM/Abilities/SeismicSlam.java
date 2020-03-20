@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 
 public class SeismicSlam extends Ability {
 
-    public void SeismicSlam() {
+    public SeismicSlam() {
         this.name = "Seismic Slam";
         this.cooldownTime = 12;
         this.rightClickActivate = true;

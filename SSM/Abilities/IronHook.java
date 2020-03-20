@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 
 public class IronHook extends Ability {
 
-    public void IronHook() {
+    public IronHook() {
         this.name = "Iron Hook";
         this.cooldownTime = 10;
         this.rightClickActivate = true;

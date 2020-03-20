@@ -1,0 +1,10 @@
+main: SSM.SSM
+name: Super_Smash_Mobs_2
+version: 1
+author: Heartlessknights, Whoneedspacee, Huxs
+description: 'Based SSM 2'
+api-version: 1.15
+commands:
+  kit:
+    description: 'Applies the kit of the name entered'
+    usage: /kit KitName

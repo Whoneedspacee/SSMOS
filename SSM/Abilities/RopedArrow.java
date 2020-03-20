@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 
 public class RopedArrow extends Ability {
 
-    public void RopedArrow() {
+    public RopedArrow() {
         this.name = "Roped Arrow";
         this.cooldownTime = 8;
         this.leftClickActivate = true;

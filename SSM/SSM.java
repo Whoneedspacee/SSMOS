@@ -54,10 +54,13 @@ public class SSM extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("kit")) {
-            Player player = sender.getServer().getPlayer(args[0]);
+            if (!(sender instanceof Player)) {
+                return true;
+            }
+            Player player = (Player) sender;
             if (args.length == 1) {
                 for (Kit check : allKits) {
-                    if (check.name == args[0]) {
+                    if (check.name.equalsIgnoreCase(args[0])) {
                         Kit kit = null;
                         try {
                             kit = check.getClass().getDeclaredConstructor().newInstance();
@@ -74,7 +77,7 @@ public class SSM extends JavaPlugin implements Listener {
                             return true;
                         }
                         kit.equipKit(player);
-                        playerKit.replace(player.getUniqueId(), kit);
+                        playerKit.put(player.getUniqueId(), kit);
                         return true;
                     }
                 }
@@ -97,10 +100,13 @@ public class SSM extends JavaPlugin implements Listener {
         if (kit == null) {
             return;
         }
-        if (selected > kit.abilities.length) {
+        if (selected >= kit.abilities.length) {
             return;
         }
-        Ability using = kit.abilities[selected - 1];
+        Ability using = kit.abilities[selected];
+        if(using == null) {
+            return;
+        }
         if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
             using.activateLeft(player);
         }
