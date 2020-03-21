@@ -19,7 +19,14 @@ public class IronHook extends Ability {
     }
 
     public void useAbility(Player player) {
-        new ItemProjectile(plugin, player, name, Material.TRIPWIRE_HOOK, 5.0, 1.8, -2.0, 1, 1, 0, true, false);
+        ItemStack hook = new ItemStack(Material.TRIPWIRE_HOOK);
+        Item firing = player.getWorld().dropItem(player.getEyeLocation(), hook);
+        EntityProjectile projectile = new EntityProjectile(plugin, player, name, firing);
+        projectile.setDamage(5.0);
+        projectile.setSpeed(1.8);
+        projectile.setKnockback(-2.0);
+        projectile.setHitboxSize(1.0);
+        projectile.launchProjectile();
     }
 
 }
