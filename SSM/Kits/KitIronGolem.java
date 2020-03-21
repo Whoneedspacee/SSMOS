@@ -6,11 +6,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 public class KitIronGolem extends Kit {
 
-    public KitIronGolem() {
-        super();
+    public KitIronGolem(Plugin plugin) {
+        super(plugin);
 
         this.name = "IronGolem";
 
@@ -29,8 +30,8 @@ public class KitIronGolem extends Kit {
 
         this.abilities = new Ability[]{
             null, // fissure
-            new IronHook(),
-            new SeismicSlam()
+            new IronHook(plugin),
+            new SeismicSlam(plugin)
         };
     }
 

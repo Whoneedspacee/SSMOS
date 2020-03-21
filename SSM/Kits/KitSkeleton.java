@@ -4,11 +4,12 @@ import SSM.*;
 import SSM.Abilities.*;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 public class KitSkeleton extends Kit {
 
-    public KitSkeleton() {
-        super();
+    public KitSkeleton(Plugin plugin) {
+        super(plugin);
 
         this.name = "Skeleton";
 
@@ -26,7 +27,7 @@ public class KitSkeleton extends Kit {
 
         this.abilities = new Ability[]{
             null, // bone explosion
-            new RopedArrow()
+            new RopedArrow(plugin)
         };
     }
 
