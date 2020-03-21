@@ -31,7 +31,10 @@ public class Kit implements Listener {
     // assigned to the weapons above by index, ex: 1st ability goes on the 1st weapon, etc
     protected Ability[] abilities = new Ability[9];
 
+    protected Plugin plugin;
+
     public Kit(Plugin plugin) {
+        this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -73,10 +76,14 @@ public class Kit implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        int selected = player.getInventory().getHeldItemSlot();
-        if (!SSM.playerKit.get(player.getUniqueId()).equals(this)) {
+        if (player == null) {
             return;
         }
+        Kit chosen = SSM.playerKit.get(player.getUniqueId());
+        if(chosen == null || !chosen.equals(this)) {
+            return;
+        }
+        int selected = player.getInventory().getHeldItemSlot();
         if (selected >= abilities.length) {
             return;
         }

@@ -32,13 +32,7 @@ import java.util.UUID;
 public class SSM extends JavaPlugin implements Listener {
 
     public static HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
-    public Kit[] allKits = {
-            new KitCreeper(this),
-            new KitIronGolem(this),
-            new KitSkeleton(this),
-            new KitSlime(this),
-            new KitSpider(this)
-    };
+    public static Kit[] allKits;
 
     public static void main(String[] args) {
         // for testing junk
@@ -47,6 +41,13 @@ public class SSM extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
+        allKits = new Kit[]{
+            new KitCreeper(this),
+            new KitIronGolem(this),
+            new KitSkeleton(this),
+            new KitSlime(this),
+            new KitSpider(this)
+        };
     }
 
     @Override
@@ -112,7 +113,7 @@ public class SSM extends JavaPlugin implements Listener {
 
     @EventHandler
     public void stopHealthRegen(EntityRegainHealthEvent e) {
-        if(e.getRegainReason() == EntityRegainHealthEvent.RegainReason.REGEN) {
+        if (e.getRegainReason() == EntityRegainHealthEvent.RegainReason.REGEN) {
             e.setCancelled(true);
         }
     }
@@ -133,7 +134,7 @@ public class SSM extends JavaPlugin implements Listener {
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
         Player player = e.getPlayer();
         Entity NPC = e.getRightClicked();
-        if(NPC == null) {
+        if (NPC == null) {
             return;
         }
         if (NPC.getCustomName().equalsIgnoreCase("Alchemist")) {

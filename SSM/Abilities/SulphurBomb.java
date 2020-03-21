@@ -19,11 +19,7 @@ public class SulphurBomb extends Ability {
     }
 
     public void useAbility(Player player) {
-        ItemStack sulphur = new ItemStack(Material.COAL, 1);
-        Item ent = player.getWorld().dropItem(player.getEyeLocation(), sulphur);
-        ent.setCustomName("Sulphur Bomb");
-        ent.setPickupDelay(1000000);
-        ent.setVelocity(player.getLocation().getDirection().multiply(1.3));
+        new ItemProjectile(plugin, player, name, Material.COAL, 6.0, 2.0, 2.0, 1, 0, true);
     }
 
 }

@@ -20,7 +20,10 @@ public class Ability implements Listener {
     protected boolean leftClickActivate = false;
     protected boolean rightClickActivate = false;
 
+    protected Plugin plugin;
+
     public Ability(Plugin plugin) {
+        this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 

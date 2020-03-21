@@ -37,24 +37,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemProjectile extends BukkitRunnable implements Listener {
+public class ItemProjectile extends BukkitRunnable {
 
     Player firer;
-    double damage = 6.0;
-    double speed = 2.0;
-    double hitboxRange = 0.5;
-    boolean clearOnFinish = false;
+    double damage;
+    double speed;
+    double knockBack;
+    double hitboxRange;
+    boolean clearOnFinish;
     Item projectile;
 
-    public ItemProjectile(Plugin plugin, Player firer, String name, Material item, double damage, double speed, double hitboxRange, double variation, boolean clearOnFinish) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public ItemProjectile(Plugin plugin, Player firer, String name, Material item, double damage, double speed, double knockBack, double hitboxRange, double variation, boolean clearOnFinish) {
         this.firer = firer;
         this.damage = damage;
         this.speed = speed;
+        this.knockBack = knockBack;
         this.hitboxRange = hitboxRange;
         this.clearOnFinish = clearOnFinish;
         launchProjectile(name, item, variation);
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 1L);
+        this.runTaskTimer(plugin, 0L, 1L);
     }
 
     public void launchProjectile(String name, Material item, double variation) {
@@ -68,21 +69,38 @@ public class ItemProjectile extends BukkitRunnable implements Listener {
     @Override
     public void run() {
         if (projectile.isDead() || !projectile.isDead() && projectile.isOnGround()) {
-            projectile.remove();
+            onHit(null);
             this.cancel();
             return;
         }
         List<Entity> canHit = projectile.getNearbyEntities(hitboxRange, hitboxRange, hitboxRange);
         canHit.remove(projectile);
+        canHit.remove(firer);
         if (canHit.size() <= 0) {
             return;
         }
-        LivingEntity target = (LivingEntity) canHit.get(0);
-        target.damage(6.0);
-        Vector velocity = projectile.getVelocity().normalize().multiply(1.8);
-        target.setVelocity(new Vector(velocity.getX(), 0.5, velocity.getZ()));
-        projectile.remove();
-        this.cancel();
+        for (Entity entity : canHit) {
+            if (!(entity instanceof LivingEntity)) {
+                continue;
+            }
+            LivingEntity target = (LivingEntity) canHit.get(0);
+            onHit(target);
+            this.cancel();
+            break;
+        }
+    }
+
+    public boolean onHit(LivingEntity target) {
+        boolean success = target != null;
+        if (success) {
+            target.damage(damage);
+            Vector velocity = projectile.getVelocity().normalize().multiply(knockBack);
+            target.setVelocity(new Vector(velocity.getX(), 0.5, velocity.getZ()));
+        }
+        if (clearOnFinish) {
+            projectile.remove();
+        }
+        return success;
     }
 
 }

@@ -28,7 +28,7 @@ public class KitCreeper extends Kit {
         };
 
         this.abilities = new Ability[]{
-            new SulphurBomb(),
+            new SulphurBomb(plugin),
             null // explode
         };
     }

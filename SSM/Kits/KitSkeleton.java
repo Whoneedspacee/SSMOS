@@ -27,7 +27,7 @@ public class KitSkeleton extends Kit {
 
         this.abilities = new Ability[]{
             null, // bone explosion
-            new RopedArrow()
+            new RopedArrow(plugin)
         };
     }
 
