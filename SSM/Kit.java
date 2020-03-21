@@ -1,6 +1,8 @@
 package SSM;
 
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
@@ -10,6 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+
+import java.util.UUID;
 
 public class Kit implements Listener {
 
@@ -45,8 +49,10 @@ public class Kit implements Listener {
                 continue;
             }
             ItemMeta meta = item.getItemMeta();
+            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "generic.attackDamage", damage, AttributeModifier.Operation.ADD_SCALAR));
             meta.setUnbreakable(true);
             item.setItemMeta(meta);
+
         }
         player.getInventory().setArmorContents(armor);
         for (int i = 0; i < weapons.length; i++) {

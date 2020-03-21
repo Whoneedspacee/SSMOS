@@ -13,6 +13,8 @@ public class KitCreeper extends Kit {
     public KitCreeper(Plugin plugin) {
         super(plugin);
 
+        this.damage = 6.0D;
+
         this.name = "Creeper";
 
         this.armor = new ItemStack[]{
@@ -31,6 +33,8 @@ public class KitCreeper extends Kit {
             new SulphurBomb(plugin),
             null // explode
         };
-    }
+
+
+}
 
 }
