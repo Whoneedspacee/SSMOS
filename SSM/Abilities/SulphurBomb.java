@@ -19,7 +19,15 @@ public class SulphurBomb extends Ability {
     }
 
     public void useAbility(Player player) {
-        new ItemProjectile(plugin, player, name, Material.COAL, 6.0, 1.8, 2.0, 1, 1, 0, true, true);
+        ItemStack coal = new ItemStack(Material.COAL);
+        Item firing = player.getWorld().dropItem(player.getEyeLocation(), coal);
+        EntityProjectile projectile = new EntityProjectile(plugin, player, name, firing);
+        projectile.setDamage(6.0);
+        projectile.setSpeed(1.8);
+        projectile.setKnockback(2.0);
+        projectile.setUpwardKnockback(0.5);
+        projectile.setHitboxSize(1.0);
+        projectile.launchProjectile();
     }
 
 }
