@@ -24,7 +24,7 @@ public class Kit implements Listener {
     protected double damage = 0;
     protected double knockback = 0;
     protected double regeneration = 0;
-    protected double speed = 0;
+    protected float speed = 0f;
 
     // list of materials for armor
     protected ItemStack[] armor = new ItemStack[4];
@@ -43,15 +43,16 @@ public class Kit implements Listener {
     }
 
     public void equipKit(Player player) {
+        player.setWalkSpeed(speed);
         player.getInventory().clear();
         for (ItemStack item : armor) {
             if (item == null) {
                 continue;
             }
             ItemMeta meta = item.getItemMeta();
-            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "generic.attackDamage", damage, AttributeModifier.Operation.ADD_SCALAR));
             meta.setUnbreakable(true);
             item.setItemMeta(meta);
+
 
         }
         player.getInventory().setArmorContents(armor);

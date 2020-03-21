@@ -19,7 +19,7 @@ public class SulphurBomb extends Ability {
     }
 
     public void useAbility(Player player) {
-        new ItemProjectile(plugin, player, name, Material.COAL, 6.0, 2.0, 2.0, 1, 0, true);
+        new ItemProjectile(plugin, player, name, Material.COAL, 6.0, 1.8, 2.0, 1, 1, 0, true, true);
     }
 
 }

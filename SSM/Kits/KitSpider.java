@@ -13,6 +13,11 @@ public class KitSpider extends Kit {
     public KitSpider(Plugin plugin) {
         super(plugin);
 
+        this.damage = 6.0;
+        this.speed = 0.21f;
+        this.regeneration = 0.25;
+        this.knockback = 0;
+
         this.name = "Spider";
 
         this.armor = new ItemStack[]{
@@ -29,7 +34,7 @@ public class KitSpider extends Kit {
 
         this.abilities = new Ability[]{
             null, // needler
-            null // spin web
+            new SpinWeb(plugin)
         };
     }
 

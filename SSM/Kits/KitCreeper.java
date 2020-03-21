@@ -13,7 +13,11 @@ public class KitCreeper extends Kit {
     public KitCreeper(Plugin plugin) {
         super(plugin);
 
-        this.damage = 6.0D;
+        this.damage = 6.0;
+        this.speed = 0.21f;
+        this.regeneration = 0.4;
+        this.knockback = 0;
+
 
         this.name = "Creeper";
 

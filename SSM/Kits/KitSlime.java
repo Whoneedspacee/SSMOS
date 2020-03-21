@@ -13,6 +13,11 @@ public class KitSlime extends Kit {
     public KitSlime(Plugin plugin) {
         super(plugin);
 
+        this.damage = 6.0;
+        this.speed = 0.21f;
+        this.regeneration = 0.35;
+        this.knockback = 0;
+
         this.name = "Slime";
 
         this.armor = new ItemStack[]{

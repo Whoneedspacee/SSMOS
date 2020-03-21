@@ -2,6 +2,7 @@ package SSM;
 
 import SSM.Kits.*;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -46,7 +47,9 @@ public class SSM extends JavaPlugin implements Listener {
             new KitIronGolem(this),
             new KitSkeleton(this),
             new KitSlime(this),
-            new KitSpider(this)
+            new KitSpider(this),
+            new KitWitch(this),
+            new KitShulker(this)
         };
     }
 
@@ -105,6 +108,14 @@ public class SSM extends JavaPlugin implements Listener {
             Double x = player.getLocation().getDirection().getX() * 1.2;
             Double z = player.getLocation().getDirection().getZ() * 1.2;
             player.setVelocity(new Vector(x, 1.2, z));
+        }
+        if (blockOn.getType() == Material.IRON_BLOCK){
+            Location loc = player.getLocation();
+            Vector dir = loc.getDirection();
+            dir.normalize();
+            dir.multiply(10); //5 blocks a way
+            loc.add(dir);
+            player.teleport(loc);
         }
         if (blockIn.isLiquid()) {
             player.setHealth(0.0);

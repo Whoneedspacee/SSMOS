@@ -13,6 +13,11 @@ public class KitIronGolem extends Kit {
     public KitIronGolem(Plugin plugin) {
         super(plugin);
 
+        this.damage = 7.0;
+        this.speed = 0.18f;
+        this.regeneration = 0.2;
+        this.knockback = 0;
+
         this.name = "IronGolem";
 
         this.armor = new ItemStack[]{

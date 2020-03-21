@@ -44,17 +44,26 @@ public class ItemProjectile extends BukkitRunnable {
     double speed;
     double knockBack;
     double hitboxRange;
+    int amount;
+    boolean ylimit;
     boolean clearOnFinish;
     Item projectile;
 
-    public ItemProjectile(Plugin plugin, Player firer, String name, Material item, double damage, double speed, double knockBack, double hitboxRange, double variation, boolean clearOnFinish) {
+    public ItemProjectile(Plugin plugin, Player firer, String name, Material item, double damage, double speed, double knockBack, int amount, double hitboxRange, double variation, boolean clearOnFinish, boolean ylimit) {
         this.firer = firer;
         this.damage = damage;
         this.speed = speed;
         this.knockBack = knockBack;
         this.hitboxRange = hitboxRange;
         this.clearOnFinish = clearOnFinish;
-        launchProjectile(name, item, variation);
+        this.amount = amount;
+        this.ylimit = ylimit;
+        for (int i = 0; i < amount; i++){
+            launchProjectile(name, item, variation);
+            // ]]The reason I don't just set the amount when you create the ItemStack is because if we try to
+            // create something with an offset (Like spin web or needler), I think it would apply that velocity offset
+            // to the entire stack instead of just one item (And potentially delay? Like egg blaster and needler).
+        }
         this.runTaskTimer(plugin, 0L, 1L);
     }
 
@@ -95,7 +104,11 @@ public class ItemProjectile extends BukkitRunnable {
         if (success) {
             target.damage(damage);
             Vector velocity = projectile.getVelocity().normalize().multiply(knockBack);
-            target.setVelocity(new Vector(velocity.getX(), 0.5, velocity.getZ()));
+            if (ylimit = true){
+                target.setVelocity(new Vector(velocity.getX(), 0.5, velocity.getZ()));
+            }else{
+                target.setVelocity(velocity);
+            }
         }
         if (clearOnFinish) {
             projectile.remove();

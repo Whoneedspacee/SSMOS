@@ -11,6 +11,11 @@ public class KitSkeleton extends Kit {
     public KitSkeleton(Plugin plugin) {
         super(plugin);
 
+        this.damage = 5.0;
+        this.speed = 0.21f;
+        this.regeneration = 0.2;
+        this.knockback = 0;
+
         this.name = "Skeleton";
 
         this.armor = new ItemStack[]{
@@ -26,7 +31,7 @@ public class KitSkeleton extends Kit {
         };
 
         this.abilities = new Ability[]{
-            null, // bone explosion
+            new BoneExplosion(plugin),
             new RopedArrow(plugin)
         };
     }

@@ -27,7 +27,7 @@ public class RopedArrow extends Ability {
         this.player = player;
         arrow = player.launchProjectile(Arrow.class);
         arrow.setCustomName("Roped Arrow");
-        arrow.setDamage(6.0);
+        arrow.setDamage(4.0);
         arrow.setVelocity(player.getLocation().getDirection().multiply(1.8D));
     }
 
@@ -41,7 +41,7 @@ public class RopedArrow extends Ability {
         Vector pre = a.subtract(p);
         Vector velocity = pre.normalize().multiply(1.8);
 
-        player.setVelocity(new Vector(velocity.getX(), 1, velocity.getZ()));
+        player.setVelocity(new Vector(velocity.getX(), 1.2, velocity.getZ()));
         arrow.remove();
     }
 

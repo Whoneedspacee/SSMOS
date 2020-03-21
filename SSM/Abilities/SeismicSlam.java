@@ -14,7 +14,7 @@ public class SeismicSlam extends Ability {
     public SeismicSlam(Plugin plugin) {
         super(plugin);
         this.name = "Seismic Slam";
-        this.cooldownTime = 12;
+        this.cooldownTime = 10;
         this.rightClickActivate = true;
     }
 
