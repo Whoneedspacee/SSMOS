@@ -7,21 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1567c692-1ad0-41f7-8c8a-9b660aaf5f31" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/Sly.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/spigot_1_15_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/SSM2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SSM2.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/SSM2_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/SSM2_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SSM/Abilities/IronHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/SSM/Abilities/IronHook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SSM/Abilities/SpinWeb.java" beforeDir="false" afterPath="$PROJECT_DIR$/SSM/Abilities/SpinWeb.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SSM/Abilities/SulphurBomb.java" beforeDir="false" afterPath="$PROJECT_DIR$/SSM/Abilities/SulphurBomb.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SSM/ItemProjectile.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,10 +80,10 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="440" y="114" key="SettingsEditor/-1920.0.1920.1080/0.0.1920.1080@0.0.1920.1080" timestamp="1584822041193" />
-    <state x="656" y="364" key="com.intellij.ide.util.TipDialog" timestamp="1584816508048">
+    <state x="656" y="364" key="com.intellij.ide.util.TipDialog" timestamp="1584838406796">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="656" y="364" key="com.intellij.ide.util.TipDialog/-1920.0.1920.1080/0.0.1920.1080@0.0.1920.1080" timestamp="1584816508048" />
+    <state x="656" y="364" key="com.intellij.ide.util.TipDialog/-1920.0.1920.1080/0.0.1920.1080@0.0.1920.1080" timestamp="1584838406796" />
     <state x="616" y="250" key="run.anything.popup" timestamp="1584825846405">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
