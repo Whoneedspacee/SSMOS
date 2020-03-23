@@ -35,6 +35,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class EntityProjectile extends BukkitRunnable {
@@ -59,7 +60,12 @@ public class EntityProjectile extends BukkitRunnable {
     }
 
     public double getRandomVariation() {
-        return Math.random() * getVariation() * Math.PI / 180;
+        double variation = getVariation();
+        double randomAngle = Math.random() * variation / 2;
+        if(new Random().nextBoolean()) {
+            randomAngle *= -1;
+        }
+        return randomAngle;
     }
 
     public void launchProjectile() {
