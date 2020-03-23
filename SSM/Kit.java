@@ -80,30 +80,6 @@ public class Kit implements Listener {
         return abilities;
     }
 
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        if (player == null) {
-            return;
-        }
-        Kit chosen = SSM.playerKit.get(player.getUniqueId());
-        if(chosen == null || !chosen.equals(this)) {
-            return;
-        }
-        int selected = player.getInventory().getHeldItemSlot();
-        if (selected >= abilities.length) {
-            return;
-        }
-        Ability using = abilities[selected];
-        if (using == null) {
-            return;
-        }
-        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-            using.activateLeft(player);
-        }
-        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            using.activateRight(player);
-        }
-    }
+
 
 }
