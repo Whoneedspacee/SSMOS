@@ -49,7 +49,8 @@ public class SSM extends JavaPlugin implements Listener {
             new KitSlime(this),
             new KitSpider(this),
             new KitWitch(this),
-            new KitShulker(this)
+            new KitShulker(this),
+            new KitSquid(this),
         };
     }
 
