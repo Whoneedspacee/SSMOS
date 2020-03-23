@@ -52,7 +52,6 @@ public class Ability implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta.getDisplayName().equalsIgnoreCase(name)){
             player.setCooldown(itemType, (int) (cooldownTime * 20));
-            player.sendMessage("Spacee your fucking stupid watch this send once");
             useAbility(player);
         }
     }
