@@ -124,10 +124,9 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void stopHealthRegen(EntityRegainHealthEvent e) {
-        if (e.getRegainReason() == EntityRegainHealthEvent.RegainReason.REGEN) {
-            e.setCancelled(true);
-        }
+    public void stopHealthRegen(EntityRegainHealthEvent e) { e.setCancelled(true);
+
+
     }
 
     @EventHandler
