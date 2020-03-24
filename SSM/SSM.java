@@ -39,7 +39,9 @@ public class SSM extends JavaPlugin implements Listener {
         // for testing junk
     }
 
-    public static Plugin getInstance() { return ourInstance; }
+    public static Plugin getInstance() {
+        return ourInstance;
+    }
 
     @Override
     public void onEnable() {
