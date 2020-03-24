@@ -17,20 +17,20 @@ public class InkShotgun extends Ability {
 
     protected int inkAmount = 7;
 
-    public InkShotgun(Plugin plugin) {
-        super(plugin);
+    public InkShotgun() {
+        super();
         this.name = "Ink Shotgun";
         this.cooldownTime = 6;
         this.rightClickActivate = true;
     }
 
-    public void useAbility(Player player) {
-        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 10L, 1L);
+    public void activate() {
+        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 10L, 1L);
         ItemStack ink = new ItemStack(Material.INK_SAC, inkAmount);
         for (int i = 0; i < inkAmount; i++) {
-            Item firing = player.getWorld().dropItem(player.getEyeLocation(), ink);
-            InkProjectile projectile = new InkProjectile(plugin, player, name, firing);
-            projectile.setOverridePosition(player.getEyeLocation().subtract(0, -1, 0));
+            Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), ink);
+            InkProjectile projectile = new InkProjectile(plugin, owner, name, firing);
+            projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
             projectile.launchProjectile();
         }
     }

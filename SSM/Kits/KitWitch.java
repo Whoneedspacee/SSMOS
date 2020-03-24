@@ -10,32 +10,26 @@ import org.bukkit.plugin.Plugin;
 
 public class KitWitch extends Kit {
 
-    public KitWitch(Plugin plugin) {
-        super(plugin);
+    public KitWitch() {
+        super();
 
-        this.damage = 6.0;
+        this.damage = 6;
         this.speed = 0.21f;
         this.regeneration = 0.3;
         this.knockback = 0;
 
         this.name = "Witch";
+    }
 
-        this.armor = new ItemStack[]{
-            new ItemStack(Material.CHAINMAIL_BOOTS),
-            new ItemStack(Material.CHAINMAIL_LEGGINGS),
-            new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-            null
-        };
+    public void equipKit(Player player) {
+        super.equipKit(player);
 
-        this.weapons = new ItemStack[]{
-            new ItemStack(Material.IRON_AXE),
-            new ItemStack(Material.IRON_SHOVEL)
-        };
+        setArmor(Material.CHAINMAIL_BOOTS, 0);
+        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
-        this.abilities = new Ability[]{
-            null, // Daze Potion
-            null, // Bat Wave
-        };
+        setItem(Material.IRON_AXE, 0);
+        setItem(Material.IRON_SHOVEL, 1);
     }
 
 }

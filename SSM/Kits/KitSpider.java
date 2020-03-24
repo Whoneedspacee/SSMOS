@@ -10,32 +10,26 @@ import org.bukkit.plugin.Plugin;
 
 public class KitSpider extends Kit {
 
-    public KitSpider(Plugin plugin) {
-        super(plugin);
+    public KitSpider() {
+        super();
 
-        this.damage = 6.0;
+        this.damage = 6;
         this.speed = 0.21f;
         this.regeneration = 0.25;
         this.knockback = 0;
 
         this.name = "Spider";
+    }
 
-        this.armor = new ItemStack[]{
-            new ItemStack(Material.IRON_BOOTS),
-            new ItemStack(Material.CHAINMAIL_LEGGINGS),
-            new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-            null
-        };
+    public void equipKit(Player player) {
+        super.equipKit(player);
 
-        this.weapons = new ItemStack[]{
-            new ItemStack(Material.IRON_SWORD),
-            new ItemStack(Material.IRON_AXE)
-        };
+        setArmor(Material.IRON_BOOTS, 0);
+        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
-        this.abilities = new Ability[]{
-            null, // needler
-            new SpinWeb(plugin)
-        };
+        setItem(Material.IRON_SWORD, 0);
+        setItem(Material.IRON_AXE, 1, new SpinWeb());
     }
 
 }

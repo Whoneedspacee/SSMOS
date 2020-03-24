@@ -14,16 +14,16 @@ public class Shulker extends Ability {
 
     private ShulkerBullet Bullet;
 
-    public Shulker(Plugin plugin) {
-        super(plugin);
+    public Shulker() {
+        super();
         this.name = "Cast Shulker Bullet";
         this.cooldownTime = 0;
         this.rightClickActivate = true;
 
     }
 
-    public void useAbility(Player player) {
-        Bullet = player.launchProjectile(ShulkerBullet.class);
+    public void activate() {
+        Bullet = owner.launchProjectile(ShulkerBullet.class);
         List<Entity> canHit = Bullet.getNearbyEntities(100, 100, 100);
         canHit.remove(Bullet);
         canHit.remove(Bullet.getShooter());

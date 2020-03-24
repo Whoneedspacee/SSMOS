@@ -10,32 +10,26 @@ import org.bukkit.plugin.Plugin;
 
 public class KitSlime extends Kit {
 
-    public KitSlime(Plugin plugin) {
-        super(plugin);
+    public KitSlime() {
+        super();
 
-        this.damage = 6.0;
+        this.damage = 6;
         this.speed = 0.21f;
         this.regeneration = 0.35;
         this.knockback = 0;
 
         this.name = "Slime";
+    }
 
-        this.armor = new ItemStack[]{
-            new ItemStack(Material.CHAINMAIL_BOOTS),
-            null,
-            new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-            new ItemStack(Material.CHAINMAIL_HELMET)
-        };
+    public void equipKit(Player player) {
+        super.equipKit(player);
 
-        this.weapons = new ItemStack[]{
-            new ItemStack(Material.IRON_SWORD),
-            new ItemStack(Material.IRON_AXE)
-        };
+        setArmor(Material.CHAINMAIL_BOOTS, 0);
+        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmor(Material.CHAINMAIL_HELMET, 3);
 
-        this.abilities = new Ability[]{
-            null, // slime rocket
-            null // slime slam
-        };
+        setItem(Material.IRON_SWORD, 0);
+        setItem(Material.IRON_AXE, 1);
     }
 
 }

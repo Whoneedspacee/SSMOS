@@ -14,16 +14,16 @@ import java.util.List;
 
 public class BoneExplosion extends Ability {
 
-    public BoneExplosion(Plugin plugin) {
-        super(plugin);
+    public BoneExplosion() {
+        super();
         this.name = "Bone Explosion";
         this.cooldownTime = 8;
         this.rightClickActivate = true;
     }
 
-    public void useAbility(Player player) {
-        List<Entity> canHit = player.getNearbyEntities(4, 4, 4);
-        canHit.remove(player);
+    public void activate() {
+        List<Entity> canHit = owner.getNearbyEntities(4, 4, 4);
+        canHit.remove(owner);
 
         if (canHit.size() <= 0) {
             return;

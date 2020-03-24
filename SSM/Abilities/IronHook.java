@@ -11,17 +11,17 @@ import org.bukkit.util.Vector;
 
 public class IronHook extends Ability {
 
-    public IronHook(Plugin plugin) {
-        super(plugin);
+    public IronHook() {
+        super();
         this.name = "Iron Hook";
         this.cooldownTime = 8;
         this.rightClickActivate = true;
     }
 
-    public void useAbility(Player player) {
+    public void activate() {
         ItemStack hook = new ItemStack(Material.TRIPWIRE_HOOK);
-        Item firing = player.getWorld().dropItem(player.getEyeLocation(), hook);
-        EntityProjectile projectile = new EntityProjectile(plugin, player, name, firing);
+        Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), hook);
+        EntityProjectile projectile = new EntityProjectile(plugin, owner, name, firing);
         projectile.setDamage(5.0);
         projectile.setSpeed(1.8);
         projectile.setKnockback(-2.0);
