@@ -26,6 +26,10 @@ public class Kit implements Listener {
     protected double regeneration = 0;
     protected float speed = 0f;
 
+    protected boolean hasDirectDoubleJump = false;
+    protected double doubleJumpHeight = 0.8;
+    protected double doubleJumpPower = 0.61;
+
     // list of materials for armor
     protected ItemStack[] armor = new ItemStack[4];
 
@@ -52,9 +56,8 @@ public class Kit implements Listener {
             ItemMeta meta = item.getItemMeta();
             meta.setUnbreakable(true);
             item.setItemMeta(meta);
-
-
         }
+
         player.getInventory().setArmorContents(armor);
         for (int i = 0; i < weapons.length; i++) {
             ItemStack item = weapons[i];
@@ -72,14 +75,15 @@ public class Kit implements Listener {
         }
     }
 
+
     public String getName() {
         return name;
     }
-
     public Ability[] getAbilities() {
         return abilities;
     }
 
-
-
+    public boolean hasDirectDoubleJump() { return hasDirectDoubleJump; }
+    public double getDoubleJumpHeight() { return doubleJumpHeight; }
+    public double getDoubleJumpPower() { return doubleJumpPower; }
 }
