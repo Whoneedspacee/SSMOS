@@ -39,6 +39,6 @@ public class KitCreeper extends Kit {
         };
 
 
-}
+    }
 
 }

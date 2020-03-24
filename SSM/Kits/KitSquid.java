@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import SSM.Ability;
 
-public class KitSquid extends Kit{
+public class KitSquid extends Kit {
 
 
     public KitSquid(Plugin plugin) {
@@ -21,22 +21,22 @@ public class KitSquid extends Kit{
         this.name = "SkySquid";
 
         this.armor = new ItemStack[]{
-                new ItemStack(Material.CHAINMAIL_BOOTS),
-                new ItemStack(Material.CHAINMAIL_LEGGINGS),
-                new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-                null
+            new ItemStack(Material.CHAINMAIL_BOOTS),
+            new ItemStack(Material.CHAINMAIL_LEGGINGS),
+            new ItemStack(Material.CHAINMAIL_CHESTPLATE),
+            null
         };
 
         this.weapons = new ItemStack[]{
-                new ItemStack(Material.IRON_AXE),
-                new ItemStack(Material.IRON_SWORD),
-                new ItemStack(Material.IRON_SHOVEL)
+            new ItemStack(Material.IRON_AXE),
+            new ItemStack(Material.IRON_SWORD),
+            new ItemStack(Material.IRON_SHOVEL)
         };
 
         this.abilities = new Ability[]{
-                new InkShotgun(plugin),
-                null, //Super Squid
-                null //Fish Flurry
+            new InkShotgun(plugin),
+            null, //Super Squid
+            null //Fish Flurry
 
 
         };

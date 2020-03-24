@@ -21,20 +21,20 @@ public class KitWitch extends Kit {
         this.name = "Witch";
 
         this.armor = new ItemStack[]{
-                new ItemStack(Material.CHAINMAIL_BOOTS),
-                new ItemStack(Material.CHAINMAIL_LEGGINGS),
-                new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-                null
+            new ItemStack(Material.CHAINMAIL_BOOTS),
+            new ItemStack(Material.CHAINMAIL_LEGGINGS),
+            new ItemStack(Material.CHAINMAIL_CHESTPLATE),
+            null
         };
 
         this.weapons = new ItemStack[]{
-                new ItemStack(Material.IRON_AXE),
-                new ItemStack(Material.IRON_SHOVEL)
+            new ItemStack(Material.IRON_AXE),
+            new ItemStack(Material.IRON_SHOVEL)
         };
 
         this.abilities = new Ability[]{
-                null, // Daze Potion
-                null, // Bat Wave
+            null, // Daze Potion
+            null, // Bat Wave
         };
     }
 

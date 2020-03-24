@@ -21,18 +21,18 @@ public class KitShulker extends Kit {
         this.name = "Shulker";
 
         this.armor = new ItemStack[]{
-                new ItemStack(Material.IRON_BOOTS),
-                new ItemStack(Material.IRON_LEGGINGS),
-                new ItemStack(Material.IRON_CHESTPLATE),
-                new ItemStack(Material.IRON_HELMET)
+            new ItemStack(Material.IRON_BOOTS),
+            new ItemStack(Material.IRON_LEGGINGS),
+            new ItemStack(Material.IRON_CHESTPLATE),
+            new ItemStack(Material.IRON_HELMET)
         };
 
         this.weapons = new ItemStack[]{
-                new ItemStack(Material.IRON_AXE),
+            new ItemStack(Material.IRON_AXE),
         };
 
         this.abilities = new Ability[]{
-                new Shulker(plugin),
+            new Shulker(plugin),
         };
 
 

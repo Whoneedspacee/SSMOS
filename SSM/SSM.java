@@ -110,7 +110,7 @@ public class SSM extends JavaPlugin implements Listener {
             Double z = player.getLocation().getDirection().getZ() * 1.2;
             player.setVelocity(new Vector(x, 1.2, z));
         }
-        if (blockOn.getType() == Material.IRON_BLOCK){
+        if (blockOn.getType() == Material.IRON_BLOCK) {
             Location loc = player.getLocation();
             Vector dir = loc.getDirection();
             dir.normalize();
@@ -124,7 +124,8 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void stopHealthRegen(EntityRegainHealthEvent e) { e.setCancelled(true);
+    public void stopHealthRegen(EntityRegainHealthEvent e) {
+        e.setCancelled(true);
 
 
     }

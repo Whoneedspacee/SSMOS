@@ -50,7 +50,7 @@ public class Ability implements Listener {
             return;
         }
         ItemMeta meta = item.getItemMeta();
-        if (meta.getDisplayName().equalsIgnoreCase(name)){
+        if (meta.getDisplayName().equalsIgnoreCase(name)) {
             player.setCooldown(itemType, (int) (cooldownTime * 20));
             useAbility(player);
         }

@@ -37,4 +37,5 @@ public class Shulker extends Ability {
             LivingEntity target = (LivingEntity) canHit.get(0);
             Bullet.setTarget(target);
         }
-    }}
+    }
+}

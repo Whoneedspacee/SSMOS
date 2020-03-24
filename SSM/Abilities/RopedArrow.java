@@ -33,7 +33,7 @@ public class RopedArrow extends Ability {
 
     @EventHandler
     public void pullToArrow(ProjectileHitEvent e) {
-        if(e.getEntity() != arrow) {
+        if (e.getEntity() != arrow) {
             return;
         }
         Vector p = player.getLocation().toVector();

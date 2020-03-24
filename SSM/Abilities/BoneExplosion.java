@@ -25,7 +25,7 @@ public class BoneExplosion extends Ability {
         List<Entity> canHit = player.getNearbyEntities(4, 4, 4);
         canHit.remove(player);
 
-        if (canHit.size() <= 0){
+        if (canHit.size() <= 0) {
             return;
         }
 
