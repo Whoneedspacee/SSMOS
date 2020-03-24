@@ -48,8 +48,9 @@ public class DJManager implements Listener
             player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT,1f, 1f);
 
             double frictionModifier = 0;
-
-
+            if (!player.getLocation().subtract(0, 0.001, 0).getBlock().isPassable()) {
+                frictionModifier = -0.2;
+            }
 
             if (!kit.hasDirectDoubleJump()) {
                 player.setVelocity(player.getLocation().getDirection().multiply(kit.getDoubleJumpPower()).setY(kit.getDoubleJumpHeight() + frictionModifier));
