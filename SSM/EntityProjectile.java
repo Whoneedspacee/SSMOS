@@ -62,7 +62,7 @@ public class EntityProjectile extends BukkitRunnable {
     public double getRandomVariation() {
         double variation = getVariation();
         double randomAngle = Math.random() * variation / 2;
-        if(new Random().nextBoolean()) {
+        if (new Random().nextBoolean()) {
             randomAngle *= -1;
         }
         return randomAngle * Math.PI / 180;

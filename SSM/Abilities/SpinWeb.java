@@ -13,22 +13,22 @@ public class SpinWeb extends Ability {
 
     protected int webAmount = 20;
 
-    public SpinWeb(Plugin plugin) {
-        super(plugin);
+    public SpinWeb() {
+        super();
         this.name = "Spin Web";
         this.cooldownTime = 5;
         this.rightClickActivate = true;
     }
 
-    public void useAbility(Player player) {
+    public void activate() {
         ItemStack cobweb = new ItemStack(Material.COBWEB, webAmount);
         for (int i = 0; i < webAmount; i++) {
-            Item firing = player.getWorld().dropItem(player.getEyeLocation(), cobweb);
-            WebProjectile projectile = new WebProjectile(plugin, player, name, firing);
-            projectile.setOverridePosition(player.getEyeLocation().subtract(0, -1, 0));
+            Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), cobweb);
+            WebProjectile projectile = new WebProjectile(plugin, owner, name, firing);
+            projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
             projectile.launchProjectile();
         }
-        player.setVelocity(player.getLocation().getDirection().multiply(1.5));
+        owner.setVelocity(owner.getLocation().getDirection().multiply(1.5));
     }
 
     class WebProjectile extends EntityProjectile {

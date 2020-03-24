@@ -14,34 +14,32 @@ import org.bukkit.util.Vector;
 public class RopedArrow extends Ability {
 
     private Arrow arrow;
-    private Player player;
 
-    public RopedArrow(Plugin plugin) {
-        super(plugin);
+    public RopedArrow() {
+        super();
         this.name = "Roped Arrow";
         this.cooldownTime = 8;
         this.leftClickActivate = true;
     }
 
-    public void useAbility(Player player) {
-        this.player = player;
-        arrow = player.launchProjectile(Arrow.class);
+    public void activate() {
+        arrow = owner.launchProjectile(Arrow.class);
         arrow.setCustomName("Roped Arrow");
         arrow.setDamage(4.0);
-        arrow.setVelocity(player.getLocation().getDirection().multiply(1.8D));
+        arrow.setVelocity(owner.getLocation().getDirection().multiply(1.8D));
     }
 
     @EventHandler
     public void pullToArrow(ProjectileHitEvent e) {
-        if(e.getEntity() != arrow) {
+        if (e.getEntity() != arrow) {
             return;
         }
-        Vector p = player.getLocation().toVector();
+        Vector p = owner.getLocation().toVector();
         Vector a = arrow.getLocation().toVector();
         Vector pre = a.subtract(p);
         Vector velocity = pre.normalize().multiply(1.8);
 
-        player.setVelocity(new Vector(velocity.getX(), 1.2, velocity.getZ()));
+        owner.setVelocity(new Vector(velocity.getX(), 1.2, velocity.getZ()));
         arrow.remove();
     }
 

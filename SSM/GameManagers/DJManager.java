@@ -19,8 +19,7 @@ import org.bukkit.util.Vector;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class DJManager implements Listener
-{
+public class DJManager implements Listener {
     private static DJManager instance = new DJManager();
     private HashMap<UUID, Integer> doubleJumpCount = new HashMap<>();
 
@@ -45,7 +44,7 @@ public class DJManager implements Listener
         if (jumpCount > 0) {
             doubleJumpCount.put(player.getUniqueId(), --jumpCount);
 
-            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT,1f, 1f);
+            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT, 1f, 1f);
 
             double frictionModifier = 0;
             if (!player.getLocation().subtract(0, 0.001, 0).getBlock().isPassable()) {
@@ -83,13 +82,13 @@ public class DJManager implements Listener
         }
     }
 
-    @EventHandler private void playerQuitEvent(PlayerQuitEvent e) {
+    @EventHandler
+    private void playerQuitEvent(PlayerQuitEvent e) {
         doubleJumpCount.remove(e.getPlayer().getUniqueId());
     }
 
 
-    public static DJManager getInstance()
-    {
+    public static DJManager getInstance() {
         return instance;
     }
 

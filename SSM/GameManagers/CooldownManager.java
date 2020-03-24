@@ -20,8 +20,7 @@ public class CooldownManager extends BukkitRunnable {
 
     private boolean isRunning = false;
 
-    public void start(Plugin plugin) throws ManagerAlreadyRunningException
-    {
+    public void start(Plugin plugin) throws ManagerAlreadyRunningException {
         if (isRunning) {
             throw new ManagerAlreadyRunningException();
         }
@@ -36,7 +35,7 @@ public class CooldownManager extends BukkitRunnable {
      */
     @Override
     public void run() {
-        for (Iterator<CooldownData> cdDataIterator = cooldownData.iterator(); cdDataIterator.hasNext();) {
+        for (Iterator<CooldownData> cdDataIterator = cooldownData.iterator(); cdDataIterator.hasNext(); ) {
             CooldownData currData = cdDataIterator.next();
 
             if (currData.getRemainingTimeMs() <= 0) {
@@ -67,9 +66,8 @@ public class CooldownManager extends BukkitRunnable {
     }
 
     /**
-     *
      * @param abilityName name used to reference cooldown (should be abilityName)
-     * @param duration time in milliseconds for cooldown duration
+     * @param duration    time in milliseconds for cooldown duration
      * @param abilityUser player using the ability (cooldownData linked with this player)
      */
     public void addCooldown(String abilityName, long duration, Player abilityUser) {
@@ -81,7 +79,7 @@ public class CooldownManager extends BukkitRunnable {
      */
     private void displayCooldownTo(Player player, CooldownData cd) {
         int barLength = 24;
-        int startRedBarInterval = barLength - (int)((cd.getRemainingTimeMs() / (double)cd.duration) * barLength); // Val between 0 - 1
+        int startRedBarInterval = barLength - (int) ((cd.getRemainingTimeMs() / (double) cd.duration) * barLength); // Val between 0 - 1
         StringBuilder sb = new StringBuilder("§f§l" + cd.abilityName + " ");
         for (int i = 0; i < barLength; i++) {
             if (i < startRedBarInterval) {
@@ -96,7 +94,9 @@ public class CooldownManager extends BukkitRunnable {
     }
 
 
-    public static CooldownManager getInstance() { return ourInstance; }
+    public static CooldownManager getInstance() {
+        return ourInstance;
+    }
 
     /**
      * Container for all information needed in a cooldown
@@ -118,7 +118,12 @@ public class CooldownManager extends BukkitRunnable {
             return startTime + duration - System.currentTimeMillis();
         }
 
-        Player getAbilityUser() { return abilityUser; }
-        String getAbilityName() { return abilityName; }
+        Player getAbilityUser() {
+            return abilityUser;
+        }
+
+        String getAbilityName() {
+            return abilityName;
+        }
     }
 }

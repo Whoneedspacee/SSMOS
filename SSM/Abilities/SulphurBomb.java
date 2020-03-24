@@ -11,17 +11,17 @@ import org.bukkit.util.Vector;
 
 public class SulphurBomb extends Ability {
 
-    public SulphurBomb(Plugin plugin) {
-        super(plugin);
+    public SulphurBomb() {
+        super();
         this.name = "Sulphur Bomb";
         this.cooldownTime = 3;
         this.rightClickActivate = true;
     }
 
-    public void useAbility(Player player) {
+    public void activate() {
         ItemStack coal = new ItemStack(Material.COAL);
-        Item firing = player.getWorld().dropItem(player.getEyeLocation(), coal);
-        EntityProjectile projectile = new EntityProjectile(plugin, player, name, firing);
+        Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), coal);
+        EntityProjectile projectile = new EntityProjectile(plugin, owner, name, firing);
         projectile.setDamage(6.0);
         projectile.setSpeed(1.8);
         projectile.setKnockback(2.0);
