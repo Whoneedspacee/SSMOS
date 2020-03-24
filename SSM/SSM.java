@@ -1,5 +1,7 @@
 package SSM;
 
+import SSM.GameManagers.CooldownManager;
+import SSM.GameManagers.DJManager;
 import SSM.Kits.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,11 +14,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
@@ -25,7 +25,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.UUID;
@@ -42,7 +41,9 @@ public class SSM extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
-        allKits = new Kit[]{
+        getServer().getPluginManager().registerEvents(DJManager.getInstance(), this);
+
+        allKits = new Kit[] {
             new KitCreeper(this),
             new KitIronGolem(this),
             new KitSkeleton(this),
@@ -52,11 +53,12 @@ public class SSM extends JavaPlugin implements Listener {
             new KitShulker(this),
             new KitSquid(this),
         };
+
+        CooldownManager.getInstance().start(this);
     }
 
     @Override
     public void onDisable() {
-
     }
 
     @Override
@@ -124,11 +126,7 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void stopHealthRegen(EntityRegainHealthEvent e) {
-        e.setCancelled(true);
-
-
-    }
+    public void stopHealthRegen(EntityRegainHealthEvent e) { e.setCancelled(true); }
 
     @EventHandler
     public void stopHungerLoss(FoodLevelChangeEvent e) {
