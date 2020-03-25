@@ -22,11 +22,11 @@ public class Regeneration extends Attribute {
         this.name = "Regeneration";
         this.regen = regen;
         this.delay = delay;
-        this.runTaskTimer(plugin, 0, (long) delay * 20);
+        task = this.runTaskTimer(plugin, 0, (long) delay * 20);
     }
 
     public void activate() {
-        owner.setHealth(owner.getHealth() + regen);
+        owner.setHealth(Math.min(owner.getHealth() + regen, 20));
     }
 
     @Override
