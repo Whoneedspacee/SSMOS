@@ -22,7 +22,7 @@ public class Blizzard extends Ability {
 
     public void activate() {
         for (int i = 0; i < BlizzardAmount; i++) {
-            Snowball firing = owner.getWorld().spawn(owner.getLocation(), Snowball.class);
+            Snowball firing = owner.getWorld().spawn(owner.getEyeLocation(), Snowball.class);
             EntityProjectile projectile = new EntityProjectile(plugin, owner, name, firing);
             projectile.setDamage(1.0);
             projectile.setSpeed(1.0);
