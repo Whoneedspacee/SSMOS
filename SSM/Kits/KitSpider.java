@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import SSM.Attributes.Climb;
 import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -33,6 +34,7 @@ public class KitSpider extends Kit {
         setItem(Material.IRON_AXE, 1, new SpinWeb());
 
         addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new Climb(0.5));
     }
 
 }

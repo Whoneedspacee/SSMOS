@@ -37,7 +37,7 @@ public class SpinWeb extends Ability {
 
         public WebProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
             super(plugin, firer, name, projectile);
-            this.setDamage(5.0);
+            this.setDamage(6.0);
             this.setSpeed(1.8);
             this.setHitboxSize(1.0);
             this.setVariation(30);
