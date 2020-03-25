@@ -30,19 +30,14 @@ public class ItemGenerator extends Attribute {
         task = this.runTaskTimer(plugin, 0, (long) delay * 20);
     }
 
-    public void activate() {
+    @Override
+    public void run() {
         for (ItemStack check : owner.getInventory().getContents()) {
             if (check != null && check.getType() == item && check.getAmount() >= maxAmount) {
                 return;
             }
         }
         owner.getInventory().addItem(new ItemStack(item, amount));
-    }
-
-
-    @Override
-    public void run() {
-        activate();
     }
 
 }

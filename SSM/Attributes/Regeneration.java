@@ -25,13 +25,11 @@ public class Regeneration extends Attribute {
         task = this.runTaskTimer(plugin, 0, (long) delay * 20);
     }
 
-    public void activate() {
-        owner.setHealth(Math.min(owner.getHealth() + regen, 20));
-    }
-
     @Override
     public void run() {
-        activate();
-    }
 
+        if (!owner.isDead()) {
+            owner.setHealth(Math.min(owner.getHealth() + regen, 20));
+        }
+    }
 }
