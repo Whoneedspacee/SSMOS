@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.Abilities.Blizzard;
 import SSM.Ability;
+import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
 import org.bukkit.Material;
@@ -34,6 +35,7 @@ public class KitSnowMan extends Kit {
         setItem(Material.IRON_AXE, 1);
 
         addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new GenericDoubleJump(0.61, 0.8, 1));
     }
 
 }

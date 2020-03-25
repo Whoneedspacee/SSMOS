@@ -47,7 +47,7 @@ public class SSM extends JavaPlugin implements Listener {
     public void onEnable() {
         ourInstance = this;
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(DJManager.getInstance(), this);
+      //  getServer().getPluginManager().registerEvents(DJManager.getInstance(), this);
 
         allKits = new Kit[]{
             new KitCreeper(),

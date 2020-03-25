@@ -26,7 +26,8 @@ public class Climb extends Attribute {
         task = this.runTaskTimer(plugin, 0L, 1L);
     }
 
-    public void activate() {
+    @Override
+    public void run() {
         if (!owner.isSneaking()) {
             return;
         }
@@ -36,12 +37,6 @@ public class Climb extends Attribute {
                 break;
             }
         }
-    }
-
-
-    @Override
-    public void run() {
-        activate();
     }
 
 }

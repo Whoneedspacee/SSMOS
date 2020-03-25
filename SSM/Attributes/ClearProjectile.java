@@ -1,4 +1,4 @@
-package SSM.Attributes;
+/*package SSM.Attributes;
 
 import SSM.*;
 import org.bukkit.Material;
@@ -36,3 +36,4 @@ public class ClearProjectile extends Attribute {
     }
 
 }
+*/
