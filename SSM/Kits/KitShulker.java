@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +31,8 @@ public class KitShulker extends Kit {
         setArmor(Material.IRON_HELMET, 3);
 
         setItem(Material.IRON_AXE, 1, new Shulker());
+
+        addAttribute(new Regeneration(regeneration, 1));
     }
 
 }

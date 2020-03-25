@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.Abilities.Blizzard;
 import SSM.Ability;
+import SSM.Attributes.Regeneration;
 import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,6 +32,8 @@ public class KitSnowMan extends Kit {
 
         setItem(Material.IRON_SWORD, 0, new Blizzard());
         setItem(Material.IRON_AXE, 1);
+
+        addAttribute(new Regeneration(regeneration, 1));
     }
 
 }

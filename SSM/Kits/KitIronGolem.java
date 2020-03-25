@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -32,6 +33,8 @@ public class KitIronGolem extends Kit {
         setItem(Material.IRON_AXE, 0);
         setItem(Material.IRON_PICKAXE, 1, new IronHook());
         setItem(Material.IRON_SHOVEL, 2, new SeismicSlam());
+
+        addAttribute(new Regeneration(regeneration, 1));
     }
 
 }

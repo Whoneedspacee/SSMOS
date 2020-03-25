@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,8 +18,8 @@ public class KitSpider extends Kit {
         this.speed = 0.21f;
         this.regeneration = 0.25;
         this.knockback = 0;
-
         this.name = "Spider";
+        this.hasDirectDoubleJump = true;
     }
 
     public void equipKit(Player player) {
@@ -30,6 +31,8 @@ public class KitSpider extends Kit {
 
         setItem(Material.IRON_SWORD, 0);
         setItem(Material.IRON_AXE, 1, new SpinWeb());
+
+        addAttribute(new Regeneration(regeneration, 1));
     }
 
 }

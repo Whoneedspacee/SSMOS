@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +31,8 @@ public class KitSlime extends Kit {
 
         setItem(Material.IRON_SWORD, 0);
         setItem(Material.IRON_AXE, 1);
+
+        addAttribute(new Regeneration(regeneration, 1));
     }
 
 }

@@ -4,8 +4,10 @@ import SSM.*;
 import SSM.Abilities.*;
 import SSM.Attributes.ClearProjectile;
 import SSM.Attributes.ItemGenerator;
+import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -35,6 +37,7 @@ public class KitSkeleton extends Kit {
 
         addAttribute(new ItemGenerator(Material.ARROW, 1, 3, 3));
         addAttribute(new ClearProjectile());
+        addAttribute(new Regeneration(regeneration, 1));
     }
 
 }

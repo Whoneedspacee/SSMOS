@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.Abilities.InkShotgun;
 import SSM.Abilities.SpinWeb;
+import SSM.Attributes.Regeneration;
 import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -33,6 +34,8 @@ public class KitSquid extends Kit {
         setItem(Material.IRON_AXE, 0, new InkShotgun());
         setItem(Material.IRON_SWORD, 1);
         setItem(Material.IRON_SHOVEL, 2);
+
+        addAttribute(new Regeneration(regeneration, 1));
     }
 
 }
