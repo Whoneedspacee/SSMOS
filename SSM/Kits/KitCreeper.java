@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +32,8 @@ public class KitCreeper extends Kit {
 
         setItem(Material.IRON_AXE, 0, new SulphurBomb());
         setItem(Material.IRON_SHOVEL, 1);
+
+        addAttribute(new Regeneration(regeneration, 1));
     }
 
 }

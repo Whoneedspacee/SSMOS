@@ -43,7 +43,6 @@ public class Kit {
 
     public void equipKit(Player player) {
         owner = player;
-        attributes.clear();
         player.setWalkSpeed(speed);
         player.getInventory().clear();
     }
