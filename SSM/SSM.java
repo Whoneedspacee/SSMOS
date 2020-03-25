@@ -58,6 +58,7 @@ public class SSM extends JavaPlugin implements Listener {
             new KitWitch(),
             new KitShulker(),
             new KitSquid(),
+            new KitSnowMan(),
         };
 
         CooldownManager.getInstance().start(this);
