@@ -21,6 +21,8 @@ public class KitSpider extends Kit {
         this.knockback = 0;
         this.name = "Spider";
         this.hasDirectDoubleJump = true;
+        this.doubleJumpHeight = 0.1;
+        this.doubleJumpPower = 1.5;
     }
 
     public void equipKit(Player player) {
@@ -34,7 +36,7 @@ public class KitSpider extends Kit {
         setItem(Material.IRON_AXE, 1, new SpinWeb());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new Climb(0.5));
+        addAttribute(new Climb(0.2));
     }
 
 }

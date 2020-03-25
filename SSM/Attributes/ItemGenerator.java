@@ -27,7 +27,7 @@ public class ItemGenerator extends Attribute {
         this.amount = amount;
         this.maxAmount = maxAmount;
         this.delay = delay;
-        this.runTaskTimer(plugin, 0, (long) delay * 20);
+        task = this.runTaskTimer(plugin, 0, (long) delay * 20);
     }
 
     public void activate() {

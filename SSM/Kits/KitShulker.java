@@ -30,7 +30,7 @@ public class KitShulker extends Kit {
         setArmor(Material.IRON_CHESTPLATE, 2);
         setArmor(Material.IRON_HELMET, 3);
 
-        setItem(Material.IRON_AXE, 1, new Shulker());
+        setItem(Material.IRON_AXE, 0, new Shulker());
 
         addAttribute(new Regeneration(regeneration, 1));
     }
