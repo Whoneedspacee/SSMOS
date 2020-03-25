@@ -21,15 +21,19 @@ public class Climb extends Attribute {
 
     public Climb(double power) {
         super();
-        this.name = "Item Generator";
+        this.name = "Spider Climb";
         this.power = power;
-        this.runTaskTimer(plugin, 0, 1);
+        task = this.runTaskTimer(plugin, 0L, 1L);
     }
 
     public void activate() {
-        if (owner.isSneaking()){
-            if (!owner.getLocation().getBlock().getRelative(BlockFace.WEST).isPassable() || !owner.getLocation().getBlock().getRelative(BlockFace.SOUTH).isPassable() || !owner.getLocation().getBlock().getRelative(BlockFace.EAST).isPassable() || !owner.getLocation().getBlock().getRelative(BlockFace.NORTH).isPassable()){
+        if (!owner.isSneaking()) {
+            return;
+        }
+        for (BlockFace face : BlockFace.values()) {
+            if (!owner.getLocation().getBlock().getRelative(face).isPassable()) {
                 owner.setVelocity(new Vector(0, power, 0));
+                break;
             }
         }
     }
