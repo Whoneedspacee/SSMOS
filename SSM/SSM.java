@@ -77,22 +77,7 @@ public class SSM extends JavaPlugin implements Listener {
             if (args.length == 1) {
                 for (Kit check : allKits) {
                     if (check.name.equalsIgnoreCase(args[0])) {
-                        Kit kit = null;
-                        try {
-                            kit = check.getClass().getDeclaredConstructor().newInstance();
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        } catch (InvocationTargetException e) {
-                            e.printStackTrace();
-                        } catch (NoSuchMethodException e) {
-                            e.printStackTrace();
-                        }
-                        if (kit != null) {
-                            kit.equipKit(player);
-                        }
-                        playerKit.put(player.getUniqueId(), kit);
+                        equipPlayer(player, check);
                         return true;
                     }
                 }
@@ -105,6 +90,28 @@ public class SSM extends JavaPlugin implements Listener {
             return true;
         }
         return false;
+    }
+
+    public void equipPlayer(Player player, Kit check) {
+        Kit kit = playerKit.get(player.getUniqueId());
+        if (kit != null) {
+            kit.destroyKit();
+        }
+        try {
+            kit = check.getClass().getDeclaredConstructor().newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        if (kit != null) {
+            kit.equipKit(player);
+        }
+        playerKit.put(player.getUniqueId(), kit);
     }
 
     @EventHandler

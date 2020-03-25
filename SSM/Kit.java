@@ -1,9 +1,11 @@
 package SSM;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -12,6 +14,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,16 +45,24 @@ public class Kit {
     }
 
     public void equipKit(Player player) {
+        destroyKit();
         owner = player;
         player.setWalkSpeed(speed);
         player.getInventory().clear();
+    }
+
+    public void destroyKit() {
+        owner = null;
+        for (Attribute attribute : attributes) {
+            attribute.destroyAttribute();
+        }
+        attributes.clear();
     }
 
     public void addAttribute(Attribute attribute) {
         attributes.add(attribute);
         attribute.setOwner(owner);
     }
-
 
     // 0 = boots, 1 = leggings, 2 = chestplate, 3 = helmet
     public void setArmor(Material itemMaterial, int armorSlot) {
