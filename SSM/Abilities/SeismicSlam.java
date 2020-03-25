@@ -11,17 +11,17 @@ import org.bukkit.util.Vector;
 
 public class SeismicSlam extends Ability {
 
-    public SeismicSlam(Plugin plugin) {
-        super(plugin);
+    public SeismicSlam() {
+        super();
         this.name = "Seismic Slam";
         this.cooldownTime = 10;
         this.rightClickActivate = true;
     }
 
-    public void useAbility(Player player) {
-        Double x = player.getLocation().getDirection().getX() * 0.9;
-        Double z = player.getLocation().getDirection().getZ() * 0.9;
-        player.setVelocity(new Vector(x, 0.42, z));
+    public void activate() {
+        Double x = owner.getLocation().getDirection().getX() * 0.9;
+        Double z = owner.getLocation().getDirection().getZ() * 0.9;
+        owner.setVelocity(new Vector(x, 0.42, z));
     }
 
 }

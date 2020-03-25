@@ -1,7 +1,6 @@
 package SSM;
 
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,19 +8,22 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class Kit implements Listener {
+public class Kit {
 
     /*  You must add your new kits to the allkits list in the main SSM.java file! */
 
     // used for finding the kit to equip on command, ex: /kit name
     protected String name = "";
-    protected double damage = 0;
+    protected int damage = 0;
     protected double knockback = 0;
     protected double regeneration = 0;
     protected float speed = 0f;
@@ -30,60 +32,81 @@ public class Kit implements Listener {
     protected double doubleJumpHeight = 0.8;
     protected double doubleJumpPower = 0.61;
 
-    // list of materials for armor
-    protected ItemStack[] armor = new ItemStack[4];
-
-    // list of materials for weapons
-    protected ItemStack[] weapons = new ItemStack[9];
-
-    // assigned to the weapons above by index, ex: 1st ability goes on the 1st weapon, etc
-    protected Ability[] abilities = new Ability[9];
+    protected List<Attribute> attributes = new ArrayList<Attribute>();
 
     protected Plugin plugin;
+    protected Player owner;
 
-    public Kit(Plugin plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public Kit() {
+        this.plugin = SSM.getInstance();
     }
 
     public void equipKit(Player player) {
+        owner = player;
         player.setWalkSpeed(speed);
         player.getInventory().clear();
-        for (ItemStack item : armor) {
-            if (item == null) {
-                continue;
-            }
-            ItemMeta meta = item.getItemMeta();
-            meta.setUnbreakable(true);
-            item.setItemMeta(meta);
-        }
-
-        player.getInventory().setArmorContents(armor);
-        for (int i = 0; i < weapons.length; i++) {
-            ItemStack item = weapons[i];
-            Ability ability = abilities[i];
-            if (item == null) {
-                continue;
-            }
-            ItemMeta meta = item.getItemMeta();
-            if (ability != null) {
-                meta.setDisplayName(ability.name);
-            }
-            meta.setUnbreakable(true);
-            item.setItemMeta(meta);
-            player.getInventory().addItem(item);
-        }
     }
 
+    public void addAttribute(Attribute attribute) {
+        attributes.add(attribute);
+        attribute.setOwner(owner);
+    }
+
+
+    // 0 = boots, 1 = leggings, 2 = chestplate, 3 = helmet
+    public void setArmor(Material itemMaterial, int armorSlot) {
+        if (owner == null) {
+            return;
+        }
+        ItemStack item = new ItemStack(itemMaterial);
+        ItemMeta meta = item.getItemMeta();
+        meta.setUnbreakable(true);
+        item.setItemMeta(meta);
+        ItemStack[] armor = owner.getInventory().getArmorContents();
+        armor[armorSlot] = item;
+        owner.getInventory().setArmorContents(armor);
+    }
+
+    public void setItem(Material itemMaterial, int inventorySlot) {
+        setItem(itemMaterial, inventorySlot, null);
+    }
+
+    public void setItem(Material itemMaterial, int inventorySlot, Ability ability) {
+        if (owner == null) {
+            return;
+        }
+        ItemStack item = new ItemStack(itemMaterial);
+        ItemMeta meta = item.getItemMeta();
+        if (ability != null) {
+            addAttribute(ability);
+            meta.setDisplayName(ability.name);
+        }
+        if (meta instanceof Damageable) {
+            Damageable damageable = (Damageable) meta;
+            damageable.setDamage(damage);
+        }
+        meta.setUnbreakable(true);
+        item.setItemMeta(meta);
+        owner.getInventory().setItem(inventorySlot, item);
+    }
 
     public String getName() {
         return name;
     }
-    public Ability[] getAbilities() {
-        return abilities;
+
+    public List<Attribute> getAttributes() {
+        return attributes;
     }
 
-    public boolean hasDirectDoubleJump() { return hasDirectDoubleJump; }
-    public double getDoubleJumpHeight() { return doubleJumpHeight; }
-    public double getDoubleJumpPower() { return doubleJumpPower; }
+    public boolean hasDirectDoubleJump() {
+        return hasDirectDoubleJump;
+    }
+
+    public double getDoubleJumpHeight() {
+        return doubleJumpHeight;
+    }
+
+    public double getDoubleJumpPower() {
+        return doubleJumpPower;
+    }
 }

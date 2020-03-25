@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,34 +11,30 @@ import org.bukkit.plugin.Plugin;
 
 public class KitIronGolem extends Kit {
 
-    public KitIronGolem(Plugin plugin) {
-        super(plugin);
+    public KitIronGolem() {
+        super();
 
-        this.damage = 7.0;
+        this.damage = 7;
         this.speed = 0.18f;
         this.regeneration = 0.2;
         this.knockback = 0;
 
-        this.name = "IronGolem";
+        this.name = "Iron_Golem";
+    }
 
-        this.armor = new ItemStack[]{
-            new ItemStack(Material.DIAMOND_BOOTS),
-            new ItemStack(Material.IRON_LEGGINGS),
-            new ItemStack(Material.IRON_CHESTPLATE),
-            new ItemStack(Material.IRON_HELMET)
-        };
+    public void equipKit(Player player) {
+        super.equipKit(player);
 
-        this.weapons = new ItemStack[]{
-            new ItemStack(Material.IRON_AXE),
-            new ItemStack(Material.IRON_PICKAXE),
-            new ItemStack(Material.IRON_SHOVEL)
-        };
+        setArmor(Material.DIAMOND_BOOTS, 0);
+        setArmor(Material.IRON_LEGGINGS, 1);
+        setArmor(Material.IRON_CHESTPLATE, 2);
+        setArmor(Material.IRON_HELMET, 3);
 
-        this.abilities = new Ability[]{
-            null, // fissure
-            new IronHook(plugin),
-            new SeismicSlam(plugin)
-        };
+        setItem(Material.IRON_AXE, 0);
+        setItem(Material.IRON_PICKAXE, 1, new IronHook());
+        setItem(Material.IRON_SHOVEL, 2, new SeismicSlam());
+
+        addAttribute(new Regeneration(regeneration, 1));
     }
 
 }

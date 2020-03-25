@@ -2,38 +2,42 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import SSM.Attributes.ClearProjectile;
+import SSM.Attributes.ItemGenerator;
+import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 public class KitSkeleton extends Kit {
 
-    public KitSkeleton(Plugin plugin) {
-        super(plugin);
+    public KitSkeleton() {
+        super();
 
-        this.damage = 5.0;
+        this.damage = 5;
         this.speed = 0.21f;
         this.regeneration = 0.2;
         this.knockback = 0;
 
         this.name = "Skeleton";
+    }
 
-        this.armor = new ItemStack[]{
-            new ItemStack(Material.CHAINMAIL_BOOTS),
-            new ItemStack(Material.CHAINMAIL_LEGGINGS),
-            new ItemStack(Material.CHAINMAIL_CHESTPLATE),
-            new ItemStack(Material.CHAINMAIL_HELMET)
-        };
+    public void equipKit(Player player) {
+        super.equipKit(player);
 
-        this.weapons = new ItemStack[]{
-            new ItemStack(Material.IRON_AXE),
-            new ItemStack(Material.BOW)
-        };
+        setArmor(Material.CHAINMAIL_BOOTS, 0);
+        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmor(Material.CHAINMAIL_HELMET, 3);
 
-        this.abilities = new Ability[]{
-            new BoneExplosion(plugin),
-            new RopedArrow(plugin)
-        };
+        setItem(Material.IRON_AXE, 0, new BoneExplosion());
+        setItem(Material.BOW, 1, new RopedArrow());
+
+        addAttribute(new ItemGenerator(Material.ARROW, 1, 3, 3));
+        addAttribute(new ClearProjectile());
+        addAttribute(new Regeneration(regeneration, 1));
     }
 
 }
