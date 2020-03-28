@@ -24,6 +24,8 @@ public abstract class Ability extends Attribute {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    public abstract void activate();
+
     public void activateLeft(Player player) {
         if (leftClickActivate) {
             checkAndActivate(player);
@@ -51,6 +53,7 @@ public abstract class Ability extends Attribute {
         }
     }
 
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
@@ -63,6 +66,11 @@ public abstract class Ability extends Attribute {
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             activateRight(player);
         }
+    }
+
+    @Override
+    public void run() {
+        this.cancel();
     }
 
 }

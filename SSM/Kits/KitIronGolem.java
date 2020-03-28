@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -35,6 +36,7 @@ public class KitIronGolem extends Kit {
         setItem(Material.IRON_SHOVEL, 2, new SeismicSlam());
 
         addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new GenericDoubleJump(0.61, 0.8, 1));
     }
 
 }

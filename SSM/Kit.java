@@ -54,7 +54,7 @@ public class Kit {
     public void destroyKit() {
         owner = null;
         for (Attribute attribute : attributes) {
-            attribute.destroyAttribute();
+            attribute.remove();
         }
         attributes.clear();
     }

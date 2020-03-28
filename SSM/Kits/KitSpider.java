@@ -3,6 +3,8 @@ package SSM.Kits;
 import SSM.*;
 import SSM.Abilities.*;
 import SSM.Attributes.Climb;
+import SSM.Attributes.DoubleJumps.DirectDoubleJump;
+import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,6 +39,7 @@ public class KitSpider extends Kit {
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new Climb(0.2));
+        addAttribute(new DirectDoubleJump(0.8, 0.2, 1));
     }
 
 }
