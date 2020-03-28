@@ -54,7 +54,7 @@ public abstract class Ability extends Attribute {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if (owner != player) {
+        if (player != owner) {
             return;
         }
         if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
