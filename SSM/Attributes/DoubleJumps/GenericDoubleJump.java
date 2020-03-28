@@ -8,7 +8,7 @@ public class GenericDoubleJump extends DoubleJump {
 
     @Override
     protected void jump(boolean perfectJumped) {
-        double frictionModifier = perfectJumped ? - 0.2 : 0;
+        double frictionModifier = perfectJumped ? -0.2 : 0;
 
         owner.setVelocity(owner.getLocation().getDirection().multiply(power).setY(height + frictionModifier));
     }

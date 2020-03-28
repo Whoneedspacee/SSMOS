@@ -68,9 +68,4 @@ public abstract class Ability extends Attribute {
         }
     }
 
-    @Override
-    public void run() {
-        this.cancel();
-    }
-
 }

@@ -11,8 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.util.Vector;
 
-public abstract class DoubleJump extends Attribute
-{
+public abstract class DoubleJump extends Attribute {
     protected double height;
     protected double power;
     private int maxDoubleJumps;
@@ -86,8 +85,4 @@ public abstract class DoubleJump extends Attribute
         }
     }
 
-    @Override
-    public void run() {
-        this.cancel();
-    }
 }

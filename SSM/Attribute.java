@@ -25,10 +25,21 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     }
 
     public void remove() {
-        if (task != null) {
-            task.cancel();
-            task = null;
-        }
+        cancelTask();
         HandlerList.unregisterAll(this);
     }
+
+    public boolean cancelTask() {
+        if (task != null) {
+            task.cancel();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void run() {
+        this.cancel();
+    }
+
 }

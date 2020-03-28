@@ -49,6 +49,7 @@ public class Kit {
         owner = player;
         player.setWalkSpeed(speed);
         player.getInventory().clear();
+        player.setExp(0);
     }
 
     public void destroyKit() {
