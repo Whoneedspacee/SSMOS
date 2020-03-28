@@ -3,6 +3,7 @@ package SSM.Kits;
 import SSM.*;
 import SSM.Abilities.*;
 //import SSM.Attributes.ClearProjectile;
+import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
@@ -37,9 +38,9 @@ public class KitSkeleton extends Kit {
         setItem(Material.BOW, 1, new RopedArrow());
 
         addAttribute(new ItemGenerator(Material.ARROW, 1, 3, 3));
-      //  addAttribute(new ClearProjectile());
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1));
+        addAttribute(new Barrage(1.1, 0.25, 5));
     }
 
 }
