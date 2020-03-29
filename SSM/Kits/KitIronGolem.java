@@ -31,7 +31,7 @@ public class KitIronGolem extends Kit {
         setArmor(Material.IRON_CHESTPLATE, 2);
         setArmor(Material.IRON_HELMET, 3);
 
-        setItem(Material.IRON_AXE, 0);
+        setItem(Material.IRON_AXE, 0, new Fissure());
         setItem(Material.IRON_PICKAXE, 1, new IronHook());
         setItem(Material.IRON_SHOVEL, 2, new SeismicSlam());
 
