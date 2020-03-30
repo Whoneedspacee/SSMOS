@@ -34,20 +34,22 @@ public class Fissure extends Ability {
         addBlock();
     }
     public void addBlock(){
+        Location location = owner.getLocation();
+        Vector direction = location.getDirection();
         runn = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
                 i++;
-                Location location = owner.getLocation();
-                Vector direction = location.getDirection();
-                direction.normalize();
-                direction.multiply(i);
+                direction.multiply(1);
                 location.add(direction);
                 Location blockHere = new Location(owner.getWorld(), (int)location.getX(), (int)owner.getLocation().getY(), (int)location.getZ());
-                owner.getWorld().getBlockAt(blockHere).setType(Material.DIRT);
+                Location material = new Location(owner.getWorld(), (int)location.getX(), (int)owner.getLocation().getY()-1, (int)location.getZ());
+                if (material.getBlock().isPassable()){
+                    stop();
+                }
+                owner.getWorld().getBlockAt(blockHere).setType(material.getBlock().getType());
                 if (i >= fissureLength){
                     stop();
-                    i = 0;
                 }
             }
         }, 0, (long) delay * 20);
@@ -55,6 +57,7 @@ public class Fissure extends Ability {
     }
 
     private void stop(){
+        i = 0;
         Bukkit.getScheduler().cancelTask(runn);
     }
 
