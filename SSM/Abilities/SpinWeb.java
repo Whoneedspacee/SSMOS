@@ -23,7 +23,7 @@ public class SpinWeb extends Ability {
 
     public void activate() {
         owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_SPIDER_DEATH, 10L, 1L);
-        ItemStack cobweb = new ItemStack(Material.COBWEB, webAmount);
+        ItemStack cobweb = new ItemStack(Material.COBWEB, 1);
         for (int i = 0; i < webAmount; i++) {
             Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), cobweb);
             WebProjectile projectile = new WebProjectile(plugin, owner, name, firing);
