@@ -28,38 +28,34 @@ public class BoneExplosion extends Ability {
         owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_SKELETON_DEATH, 10L, 1L);
         ItemStack bone = new ItemStack(Material.BONE, 1);
         for (int i = 0; i < boneAmount; i++) {
-            ItemMeta x = bone.getItemMeta();
-            x.setDisplayName("ooga booga"+i);
-            bone.setItemMeta(x);
+            ItemMeta boneMeta = bone.getItemMeta();
+            boneMeta.setDisplayName("bone"+i);
+            bone.setItemMeta(boneMeta);
             Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), bone);
-            BoneExplosion.boneProjectile projectile = new BoneExplosion.boneProjectile(plugin, owner, name, firing);
+            BoneProjectile projectile = new BoneProjectile(plugin, owner, name, firing);
             projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
             projectile.launchProjectile();
             List<Entity> canHit = owner.getNearbyEntities(4, 4, 4);
             canHit.remove(owner);
 
-            if (canHit.size() <= 0) {
-                return;
-            }
-
             for (Entity entity : canHit) {
                 if ((entity instanceof LivingEntity)) {
                     ((LivingEntity) entity).damage(6.0);
-                    Vector p = entity.getLocation().toVector();
-                    Vector a = owner.getLocation().toVector();
-                    Vector pre = a.subtract(p);
-                    Vector velocity = pre.normalize().multiply(1.8);
+                    Vector target = entity.getLocation().toVector();
+                    Vector player = owner.getLocation().toVector();
+                    Vector pre = target.subtract(player);
+                    Vector velocity = pre.normalize().multiply(1.35);
 
-                    entity.setVelocity(new Vector(velocity.getX()*-.75, 0.4, velocity.getZ()*-.75));
+                    entity.setVelocity(new Vector(velocity.getX(), 0.4, velocity.getZ()));
                 }
             }
         }
 
     }
 
-    class boneProjectile extends EntityProjectile {
+    class BoneProjectile extends EntityProjectile {
 
-        public boneProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
+        public BoneProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
             super(plugin, firer, name, projectile);
             this.setDamage(0.0);
             this.setSpeed(0.5 + Math.random() * 0.3);

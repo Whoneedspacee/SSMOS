@@ -30,6 +30,7 @@ public class MagmaBlast extends Ability {
         largeFireball.setVelocity(owner.getEyeLocation().getDirection().multiply(1.0D));
         Double x = owner.getPlayer().getEyeLocation().getDirection().getX() * -1.36;
         Double z = owner.getPlayer().getEyeLocation().getDirection().getZ() * -1.36;
-        owner.setVelocity(new Vector(x, 1.32, z));
+        Double y = owner.getPlayer().getEyeLocation().getDirection().getY() * -1.36;
+        owner.setVelocity(new Vector(x, y, z));
     }
 }
