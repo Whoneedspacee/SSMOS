@@ -3,6 +3,7 @@ package SSM.Abilities;
 import SSM.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.Listener;;
@@ -21,6 +22,7 @@ public class SpinWeb extends Ability {
     }
 
     public void activate() {
+        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_SPIDER_DEATH, 10L, 1L);
         ItemStack cobweb = new ItemStack(Material.COBWEB, webAmount);
         for (int i = 0; i < webAmount; i++) {
             Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), cobweb);
