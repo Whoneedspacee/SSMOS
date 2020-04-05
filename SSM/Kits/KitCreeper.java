@@ -32,7 +32,7 @@ public class KitCreeper extends Kit {
         setArmor(Material.LEATHER_HELMET, 3);
 
         setItem(Material.IRON_AXE, 0, new SulphurBomb());
-        setItem(Material.IRON_SHOVEL, 1);
+        setItem(Material.IRON_SHOVEL, 1, new Explode());
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1));
