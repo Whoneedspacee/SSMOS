@@ -15,6 +15,7 @@ public class Explode extends Ability {
     int runn = -1;
     int explosionstall = -1;
     int i = 0;
+    int cancel = 0;
 
     public Explode() {
         super();
@@ -24,6 +25,7 @@ public class Explode extends Ability {
     }
 
     public void activate(){
+        cancel = 0;
         i = 0;
         owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 10L, 1L);
         Location location = owner.getLocation();
@@ -37,26 +39,31 @@ public class Explode extends Ability {
                 if (i >= ExplodeTime){
                     stop();
                 }
+                if (owner.isSneaking()){
+                    cancel = 1;
+                    stop();
+                }
             }
         }, 0,1);
         runn = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 10, 1);
-                owner.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, owner.getLocation(), 1);
-                owner.setVelocity(owner.getLocation().getDirection().multiply(2));
-                List<Entity> canHit = owner.getNearbyEntities(4, 4, 4);
-                canHit.remove(owner);
+                if (cancel <= 0) {
+                    owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 10, 1);
+                    owner.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, owner.getLocation(), 1);
+                    owner.setVelocity(owner.getLocation().getDirection().multiply(2));
+                    List<Entity> canHit = owner.getNearbyEntities(4, 4, 4);
+                    canHit.remove(owner);
 
-                for (Entity entity : canHit) {
-                    if ((entity instanceof LivingEntity)) {
-                        ((LivingEntity) entity).damage(6.0);
-                        Vector target = entity.getLocation().toVector();
-                        Vector player = owner.getLocation().toVector();
-                        Vector pre = target.subtract(player);
-                        Vector velocity = pre.normalize().multiply(3.50);
-
-                        entity.setVelocity(new Vector(velocity.getX(), 0.4, velocity.getZ()));
+                    for (Entity entity : canHit) {
+                        if ((entity instanceof LivingEntity)) {
+                            ((LivingEntity) entity).damage(6.0);
+                            Vector target = entity.getLocation().toVector();
+                            Vector player = owner.getLocation().toVector();
+                            Vector pre = target.subtract(player);
+                            Vector velocity = pre.normalize().multiply(3.50);
+                            entity.setVelocity(new Vector(velocity.getX(), 0.4, velocity.getZ()));
+                        }
                     }
                 }
             }
