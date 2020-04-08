@@ -5,6 +5,7 @@ import SSM.Abilities.SpinWeb;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,8 +22,8 @@ public class KitSquid extends Kit {
         this.speed = 0.24f;
         this.regeneration = 0.25;
         this.knockback = 0;
-
         this.name = "SkySquid";
+        this.disguise = DisguiseType.SQUID;
     }
 
     public void equipKit(Player player) {

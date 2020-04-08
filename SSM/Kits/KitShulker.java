@@ -19,7 +19,6 @@ public class KitShulker extends Kit {
         this.speed = 0.15f;
         this.regeneration = 0.2;
         this.knockback = 0;
-
         this.name = "Shulker";
     }
 

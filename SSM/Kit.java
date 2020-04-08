@@ -1,5 +1,8 @@
 package SSM;
 
+import me.libraryaddict.disguise.LibsDisguises;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
+import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.AttributeModifier;
@@ -20,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Kit {
+public class Kit{
 
     /*  You must add your new kits to the allkits list in the main SSM.java file! */
 
@@ -30,6 +33,7 @@ public class Kit {
     protected double knockback = 0;
     protected double regeneration = 0;
     protected float speed = 0f;
+    protected DisguiseType disguise;
 
     protected boolean hasDirectDoubleJump = false;
     protected double doubleJumpHeight = 0.8;
@@ -50,6 +54,9 @@ public class Kit {
         player.setWalkSpeed(speed);
         player.getInventory().clear();
         player.setExp(0);
+        MobDisguise disg = new MobDisguise(disguise);
+        disg.setEntity(player);
+        disg.startDisguise();
     }
 
     public void destroyKit() {

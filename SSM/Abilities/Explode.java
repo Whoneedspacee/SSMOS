@@ -27,7 +27,7 @@ public class Explode extends Ability {
     public void activate(){
         cancel = 0;
         i = 0;
-        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 10L, 1L);
+        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 1L, 1L);
         Location location = owner.getLocation();
         Vector direction = location.getDirection();
 

@@ -7,6 +7,7 @@ import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -22,7 +23,7 @@ public class KitSkeleton extends Kit {
         this.speed = 0.21f;
         this.regeneration = 0.2;
         this.knockback = 0;
-
+        this.disguise = DisguiseType.SKELETON;
         this.name = "Skeleton";
     }
 

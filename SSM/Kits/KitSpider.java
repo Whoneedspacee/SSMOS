@@ -6,6 +6,7 @@ import SSM.Attributes.Climb;
 import SSM.Attributes.DoubleJumps.DirectDoubleJump;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,6 +22,7 @@ public class KitSpider extends Kit {
         this.speed = 0.21f;
         this.regeneration = 0.25;
         this.knockback = 0;
+        this.disguise = DisguiseType.SPIDER;
         this.name = "Spider";
         this.hasDirectDoubleJump = true;
         this.doubleJumpHeight = 0.1;
@@ -29,7 +31,6 @@ public class KitSpider extends Kit {
 
     public void equipKit(Player player) {
         super.equipKit(player);
-
         setArmor(Material.IRON_BOOTS, 0);
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);

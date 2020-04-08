@@ -4,6 +4,7 @@ import SSM.*;
 import SSM.Abilities.*;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ public class KitIronGolem extends Kit {
         this.speed = 0.18f;
         this.regeneration = 0.2;
         this.knockback = 0;
-
+        this.disguise = DisguiseType.IRON_GOLEM;
         this.name = "Iron_Golem";
     }
 
