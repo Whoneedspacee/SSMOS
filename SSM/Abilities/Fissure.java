@@ -6,18 +6,25 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class Fissure extends Ability {
 
-    int fissureLength = 14;
+    private int fissureLength = 14;
     int fissureHeight = 3;
-    double delay = 0.5;
-    int runn = -1;
-    int i = 0;
+    private double delay = 0.5;
+    private int runn = -1;
+    private int i = 0;
 
 
     public Fissure() {
@@ -48,6 +55,12 @@ public class Fissure extends Ability {
                     stop();
                 }
                 owner.getWorld().getBlockAt(blockHere).setType(material.getBlock().getType());
+                Collection<Entity> target = blockHere.getWorld().getNearbyEntities(blockHere, 1, 1, 1);
+                List<LivingEntity> targets = (List)target;
+                for (LivingEntity player : targets){
+                    player.damage(i+5);
+                    player.setVelocity(new Vector(0, i*0.5, 0));
+                }
                 if (i >= fissureLength){
                     stop();
                 }
