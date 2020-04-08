@@ -14,8 +14,6 @@ import org.bukkit.util.Vector;
 
 public class SulphurBomb extends Ability {
 
-    protected int sulphurAmount = 1;
-
     public SulphurBomb() {
         super();
         this.name = "Sulphur Bomb";
@@ -26,17 +24,13 @@ public class SulphurBomb extends Ability {
     public void activate() {
         owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_CREEPER_DEATH, 10L, 1L);
         ItemStack sulphur = new ItemStack(Material.COAL, 1);
-        for (int i = 0; i < sulphurAmount; i++) {
             Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), sulphur);
             BombProjectile projectile = new BombProjectile(plugin, owner, name, firing);
             projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
             projectile.launchProjectile();
-        }
     }
 
     class BombProjectile extends EntityProjectile {
-
-        protected double vanishTime = 4;
 
         public BombProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
             super(plugin, firer, name, projectile);

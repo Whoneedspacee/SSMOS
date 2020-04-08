@@ -1,6 +1,7 @@
 package SSM.Abilities;
 
 import SSM.*;
+import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LargeFireball;
 import org.bukkit.entity.Player;
@@ -25,6 +26,7 @@ public class MagmaBlast extends Ability {
     }
 
     public void activate() {
+        owner.getWorld().playSound(owner.getLocation(),Sound.ENTITY_CREEPER_DEATH,1,1);
         largeFireball = owner.launchProjectile(LargeFireball.class);
         largeFireball.setCustomName("MagmaBlast");
         largeFireball.setVelocity(owner.getEyeLocation().getDirection().multiply(1.0D));
