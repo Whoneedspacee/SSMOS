@@ -16,8 +16,10 @@ public class Blizzard extends Ability {
     public Blizzard() {
         super();
         this.name = "Blizzard";
-        this.cooldownTime = 0;
         this.rightClickActivate = true;
+        this.cooldownTime = 0;
+        this.expUsed = 0.2F;
+        this.usesEnergy = true;
     }
 
     public void activate() {

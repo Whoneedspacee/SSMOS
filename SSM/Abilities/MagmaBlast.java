@@ -20,7 +20,7 @@ public class MagmaBlast extends Ability {
 
     public MagmaBlast() {
         super();
-        this.name = "MagmaBlast";
+        this.name = "Magma Blast";
         this.cooldownTime = 8;
         this.rightClickActivate = true;
     }
