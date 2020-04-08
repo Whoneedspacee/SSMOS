@@ -18,6 +18,11 @@ public abstract class Ability extends Attribute {
     protected double cooldownTime = 2.5;
     protected boolean leftClickActivate = false;
     protected boolean rightClickActivate = false;
+    protected boolean usesEnergy = false;
+    protected float expUsed = 0;
+
+    float energy = 0;
+    float xp;
 
     public Ability() {
         super();
@@ -48,7 +53,19 @@ public abstract class Ability extends Attribute {
         if (CooldownManager.getInstance().getRemainingTimeFor(itemName, player) <= 0) {
             if (itemName.equalsIgnoreCase(name)) {
                 CooldownManager.getInstance().addCooldown(itemName, (long) (cooldownTime * 1000), player);
-                activate();
+                if(usesEnergy){
+                    energy = owner.getExp();
+                    xp = (owner.getExpToLevel()* expUsed)/owner.getExpToLevel();
+                    if (xp >= owner.getExp()){
+                        return;
+                    }
+                    owner.setExp(owner.getExp()-(xp));
+                    activate();
+                }
+                else{
+                    activate();
+                }
+
             }
         }
     }

@@ -1,5 +1,7 @@
 package SSM.GameManagers;
 
+import SSM.Kit;
+import SSM.SSM;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import org.bukkit.Bukkit;
@@ -71,7 +73,13 @@ public class CooldownManager extends BukkitRunnable {
      * @param abilityUser player using the ability (cooldownData linked with this player)
      */
     public void addCooldown(String abilityName, long duration, Player abilityUser) {
-        cooldownData.add(new CooldownData(abilityName, duration, abilityUser));
+        Kit kit = SSM.playerKit.get(abilityUser.getUniqueId());
+        if (duration == 0){
+            return;
+        }
+        else{
+            cooldownData.add(new CooldownData(abilityName, duration, abilityUser));
+        }
     }
 
     /**

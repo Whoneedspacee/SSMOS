@@ -34,6 +34,7 @@ public class Kit{
     protected double regeneration = 0;
     protected float speed = 0f;
     protected DisguiseType disguise;
+    protected double armor;
 
     protected boolean hasDirectDoubleJump = false;
     protected double doubleJumpHeight = 0.8;

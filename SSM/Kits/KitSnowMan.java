@@ -3,6 +3,7 @@ package SSM.Kits;
 import SSM.Abilities.Blizzard;
 import SSM.Ability;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
+import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
@@ -37,6 +38,6 @@ public class KitSnowMan extends Kit {
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1));
+        addAttribute(new ExpCharge(0.01F,1));
     }
-
 }

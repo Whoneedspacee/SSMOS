@@ -12,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
-
 import javax.xml.bind.ValidationException;
 import java.util.List;
 
@@ -39,7 +38,6 @@ public class FlameDash extends Ability {
     public void activate() {
         cancel = 0;
         DashLength = 19;
-        active = true;
         early = 0;
         i = 0;
         directionX = owner.getLocation().getDirection().getX();
@@ -59,14 +57,14 @@ public class FlameDash extends Ability {
                 if (early >= DashLength) {
                     stop();
                 }
+                if (i >= 1){
+                    active = true;
+                }
                 if (i >= 3.16666667) {
                     damage = 4;
                 }
                 if (i >= 6.33333334) {
                     damage = 5;
-                }
-                if (i >= 9.50000001) {
-                    damage = 6;
                 }
                 if (i >= 9.50000001) {
                     damage = 6;
