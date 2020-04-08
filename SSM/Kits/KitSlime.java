@@ -32,7 +32,7 @@ public class KitSlime extends Kit {
         setArmor(Material.CHAINMAIL_HELMET, 3);
 
         setItem(Material.IRON_SWORD, 0);
-        setItem(Material.IRON_AXE, 1);
+        setItem(Material.IRON_AXE, 1, new SlimeSlam());
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.9, 1));
