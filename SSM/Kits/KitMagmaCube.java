@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +18,7 @@ public class KitMagmaCube extends Kit {
         this.speed = 0.22f;
         this.regeneration = 0.3;
         this.knockback = 0;
-
+        this.disguise = DisguiseType.MAGMA_CUBE;
         this.name = "MagmaCube";
     }
 
