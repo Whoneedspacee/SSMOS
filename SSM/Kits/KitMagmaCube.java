@@ -29,6 +29,6 @@ public class KitMagmaCube extends Kit {
         setArmor(Material.CHAINMAIL_HELMET, 3);
 
         setItem(Material.IRON_AXE, 0, new MagmaBlast());
-        setItem(Material.IRON_SHOVEL, 1);
+        setItem(Material.IRON_SHOVEL, 1, new FlameDash());
     }
 }
