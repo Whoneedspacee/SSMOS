@@ -20,12 +20,11 @@ import java.util.List;
 
 public class Fissure extends Ability {
 
-    private int fissureLength = 14;
-    int fissureHeight = 3;
-    private double delay = 0.5;
-    private int runn = -1;
-    private int i = 0;
-
+    private int fissureLength = 13;
+    private int task = -1;
+    private int cycle = 0;
+    private Material type;
+    private ArrayList<Location> blocks = new ArrayList<>();
 
     public Fissure() {
         super();
@@ -35,43 +34,47 @@ public class Fissure extends Ability {
     }
 
     public void activate() {
-        if (!owner.isOnGround()){
-            return;
-        }
-        addBlock();
-    }
-    public void addBlock(){
-        Location location = owner.getLocation();
-        Vector direction = location.getDirection();
-        runn = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+        Location loc = owner.getLocation();
+        Vector dir = loc.getDirection();
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
             @Override
-            public void run() {
-                i++;
-                direction.multiply(1);
-                location.add(direction);
-                Location blockHere = new Location(owner.getWorld(), (int)location.getX(), (int)owner.getLocation().getY(), (int)location.getZ());
-                Location material = new Location(owner.getWorld(), (int)location.getX(), (int)owner.getLocation().getY()-1, (int)location.getZ());
-                if (material.getBlock().isPassable()){
+            public void run(){
+                cycle++;
+                layerOne(dir, loc);
+                if (cycle >= fissureLength){
                     stop();
-                }
-                owner.getWorld().getBlockAt(blockHere).setType(material.getBlock().getType());
-                Collection<Entity> target = blockHere.getWorld().getNearbyEntities(blockHere, 1, 1, 1);
-                List<LivingEntity> targets = (List)target;
-                for (LivingEntity player : targets){
-                    player.damage(i+5);
-                    player.setVelocity(new Vector(0, i*0.5, 0));
-                }
-                if (i >= fissureLength){
-                    stop();
+                    cycle = 0;
                 }
             }
-        }, 0, (long) delay * 20);
-
+        }, 0L, 2L
+        );
     }
+
+
+    public void layerOne(Vector dir, Location loc) {
+        dir.multiply(1);
+        loc.add(dir);
+        loc.setY(owner.getLocation().getY());
+        type = new Location(loc.getWorld(), loc.getX(), loc.getY() - 1, loc.getZ()).getBlock().getType();
+        loc.getBlock().setType(type);
+        blocks.add(loc);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                layerTwo(loc);
+            }
+        }, 1L);
+    }
+
+    public void layerTwo(Location loc) {
+        loc.getWorld().getBlockAt(new Location(loc.getWorld(), loc.getX(), loc.getY() + 1, loc.getZ())).setType(type);
+        blocks.add(new Location(loc.getWorld(), loc.getX(), loc.getY()+1, loc.getZ()));
+    }
+
 
     private void stop(){
-        i = 0;
-        Bukkit.getScheduler().cancelTask(runn);
+        Bukkit.getScheduler().cancelTask(task);
     }
+
 
 }
