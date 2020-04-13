@@ -30,11 +30,11 @@ public class Kit{
     // used for finding the kit to equip on command, ex: /kit name
     protected String name = "";
     protected int damage = 0;
+    protected double armor = 0;
     protected double knockback = 0;
     protected double regeneration = 0;
     protected float speed = 0f;
     protected DisguiseType disguise;
-    protected double armor;
 
     protected boolean hasDirectDoubleJump = false;
     protected double doubleJumpHeight = 0.8;

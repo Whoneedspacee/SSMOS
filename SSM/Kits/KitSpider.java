@@ -19,6 +19,7 @@ public class KitSpider extends Kit {
         super();
 
         this.damage = 6;
+        this.armor = 5.5;
         this.speed = 0.21f;
         this.regeneration = 0.25;
         this.knockback = 0;

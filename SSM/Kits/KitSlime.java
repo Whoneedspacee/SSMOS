@@ -17,6 +17,7 @@ public class KitSlime extends Kit {
         super();
 
         this.damage = 6;
+        this.armor = 4;
         this.speed = 0.21f;
         this.regeneration = 0.35;
         this.knockback = 0;

@@ -1,6 +1,7 @@
 package SSM.Abilities;
 
 import SSM.*;
+import SSM.GameManagers.DamageManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
