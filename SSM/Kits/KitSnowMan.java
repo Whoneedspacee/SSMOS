@@ -18,6 +18,7 @@ public class KitSnowMan extends Kit {
         super();
 
         this.damage = 7;
+        this.armor = 6;
         this.speed = 0.23f;
         this.regeneration = 0.2;
         this.knockback = 0;

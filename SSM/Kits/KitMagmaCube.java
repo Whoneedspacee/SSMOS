@@ -15,6 +15,7 @@ public class KitMagmaCube extends Kit {
         super();
 
         this.damage = 5;
+        this.armor = 4;
         this.speed = 0.22f;
         this.regeneration = 0.3;
         this.knockback = 0;

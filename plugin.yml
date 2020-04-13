@@ -8,3 +8,6 @@ commands:
   kit:
     description: 'Applies the kit of the name entered'
     usage: /kit KitName
+  damage:
+    description: 'Inflicts the damage proposed'
+    usage: /damage number

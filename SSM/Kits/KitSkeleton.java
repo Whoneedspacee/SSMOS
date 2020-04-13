@@ -20,6 +20,7 @@ public class KitSkeleton extends Kit {
         super();
 
         this.damage = 5;
+        this.armor = 6;
         this.speed = 0.21f;
         this.regeneration = 0.2;
         this.knockback = 0;

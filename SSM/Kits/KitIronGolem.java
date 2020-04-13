@@ -17,6 +17,7 @@ public class KitIronGolem extends Kit {
         super();
 
         this.damage = 7;
+        this.armor = 8;
         this.speed = 0.18f;
         this.regeneration = 0.2;
         this.knockback = 0;

@@ -20,6 +20,7 @@ public class KitCreeper extends Kit {
     public KitCreeper() {
         super();
         this.damage = 6;
+        this.armor = 4;
         this.speed = 0.21f;
         this.regeneration = 0.4;
         this.knockback = 0;

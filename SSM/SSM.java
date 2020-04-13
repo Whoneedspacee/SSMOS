@@ -2,6 +2,7 @@ package SSM;
 
 import SSM.GameManagers.CooldownManager;
 import SSM.GameManagers.DJManager;
+import SSM.GameManagers.DamageManager;
 import SSM.Kits.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,9 +12,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -89,6 +92,14 @@ public class SSM extends JavaPlugin implements Listener {
             }
             player.sendMessage(finalMessage);
             return true;
+        }else if (cmd.getName().equalsIgnoreCase("damage")){
+            if (args.length == 1){
+                Player player = (Player)sender;
+                Kit kit = playerKit.get(player.getUniqueId());
+                player.damage(DamageManager.finalDamage(Integer.parseInt(args[0]), kit.armor));
+                player.sendMessage("You were dealt "+Integer.parseInt(args[0])+" damage");
+
+            }
         }
         return false;
     }
@@ -150,7 +161,32 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
+    public void meleeDamage(EntityDamageByEntityEvent e){
+        if (!(e.getDamager() instanceof Player)){
+            return;
+        }
+        if (!(e.getEntity() instanceof Player)){
+            Player damager = (Player)e.getDamager();
+            LivingEntity target = (LivingEntity)e.getEntity();
+            Kit damagerKit = playerKit.get(damager.getUniqueId());
+            target.damage(DamageManager.finalDamage(damagerKit.damage, 0));
+        }
+        e.setCancelled(true);
+        Player damager = (Player)e.getDamager();
+        LivingEntity target = (LivingEntity)e.getEntity();
+        Kit damagerKit = playerKit.get(damager.getUniqueId());
+        Kit targetKit = playerKit.get(target.getUniqueId());
+        target.damage(DamageManager.finalDamage(damagerKit.damage, targetKit.armor));
+        Vector enemy = target.getLocation().toVector();
+        Vector player = damager.getLocation().toVector();
+        Vector pre = enemy.subtract(player);
+        Vector velocity = pre.normalize().multiply(damagerKit.damage/2.5);
+        target.setVelocity(new Vector(velocity.getX(), 0.45, velocity.getZ()));
+    }
+
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e){
         Player player = e.getPlayer();
         String name = player.getDisplayName();
         e.setQuitMessage(ChatColor.YELLOW + name + " has fucking rage quit, what a fucking bitch LOL");
