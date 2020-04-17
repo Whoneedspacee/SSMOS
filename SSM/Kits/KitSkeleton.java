@@ -26,6 +26,7 @@ public class KitSkeleton extends Kit {
         this.knockback = 0;
         this.disguise = DisguiseType.SKELETON;
         this.name = "Skeleton";
+        this.menuItem = new ItemStack(Material.BOW);
     }
 
     public void equipKit(Player player) {

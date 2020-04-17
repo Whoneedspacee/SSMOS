@@ -23,6 +23,7 @@ public class KitIronGolem extends Kit {
         this.knockback = 0;
         this.disguise = DisguiseType.IRON_GOLEM;
         this.name = "Iron_Golem";
+        this.menuItem = new ItemStack(Material.IRON_BLOCK);
     }
 
     public void equipKit(Player player) {

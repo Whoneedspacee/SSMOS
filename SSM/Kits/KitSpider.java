@@ -28,6 +28,7 @@ public class KitSpider extends Kit {
         this.hasDirectDoubleJump = true;
         this.doubleJumpHeight = 0.1;
         this.doubleJumpPower = 1.5;
+        this.menuItem = new ItemStack(Material.SPIDER_EYE);
     }
 
     public void equipKit(Player player) {

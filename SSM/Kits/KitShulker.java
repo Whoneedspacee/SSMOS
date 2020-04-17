@@ -20,6 +20,7 @@ public class KitShulker extends Kit {
         this.regeneration = 0.2;
         this.knockback = 0;
         this.name = "Shulker";
+        this.menuItem = new ItemStack(Material.SHULKER_SHELL);
     }
 
     public void equipKit(Player player) {

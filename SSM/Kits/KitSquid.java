@@ -26,8 +26,9 @@ public class KitSquid extends Kit {
         this.speed = 0.24f;
         this.regeneration = 0.25;
         this.knockback = 0;
-        this.name = "SkySquid";
+        this.name = "Sky_Squid";
         this.disguise = DisguiseType.SQUID;
+        this.menuItem = new ItemStack(Material.INK_SAC);
     }
 
     public void equipKit(Player player) {

@@ -1,8 +1,8 @@
 package SSM;
 
 import SSM.Abilities.SelectKit;
+import SSM.Commands.*;
 import SSM.GameManagers.CooldownManager;
-import SSM.GameManagers.DamageManager;
 import SSM.Kits.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -21,6 +21,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -33,6 +36,7 @@ public class SSM extends JavaPlugin implements Listener {
 
     public static HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
     public static Kit[] allKits;
+    public static CustomCommand[] allCommands;
     public static Plugin ourInstance;
 
     public static void main(String[] args) {
@@ -50,17 +54,23 @@ public class SSM extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
 
         allKits = new Kit[]{
-            new KitCreeper(),
-            new KitIronGolem(),
+            //Put in order of how kits appear (It affects ordering).
             new KitSkeleton(),
-            new KitSlime(),
+            new KitIronGolem(),
             new KitSpider(),
-            new KitWitch(),
-            new KitShulker(),
+            new KitSlime(),
             new KitSquid(),
+            new KitCreeper(),
             new KitSnowMan(),
             new KitMagmaCube(),
+            new KitWitch(),
+            new KitShulker(),
             new KitChoose(),
+        };
+        allCommands = new CustomCommand[]{
+                new kit(),
+                new damage(),
+                new rank(),
         };
 
         CooldownManager.getInstance().start(this);
@@ -72,38 +82,20 @@ public class SSM extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("kit")) {
-            if (!(sender instanceof Player)) {
-                return true;
-            }
-            Player player = (Player) sender;
-            if (args.length == 1) {
-                for (Kit check : allKits) {
-                    if (check.name.equalsIgnoreCase(args[0])) {
-                        equipPlayer(player, check);
-                        return true;
-                    }
-                }
-            }
-            String finalMessage = "Kit Choices: ";
-            for (Kit kit : allKits) {
-                finalMessage += kit.getName() + " ";
-            }
-            player.sendMessage(finalMessage);
+        if (!(sender instanceof Player)) {
             return true;
-        }else if (cmd.getName().equalsIgnoreCase("damage")){
-            if (args.length == 1){
-                Player player = (Player)sender;
-                Kit kit = playerKit.get(player.getUniqueId());
-                player.damage(DamageManager.finalDamage(Integer.parseInt(args[0]), kit.armor));
-                player.sendMessage("You were dealt "+Integer.parseInt(args[0])+" damage");
-
+        }
+        Player p = (Player)sender;
+        for (CustomCommand command : allCommands){
+            if (cmd.getName().equalsIgnoreCase(command.name)){
+                command.activate(p, args);
+                return true;
             }
         }
         return false;
     }
 
-    public void equipPlayer(Player player, Kit check) {
+    public static void equipPlayer(Player player, Kit check) {
         Kit kit = playerKit.get(player.getUniqueId());
         if (kit != null) {
             kit.destroyKit();
@@ -140,7 +132,7 @@ public class SSM extends JavaPlugin implements Listener {
             Location loc = player.getLocation();
             Vector dir = loc.getDirection();
             dir.normalize();
-            dir.multiply(10); //5 blocks a way
+            dir.multiply(10);
             loc.add(dir);
             player.teleport(loc);
         }
@@ -152,7 +144,8 @@ public class SSM extends JavaPlugin implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event){
         String msg = event.getMessage();
-        msg = msg.replace(":b:", ""+ChatColor.RED + ChatColor.BOLD + "B" +ChatColor.RESET);
+        event.setFormat(event.getPlayer().getDisplayName()+" "+msg);
+        msg = msg.replace(":b:", ""+ChatColor.DARK_RED + ChatColor.BOLD + "B" +ChatColor.RESET);
         event.setMessage(msg);
         }
 
@@ -175,14 +168,14 @@ public class SSM extends JavaPlugin implements Listener {
             Player damager = (Player)e.getDamager();
             LivingEntity target = (LivingEntity)e.getEntity();
             Kit damagerKit = playerKit.get(damager.getUniqueId());
-            target.damage(DamageManager.finalDamage(damagerKit.damage, 0));
+            target.damage(damagerKit.damage);
         }
         e.setCancelled(true);
         Player damager = (Player)e.getDamager();
         LivingEntity target = (LivingEntity)e.getEntity();
         Kit damagerKit = playerKit.get(damager.getUniqueId());
         Kit targetKit = playerKit.get(target.getUniqueId());
-        target.damage(DamageManager.finalDamage(damagerKit.damage, targetKit.armor));
+        target.damage(damagerKit.damage);
         Vector enemy = target.getLocation().toVector();
         Vector player = damager.getLocation().toVector();
         Vector pre = enemy.subtract(player);
@@ -200,7 +193,7 @@ public class SSM extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
         Player player = e.getPlayer();
-        player.performCommand("kit Selecting");
+
         if (player.getName().equals("huxs")||player.getName().equalsIgnoreCase("RyukoMatoiKLK")||player.getName().equalsIgnoreCase("Whoneedspacee")){
             player.setDisplayName(""+ChatColor.MAGIC + ChatColor.BOLD + "N"+ChatColor.DARK_PURPLE + ChatColor.BOLD + "Developer" +ChatColor.RESET +ChatColor.MAGIC + ChatColor.BOLD + "N" + ChatColor.RESET + ChatColor.DARK_RED + " " +player.getName() + ChatColor.RESET);
         }
