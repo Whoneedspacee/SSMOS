@@ -152,7 +152,7 @@ public class SSM extends JavaPlugin implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event){
         String msg = event.getMessage();
-        msg = msg.replace(":b:", ""+ChatColor.RED + ChatColor.BOLD + "B");
+        msg = msg.replace(":b:", ""+ChatColor.RED + ChatColor.BOLD + "B" +ChatColor.RESET);
         event.setMessage(msg);
         }
 
