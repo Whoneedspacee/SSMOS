@@ -7,6 +7,7 @@ import SSM.Attributes.Regeneration;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitCreeper extends Kit {
 
@@ -19,6 +20,7 @@ public class KitCreeper extends Kit {
         this.knockback = 0;
         this.disguise = DisguiseType.CREEPER;
         this.name = "Creeper";
+        this.menuItem = new ItemStack(Material.GUNPOWDER);
     }
 
     public void equipKit(Player player) {

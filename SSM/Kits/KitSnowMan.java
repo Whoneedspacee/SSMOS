@@ -23,7 +23,8 @@ public class KitSnowMan extends Kit {
         this.regeneration = 0.2;
         this.knockback = 0;
         this.disguise = DisguiseType.SNOWMAN;
-        this.name = "SnowMan";
+        this.name = "Snowman";
+        this.menuItem = new ItemStack(Material.SNOWBALL);
     }
 
     public void equipKit(Player player) {

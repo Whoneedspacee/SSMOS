@@ -11,3 +11,6 @@ commands:
   damage:
     description: 'Inflicts the damage proposed'
     usage: /damage number
+  rank:
+    description: 'Gives you a rank'
+    usage: /rank rank

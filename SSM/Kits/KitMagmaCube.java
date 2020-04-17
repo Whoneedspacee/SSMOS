@@ -20,7 +20,8 @@ public class KitMagmaCube extends Kit {
         this.regeneration = 0.3;
         this.knockback = 0;
         this.disguise = DisguiseType.MAGMA_CUBE;
-        this.name = "MagmaCube";
+        this.name = "Magma_Cube";
+        this.menuItem = new ItemStack(Material.FIRE_CHARGE);
     }
 
     public void equipKit(Player player) {
