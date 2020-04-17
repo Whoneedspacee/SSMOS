@@ -1,5 +1,7 @@
 package SSM.GameManagers;
 
+import org.bukkit.entity.Player;
+
 public class DamageManager {
 
     public static double finalDamage(double damage, double armor){

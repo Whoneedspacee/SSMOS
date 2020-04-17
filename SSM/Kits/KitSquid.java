@@ -4,8 +4,12 @@ import SSM.Abilities.InkShotgun;
 import SSM.Abilities.SpinWeb;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
+import SSM.Attributes.SquidFix;
 import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
+import me.libraryaddict.disguise.disguisetypes.MobDisguise;
+import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
+import me.libraryaddict.disguise.disguisetypes.watchers.SquidWatcher;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +21,6 @@ public class KitSquid extends Kit {
 
     public KitSquid() {
         super();
-
         this.damage = 6;
         this.armor = 5;
         this.speed = 0.24f;
@@ -40,6 +43,6 @@ public class KitSquid extends Kit {
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1));
+        addAttribute(new SquidFix());
     }
-
 }
