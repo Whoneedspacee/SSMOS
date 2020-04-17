@@ -20,9 +20,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -150,6 +148,13 @@ public class SSM extends JavaPlugin implements Listener {
             player.setHealth(0.0);
         }
     }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event){
+        String msg = event.getMessage();
+        msg = msg.replace(":b:", ""+ChatColor.RED + ChatColor.BOLD + "B");
+        event.setMessage(msg);
+        }
 
     @EventHandler
     public void stopHealthRegen(EntityRegainHealthEvent e) {
