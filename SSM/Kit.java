@@ -2,6 +2,7 @@ package SSM;
 
 import me.libraryaddict.disguise.LibsDisguises;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
+import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -57,6 +58,8 @@ public class Kit{
         player.setExp(0);
         MobDisguise disg = new MobDisguise(disguise);
         disg.setEntity(player);
+        FlagWatcher watcher = disg.getWatcher();
+        watcher.setCustomName(""+owner.getName());
         disg.startDisguise();
     }
 

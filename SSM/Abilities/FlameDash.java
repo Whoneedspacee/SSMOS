@@ -1,6 +1,11 @@
 package SSM.Abilities;
 
 import SSM.Ability;
+import me.libraryaddict.disguise.disguisetypes.Disguise;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
+import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
+import me.libraryaddict.disguise.disguisetypes.MobDisguise;
+import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -14,11 +19,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 import javax.xml.bind.ValidationException;
 import java.util.List;
+import me.libraryaddict.disguise.LibsDisguises;
+import me.libraryaddict.*;
 
 public class FlameDash extends Ability {
 
     int DashLength = 19;
-    int runn = -1;
     int Dash = -1;
     int i = 0;
     int cancel = 0;
@@ -27,6 +33,8 @@ public class FlameDash extends Ability {
     boolean active = false;
     int damage = 0;
     int early = 0;
+    int cancelable = -1;
+    int size = 1;
 
     public FlameDash() {
         super();
@@ -36,14 +44,21 @@ public class FlameDash extends Ability {
     }
 
     public void activate() {
+        active = false;
         cancel = 0;
         DashLength = 19;
         early = 0;
         i = 0;
+        MobDisguise disg = new MobDisguise(DisguiseType.MAGMA_CUBE);
+        disg.setEntity(owner);
+        SlimeWatcher watcher = (SlimeWatcher) disg.getWatcher();
+        watcher.setInvisible(true);
+        watcher.setCustomNameVisible(false);
+        watcher.setSize(size);
+        disg.startDisguise();
         directionX = owner.getLocation().getDirection().getX();
         directionZ = owner.getLocation().getDirection().getZ();
         damage = 3;
-
 
         Dash = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
@@ -56,9 +71,6 @@ public class FlameDash extends Ability {
                 owner.getWorld().playSound(owner.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1, 2);
                 if (early >= DashLength) {
                     stop();
-                }
-                if (i >= 1){
-                    active = true;
                 }
                 if (i >= 3.16666667) {
                     damage = 4;
@@ -80,17 +92,30 @@ public class FlameDash extends Ability {
                 }
             }
         }, 0, 1);
+
+        cancelable = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if (i >= 1.5){
+                    active = true;
+                    Bukkit.getScheduler().cancelTask(cancelable);
+                }
+            }
+        },0,1);
     }
 
     @EventHandler
     public void onEarlyExplode(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if (e.getAction() == Action.RIGHT_CLICK_AIR && active || e.getAction() == Action.RIGHT_CLICK_BLOCK && active) {
+        player.getInventory();
+        if (e.getAction() == Action.RIGHT_CLICK_AIR && active && player.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase("Flame Dash") || e.getAction() == Action.RIGHT_CLICK_BLOCK && active && player.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase("Flame Dash")) {
+            active = false;
             stop();
         }
     }
 
     private void stop() {
+        active = false;
         Bukkit.getScheduler().cancelTask(Dash);
         run2();
     }
@@ -101,6 +126,14 @@ public class FlameDash extends Ability {
         owner.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, owner.getLocation(), 1);
         List<Entity> canHit = owner.getNearbyEntities(2, 2, 2);
         canHit.remove(owner);
+        MobDisguise disg = new MobDisguise(DisguiseType.MAGMA_CUBE);
+        disg.setEntity(owner);
+        SlimeWatcher watcher = (SlimeWatcher) disg.getWatcher();
+        watcher.setInvisible(false);
+        watcher.setCustomNameVisible(true);
+        watcher.setCustomName(""+owner.getName());
+        watcher.setSize(size);
+        disg.startDisguise();
 
         for (Entity entity : canHit) {
             if ((entity instanceof LivingEntity)) {

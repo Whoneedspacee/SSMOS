@@ -1,7 +1,7 @@
 package SSM;
 
+import SSM.Abilities.SelectKit;
 import SSM.GameManagers.CooldownManager;
-import SSM.GameManagers.DJManager;
 import SSM.GameManagers.DamageManager;
 import SSM.Kits.*;
 import org.bukkit.ChatColor;
@@ -17,15 +17,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
@@ -49,6 +48,7 @@ public class SSM extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         ourInstance = this;
+        getServer().getPluginManager().registerEvents(new SelectKit.ClickEvent(), this);
         getServer().getPluginManager().registerEvents(this, this);
 
         allKits = new Kit[]{
@@ -62,6 +62,7 @@ public class SSM extends JavaPlugin implements Listener {
             new KitSquid(),
             new KitSnowMan(),
             new KitMagmaCube(),
+            new KitChoose(),
         };
 
         CooldownManager.getInstance().start(this);
@@ -191,17 +192,20 @@ public class SSM extends JavaPlugin implements Listener {
         String name = player.getDisplayName();
         e.setQuitMessage(ChatColor.YELLOW + name + " has fucking rage quit, what a fucking bitch LOL");
     }
-
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e){
+        Player player = e.getPlayer();
+        player.performCommand("kit Selecting");
+        if (player.getName().equals("huxs")||player.getName().equalsIgnoreCase("RyukoMatoiKLK")||player.getName().equalsIgnoreCase("Whoneedspacee")){
+            player.setDisplayName(""+ChatColor.MAGIC + ChatColor.BOLD + "N"+ChatColor.DARK_PURPLE + ChatColor.BOLD + "Developer" +ChatColor.RESET +ChatColor.MAGIC + ChatColor.BOLD + "N" + ChatColor.RESET + ChatColor.DARK_RED + " " +player.getName() + ChatColor.RESET);
+        }
+        if (player.getName().equalsIgnoreCase("HDSbjIhdihdgh2sf")){
+            player.setDisplayName("" + ChatColor.BLUE + ChatColor.BOLD + "Mag" + ChatColor.RESET + ChatColor.GOLD + " " + player.getName() + ChatColor.RESET);
+        }
+    }
+    @EventHandler
+    public void whenHit(EntityDamageEvent e){
+        Entity entity = e.getEntity();
+        entity.getServer().broadcastMessage(""+ChatColor.BOLD + ChatColor.LIGHT_PURPLE+e.getCause());
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
