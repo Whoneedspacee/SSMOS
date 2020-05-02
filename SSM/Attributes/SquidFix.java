@@ -21,14 +21,6 @@ public class SquidFix extends Attribute {
 
     @Override
     public void run() {
-        List<Entity> canHit = owner.getNearbyEntities(10, 10, 10);
-        canHit.remove(owner);
-
-        for (Entity entity : canHit) {
-            switch ((entity.getType())) {
-                case SQUID:
-                    entity.setVelocity(new Vector(0, 0, 0));
-            }
-        }
+        owner.setNoDamageTicks(-1);
     }
 }

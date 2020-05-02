@@ -2,6 +2,7 @@ package SSM.Commands;
 
 import SSM.CustomCommand;
 import SSM.Kit;
+import SSM.SSM;
 import org.bukkit.entity.Player;
 
 import static SSM.SSM.allKits;
@@ -19,6 +20,12 @@ public class kit extends CustomCommand {
             for (Kit check : allKits) {
                 if (check.getName().equalsIgnoreCase(args[0])) {
                     equipPlayer(player, check);
+                    if (SSM.playerKit.containsKey(player.getUniqueId())){
+                        SSM.playerKit.remove(player.getUniqueId());
+                        SSM.playerKit.put(player.getUniqueId(), check);
+                    } else {
+                        SSM.playerKit.put(player.getUniqueId(), check);
+                    }
                     validKit = true;
                     break;
                 }
@@ -31,6 +38,5 @@ public class kit extends CustomCommand {
             }
             player.sendMessage(finalMessage.replace("_", " "));
         }
-
     }
 }

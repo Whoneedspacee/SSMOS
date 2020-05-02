@@ -6,8 +6,6 @@ import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 public class KitMagmaCube extends Kit {
 
@@ -18,7 +16,7 @@ public class KitMagmaCube extends Kit {
         this.armor = 4;
         this.speed = 0.22f;
         this.regeneration = 0.3;
-        this.knockback = 0;
+        this.knockbackTaken = 0;
         this.disguise = DisguiseType.MAGMA_CUBE;
         this.name = "Magma_Cube";
         this.menuItem = new ItemStack(Material.FIRE_CHARGE);

@@ -3,6 +3,7 @@ package SSM.Abilities;
 import SSM.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Listener;;
@@ -48,7 +49,7 @@ public class SeismicSlam extends Ability {
 
     public void land() {
         active = false;
-        owner.getWorld().playSound(owner.getLocation(), Sound.BLOCK_STONE_BREAK, 10, 1);
+        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, 10, 1);
         List<Entity> canHit = owner.getNearbyEntities(6, 4, 6);
         canHit.remove(owner);
 

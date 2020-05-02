@@ -10,7 +10,6 @@ public class rank extends CustomCommand {
 
     private HashMap<String, ChatColor> ranks = new HashMap<>();
 
-
     public rank(){
         this.name = "rank";
         ranks.put("ETERNAL", ChatColor.DARK_AQUA);
@@ -26,7 +25,7 @@ public class rank extends CustomCommand {
     public void activate(Player player, String[] args){
         for (String rank : ranks.keySet()){
             if (args[0].equalsIgnoreCase(rank)){
-                player.setDisplayName(""+ChatColor.BOLD+""+ranks.get(rank)+""+rank.toUpperCase()+""+ChatColor.RESET+ChatColor.YELLOW+" "+player.getName()+ChatColor.RESET);
+                player.setDisplayName(""+ChatColor.BOLD+""+ranks.get(rank)+ ChatColor.BOLD +rank.toUpperCase()+""+ChatColor.RESET+ChatColor.YELLOW+" "+player.getName()+ChatColor.RESET);
 
             }
         }

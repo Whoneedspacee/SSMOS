@@ -7,12 +7,11 @@ import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
+import SSM.Attributes.SquidFix;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 public class KitSkeleton extends Kit {
 
@@ -23,7 +22,7 @@ public class KitSkeleton extends Kit {
         this.armor = 6;
         this.speed = 0.21f;
         this.regeneration = 0.2;
-        this.knockback = 0;
+        this.knockbackTaken = 0;
         this.disguise = DisguiseType.SKELETON;
         this.name = "Skeleton";
         this.menuItem = new ItemStack(Material.BOW);
@@ -44,6 +43,7 @@ public class KitSkeleton extends Kit {
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1));
         addAttribute(new Barrage(1.1, 0.25, 5));
+        addAttribute(new SquidFix());
     }
 
 }

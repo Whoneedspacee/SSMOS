@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -59,7 +60,7 @@ public class EntityProjectile extends BukkitRunnable {
         this.data = new double[]{0, 0, 0, 0, 0, 0};
     }
 
-    public double getRandomVariation() {
+    public double getRandomVariation() { //This is how random variation on entity projectiles is calculated
         double variation = getVariation();
         double randomAngle = Math.random() * variation / 2;
         if (new Random().nextBoolean()) {
@@ -68,7 +69,7 @@ public class EntityProjectile extends BukkitRunnable {
         return randomAngle * Math.PI / 180;
     }
 
-    public void launchProjectile() {
+    public void launchProjectile() { //This is the code for creating entity projectiles and adding velocity to them
         if (fired) {
             return;
         }
@@ -96,13 +97,13 @@ public class EntityProjectile extends BukkitRunnable {
     }
 
     @Override
-    public void run() {
-        if (projectile.isDead() || !projectile.isDead() && projectile.isOnGround()) {
+    public void run() { //This is the code for deleting the entity projectile when it hits the ground
+        if (projectile.isDead() || !projectile.isDead() && projectile.isOnGround() ) {
             onHit(null);
             this.cancel();
             return;
         }
-        double hitboxRange = getHitboxSize();
+        double hitboxRange = getHitboxSize(); //This is the code for setting the hitbox of an entity projectile
         List<Entity> canHit = projectile.getNearbyEntities(hitboxRange, hitboxRange, hitboxRange);
         canHit.remove(projectile);
         canHit.remove(firer);
@@ -120,7 +121,7 @@ public class EntityProjectile extends BukkitRunnable {
         }
     }
 
-    public boolean onHit(LivingEntity target) {
+    public boolean onHit(LivingEntity target) { //This is the code for dealing knockback and damage to the person an entity projectile hits
         boolean success = target != null;
         if (success) {
             double damage = getDamage();

@@ -66,8 +66,8 @@ public class FlameDash extends Ability {
                 early++;
                 i++;
                 owner.setVelocity(new Vector(directionX, 0, directionZ));
-                owner.spawnParticle(Particle.FLAME, owner.getLocation(), 1);
-                owner.spawnParticle(Particle.FLAME, owner.getLocation(), 1);
+                owner.getWorld().spawnParticle(Particle.FLAME, owner.getLocation(), 1);
+                owner.getWorld().spawnParticle(Particle.FLAME, owner.getLocation(), 1);
                 owner.getWorld().playSound(owner.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1, 2);
                 if (early >= DashLength) {
                     stop();

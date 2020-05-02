@@ -17,7 +17,7 @@ public class KitCreeper extends Kit {
         this.armor = 4;
         this.speed = 0.21f;
         this.regeneration = 0.4;
-        this.knockback = 0;
+        this.knockbackTaken = 0;
         this.disguise = DisguiseType.CREEPER;
         this.name = "Creeper";
         this.menuItem = new ItemStack(Material.GUNPOWDER);

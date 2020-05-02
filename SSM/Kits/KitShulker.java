@@ -7,8 +7,6 @@ import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 public class KitShulker extends Kit {
 
@@ -18,7 +16,7 @@ public class KitShulker extends Kit {
         this.damage = 5;
         this.speed = 0.15f;
         this.regeneration = 0.2;
-        this.knockback = 0;
+        this.knockbackTaken = 0;
         this.name = "Shulker";
         this.menuItem = new ItemStack(Material.SHULKER_SHELL);
     }

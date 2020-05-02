@@ -1,15 +1,12 @@
 package SSM.Kits;
 
 import SSM.*;
-import SSM.Abilities.*;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 public class KitWitch extends Kit {
 
@@ -20,7 +17,7 @@ public class KitWitch extends Kit {
         this.armor = 5;
         this.speed = 0.21f;
         this.regeneration = 0.3;
-        this.knockback = 0;
+        this.knockbackTaken = 0;
         this.disguise = DisguiseType.WITCH;
         this.name = "Witch";
         this.menuItem = new ItemStack(Material.POTION);

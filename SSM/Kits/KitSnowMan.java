@@ -1,7 +1,6 @@
 package SSM.Kits;
 
 import SSM.Abilities.Blizzard;
-import SSM.Ability;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
@@ -10,7 +9,6 @@ import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 public class KitSnowMan extends Kit {
 
@@ -21,7 +19,7 @@ public class KitSnowMan extends Kit {
         this.armor = 6;
         this.speed = 0.23f;
         this.regeneration = 0.2;
-        this.knockback = 0;
+        this.knockbackTaken = 0;
         this.disguise = DisguiseType.SNOWMAN;
         this.name = "Snowman";
         this.menuItem = new ItemStack(Material.SNOWBALL);

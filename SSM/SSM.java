@@ -1,25 +1,24 @@
 package SSM;
 
+import SSM.Abilities.Firefly;
 import SSM.Abilities.SelectKit;
 import SSM.Commands.*;
 import SSM.GameManagers.CooldownManager;
 import SSM.Kits.*;
+import net.minecraft.server.v1_15_R1.DamageSource;
+import net.minecraft.server.v1_15_R1.LightEngineLayerEventListener;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.TreeType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +32,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class SSM extends JavaPlugin implements Listener {
+
+    int i = 0;
 
     public static HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
     public static Kit[] allKits;
@@ -50,22 +51,25 @@ public class SSM extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         ourInstance = this;
+        getServer().getPluginManager().registerEvents(new CustomPvP(),this);
         getServer().getPluginManager().registerEvents(new SelectKit.ClickEvent(), this);
+        getServer().getPluginManager().registerEvents(new Firefly(), this);
         getServer().getPluginManager().registerEvents(this, this);
 
         allKits = new Kit[]{
-            //Put in order of how kits appear (It affects ordering).
-            new KitSkeleton(),
-            new KitIronGolem(),
-            new KitSpider(),
-            new KitSlime(),
-            new KitSquid(),
-            new KitCreeper(),
-            new KitSnowMan(),
-            new KitMagmaCube(),
-            new KitWitch(),
-            new KitShulker(),
-            new KitChoose(),
+                //Put in order of how kits appear (It affects ordering).
+                new KitSkeleton(),
+                new KitIronGolem(),
+                new KitSpider(),
+                new KitSlime(),
+                new KitSquid(),
+                new KitCreeper(),
+                new KitSnowMan(),
+                new KitMagmaCube(),
+                new KitWitch(),
+                new KitBlaze(),
+                new KitShulker(),
+                new KitChoose(),
         };
         allCommands = new CustomCommand[]{
                 new kit(),
@@ -85,9 +89,9 @@ public class SSM extends JavaPlugin implements Listener {
         if (!(sender instanceof Player)) {
             return true;
         }
-        Player p = (Player)sender;
-        for (CustomCommand command : allCommands){
-            if (cmd.getName().equalsIgnoreCase(command.name)){
+        Player p = (Player) sender;
+        for (CustomCommand command : allCommands) {
+            if (cmd.getName().equalsIgnoreCase(command.name)) {
                 command.activate(p, args);
                 return true;
             }
@@ -142,12 +146,12 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent event){
+    public void onChat(AsyncPlayerChatEvent event) {
         String msg = event.getMessage();
-        event.setFormat(event.getPlayer().getDisplayName()+" "+msg);
-        msg = msg.replace(":b:", ""+ChatColor.DARK_RED + ChatColor.BOLD + "B" +ChatColor.RESET);
+        event.setFormat(event.getPlayer().getDisplayName() + " " + msg);
+        msg = msg.replace(":b:", "" + ChatColor.DARK_RED + ChatColor.BOLD + "B" + ChatColor.RESET);
         event.setMessage(msg);
-        }
+    }
 
     @EventHandler
     public void stopHealthRegen(EntityRegainHealthEvent e) {
@@ -160,50 +164,35 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void meleeDamage(EntityDamageByEntityEvent e){
-        if (!(e.getDamager() instanceof Player)){
-            return;
-        }
-        if (!(e.getEntity() instanceof Player)){
-            Player damager = (Player)e.getDamager();
-            LivingEntity target = (LivingEntity)e.getEntity();
-            Kit damagerKit = playerKit.get(damager.getUniqueId());
-            target.damage(damagerKit.damage);
-        }
-        e.setCancelled(true);
-        Player damager = (Player)e.getDamager();
-        LivingEntity target = (LivingEntity)e.getEntity();
-        Kit damagerKit = playerKit.get(damager.getUniqueId());
-        Kit targetKit = playerKit.get(target.getUniqueId());
-        target.damage(damagerKit.damage);
-        Vector enemy = target.getLocation().toVector();
-        Vector player = damager.getLocation().toVector();
-        Vector pre = enemy.subtract(player);
-        Vector velocity = pre.normalize().multiply(damagerKit.damage/2.5);
-        target.setVelocity(new Vector(velocity.getX(), 0.45, velocity.getZ()));
-    }
-
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e){
+    public void onPlayerQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         String name = player.getDisplayName();
         e.setQuitMessage(ChatColor.YELLOW + name + " has fucking rage quit, what a fucking bitch LOL");
     }
+
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e){
+    public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
-        if (player.getName().equals("huxs")||player.getName().equalsIgnoreCase("RyukoMatoiKLK")||player.getName().equalsIgnoreCase("Whoneedspacee")){
-            player.setDisplayName(""+ChatColor.MAGIC + ChatColor.BOLD + "N"+ChatColor.DARK_PURPLE + ChatColor.BOLD + "Developer" +ChatColor.RESET +ChatColor.MAGIC + ChatColor.BOLD + "N" + ChatColor.RESET + ChatColor.DARK_RED + " " +player.getName() + ChatColor.RESET);
+        if (player.getName().equals("Tap_That_Trap") || player.getName().equalsIgnoreCase("SSMGod") || player.getName().equalsIgnoreCase("Whoneedspacee")) {
+            player.setDisplayName("" + ChatColor.MAGIC + ChatColor.BOLD + "N" + ChatColor.DARK_PURPLE + ChatColor.BOLD + "Developer" + ChatColor.RESET + ChatColor.MAGIC + ChatColor.BOLD + "N" + ChatColor.RESET + ChatColor.DARK_RED + " " + player.getName() + ChatColor.RESET);
         }
-        if (player.getName().equalsIgnoreCase("HDSbjIhdihdgh2sf")){
+        if (player.getName().equalsIgnoreCase("HDSbjIhdihdgh2sf")) {
             player.setDisplayName("" + ChatColor.BLUE + ChatColor.BOLD + "Mag" + ChatColor.RESET + ChatColor.GOLD + " " + player.getName() + ChatColor.RESET);
         }
     }
+
     @EventHandler
-    public void whenHit(EntityDamageEvent e){
-        Entity entity = e.getEntity();
-        entity.getServer().broadcastMessage(""+ChatColor.BOLD + ChatColor.LIGHT_PURPLE+e.getCause());
+    public void whenHit(EntityDamageEvent e) {
+            Player p = (Player) e.getEntity();
+            p.getServer().broadcastMessage("" + ChatColor.BOLD + ChatColor.LIGHT_PURPLE + e.getCause());
+            if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                e.setDamage(1000);
+            }
+        }
+    @EventHandler
+    public void onDeath(PlayerDeathEvent e){
+        Player player = e.getEntity();
+        e.setDeathMessage("" + ChatColor.BLUE + "Death> " + ChatColor.YELLOW + player.getName() + " " + ChatColor.GRAY + "killed by " + ChatColor.GREEN + "Gaming addiction");
     }
 }
