@@ -1,9 +1,9 @@
 package SSM;
 
-import SSM.Abilities.SelectKit;
-import SSM.Commands.*;
+import SSM.Abilities.*;
 import SSM.GameManagers.CooldownManager;
 import SSM.Kits.*;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,15 +11,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +34,7 @@ public class SSM extends JavaPlugin implements Listener {
 
     public static HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
     public static Kit[] allKits;
-    public static CustomCommand[] allCommands;
+    public static Ability[] heroAbilities;
     public static Plugin ourInstance;
 
     public static void main(String[] args) {
@@ -65,12 +63,18 @@ public class SSM extends JavaPlugin implements Listener {
             new KitMagmaCube(),
             new KitWitch(),
             new KitShulker(),
+            new KitHero(),
             new KitChoose(),
         };
-        allCommands = new CustomCommand[]{
-                new kit(),
-                new damage(),
-                new rank(),
+        heroAbilities = new Ability[]{
+                new heroFly(),
+                new heroTeleport(),
+                new heroSpeed(),
+                new heroGay(),
+                new heroFireball(),
+                new heroHeal(),
+                new heroParalyze(),
+                new heroDitto(),
         };
 
         CooldownManager.getInstance().start(this);
@@ -82,15 +86,35 @@ public class SSM extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            return true;
-        }
-        Player p = (Player)sender;
-        for (CustomCommand command : allCommands){
-            if (cmd.getName().equalsIgnoreCase(command.name)){
-                command.activate(p, args);
+        if (cmd.getName().equalsIgnoreCase("kit")) {
+            if (!(sender instanceof Player)) {
                 return true;
             }
+            Player player = (Player) sender;
+            if (args.length == 1) {
+                for (Kit check : allKits) {
+                    if (check.name.equalsIgnoreCase(args[0])) {
+                        equipPlayer(player, check);
+                        return true;
+                    }
+                }
+            }
+            String finalMessage = "Kit Choices: ";
+            for (Kit kit : allKits) {
+                finalMessage += kit.getName() + " ";
+            }
+            player.sendMessage(finalMessage);
+    }else if (cmd.getName().equalsIgnoreCase("damage")){
+        if (args.length == 1) {
+            Player player = (Player) sender;
+            try {
+                int number = Integer.parseInt(args[0]);
+                player.damage(number);
+                player.sendMessage("You were dealt " + number + " damage");
+            }catch (NumberFormatException e){
+                player.sendMessage("You need to input a number!");
+            }
+        }
         }
         return false;
     }
@@ -159,29 +183,6 @@ public class SSM extends JavaPlugin implements Listener {
         e.setCancelled(true);
     }
 
-    @EventHandler
-    public void meleeDamage(EntityDamageByEntityEvent e){
-        if (!(e.getDamager() instanceof Player)){
-            return;
-        }
-        if (!(e.getEntity() instanceof Player)){
-            Player damager = (Player)e.getDamager();
-            LivingEntity target = (LivingEntity)e.getEntity();
-            Kit damagerKit = playerKit.get(damager.getUniqueId());
-            target.damage(damagerKit.damage);
-        }
-        e.setCancelled(true);
-        Player damager = (Player)e.getDamager();
-        LivingEntity target = (LivingEntity)e.getEntity();
-        Kit damagerKit = playerKit.get(damager.getUniqueId());
-        Kit targetKit = playerKit.get(target.getUniqueId());
-        target.damage(damagerKit.damage);
-        Vector enemy = target.getLocation().toVector();
-        Vector player = damager.getLocation().toVector();
-        Vector pre = enemy.subtract(player);
-        Vector velocity = pre.normalize().multiply(damagerKit.damage/2.5);
-        target.setVelocity(new Vector(velocity.getX(), 0.45, velocity.getZ()));
-    }
 
 
     @EventHandler

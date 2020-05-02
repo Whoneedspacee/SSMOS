@@ -1,6 +1,7 @@
 package SSM;
 
 import SSM.GameManagers.CooldownManager;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import org.bukkit.util.Vector;
 public abstract class Ability extends Attribute {
 
     protected double cooldownTime = 2.5;
+    public static Material item;
     protected boolean leftClickActivate = false;
     protected boolean rightClickActivate = false;
     protected boolean usesEnergy = false;

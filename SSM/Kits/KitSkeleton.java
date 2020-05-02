@@ -9,6 +9,7 @@ import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +43,7 @@ public class KitSkeleton extends Kit {
 
         addAttribute(new ItemGenerator(Material.ARROW, 1, 3, 3));
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1));
+        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
         addAttribute(new Barrage(1.1, 0.25, 5));
     }
 

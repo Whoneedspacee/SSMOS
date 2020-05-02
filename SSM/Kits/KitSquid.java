@@ -11,6 +11,7 @@ import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
 import me.libraryaddict.disguise.disguisetypes.watchers.SquidWatcher;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -43,7 +44,7 @@ public class KitSquid extends Kit {
         setItem(Material.IRON_SHOVEL, 2);
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1));
+        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
         addAttribute(new SquidFix());
     }
 }

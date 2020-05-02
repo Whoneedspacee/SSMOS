@@ -1,9 +1,12 @@
 package SSM.Attributes.DoubleJumps;
 
+import org.bukkit.Sound;
+
 public class GenericDoubleJump extends DoubleJump {
 
-    public GenericDoubleJump(double power, double height, int maxDoubleJumps) {
-        super(power, height, maxDoubleJumps);
+    public GenericDoubleJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound) {
+        super(power, height, maxDoubleJumps, doubleJumpSound);
+        this.name = "Double Jump";
     }
 
     @Override
