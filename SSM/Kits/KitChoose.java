@@ -6,6 +6,7 @@ import SSM.Attributes.Regeneration;
 import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class KitChoose extends Kit {
@@ -30,6 +31,6 @@ public class KitChoose extends Kit {
         setItem(Material.CLOCK, 0, new SelectKit());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.9, 1));
+        addAttribute(new GenericDoubleJump(0.61, 0.9, 1, Sound.ENTITY_GHAST_SHOOT));
     }
 }

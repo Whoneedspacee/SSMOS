@@ -15,15 +15,17 @@ public abstract class DoubleJump extends Attribute {
     protected double height;
     protected double power;
     private int maxDoubleJumps;
-    private int remainingDoubleJumps = 0;
+    private static int remainingDoubleJumps = 0;
+    private Sound doubleJumpSound;
 
     protected abstract void jump(boolean perfectJumped);
 
-    public DoubleJump(double power, double height, int maxDoubleJumps) {
+    public DoubleJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound) {
         super();
         this.power = power;
         this.height = height;
         this.maxDoubleJumps = maxDoubleJumps;
+        this.doubleJumpSound = doubleJumpSound;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -38,12 +40,16 @@ public abstract class DoubleJump extends Attribute {
             return;
         }
 
+        if (player.getGameMode() == GameMode.CREATIVE){
+            return;
+        }
+
         e.setCancelled(true);
 
         if (remainingDoubleJumps > 0) {
             remainingDoubleJumps--;
 
-            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT, 1f, 1f);
+            player.getWorld().playSound(player.getLocation(), doubleJumpSound, 1f, 1f);
 
             //Jumping when directly on the ground seems to transfer Y velocity to horizontal velocity, or simply diminish Y. (Go very fast forward)
             boolean perfectJumped = false;
