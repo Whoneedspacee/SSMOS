@@ -22,7 +22,7 @@ public class KitHero extends Kit {
         this.knockback = 0;
         this.regeneration = 0.4;
         this.disguise = DisguiseType.ILLUSIONER;
-        this.menuItem = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        this.menuItem = Material.EXPERIENCE_BOTTLE;
     }
 
     public void equipKit(Player player) {

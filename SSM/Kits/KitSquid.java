@@ -29,7 +29,7 @@ public class KitSquid extends Kit {
         this.knockback = 0;
         this.name = "Sky_Squid";
         this.disguise = DisguiseType.SQUID;
-        this.menuItem = new ItemStack(Material.INK_SAC);
+        this.menuItem = Material.INK_SAC;
     }
 
     public void equipKit(Player player) {

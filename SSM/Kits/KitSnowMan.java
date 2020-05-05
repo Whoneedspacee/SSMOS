@@ -25,7 +25,7 @@ public class KitSnowMan extends Kit {
         this.knockback = 0;
         this.disguise = DisguiseType.SNOWMAN;
         this.name = "Snowman";
-        this.menuItem = new ItemStack(Material.SNOWBALL);
+        this.menuItem = Material.PUMPKIN;
     }
 
     public void equipKit(Player player) {

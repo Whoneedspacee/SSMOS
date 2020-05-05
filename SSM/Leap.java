@@ -14,13 +14,10 @@ import java.util.UUID;
 
 public abstract class Leap extends Ability {
 
-    public double power;
-    public HashMap<UUID, Boolean> activity = new HashMap<>();
-    public HashMap<UUID, Long> timerList = new HashMap<>();
-    public boolean endOnLand;
-    public boolean timed;
-    public double activeTime;
-    public double hitbox;
+    protected HashMap<UUID, Boolean> activity = new HashMap<>();
+    protected HashMap<UUID, Long> timerList = new HashMap<>();
+    protected boolean endOnLand, timed;
+    protected double activeTime, hitbox, power;
 
 
     public Leap() {
@@ -28,7 +25,7 @@ public abstract class Leap extends Ability {
     }
 
     public void activate() {
-        //does nothing
+        // This does nothing.
     }
 
     public abstract void onLand();
@@ -59,7 +56,7 @@ public abstract class Leap extends Ability {
 
     }
     @EventHandler
-    public void onLandorTime(PlayerMoveEvent e){
+    public void whenEnd(PlayerMoveEvent e){
         Player player = e.getPlayer();
         if (activity.get(player.getUniqueId()) == null){
             return;

@@ -35,7 +35,7 @@ public class SelectKit extends Ability {
     public void activate(){
         selectKit = Bukkit.createInventory(owner, 54,  ChatColor.BLUE + "Select Your Kit");
         for (Kit kit : SSM.allKits){
-            ItemStack item = kit.menuItem;
+            ItemStack item = new ItemStack(kit.menuItem);
             ItemMeta itemMeta = item.getItemMeta();
             itemMeta.setDisplayName(ChatColor.RESET + kit.getName().replace("_", " "));
             item.setItemMeta(itemMeta);
@@ -50,17 +50,16 @@ public class SelectKit extends Ability {
     public void clickEvent(InventoryClickEvent e){
             Player player = (Player) e.getWhoClicked();
 
-        if (e.getClickedInventory().getSize()==54) {
-            for (Kit kit : SSM.allKits){
-                if (e.getCurrentItem().getType() == kit.menuItem.getType()){
-                    kit.equipKit(player);
-                    player.closeInventory();
+            if (e.getView().getTitle().contains("Kit")){
+                for (Kit kit : SSM.allKits){
+                    if (e.getCurrentItem().getType() == kit.menuItem){
+                        SSM.equipPlayer(player, kit);
+                        player.closeInventory();
+                        break;
+                    }
                 }
+                e.setCancelled(true);
             }
-            e.setCancelled(true);
-        }
-
-
     }
 }
 }

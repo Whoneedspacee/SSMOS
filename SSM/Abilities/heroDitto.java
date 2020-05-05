@@ -19,7 +19,7 @@ public class heroDitto extends Ability {
         this.cooldownTime = 0;
         this.rightClickActivate = true;
         this.item = Material.PURPLE_WOOL;
-        this.expUsed = 0.5F;
+        this.expUsed = 1.0F;
         this.usesEnergy = true;
     }
 
@@ -29,6 +29,7 @@ public class heroDitto extends Ability {
         }
         List<Entity> nearby = owner.getNearbyEntities(10, 10, 10);
         nearby.remove(owner);
+
         if (nearby.isEmpty()){
             owner.sendMessage("There were no nearby players to turn into!");
             return;
