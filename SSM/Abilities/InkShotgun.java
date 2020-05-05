@@ -43,8 +43,9 @@ public class InkShotgun extends Ability {
             this.setSpeed(1 + Math.random() * 0.5);
             this.setKnockback(1.0);
             this.setUpwardKnockback(0.5);
-            this.setHitboxSize(1.0);
-            this.setVariation(10);
+            this.setHitboxSize(0.5);
+            this.setVariation(15);
+            this.setExpAdd(true);
             this.setFireOpposite(false);
         }
 

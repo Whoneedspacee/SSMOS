@@ -3,6 +3,7 @@ package SSM;
 import SSM.Abilities.*;
 import SSM.GameManagers.CooldownManager;
 import SSM.Kits.*;
+import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -47,6 +48,9 @@ public class SSM extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        for (Player player : Bukkit.getOnlinePlayers()){
+            player.setInvulnerable(false);
+        }
         ourInstance = this;
         getServer().getPluginManager().registerEvents(new SelectKit.ClickEvent(), this);
         getServer().getPluginManager().registerEvents(this, this);
@@ -62,7 +66,6 @@ public class SSM extends JavaPlugin implements Listener {
             new KitSnowMan(),
             new KitMagmaCube(),
             new KitWitch(),
-            new KitShulker(),
             new KitHero(),
             new KitChoose(),
         };
@@ -86,11 +89,11 @@ public class SSM extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        Player player = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("kit")) {
             if (!(sender instanceof Player)) {
                 return true;
             }
-            Player player = (Player) sender;
             if (args.length == 1) {
                 for (Kit check : allKits) {
                     if (check.name.equalsIgnoreCase(args[0])) {
@@ -106,15 +109,16 @@ public class SSM extends JavaPlugin implements Listener {
             player.sendMessage(finalMessage);
     }else if (cmd.getName().equalsIgnoreCase("damage")){
         if (args.length == 1) {
-            Player player = (Player) sender;
             try {
                 int number = Integer.parseInt(args[0]);
-                player.damage(number);
+                DamageUtil.dealDamage(player, number);
                 player.sendMessage("You were dealt " + number + " damage");
             }catch (NumberFormatException e){
                 player.sendMessage("You need to input a number!");
             }
         }
+        }else if (cmd.getName().equalsIgnoreCase("settings")){
+
         }
         return false;
     }
@@ -201,10 +205,5 @@ public class SSM extends JavaPlugin implements Listener {
         if (player.getName().equalsIgnoreCase("HDSbjIhdihdgh2sf")){
             player.setDisplayName("" + ChatColor.BLUE + ChatColor.BOLD + "Mag" + ChatColor.RESET + ChatColor.GOLD + " " + player.getName() + ChatColor.RESET);
         }
-    }
-    @EventHandler
-    public void whenHit(EntityDamageEvent e){
-        Entity entity = e.getEntity();
-        entity.getServer().broadcastMessage(""+ChatColor.BOLD + ChatColor.LIGHT_PURPLE+e.getCause());
     }
 }

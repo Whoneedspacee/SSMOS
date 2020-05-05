@@ -17,7 +17,7 @@ import org.bukkit.util.Vector;
 public abstract class Ability extends Attribute {
 
     protected double cooldownTime = 2.5;
-    public static Material item;
+    public Material item;
     protected boolean leftClickActivate = false;
     protected boolean rightClickActivate = false;
     protected boolean usesEnergy = false;

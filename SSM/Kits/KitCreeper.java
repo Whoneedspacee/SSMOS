@@ -21,7 +21,7 @@ public class KitCreeper extends Kit {
         this.knockback = 0;
         this.disguise = DisguiseType.CREEPER;
         this.name = "Creeper";
-        this.menuItem = new ItemStack(Material.GUNPOWDER);
+        this.menuItem = Material.GUNPOWDER;
     }
 
     public void equipKit(Player player) {

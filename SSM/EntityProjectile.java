@@ -1,6 +1,7 @@
 package SSM;
 
 import SSM.Kits.*;
+import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -43,6 +44,7 @@ public class EntityProjectile extends BukkitRunnable {
     protected Plugin plugin;
     protected Player firer;
     protected String name;
+    protected boolean expAdd = false;
     protected Entity projectile;
     protected Location overridePosition;
     protected boolean fireOpposite = false;
@@ -69,6 +71,7 @@ public class EntityProjectile extends BukkitRunnable {
     }
 
     public void launchProjectile() {
+        firer.setLevel(0);
         if (fired) {
             return;
         }
@@ -123,8 +126,11 @@ public class EntityProjectile extends BukkitRunnable {
     public boolean onHit(LivingEntity target) {
         boolean success = target != null;
         if (success) {
+            if (target.getNoDamageTicks() > 1){
+                target.setNoDamageTicks(0);
+            }
             double damage = getDamage();
-            target.damage(damage);
+            DamageUtil.dealDamage(firer, target, damage, true, expAdd);
             double knockback = getKnockback();
             double upwardKnockback = getUpwardKnockback();
             Vector velocity = projectile.getVelocity();
@@ -223,6 +229,10 @@ public class EntityProjectile extends BukkitRunnable {
     public double getVariation() {
         return data[5];
     }
+
+    public boolean getExpAdd(){return expAdd;}
+
+    public void setExpAdd(boolean expAdd1){expAdd = expAdd1;}
 
 }
 

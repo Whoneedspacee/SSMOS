@@ -24,7 +24,7 @@ public class KitSlime extends Kit {
         this.knockback = 0;
         this.disguise = DisguiseType.SLIME;
         this.name = "Slime";
-        this.menuItem = new ItemStack(Material.SLIME_BALL);
+        this.menuItem = Material.SLIME_BALL;
     }
 
     public void equipKit(Player player) {

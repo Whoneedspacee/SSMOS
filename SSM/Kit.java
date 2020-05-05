@@ -31,11 +31,11 @@ public class Kit{
     // used for finding the kit to equip on command, ex: /kit name
     protected String name = "";
     protected int damage = 0;
-    public double armor = 0;
+    protected double armor = 0;
     protected double knockback = 0;
     protected double regeneration = 0;
     protected float speed = 0f;
-    public ItemStack menuItem;
+    public Material menuItem;
     protected DisguiseType disguise;
 
     protected boolean hasDirectDoubleJump = false;
@@ -116,6 +116,10 @@ public class Kit{
 
     public String getName() {
         return name;
+    }
+
+    public double getArmor() {
+        return armor;
     }
 
     public List<Attribute> getAttributes() {

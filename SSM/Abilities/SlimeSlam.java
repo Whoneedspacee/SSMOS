@@ -1,6 +1,7 @@
 package SSM.Abilities;
 
 import SSM.*;
+import SSM.Utilities.DamageUtil;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Listener;;
 import org.bukkit.plugin.Plugin;
@@ -31,8 +32,8 @@ public class SlimeSlam extends Leap {
     }
 
     public void onHit(LivingEntity target) {
-        target.damage(7.0);
-        owner.damage(3.5);
+        DamageUtil.dealDamage(owner, target, 7.0, true, false);
+        DamageUtil.dealDamage(owner, 3.5);
         Vector enemy = target.getLocation().toVector();
         Vector player = owner.getLocation().toVector();
         Vector pre = enemy.subtract(player);

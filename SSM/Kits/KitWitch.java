@@ -24,7 +24,7 @@ public class KitWitch extends Kit {
         this.knockback = 0;
         this.disguise = DisguiseType.WITCH;
         this.name = "Witch";
-        this.menuItem = new ItemStack(Material.POTION);
+        this.menuItem = Material.POTION;
     }
 
     public void equipKit(Player player) {
