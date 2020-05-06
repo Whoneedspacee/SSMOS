@@ -2,6 +2,7 @@ package SSM;
 
 import SSM.Abilities.*;
 import SSM.GameManagers.CooldownManager;
+import SSM.GameManagers.MeleeManager;
 import SSM.Kits.*;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
@@ -54,6 +55,7 @@ public class SSM extends JavaPlugin implements Listener {
         ourInstance = this;
         getServer().getPluginManager().registerEvents(new SelectKit.ClickEvent(), this);
         getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(new MeleeManager(), this);
 
         allKits = new Kit[]{
             //Put in order of how kits appear (It affects ordering).
@@ -67,6 +69,7 @@ public class SSM extends JavaPlugin implements Listener {
             new KitMagmaCube(),
             new KitWitch(),
             new KitHero(),
+            new KitCow(),
             new KitChoose(),
         };
         heroAbilities = new Ability[]{

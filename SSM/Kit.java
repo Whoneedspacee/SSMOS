@@ -122,6 +122,8 @@ public class Kit{
         return armor;
     }
 
+    public double getMelee(){return damage;}
+
     public List<Attribute> getAttributes() {
         return attributes;
     }
