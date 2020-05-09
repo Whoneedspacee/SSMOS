@@ -21,7 +21,7 @@ public class KitCow extends Kit {
         this.knockback = 0;
         this.disguise = DisguiseType.COW;
         this.name = "Cow";
-        this.menuItem = Material.BEEF;
+        this.menuItem = Material.MILK_BUCKET;
     }
 
     public void equipKit(Player player) {
