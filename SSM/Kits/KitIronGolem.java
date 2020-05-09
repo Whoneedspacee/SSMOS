@@ -9,6 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 public class KitIronGolem extends Kit {
 
@@ -19,10 +21,10 @@ public class KitIronGolem extends Kit {
         this.armor = 8;
         this.speed = 0.18f;
         this.regeneration = 0.2;
-        this.knockbackTaken = 1.00;
+        this.knockback = 0;
         this.disguise = DisguiseType.IRON_GOLEM;
         this.name = "Iron_Golem";
-        this.menuItem = new ItemStack(Material.IRON_BLOCK);
+        this.menuItem = Material.IRON_BLOCK;
     }
 
     public void equipKit(Player player) {

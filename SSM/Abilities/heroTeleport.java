@@ -3,6 +3,7 @@ package SSM.Abilities;
 import SSM.Ability;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
 public class heroTeleport extends Ability {
@@ -18,23 +19,11 @@ public class heroTeleport extends Ability {
 
 
     public void activate() {
-        for (int i = 1; i <= 40; i++){
-            Location loc = owner.getLocation();
-            Vector dir = loc.getDirection();
-            dir.normalize();
-            dir.multiply(i);
-            loc.add(dir);
-            if (loc.getBlock().getType().isAir()){
-                continue;
-            }else{
-                loc = owner.getLocation();
-                dir = loc.getDirection();
-                dir.normalize();
-                dir.multiply(i-2);
-                loc.add(dir);
-                owner.teleport(loc);
-            }
-        }
+        Vector dir = owner.getLocation().getDirection();
+        Block block = owner.getTargetBlockExact(40);
+        Location loc = block.getLocation();
+        owner.teleport(new Location(owner.getWorld(), loc.getX(), loc.getY()+1, loc.getZ()));
+        owner.getLocation().setDirection(dir);
         for (int i = 1; i < 27;i++){
             owner.getInventory().clear(i);
         }

@@ -2,10 +2,15 @@ package SSM.Kits;
 
 import SSM.*;
 import SSM.Abilities.*;
+import SSM.Attributes.DoubleJumps.GenericDoubleJump;
+import SSM.Attributes.Regeneration;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 public class KitMagmaCube extends Kit {
 
@@ -15,11 +20,11 @@ public class KitMagmaCube extends Kit {
         this.damage = 5;
         this.armor = 4;
         this.speed = 0.22f;
-        this.regeneration = 0.3;
-        this.knockbackTaken = 0;
+        this.regeneration = 0.35;
+        this.knockback = 0;
         this.disguise = DisguiseType.MAGMA_CUBE;
         this.name = "Magma_Cube";
-        this.menuItem = new ItemStack(Material.FIRE_CHARGE);
+        this.menuItem = Material.FIRE_CHARGE;
     }
 
     public void equipKit(Player player) {
@@ -31,5 +36,8 @@ public class KitMagmaCube extends Kit {
 
         setItem(Material.IRON_AXE, 0, new MagmaBlast());
         setItem(Material.IRON_SHOVEL, 1, new FlameDash());
+
+        addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new GenericDoubleJump(0.61, 1.0, 1, Sound.ENTITY_GHAST_SHOOT));
     }
 }

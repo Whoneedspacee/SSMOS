@@ -1,15 +1,21 @@
 package SSM.Kits;
 
 import SSM.Abilities.InkShotgun;
+import SSM.Abilities.SpinWeb;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Attributes.SquidFix;
 import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
+import me.libraryaddict.disguise.disguisetypes.MobDisguise;
+import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
+import me.libraryaddict.disguise.disguisetypes.watchers.SquidWatcher;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import SSM.Ability;
 
 public class KitSquid extends Kit {
 
@@ -20,10 +26,10 @@ public class KitSquid extends Kit {
         this.armor = 5;
         this.speed = 0.24f;
         this.regeneration = 0.25;
-        this.knockbackTaken = 0;
+        this.knockback = 0;
         this.name = "Sky_Squid";
         this.disguise = DisguiseType.SQUID;
-        this.menuItem = new ItemStack(Material.INK_SAC);
+        this.menuItem = Material.INK_SAC;
     }
 
     public void equipKit(Player player) {

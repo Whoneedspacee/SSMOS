@@ -17,7 +17,7 @@ public class KitChoose extends Kit {
         this.armor = 5;
         this.speed = 0.21f;
         this.regeneration = 0.4;
-        this.knockbackTaken = 0;
+        this.knockback = 0;
         this.name = "Choose";
         this.disguise = DisguiseType.WANDERING_TRADER;
     }

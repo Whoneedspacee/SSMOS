@@ -5,7 +5,6 @@ import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
@@ -19,7 +18,6 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
@@ -33,11 +31,11 @@ public class Kit{
     // used for finding the kit to equip on command, ex: /kit name
     protected String name = "";
     protected int damage = 0;
-    public double armor = 0;
-    protected double knockbackTaken = 1.00;
+    protected double armor = 0;
+    protected double knockback = 0;
     protected double regeneration = 0;
     protected float speed = 0f;
-    public ItemStack menuItem;
+    public Material menuItem;
     protected DisguiseType disguise;
 
     protected boolean hasDirectDoubleJump = false;
@@ -49,7 +47,9 @@ public class Kit{
     protected Plugin plugin;
     protected Player owner;
 
-    public Kit() { this.plugin = SSM.getInstance(); }
+    public Kit() {
+        this.plugin = SSM.getInstance();
+    }
 
     public void equipKit(Player player) {
         destroyKit();
@@ -103,14 +103,7 @@ public class Kit{
         ItemMeta meta = item.getItemMeta();
         if (ability != null) {
             addAttribute(ability);
-            if (ability.leftClickActivate) {
-                meta.setDisplayName("" + ChatColor.BOLD + ChatColor.YELLOW + "Left Click " + ChatColor.RESET + ChatColor.BOLD + "- " + ChatColor.RESET + ChatColor.BOLD + ChatColor.GREEN + ability.name);
-            }
-            if (ability.rightClickActivate) {
-                meta.setDisplayName("" + ChatColor.BOLD + ChatColor.YELLOW + "Right Click " + ChatColor.RESET + ChatColor.BOLD + "- " + ChatColor.RESET + ChatColor.BOLD + ChatColor.GREEN + ability.name);
-            }
-            if (ability.holdDownActivate)
-                meta.setDisplayName("" + ChatColor.BOLD + ChatColor.YELLOW + "Hold/Block " + ChatColor.RESET + ChatColor.BOLD + "- " + ChatColor.RESET + ChatColor.BOLD + ChatColor.GREEN + ability.name);
+            meta.setDisplayName(ability.name);
         }
         if (meta instanceof Damageable) {
             Damageable damageable = (Damageable) meta;
@@ -125,6 +118,12 @@ public class Kit{
         return name;
     }
 
+    public double getArmor() {
+        return armor;
+    }
+
+    public double getMelee(){return damage;}
+
     public List<Attribute> getAttributes() {
         return attributes;
     }
@@ -137,5 +136,7 @@ public class Kit{
         return doubleJumpHeight;
     }
 
-    public double getDoubleJumpPower() { return doubleJumpPower; }
+    public double getDoubleJumpPower() {
+        return doubleJumpPower;
+    }
 }

@@ -3,7 +3,6 @@ package SSM.Abilities;
 import SSM.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Listener;;
@@ -13,43 +12,28 @@ import org.bukkit.util.Vector;
 
 import java.util.List;
 
-public class SeismicSlam extends Ability {
-
-    boolean active = false;
-    int i = 0;
-    int runn = -1;
+public class SeismicSlam extends Leap {
 
     public SeismicSlam() {
         super();
         this.name = "Seismic Slam";
-        this.cooldownTime = 2;
+        this.cooldownTime = 8;
         this.rightClickActivate = true;
+        this.timed = false;
+        this.endOnLand = true;
     }
 
     public void activate() {
-        active = false;
-        i = 0;
+        activity.put(owner.getUniqueId(), true);
         Vector velocity = owner.getVelocity();
-        velocity.setY(0.8);
+        velocity.setY(1.0);
         owner.setVelocity(velocity);
-        runn = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                i++;
-                if (i >= 15) {
-                    active = true;
-                }
-                if (active && owner.isOnGround()){
-                    Bukkit.getScheduler().cancelTask(runn);
-                    land();
-                }
-            }
-        }, 1, 1);
+
     }
 
-    public void land() {
-        active = false;
-        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, 10, 1);
+    public void onLand(){
+        owner.getWorld().playSound(owner.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0F, 1.0F);
+
         List<Entity> canHit = owner.getNearbyEntities(6, 4, 6);
         canHit.remove(owner);
 
@@ -60,9 +44,13 @@ public class SeismicSlam extends Ability {
                 Vector player = owner.getLocation().toVector();
                 Vector pre = target.subtract(player);
                 Vector velocity = pre.normalize().multiply(1.35);
-
                 entity.setVelocity(new Vector(velocity.getX(), 0.4, velocity.getZ()));
             }
         }
     }
+    public void onHit(LivingEntity target){
+
+    }
+
+
 }

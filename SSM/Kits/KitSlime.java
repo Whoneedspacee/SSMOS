@@ -9,6 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 public class KitSlime extends Kit {
 
@@ -19,10 +21,10 @@ public class KitSlime extends Kit {
         this.armor = 4;
         this.speed = 0.21f;
         this.regeneration = 0.35;
-        this.knockbackTaken = 0;
+        this.knockback = 0;
         this.disguise = DisguiseType.SLIME;
         this.name = "Slime";
-        this.menuItem = new ItemStack(Material.SLIME_BALL);
+        this.menuItem = Material.SLIME_BALL;
     }
 
     public void equipKit(Player player) {
