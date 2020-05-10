@@ -17,7 +17,7 @@ public abstract class Leap extends Ability {
     protected HashMap<UUID, Boolean> activity = new HashMap<>();
     protected HashMap<UUID, Long> timerList = new HashMap<>();
     protected boolean endOnLand, timed;
-    protected double activeTime, hitbox, power;
+    protected double activeTime = 5.0, hitbox, power;
 
 
     public Leap() {
@@ -28,8 +28,12 @@ public abstract class Leap extends Ability {
         // This does nothing.
     }
 
-    public abstract void onLand();
-    public abstract void onHit(LivingEntity target);
+    public void onLand(){
+
+    }
+    public void onHit(LivingEntity target){
+
+    }
 
     @EventHandler
     public void hitbox(PlayerMoveEvent e){
@@ -59,6 +63,9 @@ public abstract class Leap extends Ability {
     public void whenEnd(PlayerMoveEvent e){
         Player player = e.getPlayer();
         if (activity.get(player.getUniqueId()) == null){
+            return;
+        }
+        if ((System.currentTimeMillis() - (timerList.get(player.getUniqueId()) - activeTime*1000L)) < 200){
             return;
         }
         if (!(player.getLocation().subtract(0, 0.001, 0).getBlock().isPassable()) && (activity.get(player.getUniqueId()) != null)){

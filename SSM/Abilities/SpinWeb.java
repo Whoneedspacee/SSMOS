@@ -49,7 +49,7 @@ public class SpinWeb extends Ability {
 
         @Override
         public boolean onHit(LivingEntity target) {
-            Block replace = target.getLocation().getBlock();
+            Block replace = projectile.getLocation().getBlock();
             Material replacedType = replace.getType();
             if (replacedType == Material.COBWEB) {
                 return super.onHit(target);

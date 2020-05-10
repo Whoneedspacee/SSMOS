@@ -27,7 +27,6 @@ public abstract class BowCharge extends Attribute {
     double delay;
     double rate;
     int maxCharge;
-
     int charge = 0;
 
     public BowCharge(double delay, double rate, int maxCharge) {
@@ -84,10 +83,17 @@ public abstract class BowCharge extends Attribute {
         finishFiring();
     }
 
-    // make it run last so the check for firing the bow works first (if it does run)
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void switchedWeapon(PlayerItemHeldEvent e) {
+        Player player = e.getPlayer();
+        if (player != owner) {
+            return;
+        }
+        // finish firing for visuals but changing the charge can cause issues so set it back
+        // the bow can fire sometimes after this event is called which resets the charges before they should be
+        int storedCharge = charge;
         finishFiring();
+        charge = storedCharge;
     }
 
     public void incrementedCharge() {

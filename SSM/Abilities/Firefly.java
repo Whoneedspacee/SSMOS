@@ -5,8 +5,6 @@ import SSM.Ability;
 public class Firefly extends Ability {
 
     int x = 0;
-    int stall = -1;
-    int runn = -1;
 
     public Firefly() {
         super();
@@ -16,6 +14,6 @@ public class Firefly extends Ability {
     }
 
     public void activate(){
-        x = 0;
+
     }
 }

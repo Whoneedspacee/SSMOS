@@ -23,7 +23,7 @@ public class KitSpider extends Kit {
         this.armor = 5.5;
         this.speed = 0.21f;
         this.regeneration = 0.25;
-        this.knockback = 0;
+        this.knockback = 1.5;
         this.disguise = DisguiseType.SPIDER;
         this.name = "Spider";
         this.hasDirectDoubleJump = true;
@@ -43,7 +43,7 @@ public class KitSpider extends Kit {
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new Climb(0.2));
-        addAttribute(new DirectDoubleJump(0.8, 0.2, 1, Sound.ENTITY_SPIDER_HURT));
+        addAttribute(new DirectDoubleJump(1.0, 0.2, 1, Sound.ENTITY_SPIDER_HURT));
     }
 
 }

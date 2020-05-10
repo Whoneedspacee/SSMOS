@@ -1,5 +1,6 @@
 package SSM;
 
+import SSM.Attributes.Compass;
 import me.libraryaddict.disguise.LibsDisguises;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
@@ -30,7 +31,7 @@ public class Kit{
 
     // used for finding the kit to equip on command, ex: /kit name
     protected String name = "";
-    protected int damage = 0;
+    protected double damage = 0;
     protected double armor = 0;
     protected double knockback = 0;
     protected double regeneration = 0;
@@ -62,6 +63,7 @@ public class Kit{
         FlagWatcher watcher = disg.getWatcher();
         watcher.setCustomName(""+owner.getName());
         disg.startDisguise();
+        addAttribute(new Compass());
     }
 
     public void destroyKit() {
@@ -107,7 +109,7 @@ public class Kit{
         }
         if (meta instanceof Damageable) {
             Damageable damageable = (Damageable) meta;
-            damageable.setDamage(damage);
+            damageable.setDamage((int)damage);
         }
         meta.setUnbreakable(true);
         item.setItemMeta(meta);
@@ -122,7 +124,11 @@ public class Kit{
         return armor;
     }
 
+    public double getKnockback(){return knockback;}
+
     public double getMelee(){return damage;}
+
+    public void setMelee(double melee){damage = melee;}
 
     public List<Attribute> getAttributes() {
         return attributes;

@@ -2,6 +2,7 @@ package SSM;
 
 import SSM.Kits.*;
 import SSM.Utilities.DamageUtil;
+import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -37,7 +38,7 @@ public class EntityProjectile extends BukkitRunnable {
     private boolean clearOnFinish = true;
     private boolean direct = false;
     private boolean fired;
-    private boolean upwardKnockbackSet;
+    private boolean upwardKnockbackSet = true;
     private boolean pierce;
     private double[] data;
 
@@ -71,9 +72,9 @@ public class EntityProjectile extends BukkitRunnable {
         if (fired) {
             return;
         }
-        //if (getOverridePosition() == null) {
-            //setOverridePosition(firer.getEyeLocation());
-        //}
+        if (getOverridePosition() == null) {
+            setOverridePosition(firer.getEyeLocation());
+        }
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
             public void run() {
@@ -147,10 +148,7 @@ public class EntityProjectile extends BukkitRunnable {
             double upwardKnockback = getUpwardKnockback();
             Vector velocity = projectile.getVelocity();
             if (upwardKnockbackSet) {
-                velocity.setY(0);
-                velocity = velocity.normalize().multiply(knockback);
-                velocity.setY(upwardKnockback);
-                target.setVelocity(new Vector(velocity.getX(), upwardKnockback, velocity.getZ()));
+                VelocityUtil.addKnockback(firer, target, knockback, 0.5);
             } else {
                 velocity = velocity.normalize().multiply(knockback);
                 target.setVelocity(velocity);
@@ -159,11 +157,16 @@ public class EntityProjectile extends BukkitRunnable {
             if (!lastsOnGround){
                 projectile.remove();
             }
+            onBlockHit();
         }
         if (!pierce){
             clearProjectile();
         }
         return success;
+    }
+
+    public void onBlockHit(){
+
     }
 
     public boolean clearProjectile() {

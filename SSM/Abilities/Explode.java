@@ -4,6 +4,7 @@ import SSM.Ability;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
@@ -26,6 +27,7 @@ public class Explode extends Ability {
     }
 
     public void activate() {
+        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 1, 2);
         time = System.currentTimeMillis() + (int) (timeToExplode * 1000);
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override

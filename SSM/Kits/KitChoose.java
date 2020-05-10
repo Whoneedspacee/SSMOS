@@ -1,6 +1,7 @@
 package SSM.Kits;
 
 import SSM.Abilities.SelectKit;
+import SSM.Attributes.Compass;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
