@@ -23,12 +23,12 @@ public class IronHook extends Ability {
 
     public void activate() {
         ItemStack hook = new ItemStack(Material.TRIPWIRE_HOOK, 1);
-            Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), hook);
-            HookProjectile projectile = new HookProjectile(plugin, owner, name, firing);
-            projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
-            projectile.launchProjectile();
+        Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), hook);
+        HookProjectile projectile = new HookProjectile(plugin, owner, name, firing);
+        projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
+        projectile.launchProjectile();
     }
-}
+
     class HookProjectile extends EntityProjectile {
 
         int runn = -1;
@@ -45,7 +45,7 @@ public class IronHook extends Ability {
                 @Override
                 public void run() {
                     firer.getWorld().playSound(projectile.getLocation(), Sound.ITEM_FLINTANDSTEEL_USE, 1, 1);
-                    firer.getWorld().spawnParticle(Particle.CRIT,projectile.getLocation(),0);
+                    firer.getWorld().spawnParticle(Particle.CRIT, projectile.getLocation(), 0);
                 }
             }, 0, 1);
         }
@@ -56,3 +56,4 @@ public class IronHook extends Ability {
             return super.onHit(target);
         }
     }
+}
