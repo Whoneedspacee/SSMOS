@@ -43,12 +43,13 @@ public class SpinWeb extends Ability {
             this.setSpeed(1.8);
             this.setHitboxSize(1.0);
             this.setVariation(30);
+            this.setExpAdd(true);
             this.setFireOpposite(true);
         }
 
         @Override
         public boolean onHit(LivingEntity target) {
-            Block replace = projectile.getLocation().getBlock();
+            Block replace = target.getLocation().getBlock();
             Material replacedType = replace.getType();
             if (replacedType == Material.COBWEB) {
                 return super.onHit(target);

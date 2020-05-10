@@ -2,6 +2,7 @@ package SSM;
 
 import me.libraryaddict.disguise.LibsDisguises;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
+import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,11 +31,12 @@ public class Kit{
     // used for finding the kit to equip on command, ex: /kit name
     protected String name = "";
     protected int damage = 0;
+    protected double armor = 0;
     protected double knockback = 0;
     protected double regeneration = 0;
     protected float speed = 0f;
+    public Material menuItem;
     protected DisguiseType disguise;
-    protected double armor;
 
     protected boolean hasDirectDoubleJump = false;
     protected double doubleJumpHeight = 0.8;
@@ -57,6 +59,8 @@ public class Kit{
         player.setExp(0);
         MobDisguise disg = new MobDisguise(disguise);
         disg.setEntity(player);
+        FlagWatcher watcher = disg.getWatcher();
+        watcher.setCustomName(""+owner.getName());
         disg.startDisguise();
     }
 
@@ -113,6 +117,12 @@ public class Kit{
     public String getName() {
         return name;
     }
+
+    public double getArmor() {
+        return armor;
+    }
+
+    public double getMelee(){return damage;}
 
     public List<Attribute> getAttributes() {
         return attributes;

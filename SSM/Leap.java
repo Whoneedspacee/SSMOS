@@ -1,112 +1,83 @@
 package SSM;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerMoveEvent;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class Leap extends Ability {
-    private double power;
-    private boolean active;
-    private double activeTime;
-    private double damage;
-    private double knockback;
-    private boolean recoil;
-    private int bukkit = -1;
-    private int i = 0;
+
+    protected HashMap<UUID, Boolean> activity = new HashMap<>();
+    protected HashMap<UUID, Long> timerList = new HashMap<>();
+    protected boolean endOnLand, timed;
+    protected double activeTime, hitbox, power;
 
 
     public Leap() {
-        super();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
-
-    public void setPower(double power) {
-        this.power = power;
-    }
-
-    public double getPower() {
-        return this.power;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public boolean getActive() {
-        return this.active;
-    }
-
-    public void setActiveTime(double activeTime) {
-        this.activeTime = activeTime;
-    }
-
-    public double getActiveTime() {
-        return this.activeTime;
-    }
-
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
-
-    public double getDamage() {
-        return this.damage;
-    }
-
-    public void setKnockback(double knockback) {
-        this.knockback = knockback;
-    }
-
-    public double getKnockback() {
-        return this.knockback;
-    }
-
-    public void setRecoil(boolean recoil) {
-        this.recoil = recoil;
-    }
-
-    public boolean getRecoil() {
-        return this.recoil;
-    }
-
 
     public void activate() {
-        i = 0;
-        owner.setVelocity(owner.getLocation().getDirection().multiply(getPower()));
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                active = false;
-            }
-        }, (long) getActiveTime() * 20);
-        bukkit = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                i++;
-                if (active) {
-                    List nearby = owner.getNearbyEntities(0.5, 0.5, 0.5);
-                    nearby.remove(owner);
-                    if (nearby.isEmpty()) {
-                        return;
-                    }
-                    if (!(nearby.get(0) instanceof LivingEntity)) {
-                        return;
-                    }
-                    LivingEntity target = (LivingEntity)nearby.get(0);
-                    target.damage(damage);
-                    stop();
-                }
-                if (i >= (activeTime * 20)) {
-                    stop();
-                }
-            }
-        }, 0, 1);
-
-
+        // This does nothing.
     }
 
-    private void stop() {
-        Bukkit.getScheduler().cancelTask(bukkit);
-        active = false;
+    public abstract void onLand();
+    public abstract void onHit(LivingEntity target);
+
+    @EventHandler
+    public void hitbox(PlayerMoveEvent e){
+        Player player = e.getPlayer();
+        if (activity.get(player.getUniqueId()) == null){
+            return;
+        }
+        List<Entity> nearby = owner.getNearbyEntities(hitbox, hitbox, hitbox);
+        nearby.remove(owner);
+        if (nearby.isEmpty()){
+            return;
+        }
+        if (!(nearby.get(0) instanceof LivingEntity)){
+            return;
+        }
+        LivingEntity target = (LivingEntity)nearby.get(0);
+        onHit(target);
+        activity.remove(player.getUniqueId());
+        timerList.remove(player.getUniqueId());
+
+        /*
+        Above checks for hitbox, then runs a "onHit" method.
+        */
+
+    }
+    @EventHandler
+    public void whenEnd(PlayerMoveEvent e){
+        Player player = e.getPlayer();
+        if (activity.get(player.getUniqueId()) == null){
+            return;
+        }
+        if (!(player.getLocation().subtract(0, 0.001, 0).getBlock().isPassable()) && (activity.get(player.getUniqueId()) != null)){
+            onLand();
+            if (endOnLand){
+                activity.remove(player.getUniqueId());
+                timerList.remove(player.getUniqueId());
+            }
+        }
+        if (timed){
+            if (System.currentTimeMillis() < timerList.get(player.getUniqueId())){
+                return;
+            }else{
+                timerList.remove(player.getUniqueId());
+                activity.remove(player.getUniqueId());
+            }
+        }
+
+
     }
 
 

@@ -1,32 +1,16 @@
 package SSM;
 
 import SSM.Kits.*;
+import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -43,13 +27,19 @@ public class EntityProjectile extends BukkitRunnable {
     protected Plugin plugin;
     protected Player firer;
     protected String name;
+    protected boolean expAdd = false;
     protected Entity projectile;
-    protected Location overridePosition;
-    protected boolean fireOpposite = false;
-    protected boolean clearOnFinish = true;
-    protected boolean fired;
-    protected boolean upwardKnockbackSet;
-    protected double[] data;
+    private Location overridePosition;
+    private double time;
+    private boolean timed = false;
+    private boolean lastsOnGround = false;
+    private boolean fireOpposite = false;
+    private boolean clearOnFinish = true;
+    private boolean direct = false;
+    private boolean fired;
+    private boolean upwardKnockbackSet;
+    private boolean pierce;
+    private double[] data;
 
     public EntityProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
         this.plugin = plugin;
@@ -69,14 +59,33 @@ public class EntityProjectile extends BukkitRunnable {
     }
 
     public void launchProjectile() {
+        if (timed){
+            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    projectile.remove();
+                }
+            }, (long)(time*20));
+        }
+        firer.setLevel(0);
         if (fired) {
             return;
         }
-        Location firePosition = getOverridePosition();
-        if (firePosition == null) {
-            firePosition = firer.getEyeLocation();
-        }
-        projectile.teleport(firePosition);
+        //if (getOverridePosition() == null) {
+            //setOverridePosition(firer.getEyeLocation());
+        //}
+        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+            @Override
+            public void run() {
+                projectile.teleport(getOverridePosition());
+                /*
+                The reason we need this is because if we don't have it, the teleport
+                literally doesn't work because apparently it's "too fast" and
+                tries to teleport the entity before it exists
+                (learned the hard way)
+                 */
+            }
+        }, 2L);
         projectile.setCustomName(name);
         if (projectile instanceof Item) {
             Item item = (Item) projectile;
@@ -90,7 +99,11 @@ public class EntityProjectile extends BukkitRunnable {
         direction.rotateAroundX(getRandomVariation());
         direction.rotateAroundY(getRandomVariation());
         direction.rotateAroundZ(getRandomVariation());
-        projectile.setVelocity(direction.multiply(magnitude));
+        if (direct){
+            projectile.setVelocity(direction.multiply(magnitude).setY(0).normalize());
+        }else{
+            projectile.setVelocity(direction.multiply(magnitude));
+        }
         this.runTaskTimer(plugin, 0L, 1L);
         fired = true;
     }
@@ -113,9 +126,11 @@ public class EntityProjectile extends BukkitRunnable {
             if (!(entity instanceof LivingEntity)) {
                 continue;
             }
+            if (entity.getName().equalsIgnoreCase(projectile.getName())){
+                continue;
+            }
             LivingEntity target = (LivingEntity) canHit.get(0);
             onHit(target);
-            this.cancel();
             break;
         }
     }
@@ -123,8 +138,11 @@ public class EntityProjectile extends BukkitRunnable {
     public boolean onHit(LivingEntity target) {
         boolean success = target != null;
         if (success) {
+            if (target.getNoDamageTicks() > 1){
+                target.setNoDamageTicks(0);
+            }
             double damage = getDamage();
-            target.damage(damage);
+            DamageUtil.dealDamage(firer, target, damage, true, expAdd);
             double knockback = getKnockback();
             double upwardKnockback = getUpwardKnockback();
             Vector velocity = projectile.getVelocity();
@@ -137,8 +155,14 @@ public class EntityProjectile extends BukkitRunnable {
                 velocity = velocity.normalize().multiply(knockback);
                 target.setVelocity(velocity);
             }
+        }else{
+            if (!lastsOnGround){
+                projectile.remove();
+            }
         }
-        clearProjectile();
+        if (!pierce){
+            clearProjectile();
+        }
         return success;
     }
 
@@ -223,6 +247,28 @@ public class EntityProjectile extends BukkitRunnable {
     public double getVariation() {
         return data[5];
     }
+
+    public boolean getExpAdd(){return expAdd;}
+
+    public void setExpAdd(boolean expAdd1){expAdd = expAdd1;}
+
+    public boolean getPierce(){return pierce;}
+
+    public void setPierce(boolean pierceBoolean){pierce = pierceBoolean;}
+
+    public boolean getLastsOnGround(){return lastsOnGround;}
+
+    public void setLastsOnGround(boolean lastsOnGround1){lastsOnGround = lastsOnGround1;}
+
+    public double getTime(){return time;}
+
+    public void setTime(double time1){time = time1;}
+
+    public boolean getTimed(){return timed;}
+
+    public void setTimed(boolean timed1){timed = timed1;}
+
+    public void setDirect(boolean direct1){direct = direct1;}
 
 }
 

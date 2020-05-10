@@ -1,8 +1,11 @@
 package SSM;
 
+import SSM.Abilities.*;
 import SSM.GameManagers.CooldownManager;
-import SSM.GameManagers.DJManager;
+import SSM.GameManagers.MeleeManager;
 import SSM.Kits.*;
+import SSM.Utilities.DamageUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,19 +13,19 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,6 +36,7 @@ public class SSM extends JavaPlugin implements Listener {
 
     public static HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
     public static Kit[] allKits;
+    public static Ability[] heroAbilities;
     public static Plugin ourInstance;
 
     public static void main(String[] args) {
@@ -45,20 +49,38 @@ public class SSM extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        for (Player player : Bukkit.getOnlinePlayers()){
+            player.setInvulnerable(false);
+        }
         ourInstance = this;
+        getServer().getPluginManager().registerEvents(new SelectKit.ClickEvent(), this);
         getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(new MeleeManager(), this);
 
         allKits = new Kit[]{
-            new KitCreeper(),
-            new KitIronGolem(),
+            //Put in order of how kits appear (It affects ordering).
             new KitSkeleton(),
-            new KitSlime(),
+            new KitIronGolem(),
             new KitSpider(),
-            new KitWitch(),
-            new KitShulker(),
+            new KitSlime(),
             new KitSquid(),
+            new KitCreeper(),
             new KitSnowMan(),
             new KitMagmaCube(),
+            new KitWitch(),
+            new KitHero(),
+            new KitCow(),
+            new KitChoose(),
+        };
+        heroAbilities = new Ability[]{
+                new heroFly(),
+                new heroTeleport(),
+                new heroSpeed(),
+                new heroGay(),
+                new heroFireball(),
+                new heroHeal(),
+                new heroParalyze(),
+                new heroDitto(),
         };
 
         CooldownManager.getInstance().start(this);
@@ -70,11 +92,11 @@ public class SSM extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        Player player = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("kit")) {
             if (!(sender instanceof Player)) {
                 return true;
             }
-            Player player = (Player) sender;
             if (args.length == 1) {
                 for (Kit check : allKits) {
                     if (check.name.equalsIgnoreCase(args[0])) {
@@ -88,12 +110,23 @@ public class SSM extends JavaPlugin implements Listener {
                 finalMessage += kit.getName() + " ";
             }
             player.sendMessage(finalMessage);
-            return true;
+    }else if (cmd.getName().equalsIgnoreCase("damage")){
+        if (args.length == 1) {
+            try {
+                int number = Integer.parseInt(args[0]);
+                DamageUtil.dealDamage(player, number);
+                player.sendMessage("You were dealt " + number + " damage");
+            }catch (NumberFormatException e){
+                player.sendMessage("You need to input a number!");
+            }
+        }
+        }else if (cmd.getName().equalsIgnoreCase("settings")){
+
         }
         return false;
     }
 
-    public void equipPlayer(Player player, Kit check) {
+    public static void equipPlayer(Player player, Kit check) {
         Kit kit = playerKit.get(player.getUniqueId());
         if (kit != null) {
             kit.destroyKit();
@@ -130,7 +163,7 @@ public class SSM extends JavaPlugin implements Listener {
             Location loc = player.getLocation();
             Vector dir = loc.getDirection();
             dir.normalize();
-            dir.multiply(10); //5 blocks a way
+            dir.multiply(10);
             loc.add(dir);
             player.teleport(loc);
         }
@@ -138,6 +171,14 @@ public class SSM extends JavaPlugin implements Listener {
             player.setHealth(0.0);
         }
     }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event){
+        String msg = event.getMessage();
+        event.setFormat(event.getPlayer().getDisplayName()+" "+msg);
+        msg = msg.replace(":b:", ""+ChatColor.DARK_RED + ChatColor.BOLD + "B" +ChatColor.RESET);
+        event.setMessage(msg);
+        }
 
     @EventHandler
     public void stopHealthRegen(EntityRegainHealthEvent e) {
@@ -149,23 +190,23 @@ public class SSM extends JavaPlugin implements Listener {
         e.setCancelled(true);
     }
 
+
+
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
+    public void onPlayerQuit(PlayerQuitEvent e){
         Player player = e.getPlayer();
         String name = player.getDisplayName();
         e.setQuitMessage(ChatColor.YELLOW + name + " has fucking rage quit, what a fucking bitch LOL");
     }
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e){
+        Player player = e.getPlayer();
 
+        if (player.getName().equals("huxs")||player.getName().equalsIgnoreCase("RyukoMatoiKLK")||player.getName().equalsIgnoreCase("Whoneedspacee")){
+            player.setDisplayName(""+ChatColor.MAGIC + ChatColor.BOLD + "N"+ChatColor.DARK_PURPLE + ChatColor.BOLD + "Developer" +ChatColor.RESET +ChatColor.MAGIC + ChatColor.BOLD + "N" + ChatColor.RESET + ChatColor.DARK_RED + " " +player.getName() + ChatColor.RESET);
+        }
+        if (player.getName().equalsIgnoreCase("HDSbjIhdihdgh2sf")){
+            player.setDisplayName("" + ChatColor.BLUE + ChatColor.BOLD + "Mag" + ChatColor.RESET + ChatColor.GOLD + " " + player.getName() + ChatColor.RESET);
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,11 +1,12 @@
 package SSM.Attributes.DoubleJumps;
 
+import org.bukkit.Sound;
 import org.bukkit.util.Vector;
 
 public class DirectDoubleJump extends DoubleJump {
 
-    public DirectDoubleJump(double power, double height, int maxDoubleJumps) {
-        super(power, height, maxDoubleJumps);
+    public DirectDoubleJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound) {
+        super(power, height, maxDoubleJumps, doubleJumpSound);
     }
 
     @Override
