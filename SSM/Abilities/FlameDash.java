@@ -72,7 +72,7 @@ public class FlameDash extends Ability {
     public void click(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (player.getInventory().getItemInHand().getType() == Material.IRON_SHOVEL) {
+            if (player.getInventory().getItemInMainHand().getType() == Material.IRON_SHOVEL) {
                 if (active) {
                     explode();
                     Bukkit.getScheduler().cancelTask(task);
