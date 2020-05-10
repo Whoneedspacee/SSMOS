@@ -24,7 +24,7 @@ public class KitSkeleton extends Kit {
         this.armor = 6;
         this.speed = 0.21f;
         this.regeneration = 0.2;
-        this.knockback = 0;
+        this.knockback = 1.25;
         this.disguise = DisguiseType.SKELETON;
         this.name = "Skeleton";
         this.menuItem = Material.BOW;

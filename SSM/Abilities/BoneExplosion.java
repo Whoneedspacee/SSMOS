@@ -1,6 +1,8 @@
 package SSM.Abilities;
 
 import SSM.*;
+import SSM.Utilities.DamageUtil;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
@@ -15,7 +17,9 @@ import java.util.List;
 
 public class BoneExplosion extends Ability {
 
-    protected int boneAmount = 40;
+    private int boneAmount = 40;
+    private double range = 5;
+    private double baseDamage = 6;
 
     public BoneExplosion() {
         super();
@@ -25,6 +29,7 @@ public class BoneExplosion extends Ability {
     }
 
     public void activate() {
+        Location loc = owner.getLocation();
         owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_SKELETON_DEATH, 10L, 1L);
         ItemStack bone = new ItemStack(Material.BONE, 1);
         for (int i = 0; i < boneAmount; i++) {
@@ -35,19 +40,19 @@ public class BoneExplosion extends Ability {
             BoneProjectile projectile = new BoneProjectile(plugin, owner, name, firing);
             projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
             projectile.launchProjectile();
-            List<Entity> canHit = owner.getNearbyEntities(4, 4, 4);
-            canHit.remove(owner);
+        }
+        List<Entity> canHit = owner.getNearbyEntities(range, range, range);
+        canHit.remove(owner);
 
-            for (Entity entity : canHit) {
-                if ((entity instanceof LivingEntity)) {
-                    ((LivingEntity) entity).damage(6.0);
-                    Vector target = entity.getLocation().toVector();
-                    Vector player = owner.getLocation().toVector();
-                    Vector pre = target.subtract(player);
-                    Vector velocity = pre.normalize().multiply(1.35);
-
-                    entity.setVelocity(new Vector(velocity.getX(), 0.4, velocity.getZ()));
-                }
+        for (Entity entity : canHit) {
+            if ((entity instanceof LivingEntity)) {
+                double dist = loc.distance(entity.getLocation());
+                DamageUtil.dealDamage(owner, (LivingEntity)entity, (range - dist) * (baseDamage / range), true, false);
+                Vector target = entity.getLocation().toVector();
+                Vector player = owner.getLocation().toVector();
+                Vector pre = target.subtract(player);
+                Vector velocity = pre.normalize().multiply(1.35);
+                entity.setVelocity(new Vector(velocity.getX(), 0.4, velocity.getZ()));
             }
         }
 

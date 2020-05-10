@@ -21,7 +21,7 @@ public class KitSlime extends Kit {
         this.armor = 4;
         this.speed = 0.21f;
         this.regeneration = 0.35;
-        this.knockback = 0;
+        this.knockback = 1.75;
         this.disguise = DisguiseType.SLIME;
         this.name = "Slime";
         this.menuItem = Material.SLIME_BALL;
