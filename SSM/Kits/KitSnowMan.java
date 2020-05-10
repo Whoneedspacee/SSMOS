@@ -22,7 +22,7 @@ public class KitSnowMan extends Kit {
         this.armor = 6;
         this.speed = 0.23f;
         this.regeneration = 0.2;
-        this.knockback = 0;
+        this.knockback = 1.4;
         this.disguise = DisguiseType.SNOWMAN;
         this.name = "Snowman";
         this.menuItem = Material.PUMPKIN;

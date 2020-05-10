@@ -18,7 +18,7 @@ public class KitCow extends Kit {
         this.armor = 7;
         this.speed = 0.20f;
         this.regeneration = 0.25;
-        this.knockback = 0;
+        this.knockback = 1.1;
         this.disguise = DisguiseType.COW;
         this.name = "Cow";
         this.menuItem = Material.MILK_BUCKET;

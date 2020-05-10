@@ -13,10 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EnderPearl;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
@@ -30,6 +27,7 @@ import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class SSM extends JavaPlugin implements Listener {
@@ -49,9 +47,6 @@ public class SSM extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        for (Player player : Bukkit.getOnlinePlayers()){
-            player.setInvulnerable(false);
-        }
         ourInstance = this;
         getServer().getPluginManager().registerEvents(new SelectKit.ClickEvent(), this);
         getServer().getPluginManager().registerEvents(this, this);
@@ -66,21 +61,12 @@ public class SSM extends JavaPlugin implements Listener {
             new KitSquid(),
             new KitCreeper(),
             new KitSnowMan(),
+            new KitWolf(),
             new KitMagmaCube(),
             new KitWitch(),
-            new KitHero(),
             new KitCow(),
+            new KitPig(),
             new KitChoose(),
-        };
-        heroAbilities = new Ability[]{
-                new heroFly(),
-                new heroTeleport(),
-                new heroSpeed(),
-                new heroGay(),
-                new heroFireball(),
-                new heroHeal(),
-                new heroParalyze(),
-                new heroDitto(),
         };
 
         CooldownManager.getInstance().start(this);
@@ -110,18 +96,18 @@ public class SSM extends JavaPlugin implements Listener {
                 finalMessage += kit.getName() + " ";
             }
             player.sendMessage(finalMessage);
-    }else if (cmd.getName().equalsIgnoreCase("damage")){
-        if (args.length == 1) {
-            try {
-                int number = Integer.parseInt(args[0]);
-                DamageUtil.dealDamage(player, number);
-                player.sendMessage("You were dealt " + number + " damage");
-            }catch (NumberFormatException e){
-                player.sendMessage("You need to input a number!");
+    }else if (cmd.getName().equalsIgnoreCase("damage")) {
+            if (args.length == 1) {
+                try {
+                    int number = Integer.parseInt(args[0]);
+                    DamageUtil.dealDamage(player, number);
+                    player.sendMessage("You were dealt " + number + " damage");
+                    return true;
+                } catch (NumberFormatException e) {
+                    player.sendMessage("You need to input a number!");
+                    return true;
+                }
             }
-        }
-        }else if (cmd.getName().equalsIgnoreCase("settings")){
-
         }
         return false;
     }
@@ -190,23 +176,18 @@ public class SSM extends JavaPlugin implements Listener {
         e.setCancelled(true);
     }
 
-
+    @EventHandler
+    public void onDamage(EntityDamageEvent e){
+        if (e.getCause() == EntityDamageEvent.DamageCause.VOID){
+            LivingEntity ent = (LivingEntity)e.getEntity();
+            ent.setHealth(0.0);
+        }
+    }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e){
         Player player = e.getPlayer();
         String name = player.getDisplayName();
         e.setQuitMessage(ChatColor.YELLOW + name + " has fucking rage quit, what a fucking bitch LOL");
-    }
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e){
-        Player player = e.getPlayer();
-
-        if (player.getName().equals("huxs")||player.getName().equalsIgnoreCase("RyukoMatoiKLK")||player.getName().equalsIgnoreCase("Whoneedspacee")){
-            player.setDisplayName(""+ChatColor.MAGIC + ChatColor.BOLD + "N"+ChatColor.DARK_PURPLE + ChatColor.BOLD + "Developer" +ChatColor.RESET +ChatColor.MAGIC + ChatColor.BOLD + "N" + ChatColor.RESET + ChatColor.DARK_RED + " " +player.getName() + ChatColor.RESET);
-        }
-        if (player.getName().equalsIgnoreCase("HDSbjIhdihdgh2sf")){
-            player.setDisplayName("" + ChatColor.BLUE + ChatColor.BOLD + "Mag" + ChatColor.RESET + ChatColor.GOLD + " " + player.getName() + ChatColor.RESET);
-        }
     }
 }
