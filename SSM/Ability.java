@@ -66,7 +66,7 @@ public abstract class Ability extends Attribute {
         if (CooldownManager.getInstance().getRemainingTimeFor(itemName, player) <= 0) {
             if (itemName.equalsIgnoreCase(name)) {
                 CooldownManager.getInstance().addCooldown(itemName, (long) (cooldownTime * 100), player);
-                if (usesEnergy) {
+                if(usesEnergy){
                     energy = owner.getExp();
                     xp = (owner.getExpToLevel() * expUsed) / owner.getExpToLevel();
                     if (xp >= owner.getExp()) {
