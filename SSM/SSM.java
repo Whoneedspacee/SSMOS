@@ -48,9 +48,6 @@ public class SSM extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         ourInstance = this;
-        getServer().getPluginManager().registerEvents(new SelectKit.ClickEvent(), this);
-        getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(new MeleeManager(), this);
 
         allKits = new Kit[]{
             //Put in order of how kits appear (It affects ordering).
@@ -141,14 +138,12 @@ public class SSM extends JavaPlugin implements Listener {
         Block blockOn = e.getFrom().getBlock().getRelative(BlockFace.DOWN);
         if (blockOn.getType() == Material.GOLD_BLOCK) {
             Vector direction = player.getLocation().getDirection().setY(0);
-            direction = direction.normalize().multiply(1.2);
             direction.setY(1.2);
             player.setVelocity(direction);
         }
         if (blockOn.getType() == Material.IRON_BLOCK) {
             Location loc = player.getLocation();
             Vector dir = loc.getDirection();
-            dir.normalize();
             dir.multiply(10);
             loc.add(dir);
             player.teleport(loc);
@@ -168,19 +163,19 @@ public class SSM extends JavaPlugin implements Listener {
 
     @EventHandler
     public void stopHealthRegen(EntityRegainHealthEvent e) {
-        e.setCancelled(true);
+        e.setCancelled(false);
     }
 
     @EventHandler
     public void stopHungerLoss(FoodLevelChangeEvent e) {
-        e.setCancelled(true);
+        e.setCancelled(false);
     }
 
     @EventHandler
     public void onDamage(EntityDamageEvent e){
         if (e.getCause() == EntityDamageEvent.DamageCause.VOID){
             LivingEntity ent = (LivingEntity)e.getEntity();
-            ent.setHealth(0.0);
+            ent.setHealth(-1.0);
         }
     }
 
