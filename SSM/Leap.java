@@ -41,7 +41,7 @@ public abstract class Leap extends Ability {
         if (activity.get(player.getUniqueId()) == null){
             return;
         }
-        List<Entity> nearby = owner.getNearbyEntities(hitbox-5, hitbox-5, hitbox-5);
+        List<Entity> nearby = owner.getNearbyEntities(hitbox, hitbox, hitbox);
         nearby.remove(owner);
         if (nearby.isEmpty()){
             return;
@@ -65,7 +65,7 @@ public abstract class Leap extends Ability {
         if (activity.get(player.getUniqueId()) == null){
             return;
         }
-        if ((System.currentTimeMillis() - (timerList.get(player.getUniqueId()) - activeTime*100L)) < 200){
+        if ((System.currentTimeMillis() - (timerList.get(player.getUniqueId()) - activeTime*1000L)) < 200){
             return;
         }
         if (!(player.getLocation().subtract(0, 0.001, 0).getBlock().isPassable()) && (activity.get(player.getUniqueId()) != null)){
