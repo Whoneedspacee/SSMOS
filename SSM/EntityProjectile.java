@@ -105,7 +105,7 @@ public class EntityProjectile extends BukkitRunnable {
         }else{
             projectile.setVelocity(direction.multiply(magnitude));
         }
-        this.runTaskTimer(plugin, 0L, 1L);
+        this.runTaskTimer(plugin, 0L, 4L);
         fired = true;
     }
 
