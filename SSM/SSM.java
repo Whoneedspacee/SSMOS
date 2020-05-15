@@ -5,6 +5,7 @@ import SSM.GameManagers.CooldownManager;
 import SSM.GameManagers.MeleeManager;
 import SSM.Kits.*;
 import SSM.Utilities.DamageUtil;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -51,6 +52,7 @@ public class SSM extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new SelectKit.ClickEvent(), this);
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new MeleeManager(), this);
+        getServer().getPluginManager().registerEvents(new Firefly(),this);
 
         allKits = new Kit[]{
             //Put in order of how kits appear (It affects ordering).
@@ -66,6 +68,7 @@ public class SSM extends JavaPlugin implements Listener {
             new KitWitch(),
             new KitCow(),
             new KitPig(),
+            new KitBlaze(),
             new KitChoose(),
         };
 

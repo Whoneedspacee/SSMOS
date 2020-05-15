@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.Abilities.InkShotgun;
 import SSM.Abilities.SpinWeb;
+import SSM.Abilities.SuperSquid;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Attributes.SquidFix;
@@ -40,7 +41,7 @@ public class KitSquid extends Kit {
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
         setItem(Material.IRON_AXE, 0, new InkShotgun());
-        setItem(Material.IRON_SWORD, 1);
+        setItem(Material.IRON_SWORD, 1, new SuperSquid());
         setItem(Material.IRON_SHOVEL, 2);
 
         addAttribute(new Regeneration(regeneration, 1));
