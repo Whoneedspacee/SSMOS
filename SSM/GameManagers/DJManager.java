@@ -71,14 +71,14 @@ public class DJManager implements Listener {
 
         if (!world.getBlockAt(location.subtract(0, 0.5, 0)).isPassable()) {
             doubleJumpCount.put(player.getUniqueId(), 1);
-            player.setAllowFlight(false);
+            player.setAllowFlight(true);
         }
     }
 
     @EventHandler
     private void entityDamageEvent(EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            e.setCancelled(false);
+            e.setCancelled(true);
         }
     }
 
