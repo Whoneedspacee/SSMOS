@@ -66,6 +66,7 @@ public class SSM extends JavaPlugin implements Listener {
             new KitChoose(),
         };
 
+        CooldownManager.getInstance().start(this);
     }
 
     @Override
