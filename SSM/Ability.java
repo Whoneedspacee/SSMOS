@@ -1,14 +1,17 @@
 package SSM;
 
 import SSM.GameManagers.CooldownManager;
+import net.minecraft.server.v1_15_R1.PacketPlayOutSetSlot;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -20,11 +23,13 @@ public abstract class Ability extends Attribute {
     public Material item;
     protected boolean leftClickActivate = false;
     protected boolean rightClickActivate = false;
+    protected boolean holdDownActivate = false;
     protected boolean usesEnergy = false;
     protected float expUsed = 0;
 
     float energy = 0;
     float xp;
+    int held = 0;
 
     public Ability() {
         super();
@@ -45,6 +50,12 @@ public abstract class Ability extends Attribute {
         }
     }
 
+    public void activateHold(Player player) {
+        if (holdDownActivate) {
+            checkAndActivate(player);
+        }
+    }
+
     public void checkAndActivate(Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getItemMeta() == null) {
@@ -57,14 +68,25 @@ public abstract class Ability extends Attribute {
                 CooldownManager.getInstance().addCooldown(itemName, (long) (cooldownTime * 100), player);
                 if(usesEnergy){
                     energy = owner.getExp();
-                    xp = (owner.getExpToLevel()* expUsed)/owner.getExpToLevel();
-                    if (xp >= owner.getExp()){
+                    xp = (owner.getExpToLevel() * expUsed) / owner.getExpToLevel();
+                    if (xp >= owner.getExp()) {
                         return;
                     }
-                    owner.setExp(owner.getExp()-(xp));
+                    owner.setExp(owner.getExp() - (xp));
                     activate();
                 }
-                else{
+                if (holdDownActivate) {
+                    for (held = 1; held == 1; ){
+                        owner.getInventory().setItemInOffHand(new ItemStack(Material.SHIELD));
+                        if (owner.isBlocking()){
+                            activate();
+
+                        }
+                        if (!owner.isBlocking()){
+                            held = 0;
+                        }
+                    }
+                } else {
                     activate();
                 }
 
@@ -85,6 +107,8 @@ public abstract class Ability extends Attribute {
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             activateRight(player);
         }
+        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            activateHold(player);
+        }
     }
-
 }

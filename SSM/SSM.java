@@ -5,6 +5,7 @@ import SSM.GameManagers.CooldownManager;
 import SSM.GameManagers.MeleeManager;
 import SSM.Kits.*;
 import SSM.Utilities.DamageUtil;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -51,22 +52,24 @@ public class SSM extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new SelectKit.ClickEvent(), this);
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new MeleeManager(), this);
+        getServer().getPluginManager().registerEvents(new Firefly(), this);
 
         allKits = new Kit[]{
-            //Put in order of how kits appear (It affects ordering).
-            new KitSkeleton(),
-            new KitIronGolem(),
-            new KitSpider(),
-            new KitSlime(),
-            new KitSquid(),
-            new KitCreeper(),
-            new KitSnowMan(),
-            new KitWolf(),
-            new KitMagmaCube(),
-            new KitWitch(),
-            new KitCow(),
-            new KitPig(),
-            new KitChoose(),
+                //Put in order of how kits appear (It affects ordering).
+                new KitSkeleton(),
+                new KitIronGolem(),
+                new KitSpider(),
+                new KitSlime(),
+                new KitSquid(),
+                new KitCreeper(),
+                new KitSnowMan(),
+                new KitWolf(),
+                new KitMagmaCube(),
+                new KitWitch(),
+                new KitCow(),
+                new KitPig(),
+                new KitBlaze(),
+                new KitChoose(),
         };
 
         CooldownManager.getInstance().start(this);
@@ -96,7 +99,7 @@ public class SSM extends JavaPlugin implements Listener {
                 finalMessage += kit.getName() + " ";
             }
             player.sendMessage(finalMessage);
-    }else if (cmd.getName().equalsIgnoreCase("damage")) {
+        } else if (cmd.getName().equalsIgnoreCase("damage")) {
             if (args.length == 1) {
                 try {
                     int number = Integer.parseInt(args[0]);
@@ -159,12 +162,12 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent event){
+    public void onChat(AsyncPlayerChatEvent event) {
         String msg = event.getMessage();
-        event.setFormat(event.getPlayer().getDisplayName()+" "+msg);
-        msg = msg.replace(":b:", ""+ChatColor.DARK_RED + ChatColor.BOLD + "B" +ChatColor.RESET);
+        event.setFormat(event.getPlayer().getDisplayName() + " " + msg);
+        msg = msg.replace(":b:", "" + ChatColor.DARK_RED + ChatColor.BOLD + "B" + ChatColor.RESET);
         event.setMessage(msg);
-        }
+    }
 
     @EventHandler
     public void stopHealthRegen(EntityRegainHealthEvent e) {
@@ -177,15 +180,15 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onDamage(EntityDamageEvent e){
-        if (e.getCause() == EntityDamageEvent.DamageCause.VOID){
-            LivingEntity ent = (LivingEntity)e.getEntity();
+    public void onDamage(EntityDamageEvent e) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
+            LivingEntity ent = (LivingEntity) e.getEntity();
             ent.setHealth(0.0);
         }
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e){
+    public void onPlayerQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         String name = player.getDisplayName();
         e.setQuitMessage(ChatColor.YELLOW + name + " has fucking rage quit, what a fucking bitch LOL");

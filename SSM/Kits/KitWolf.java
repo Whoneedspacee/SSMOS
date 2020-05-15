@@ -35,7 +35,7 @@ public class KitWolf extends Kit {
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
-        setItem(Material.IRON_AXE, 0, new CubTackle());
+        setItem(Material.IRON_AXE, 0);
         setItem(Material.IRON_SHOVEL, 1, new WolfStrike());
 
         addAttribute(new Regeneration(regeneration, 1));
