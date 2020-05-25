@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -191,6 +192,13 @@ public class SSM extends JavaPlugin implements Listener {
     public void onPlayerQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         String name = player.getDisplayName();
-        e.setQuitMessage(ChatColor.YELLOW + name + " has fucking rage quit, what a fucking bitch LOL");
+        e.setQuitMessage(ChatColor.YELLOW + name + " has left the server, cya soon!");
+    }
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e){
+        Player player = e.getPlayer();
+        player.setInvulnerable(false);
+        String name = player.getDisplayName();
+        e.setJoinMessage(ChatColor.YELLOW + "Welcome " + name + " to the SSM Open Source Testing Server!");
     }
 }

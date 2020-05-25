@@ -41,6 +41,7 @@ public class EntityProjectile extends BukkitRunnable {
     private boolean upwardKnockbackSet = true;
     private boolean pierce;
     private double[] data;
+    private int hungerGain = 3;
 
     public EntityProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
         this.plugin = plugin;
@@ -144,6 +145,7 @@ public class EntityProjectile extends BukkitRunnable {
             }
             double damage = getDamage();
             DamageUtil.dealDamage(firer, target, damage, true, expAdd);
+            firer.setFoodLevel(firer.getFoodLevel()+ hungerGain);
             double knockback = getKnockback();
             double upwardKnockback = getUpwardKnockback();
             Vector velocity = projectile.getVelocity();

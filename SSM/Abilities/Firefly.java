@@ -31,7 +31,7 @@ public class Firefly extends Ability {
     public void activate(){
         fireflyTime = 0;
         i = 0;
-        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1.0F, 0.6F);
+        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1.0F, 1.2F);
 
         stall = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
