@@ -36,7 +36,6 @@ public class SSM extends JavaPlugin implements Listener {
 
     public static HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
     public static Kit[] allKits;
-    public static Ability[] heroAbilities;
     public static Plugin ourInstance;
 
     public static void main(String[] args) {
@@ -165,7 +164,6 @@ public class SSM extends JavaPlugin implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         String msg = event.getMessage();
-        event.setFormat(event.getPlayer().getDisplayName() + " " + msg);
         msg = msg.replace(":b:", "" + ChatColor.DARK_RED + ChatColor.BOLD + "B" + ChatColor.RESET);
         event.setMessage(msg);
     }
@@ -200,5 +198,15 @@ public class SSM extends JavaPlugin implements Listener {
         player.setInvulnerable(false);
         String name = player.getDisplayName();
         e.setJoinMessage(ChatColor.YELLOW + "Welcome " + name + " to the SSM Open Source Testing Server!");
+        player.getServer().broadcastMessage(ChatColor.GRAY + "Map made by olivegard3n and SNXE");
+    }
+
+    @EventHandler
+    public void onProjectileLaunch(ProjectileHitEvent e){
+        Projectile projectile = e.getEntity();
+        Entity target = e.getHitEntity();
+        if (target instanceof Player && ((Player) target).isBlocking()){
+            ((Player) target).damage(2);
+        }
     }
 }

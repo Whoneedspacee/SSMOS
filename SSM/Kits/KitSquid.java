@@ -3,7 +3,6 @@ package SSM.Kits;
 import SSM.Abilities.InkShotgun;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
-import SSM.Attributes.SquidFix;
 import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
@@ -38,6 +37,5 @@ public class KitSquid extends Kit {
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
-        addAttribute(new SquidFix());
     }
 }
