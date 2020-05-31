@@ -14,6 +14,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -63,7 +64,6 @@ public class Kit{
         FlagWatcher watcher = disg.getWatcher();
         watcher.setCustomName(""+owner.getName());
         disg.startDisguise();
-        addAttribute(new Compass());
     }
 
     public void destroyKit() {

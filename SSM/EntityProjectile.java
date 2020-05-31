@@ -41,7 +41,7 @@ public class EntityProjectile extends BukkitRunnable {
     private boolean upwardKnockbackSet = true;
     private boolean pierce;
     private double[] data;
-    private int hungerGain = 3;
+    private int hungerGain;
 
     public EntityProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
         this.plugin = plugin;

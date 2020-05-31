@@ -38,7 +38,7 @@ public class KitSpider extends Kit {
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
-        setItem(Material.IRON_SWORD, 0);
+        setItem(Material.IRON_SWORD, 0, new Needler());
         setItem(Material.IRON_AXE, 1, new SpinWeb());
 
         addAttribute(new Regeneration(regeneration, 1));
