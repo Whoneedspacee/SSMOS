@@ -55,16 +55,15 @@ public abstract class Ability extends Attribute {
         if (CooldownManager.getInstance().getRemainingTimeFor(itemName, player) <= 0) {
             if (itemName.equalsIgnoreCase(name)) {
                 CooldownManager.getInstance().addCooldown(itemName, (long) (cooldownTime * 1000), player);
-                if(usesEnergy){
+                if (usesEnergy) {
                     energy = owner.getExp();
-                    xp = (owner.getExpToLevel()* expUsed)/owner.getExpToLevel();
-                    if (xp >= owner.getExp()){
+                    xp = (owner.getExpToLevel() * expUsed) / owner.getExpToLevel();
+                    if (xp >= owner.getExp()) {
                         return;
                     }
-                    owner.setExp(owner.getExp()-(xp));
+                    owner.setExp(owner.getExp() - (xp));
                     activate();
-                }
-                else{
+                } else {
                     activate();
                 }
 
@@ -72,6 +71,14 @@ public abstract class Ability extends Attribute {
         }
     }
 
+    public static void setCooldown(String abilityName, Player abilityUser, long duration) {
+        for (CooldownManager.CooldownData cd : CooldownManager.cooldownData) {
+            if (cd.abilityName.contains(abilityName)) {
+                CooldownManager.cooldownData.remove(cd);
+            }
+            CooldownManager.cooldownData.add(new CooldownManager.CooldownData(abilityName, duration, abilityUser));
+        }
+    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
@@ -86,5 +93,5 @@ public abstract class Ability extends Attribute {
             activateRight(player);
         }
     }
-
 }
+
