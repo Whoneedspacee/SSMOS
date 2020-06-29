@@ -1,12 +1,11 @@
 package SSM.Abilities;
 
-import SSM.*;
+import SSM.Leap;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
+
+;
 
 public class SlimeSlam extends Leap {
 
@@ -27,13 +26,13 @@ public class SlimeSlam extends Leap {
     public void activate() {
         owner.setVelocity(owner.getLocation().getDirection().multiply(power));
         activity.put(owner.getUniqueId(), true);
-        timerList.put(owner.getUniqueId(), System.currentTimeMillis()+(long)activeTime*1000);
+        timerList.put(owner.getUniqueId(), System.currentTimeMillis() + (long) activeTime * 1000);
     }
 
     @Override
     public void onHit(LivingEntity target) {
         DamageUtil.dealDamage(owner, target, damage, true, false);
-        DamageUtil.dealDamage(owner, damage*recoilDamage);
+        DamageUtil.dealDamage(owner, damage * recoilDamage);
         Vector enemy = target.getLocation().toVector();
         Vector player = owner.getLocation().toVector();
         Vector pre = enemy.subtract(player);

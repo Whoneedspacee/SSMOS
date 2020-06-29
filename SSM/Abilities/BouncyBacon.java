@@ -1,17 +1,17 @@
 package SSM.Abilities;
 
-import SSM.*;
-import org.bukkit.Bukkit;
+import SSM.Ability;
+import SSM.EntityProjectile;
 import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.block.Block;
-import org.bukkit.entity.*;
-import org.bukkit.event.Listener;;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
+
+;
 
 public class BouncyBacon extends Ability {
 

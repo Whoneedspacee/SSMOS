@@ -28,7 +28,7 @@ public class Firefly extends Ability {
         this.rightClickActivate = true;
     }
 
-    public void activate(){
+    public void activate() {
         fireflyTime = 0;
         i = 0;
         owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1.0F, 1.2F);
@@ -38,14 +38,14 @@ public class Firefly extends Ability {
             public void run() {
                 i++;
                 owner.setLastDamage(0.0);
-                owner.setVelocity(new Vector(0,0,0));
-                owner.getWorld().spawnParticle(Particle.FLAME, owner.getLocation(),1);
-                if (i >= 15){
+                owner.setVelocity(new Vector(0, 0, 0));
+                owner.getWorld().spawnParticle(Particle.FLAME, owner.getLocation(), 1);
+                if (i >= 15) {
                     Bukkit.getScheduler().cancelTask(stall);
                     i = 0;
                 }
             }
-        },0,1);
+        }, 0, 1);
         runn = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
@@ -76,19 +76,19 @@ public class Firefly extends Ability {
                             entity.setVelocity(new Vector(velocity.getX(), 0.4, velocity.getZ()));
                         }
                     }
-                    if (fireflyTime >= 40){
+                    if (fireflyTime >= 40) {
                         owner.setInvulnerable(false);
                         Bukkit.getScheduler().cancelTask(runn);
                     }
                 }
             }
-        },15,1);
+        }, 15, 1);
     }
 
     @EventHandler
-    public void onHit(EntityDamageEvent e){
-        if (e.getEntity() instanceof Player){
-            if (e.getDamage() >= 2.0){
+    public void onHit(EntityDamageEvent e) {
+        if (e.getEntity() instanceof Player) {
+            if (e.getDamage() >= 2.0) {
                 Bukkit.getScheduler().cancelTask(stall);
                 Bukkit.getScheduler().cancelTask(runn);
             }

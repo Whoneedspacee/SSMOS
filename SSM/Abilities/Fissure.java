@@ -1,22 +1,14 @@
 package SSM.Abilities;
 
-import SSM.*;
+import SSM.Ability;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+;
 
 public class Fissure extends Ability {
 
@@ -36,17 +28,17 @@ public class Fissure extends Ability {
     public void activate() {
         Location loc = owner.getLocation();
         Vector dir = loc.getDirection();
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
-            @Override
-            public void run(){
-                cycle++;
-                layerOne(dir, loc);
-                if (cycle >= fissureLength){
-                    stop();
-                    cycle = 0;
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    cycle++;
+                    layerOne(dir, loc);
+                    if (cycle >= fissureLength) {
+                        stop();
+                        cycle = 0;
+                    }
                 }
-            }
-        }, 0L, 2L
+            }, 0L, 2L
         );
     }
 
@@ -68,11 +60,11 @@ public class Fissure extends Ability {
 
     public void layerTwo(Location loc) {
         loc.getWorld().getBlockAt(new Location(loc.getWorld(), loc.getX(), loc.getY() + 1, loc.getZ())).setType(type);
-        blocks.add(new Location(loc.getWorld(), loc.getX(), loc.getY()+1, loc.getZ()));
+        blocks.add(new Location(loc.getWorld(), loc.getX(), loc.getY() + 1, loc.getZ()));
     }
 
 
-    private void stop(){
+    private void stop() {
         Bukkit.getScheduler().cancelTask(task);
     }
 

@@ -1,19 +1,18 @@
 package SSM.Kits;
 
-import SSM.*;
-import SSM.Abilities.*;
-//import SSM.Attributes.ClearProjectile;
+import SSM.Abilities.BoneExplosion;
+import SSM.Abilities.RopedArrow;
 import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
+import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
+
+//import SSM.Attributes.ClearProjectile;
 
 public class KitSkeleton extends Kit {
 

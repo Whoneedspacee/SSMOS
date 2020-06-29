@@ -1,7 +1,6 @@
 package SSM.Attributes.DoubleJumps;
 
 import org.bukkit.Sound;
-import org.bukkit.util.Vector;
 
 public class DirectDoubleJump extends DoubleJump {
 

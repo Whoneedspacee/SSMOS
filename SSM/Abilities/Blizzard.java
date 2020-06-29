@@ -1,13 +1,10 @@
 package SSM.Abilities;
 
-import SSM.*;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.*;
-import org.bukkit.event.Listener;;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
+import SSM.Ability;
+import SSM.EntityProjectile;
+import org.bukkit.entity.Snowball;
+
+;
 
 public class Blizzard extends Ability {
 

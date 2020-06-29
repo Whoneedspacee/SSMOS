@@ -1,20 +1,12 @@
 package SSM;
 
 import SSM.GameManagers.CooldownManager;
-import SSM.Utilities.Utils;
 import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 public abstract class Ability extends Attribute {
 
@@ -95,12 +87,12 @@ public abstract class Ability extends Attribute {
             activateRight(player);
         }
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (owner.getInventory().getItemInOffHand().getType() != Material.SHIELD){
+            if (owner.getInventory().getItemInOffHand().getType() != Material.SHIELD) {
                 owner.getInventory().setItemInOffHand(new ItemStack(Material.SHIELD));
                 activateHold(player);
             } else {
                 activateHold(player);
             }
-       }
+        }
     }
 }

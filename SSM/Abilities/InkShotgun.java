@@ -2,10 +2,8 @@ package SSM.Abilities;
 
 import SSM.Ability;
 import SSM.EntityProjectile;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;

@@ -1,16 +1,8 @@
 package SSM.Attributes;
 
-import SSM.*;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.*;
-import org.bukkit.event.Listener;;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Vector;
+import SSM.Attribute;
 
-import java.util.List;
+;
 
 public class Regeneration extends Attribute {
 

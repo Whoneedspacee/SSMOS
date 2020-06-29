@@ -1,6 +1,5 @@
 package SSM;
 
-import SSM.Kits.*;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
@@ -9,19 +8,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 public class EntityProjectile extends BukkitRunnable {
 
@@ -61,13 +53,13 @@ public class EntityProjectile extends BukkitRunnable {
     }
 
     public void launchProjectile() {
-        if (timed){
+        if (timed) {
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                 @Override
                 public void run() {
                     projectile.remove();
                 }
-            }, (long)(time*20));
+            }, (long) (time * 20));
         }
         firer.setLevel(0);
         if (fired) {
@@ -101,9 +93,9 @@ public class EntityProjectile extends BukkitRunnable {
         direction.rotateAroundX(getRandomVariation());
         direction.rotateAroundY(getRandomVariation());
         direction.rotateAroundZ(getRandomVariation());
-        if (direct){
+        if (direct) {
             projectile.setVelocity(direction.multiply(magnitude).setY(0).normalize());
-        }else{
+        } else {
             projectile.setVelocity(direction.multiply(magnitude));
         }
         this.runTaskTimer(plugin, 0L, 1L);
@@ -128,7 +120,7 @@ public class EntityProjectile extends BukkitRunnable {
             if (!(entity instanceof LivingEntity)) {
                 continue;
             }
-            if (entity.getName().equalsIgnoreCase(projectile.getName())){
+            if (entity.getName().equalsIgnoreCase(projectile.getName())) {
                 continue;
             }
             LivingEntity target = (LivingEntity) canHit.get(0);
@@ -140,12 +132,12 @@ public class EntityProjectile extends BukkitRunnable {
     public boolean onHit(LivingEntity target) {
         boolean success = target != null;
         if (success) {
-            if (target.getNoDamageTicks() > 1){
+            if (target.getNoDamageTicks() > 1) {
                 target.setNoDamageTicks(0);
             }
             double damage = getDamage();
             DamageUtil.dealDamage(firer, target, damage, true, expAdd);
-            firer.setFoodLevel(firer.getFoodLevel()+ hungerGain);
+            firer.setFoodLevel(firer.getFoodLevel() + hungerGain);
             double knockback = getKnockback();
             double upwardKnockback = getUpwardKnockback();
             Vector velocity = projectile.getVelocity();
@@ -155,19 +147,19 @@ public class EntityProjectile extends BukkitRunnable {
                 velocity = velocity.normalize().multiply(knockback);
                 target.setVelocity(velocity);
             }
-        }else{
-            if (!lastsOnGround){
+        } else {
+            if (!lastsOnGround) {
                 projectile.remove();
             }
             onBlockHit();
         }
-        if (!pierce){
+        if (!pierce) {
             clearProjectile();
         }
         return success;
     }
 
-    public void onBlockHit(){
+    public void onBlockHit() {
 
     }
 
@@ -253,27 +245,49 @@ public class EntityProjectile extends BukkitRunnable {
         return data[5];
     }
 
-    public boolean getExpAdd(){return expAdd;}
+    public boolean getExpAdd() {
+        return expAdd;
+    }
 
-    public void setExpAdd(boolean expAdd1){expAdd = expAdd1;}
+    public void setExpAdd(boolean expAdd1) {
+        expAdd = expAdd1;
+    }
 
-    public boolean getPierce(){return pierce;}
+    public boolean getPierce() {
+        return pierce;
+    }
 
-    public void setPierce(boolean pierceBoolean){pierce = pierceBoolean;}
+    public void setPierce(boolean pierceBoolean) {
+        pierce = pierceBoolean;
+    }
 
-    public boolean getLastsOnGround(){return lastsOnGround;}
+    public boolean getLastsOnGround() {
+        return lastsOnGround;
+    }
 
-    public void setLastsOnGround(boolean lastsOnGround1){lastsOnGround = lastsOnGround1;}
+    public void setLastsOnGround(boolean lastsOnGround1) {
+        lastsOnGround = lastsOnGround1;
+    }
 
-    public double getTime(){return time;}
+    public double getTime() {
+        return time;
+    }
 
-    public void setTime(double time1){time = time1;}
+    public void setTime(double time1) {
+        time = time1;
+    }
 
-    public boolean getTimed(){return timed;}
+    public boolean getTimed() {
+        return timed;
+    }
 
-    public void setTimed(boolean timed1){timed = timed1;}
+    public void setTimed(boolean timed1) {
+        timed = timed1;
+    }
 
-    public void setDirect(boolean direct1){direct = direct1;}
+    public void setDirect(boolean direct1) {
+        direct = direct1;
+    }
 
 }
 
