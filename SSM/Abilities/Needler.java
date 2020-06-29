@@ -3,10 +3,6 @@ package SSM.Abilities;
 import SSM.Ability;
 import SSM.EntityProjectile;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
-import org.bukkit.potion.PotionEffectType;
 
 public class Needler extends Ability {
 

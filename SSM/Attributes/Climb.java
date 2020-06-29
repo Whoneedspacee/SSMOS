@@ -1,19 +1,10 @@
 package SSM.Attributes;
 
-import SSM.*;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import SSM.Attribute;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
-import java.util.List;
+;
 
 public class Climb extends Attribute {
 

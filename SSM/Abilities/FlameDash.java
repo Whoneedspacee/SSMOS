@@ -2,25 +2,21 @@ package SSM.Abilities;
 
 import SSM.Ability;
 import SSM.Utilities.DamageUtil;
-import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
-import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.util.Vector;
 
-import javax.xml.bind.ValidationException;
 import java.util.List;
-
-import me.libraryaddict.disguise.LibsDisguises;
-import me.libraryaddict.*;
 
 public class FlameDash extends Ability {
 
@@ -35,7 +31,6 @@ public class FlameDash extends Ability {
 
     public FlameDash() {
         super();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
         this.name = "Flame Dash";
         this.cooldownTime = 8;
         this.rightClickActivate = true;

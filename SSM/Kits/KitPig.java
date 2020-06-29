@@ -1,11 +1,10 @@
 package SSM.Kits;
 
-import SSM.*;
-import SSM.Abilities.*;
+import SSM.Abilities.BouncyBacon;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
-import SSM.Attributes.Stampede;
+import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -36,6 +35,6 @@ public class KitPig extends Kit {
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
-        addAttribute(new ExpCharge(0.011F,1));
+        addAttribute(new ExpCharge(0.011F, 1));
     }
 }

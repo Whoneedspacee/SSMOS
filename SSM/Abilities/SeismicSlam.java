@@ -1,18 +1,16 @@
 package SSM.Abilities;
 
-import SSM.*;
+import SSM.Leap;
 import SSM.Utilities.DamageUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 import java.util.List;
+
+;
 
 public class SeismicSlam extends Leap {
 
@@ -30,7 +28,7 @@ public class SeismicSlam extends Leap {
 
     public void activate() {
         activity.put(owner.getUniqueId(), true);
-        timerList.put(owner.getUniqueId(), System.currentTimeMillis()+(long)activeTime*1000);
+        timerList.put(owner.getUniqueId(), System.currentTimeMillis() + (long) activeTime * 1000);
         Vector velocity = owner.getVelocity();
         velocity.setY(1.0);
         owner.setVelocity(velocity);
@@ -57,7 +55,6 @@ public class SeismicSlam extends Leap {
             }
         }
     }
-
 
 
 }

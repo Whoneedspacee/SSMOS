@@ -1,16 +1,15 @@
 package SSM.Kits;
 
-import SSM.*;
-import SSM.Abilities.*;
+import SSM.Abilities.Explode;
+import SSM.Abilities.SulphurBomb;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Hunger;
 import SSM.Attributes.Regeneration;
-import io.netty.handler.codec.http2.Http2UnknownFrame;
+import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class KitCreeper extends Kit {
 
