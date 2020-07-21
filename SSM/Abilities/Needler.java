@@ -12,22 +12,20 @@ public class Needler extends Ability {
         super();
         this.name = "Needler";
         this.cooldownTime = 0;
-        this.holdClickActivate = true;
+        this.rightClickActivate = true;
     }
 
     public void activate() {
-        while (owner.isBlocking()) {
-            for (int i = 0; i < needleAmount; i++) {
-                Arrow firing = owner.getWorld().spawn(owner.getEyeLocation(), Arrow.class);
-                EntityProjectile projectile = new EntityProjectile(plugin, owner, name, firing);
-                projectile.setDamage(1.0);
-                projectile.setSpeed(1.0);
-                projectile.setKnockback(0.4);
-                projectile.setUpwardKnockback(0.2);
-                projectile.setHitboxSize(0.5);
-                projectile.setVariation(18);
-                projectile.launchProjectile();
-            }
+        for (int i = 0; i < needleAmount; i++) {
+            Arrow firing = owner.getWorld().spawn(owner.getEyeLocation(), Arrow.class);
+            EntityProjectile projectile = new EntityProjectile(plugin, owner, name, firing);
+            projectile.setDamage(1.0);
+            projectile.setSpeed(1.0);
+            projectile.setKnockback(0.4);
+            projectile.setUpwardKnockback(0.2);
+            projectile.setHitboxSize(0.5);
+            projectile.setVariation(18);
+            projectile.launchProjectile();
         }
     }
 }
