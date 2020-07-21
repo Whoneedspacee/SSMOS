@@ -1,7 +1,6 @@
 package SSM;
 
 import SSM.GameManagers.CooldownManager;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
@@ -13,7 +12,6 @@ public abstract class Ability extends Attribute {
     protected double cooldownTime = 2.5;
     protected boolean leftClickActivate = false;
     protected boolean rightClickActivate = false;
-    protected boolean holdClickActivate = false;
     protected boolean usesEnergy = false;
     protected float expUsed = 0;
 
@@ -36,14 +34,6 @@ public abstract class Ability extends Attribute {
     public void activateRight(Player player) {
         if (rightClickActivate) {
             checkAndActivate(player);
-        }
-    }
-
-    public void activateHold(Player player) {
-        if (holdClickActivate) {
-            while (owner.isBlocking()) {
-                checkAndActivate(player);
-            }
         }
     }
 
@@ -85,14 +75,6 @@ public abstract class Ability extends Attribute {
         }
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             activateRight(player);
-        }
-        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (owner.getInventory().getItemInOffHand().getType() != Material.SHIELD) {
-                owner.getInventory().setItemInOffHand(new ItemStack(Material.SHIELD));
-                activateHold(player);
-            } else {
-                activateHold(player);
-            }
         }
     }
 }
