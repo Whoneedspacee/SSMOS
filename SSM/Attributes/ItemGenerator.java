@@ -4,8 +4,6 @@ import SSM.Attribute;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-;
-
 public class ItemGenerator extends Attribute {
 
     Material item;

@@ -18,4 +18,5 @@ public class Fatigue extends Attribute {
             owner.setSprinting(false);
         }
     }
+
 }

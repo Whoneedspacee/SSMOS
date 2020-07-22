@@ -2,16 +2,18 @@ package SSM.Abilities;
 
 import SSM.Ability;
 import SSM.EntityProjectile;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-public class InkShotgun extends Ability {
+public class InkShotgun extends Ability implements OwnerRightClickEvent {
 
     protected int inkAmount = 7;
 
@@ -19,7 +21,11 @@ public class InkShotgun extends Ability {
         super();
         this.name = "Ink Shotgun";
         this.cooldownTime = 6;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {

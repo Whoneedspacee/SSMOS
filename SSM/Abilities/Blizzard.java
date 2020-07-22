@@ -2,21 +2,26 @@ package SSM.Abilities;
 
 import SSM.Ability;
 import SSM.EntityProjectile;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
+import org.bukkit.event.player.PlayerInteractEvent;
 
-;
-
-public class Blizzard extends Ability {
+public class Blizzard extends Ability implements OwnerRightClickEvent {
 
     int BlizzardAmount = 5;
 
     public Blizzard() {
         super();
         this.name = "Blizzard";
-        this.rightClickActivate = true;
         this.cooldownTime = 0;
         this.expUsed = 0.2F;
         this.usesEnergy = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {

@@ -2,9 +2,12 @@ package SSM.Abilities;
 
 import SSM.Ability;
 import SSM.EntityProjectile;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 
-public class Needler extends Ability {
+public class Needler extends Ability implements OwnerRightClickEvent {
 
     int needleAmount = 6;
 
@@ -12,7 +15,11 @@ public class Needler extends Ability {
         super();
         this.name = "Needler";
         this.cooldownTime = 0;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {

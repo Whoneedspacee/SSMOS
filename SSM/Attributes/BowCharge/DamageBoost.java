@@ -2,8 +2,6 @@ package SSM.Attributes.BowCharge;
 
 import org.bukkit.entity.Arrow;
 
-;
-
 public class DamageBoost extends BowCharge {
 
     public DamageBoost(double delay, double rate, int maxCharge) {

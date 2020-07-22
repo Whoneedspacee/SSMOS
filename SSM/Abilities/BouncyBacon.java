@@ -2,18 +2,18 @@ package SSM.Abilities;
 
 import SSM.Ability;
 import SSM.EntityProjectile;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
-;
-
-public class BouncyBacon extends Ability {
+public class BouncyBacon extends Ability implements OwnerRightClickEvent {
 
     public BouncyBacon() {
         super();
@@ -21,7 +21,11 @@ public class BouncyBacon extends Ability {
         this.cooldownTime = 0;
         this.usesEnergy = true;
         this.expUsed = 0.3f;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {

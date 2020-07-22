@@ -23,10 +23,6 @@ public abstract class Leap extends Ability {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public void activate() {
-        // This does nothing.
-    }
-
     public void onLand() {
 
     }

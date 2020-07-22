@@ -10,13 +10,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class MeleeManager implements Listener {
 
-    private static MeleeManager ourInstance = new MeleeManager();
+    private static MeleeManager ourInstance;
+    private JavaPlugin plugin = SSM.getInstance();
 
     public MeleeManager() {
-        SSM.getInstance().getServer().getPluginManager().registerEvents(this, SSM.getInstance());
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        ourInstance = this;
     }
 
     @EventHandler
@@ -30,4 +33,5 @@ public class MeleeManager implements Listener {
             VelocityUtil.addKnockback((Player) e.getDamager(), (LivingEntity) e.getEntity(), 1.5, 0.3);
         }
     }
+
 }

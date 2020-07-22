@@ -2,16 +2,13 @@ package SSM.Attributes;
 
 import SSM.Attribute;
 import SSM.GameManagers.KitManager;
+import SSM.GameManagers.OwnerEvents.OwnerDealDamageEvent;
 import SSM.Kit;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-;
-
-
-public class Stampede extends Attribute {
+public class Stampede extends Attribute implements OwnerDealDamageEvent {
 
     private int ticksRunning = 0;
     private int timePerLevel; // seconds
@@ -45,11 +42,7 @@ public class Stampede extends Attribute {
         }
     }
 
-    @EventHandler
-    public void endStampede(EntityDamageByEntityEvent e) {
-        if (!(e.getDamager() == owner)) {
-            return;
-        }
+    public void onOwnerDealDamage(EntityDamageByEntityEvent e) {
         if (level == 1) {
             return;
         }
@@ -59,4 +52,5 @@ public class Stampede extends Attribute {
         level = 1;
         owner.setSprinting(false);
     }
+
 }

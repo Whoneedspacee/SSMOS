@@ -2,8 +2,6 @@ package SSM.Attributes;
 
 import SSM.Attribute;
 
-;
-
 public class Regeneration extends Attribute {
 
     Double regen;
@@ -19,9 +17,9 @@ public class Regeneration extends Attribute {
 
     @Override
     public void run() {
-
         if (!owner.isDead()) {
             owner.setHealth(Math.min(owner.getHealth() + regen, 20));
         }
     }
+
 }

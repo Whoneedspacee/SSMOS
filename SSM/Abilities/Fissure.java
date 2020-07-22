@@ -1,16 +1,17 @@
 package SSM.Abilities;
 
 import SSM.Ability;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 
-;
-
-public class Fissure extends Ability {
+public class Fissure extends Ability implements OwnerRightClickEvent {
 
     private int fissureLength = 13;
     private int task = -1;
@@ -22,7 +23,11 @@ public class Fissure extends Ability {
         super();
         this.name = "Fissure";
         this.cooldownTime = 10;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {
@@ -63,10 +68,8 @@ public class Fissure extends Ability {
         blocks.add(new Location(loc.getWorld(), loc.getX(), loc.getY() + 1, loc.getZ()));
     }
 
-
     private void stop() {
         Bukkit.getScheduler().cancelTask(task);
     }
-
 
 }

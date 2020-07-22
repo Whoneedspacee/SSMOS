@@ -1,13 +1,14 @@
 package SSM.Abilities;
 
 import SSM.Ability;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Sound;
 import org.bukkit.entity.LargeFireball;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-;
-
-public class MagmaBlast extends Ability {
+public class MagmaBlast extends Ability implements OwnerRightClickEvent {
 
     private LargeFireball largeFireball;
 
@@ -15,7 +16,11 @@ public class MagmaBlast extends Ability {
         super();
         this.name = "Magma Blast";
         this.cooldownTime = 8;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {

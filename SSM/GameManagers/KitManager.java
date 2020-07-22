@@ -24,7 +24,7 @@ import java.util.*;
 
 public class KitManager implements CommandExecutor, Listener {
 
-    private static KitManager ourInstance = new KitManager();
+    private static KitManager ourInstance;
     private static HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
     private List<Kit> allKits = new ArrayList<Kit>();
     private JavaPlugin plugin = SSM.getInstance();
@@ -45,6 +45,7 @@ public class KitManager implements CommandExecutor, Listener {
         allKits.add(new KitBlaze());
         allKits = Collections.unmodifiableList(allKits);
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        ourInstance = this;
     }
 
     public static void equipPlayer(Player player, Kit check) {
@@ -115,7 +116,7 @@ public class KitManager implements CommandExecutor, Listener {
             return null;
         }
         List<Attribute> attributes = kit.getAttributes();
-        String currentItemName = player.getInventory().getItemInMainHand().toString();
+        String currentItemName = player.getInventory().getItemInMainHand().getItemMeta().getDisplayName();
         Ability ability = null;
         for (Attribute attribute : attributes) {
             if (!(attribute instanceof Ability)) {

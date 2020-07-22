@@ -1,15 +1,16 @@
 package SSM.Abilities;
 
 import SSM.Ability;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-;
-
-public class MilkSpiral extends Ability {
+public class MilkSpiral extends Ability implements OwnerRightClickEvent {
 
     // length in blocks
     private int spiralLength = 40;
@@ -26,13 +27,18 @@ public class MilkSpiral extends Ability {
         super();
         this.name = "Milk Spiral";
         this.cooldownTime = 0.5;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int i = 0;
             Location ownerLocation = owner.getEyeLocation();
+
             @Override
             public void run() {
                 World world = owner.getWorld();

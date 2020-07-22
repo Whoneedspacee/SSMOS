@@ -1,12 +1,13 @@
 package SSM.GameManagers;
 
 import SSM.Kit;
+import SSM.SSM;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -17,16 +18,14 @@ import java.util.Iterator;
  */
 
 public class CooldownManager extends BukkitRunnable {
-    private static CooldownManager ourInstance = new CooldownManager();
+
+    private static CooldownManager ourInstance;
     private ArrayList<CooldownData> cooldownData = new ArrayList<>();
-
     private boolean isRunning = false;
+    private JavaPlugin plugin = SSM.getInstance();
 
-    public void start(Plugin plugin) throws ManagerAlreadyRunningException {
-        if (isRunning) {
-            throw new ManagerAlreadyRunningException();
-        }
-
+    public CooldownManager() {
+        ourInstance = this;
         this.runTaskTimer(plugin, 1, 1);
         isRunning = true;
     }

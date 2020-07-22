@@ -18,4 +18,5 @@ public class Hunger extends Attribute {
         if (owner.getGameMode() != GameMode.CREATIVE)
             owner.setFoodLevel(owner.getFoodLevel() - 1);
     }
+
 }

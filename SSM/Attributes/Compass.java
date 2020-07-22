@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-;
-
 public class Compass extends Attribute {
 
     public Compass() {
