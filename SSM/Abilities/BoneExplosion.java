@@ -2,6 +2,7 @@ package SSM.Abilities;
 
 import SSM.Ability;
 import SSM.EntityProjectile;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
@@ -17,9 +19,7 @@ import org.bukkit.util.Vector;
 
 import java.util.List;
 
-;
-
-public class BoneExplosion extends Ability {
+public class BoneExplosion extends Ability implements OwnerRightClickEvent {
 
     private int boneAmount = 40;
     private double range = 5;
@@ -29,7 +29,11 @@ public class BoneExplosion extends Ability {
         super();
         this.name = "Bone Explosion";
         this.cooldownTime = 8;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {

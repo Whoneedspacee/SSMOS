@@ -1,6 +1,8 @@
 package SSM.Abilities;
 
 import SSM.Ability;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
+import SSM.GameManagers.OwnerEvents.OwnerTakeDamageEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
 import org.bukkit.Particle;
@@ -8,13 +10,13 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
 import java.util.List;
 
-public class Firefly extends Ability {
+public class Firefly extends Ability implements OwnerRightClickEvent, OwnerTakeDamageEvent {
 
     int stall = -1;
     int runn = -1;
@@ -25,7 +27,11 @@ public class Firefly extends Ability {
         super();
         this.name = "Firefly";
         this.cooldownTime = 8;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {
@@ -85,13 +91,11 @@ public class Firefly extends Ability {
         }, 15, 1);
     }
 
-    @EventHandler
-    public void onHit(EntityDamageEvent e) {
-        if (e.getEntity() instanceof Player) {
-            if (e.getDamage() >= 2.0) {
-                Bukkit.getScheduler().cancelTask(stall);
-                Bukkit.getScheduler().cancelTask(runn);
-            }
+    public void onOwnerTakeDamage(EntityDamageEvent e) {
+        if (e.getDamage() >= 2.0) {
+            Bukkit.getScheduler().cancelTask(stall);
+            Bukkit.getScheduler().cancelTask(runn);
         }
     }
+
 }

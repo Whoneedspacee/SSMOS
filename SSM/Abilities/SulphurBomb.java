@@ -2,6 +2,7 @@ package SSM.Abilities;
 
 import SSM.Ability;
 import SSM.EntityProjectile;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -9,18 +10,21 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-;
-
-public class SulphurBomb extends Ability {
+public class SulphurBomb extends Ability implements OwnerRightClickEvent {
 
     public SulphurBomb() {
         super();
         this.name = "Sulphur Bomb";
         this.cooldownTime = 3;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {

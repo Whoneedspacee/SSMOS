@@ -1,7 +1,9 @@
 package SSM;
 
 import SSM.GameManagers.CooldownManager;
+import SSM.GameManagers.EventManager;
 import SSM.GameManagers.KitManager;
+import SSM.GameManagers.MeleeManager;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -43,7 +45,10 @@ public class SSM extends JavaPlugin implements Listener {
     public void onEnable() {
         ourInstance = this;
         getServer().getPluginManager().registerEvents(this, this);
-        CooldownManager.getInstance().start(this);
+        new CooldownManager();
+        new EventManager();
+        new KitManager();
+        new MeleeManager();
         this.getCommand("kit").setExecutor(KitManager.getInstance());
     }
 

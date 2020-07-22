@@ -4,8 +4,6 @@ import SSM.Attribute;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-;
-
 public class Heavyweight extends Attribute {
 
     public Heavyweight() {
@@ -18,4 +16,5 @@ public class Heavyweight extends Attribute {
     public void run() {
         owner.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 70, 0));
     }
+
 }

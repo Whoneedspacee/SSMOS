@@ -4,8 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 
-;
-
 public class Barrage extends BowCharge {
 
     public Barrage(double delay, double rate, int maxCharge) {

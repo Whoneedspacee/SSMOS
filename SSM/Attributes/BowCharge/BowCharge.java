@@ -14,8 +14,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
-;
-
 public abstract class BowCharge extends Attribute {
 
     double delay;

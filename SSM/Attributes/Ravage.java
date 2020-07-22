@@ -46,5 +46,4 @@ public class Ravage extends Attribute {
 
     }
 
-
 }

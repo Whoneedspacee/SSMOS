@@ -1,25 +1,30 @@
 package SSM.Abilities;
 
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Leap;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-;
-
-public class WolfStrike extends Leap {
+public class WolfStrike extends Leap implements OwnerRightClickEvent {
 
     double damage = 7.0;
 
     public WolfStrike() {
         this.name = "Wolf Strike";
         this.cooldownTime = 8;
-        this.rightClickActivate = true;
         this.power = 1.5;
         this.timed = true;
         this.activeTime = 2.5;
         this.endOnLand = true;
         this.hitbox = 1.0;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {
