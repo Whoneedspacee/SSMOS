@@ -18,11 +18,6 @@ import java.util.Iterator;
  */
 
 public class CooldownManager extends BukkitRunnable {
-<<<<<<< HEAD
-    public static CooldownManager ourInstance = new CooldownManager();
-    public static ArrayList<CooldownData> cooldownData = new ArrayList<>();
-=======
->>>>>>> master
 
     private static CooldownManager ourInstance;
     private ArrayList<CooldownData> cooldownData = new ArrayList<>();
@@ -77,13 +72,8 @@ public class CooldownManager extends BukkitRunnable {
      * @param abilityUser player using the ability (cooldownData linked with this player)
      */
     public void addCooldown(String abilityName, long duration, Player abilityUser) {
-<<<<<<< HEAD
-        Kit kit = SSM.playerKit.get(abilityUser.getUniqueId());
-        if (duration <= 1000){
-=======
         Kit kit = KitManager.getPlayerKit(abilityUser);
         if (duration == 0) {
->>>>>>> master
             return;
         } else {
             cooldownData.add(new CooldownData(abilityName, duration, abilityUser));
@@ -117,13 +107,13 @@ public class CooldownManager extends BukkitRunnable {
     /**
      * Container for all information needed in a cooldown
      */
-    public static class CooldownData {
-        public Player abilityUser;
-        public String abilityName;
-        public long duration;
-        public long startTime;
+    private class CooldownData {
+        private Player abilityUser;
+        private String abilityName;
+        private long duration;
+        private long startTime;
 
-        public CooldownData(String abilityName, long duration, Player abilityUser) {
+        CooldownData(String abilityName, long duration, Player abilityUser) {
             this.abilityName = abilityName;
             this.duration = duration;
             startTime = System.currentTimeMillis();

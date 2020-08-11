@@ -35,8 +35,6 @@ public class KitSquid extends Kit {
         setItem(Material.IRON_SWORD, 1);
         setItem(Material.IRON_SHOVEL, 2);
 
-        setShield();
-
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
     }

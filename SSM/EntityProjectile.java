@@ -290,15 +290,3 @@ public class EntityProjectile extends BukkitRunnable {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
