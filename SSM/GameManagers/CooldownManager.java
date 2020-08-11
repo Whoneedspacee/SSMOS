@@ -7,26 +7,30 @@ import SSM.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * A singleton implementation for a Cooldown manager which handles everything about cooldowns including displaying and calculating.
  */
 
 public class CooldownManager extends BukkitRunnable {
+<<<<<<< HEAD
     public static CooldownManager ourInstance = new CooldownManager();
     public static ArrayList<CooldownData> cooldownData = new ArrayList<>();
+=======
+>>>>>>> master
 
+    private static CooldownManager ourInstance;
+    private ArrayList<CooldownData> cooldownData = new ArrayList<>();
     private boolean isRunning = false;
+    private JavaPlugin plugin = SSM.getInstance();
 
-    public void start(Plugin plugin) throws ManagerAlreadyRunningException {
-        if (isRunning) {
-            throw new ManagerAlreadyRunningException();
-        }
-
+    public CooldownManager() {
+        ourInstance = this;
         this.runTaskTimer(plugin, 1, 1);
         isRunning = true;
     }
@@ -73,11 +77,15 @@ public class CooldownManager extends BukkitRunnable {
      * @param abilityUser player using the ability (cooldownData linked with this player)
      */
     public void addCooldown(String abilityName, long duration, Player abilityUser) {
+<<<<<<< HEAD
         Kit kit = SSM.playerKit.get(abilityUser.getUniqueId());
         if (duration <= 1000){
+=======
+        Kit kit = KitManager.getPlayerKit(abilityUser);
+        if (duration == 0) {
+>>>>>>> master
             return;
-        }
-        else{
+        } else {
             cooldownData.add(new CooldownData(abilityName, duration, abilityUser));
         }
     }

@@ -1,51 +1,24 @@
 package SSM;
 
 import SSM.GameManagers.CooldownManager;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 public abstract class Ability extends Attribute {
 
     protected double cooldownTime = 2.5;
-    public Material item;
-    protected boolean leftClickActivate = false;
-    protected boolean rightClickActivate = false;
     protected boolean usesEnergy = false;
     protected float expUsed = 0;
-
-    float energy = 0;
-    float xp;
+    protected float energy = 0;
+    protected float xp;
 
     public Ability() {
         super();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
-
-    public abstract void activate();
-
-    public void activateLeft(Player player) {
-        if (leftClickActivate) {
-            checkAndActivate(player);
-        }
-    }
-
-    public void activateRight(Player player) {
-        if (rightClickActivate) {
-            checkAndActivate(player);
-        }
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public void checkAndActivate(Player player) {
+<<<<<<< HEAD
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || item.getItemMeta() == null) {
             return;
@@ -65,12 +38,23 @@ public abstract class Ability extends Attribute {
                     activate();
                 } else {
                     activate();
+=======
+        if (CooldownManager.getInstance().getRemainingTimeFor(name, player) <= 0) {
+            CooldownManager.getInstance().addCooldown(name, (long) (cooldownTime * 1000), player);
+            if (usesEnergy) {
+                energy = owner.getExp();
+                xp = (owner.getExpToLevel() * expUsed) / owner.getExpToLevel();
+                if (xp >= owner.getExp()) {
+                    return;
+>>>>>>> master
                 }
-
+                owner.setExp(owner.getExp() - (xp));
             }
+            activate();
         }
     }
 
+<<<<<<< HEAD
     public static void setCooldown(String abilityName, Player abilityUser, long duration) {
         for (CooldownManager.CooldownData cd : CooldownManager.cooldownData) {
             if (cd.abilityName.contains(abilityName)) {
@@ -95,3 +79,8 @@ public abstract class Ability extends Attribute {
     }
 }
 
+=======
+    public abstract void activate();
+
+}
+>>>>>>> master
