@@ -1,11 +1,10 @@
 package SSM;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerMoveEvent;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,76 +12,86 @@ import java.util.UUID;
 
 public abstract class Leap extends Ability {
 
-    protected HashMap<UUID, Boolean> activity = new HashMap<>();
-    protected HashMap<UUID, Long> timerList = new HashMap<>();
-    protected boolean endOnLand, timed;
-    protected double activeTime = 5.0, hitbox, power;
+    protected double timeActive;
+    protected boolean active;
+    protected double duration = 50; // 2.5 seconds
+    protected boolean endOnLand;
+    protected double hitbox, power;
+    int task, hitDetection, landDetection;
 
 
     public Leap() {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public void onLand() {
-
-    }
-
-    public void onHit(LivingEntity target) {
-
-    }
-
-    @EventHandler
-    public void hitbox(PlayerMoveEvent e) {
-        Player player = e.getPlayer();
-        if (activity.get(player.getUniqueId()) == null) {
-            return;
-        }
-        List<Entity> nearby = owner.getNearbyEntities(hitbox, hitbox, hitbox);
-        nearby.remove(owner);
-        if (nearby.isEmpty()) {
-            return;
-        }
-        if (!(nearby.get(0) instanceof LivingEntity)) {
-            return;
-        }
-        LivingEntity target = (LivingEntity) nearby.get(0);
-        onHit(target);
-        activity.remove(player.getUniqueId());
-        timerList.remove(player.getUniqueId());
-
-        /*
-        Above checks for hitbox, then runs a "onHit" method.
-        */
-
-    }
-
-    @EventHandler
-    public void whenEnd(PlayerMoveEvent e) {
-        Player player = e.getPlayer();
-        if (activity.get(player.getUniqueId()) == null) {
-            return;
-        }
-        if ((System.currentTimeMillis() - (timerList.get(player.getUniqueId()) - activeTime * 1000L)) < 200) {
-            return;
-        }
-        if (!(player.getLocation().subtract(0, 0.001, 0).getBlock().isPassable()) && (activity.get(player.getUniqueId()) != null)) {
-            onLand();
-            if (endOnLand) {
-                activity.remove(player.getUniqueId());
-                timerList.remove(player.getUniqueId());
+    protected void init(){
+        owner.setVelocity(owner.getLocation().getDirection().multiply(power));
+        active = true;
+        hitDetection();
+        landDetection();
+        timeActive = 0;
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if (!active){
+                    Bukkit.getScheduler().cancelTask(task);
+                }
+                if (timeActive > duration){
+                    active = false;
+                    Bukkit.getScheduler().cancelTask(task);
+                }
+                timeActive++;
             }
-        }
-        if (timed) {
-            if (System.currentTimeMillis() < timerList.get(player.getUniqueId())) {
-                return;
-            } else {
-                timerList.remove(player.getUniqueId());
-                activity.remove(player.getUniqueId());
-            }
-        }
-
-
+        }, 0L, 1L);
     }
+
+    private void hitDetection(){
+        hitDetection = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if (!active){
+                    Bukkit.getScheduler().cancelTask(hitDetection);
+                }
+                List<Entity> nearby = owner.getNearbyEntities(hitbox, hitbox, hitbox);
+                nearby.remove(owner);
+                for (Entity entity : nearby){
+                    if (!(entity instanceof LivingEntity)){
+                        return;
+                    }
+                    LivingEntity target = (LivingEntity)entity;
+                    onHit(target);
+                    active = false;
+                }
+            }
+        },0L, 1L);
+    }
+
+    private void landDetection(){
+        landDetection = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if (!active){
+                    Bukkit.getScheduler().cancelTask(landDetection);
+                }
+                if (timeActive <= 5){
+                    return; // Prevents slam moves from immediately ending if you use them on the ground.
+                }
+                Block block = owner.getLocation().subtract(0, -0.001, 0).getBlock();
+                if (!block.isPassable()){
+                    onLand();
+                    owner.sendMessage("test");
+                }
+            }
+        }, 0L, 1L);
+    }
+
+    public abstract void onLand();
+
+    public abstract void onHit(LivingEntity target);
+
+
+
+
 
 
 }

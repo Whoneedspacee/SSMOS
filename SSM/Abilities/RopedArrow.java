@@ -41,7 +41,7 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
         Vector pre = a.subtract(p);
         Vector velocity = pre.normalize().multiply(1.8);
 
-        owner.setVelocity(new Vector(velocity.getX(), 1.2, velocity.getZ()));
+        owner.setVelocity(new Vector(velocity.getX(), 0.5, velocity.getZ()));
         arrow.remove();
     }
 

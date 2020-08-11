@@ -43,6 +43,7 @@ public class KitManager implements CommandExecutor, Listener {
         allKits.add(new KitCow());
         allKits.add(new KitPig());
         allKits.add(new KitBlaze());
+        allKits.add(new KitZombie());
         allKits = Collections.unmodifiableList(allKits);
         Bukkit.getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
