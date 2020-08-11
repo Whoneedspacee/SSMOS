@@ -1,17 +1,15 @@
 package SSM.Abilities;
 
-import SSM.*;
+import SSM.Ability;
+import SSM.GameManagers.OwnerEvents.OwnerLeftClickEvent;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-public class RopedArrow extends Ability {
+public class RopedArrow extends Ability implements OwnerLeftClickEvent {
 
     private Arrow arrow;
 
@@ -19,7 +17,11 @@ public class RopedArrow extends Ability {
         super();
         this.name = "Roped Arrow";
         this.cooldownTime = 8;
-        this.leftClickActivate = true;
+    }
+
+    public void onOwnerLeftClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {

@@ -1,10 +1,9 @@
 package SSM.Kits;
 
-import SSM.*;
-import SSM.Abilities.*;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Attributes.Stampede;
+import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;

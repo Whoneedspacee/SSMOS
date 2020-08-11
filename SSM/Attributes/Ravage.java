@@ -1,8 +1,9 @@
 package SSM.Attributes;
 
-import SSM.*;
+import SSM.Attribute;
+import SSM.GameManagers.KitManager;
+import SSM.Kit;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
@@ -25,12 +26,12 @@ public class Ravage extends Attribute {
     }
 
     @EventHandler
-    public void ravage(EntityDamageByEntityEvent e){
-        if (e.getDamager() != owner){
+    public void ravage(EntityDamageByEntityEvent e) {
+        if (e.getDamager() != owner) {
             return;
         }
-        Kit kit = SSM.playerKit.get(owner.getUniqueId());
-        if (!(kit.getMelee() + damageIncrement > damageCap)){
+        Kit kit = KitManager.getPlayerKit(owner);
+        if (!(kit.getMelee() + damageIncrement > damageCap)) {
             kit.setMelee(kit.getMelee() + damageIncrement);
             combo++;
         }
@@ -41,9 +42,8 @@ public class Ravage extends Attribute {
                 kit.setMelee(kit.getMelee() - (damageIncrement * combo));
                 combo = 0;
             }
-        }, (long)(expireTime*20));
+        }, (long) (expireTime * 20));
 
     }
-
 
 }

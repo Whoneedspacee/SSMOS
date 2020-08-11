@@ -1,21 +1,25 @@
 package SSM.Abilities;
 
-import SSM.*;
+import SSM.Ability;
+import SSM.EntityProjectile;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.*;
-import org.bukkit.event.Listener;;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 import java.util.List;
 
-public class BoneExplosion extends Ability {
+public class BoneExplosion extends Ability implements OwnerRightClickEvent {
 
     private int boneAmount = 40;
     private double range = 5;
@@ -25,7 +29,11 @@ public class BoneExplosion extends Ability {
         super();
         this.name = "Bone Explosion";
         this.cooldownTime = 8;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {
@@ -34,7 +42,7 @@ public class BoneExplosion extends Ability {
         ItemStack bone = new ItemStack(Material.BONE, 1);
         for (int i = 0; i < boneAmount; i++) {
             ItemMeta boneMeta = bone.getItemMeta();
-            boneMeta.setDisplayName("bone"+i);
+            boneMeta.setDisplayName("bone" + i);
             bone.setItemMeta(boneMeta);
             Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), bone);
             BoneProjectile projectile = new BoneProjectile(plugin, owner, name, firing);
@@ -47,7 +55,7 @@ public class BoneExplosion extends Ability {
         for (Entity entity : canHit) {
             if ((entity instanceof LivingEntity)) {
                 double dist = loc.distance(entity.getLocation());
-                DamageUtil.dealDamage(owner, (LivingEntity)entity, (range - dist) * (baseDamage / range), true, false);
+                DamageUtil.dealDamage(owner, (LivingEntity) entity, (range - dist) * (baseDamage / range), true, false);
                 Vector target = entity.getLocation().toVector();
                 Vector player = owner.getLocation().toVector();
                 Vector pre = target.subtract(player);

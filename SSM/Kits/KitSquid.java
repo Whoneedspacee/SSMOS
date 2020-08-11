@@ -1,21 +1,13 @@
 package SSM.Kits;
 
 import SSM.Abilities.InkShotgun;
-import SSM.Abilities.SpinWeb;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
-import SSM.Attributes.SquidFix;
 import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
-import me.libraryaddict.disguise.disguisetypes.MobDisguise;
-import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.SquidWatcher;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import SSM.Ability;
 
 public class KitSquid extends Kit {
 
@@ -47,6 +39,5 @@ public class KitSquid extends Kit {
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
-        addAttribute(new SquidFix());
     }
 }

@@ -1,31 +1,19 @@
 package SSM;
 
-import SSM.Attributes.Compass;
-import me.libraryaddict.disguise.LibsDisguises;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-public class Kit{
+public class Kit {
 
     /*  You must add your new kits to the allkits list in the main SSM.java file! */
 
@@ -45,7 +33,7 @@ public class Kit{
 
     protected List<Attribute> attributes = new ArrayList<Attribute>();
 
-    protected Plugin plugin;
+    protected JavaPlugin plugin;
     protected Player owner;
 
     public Kit() {
@@ -61,9 +49,8 @@ public class Kit{
         MobDisguise disg = new MobDisguise(disguise);
         disg.setEntity(player);
         FlagWatcher watcher = disg.getWatcher();
-        watcher.setCustomName(""+owner.getName());
+        watcher.setCustomName("" + owner.getName());
         disg.startDisguise();
-        addAttribute(new Compass());
     }
 
     public void destroyKit() {
@@ -109,7 +96,7 @@ public class Kit{
         }
         if (meta instanceof Damageable) {
             Damageable damageable = (Damageable) meta;
-            damageable.setDamage((int)damage);
+            damageable.setDamage((int) damage);
         }
         meta.setUnbreakable(true);
         item.setItemMeta(meta);
@@ -124,11 +111,17 @@ public class Kit{
         return armor;
     }
 
-    public double getKnockback(){return knockback;}
+    public double getKnockback() {
+        return knockback;
+    }
 
-    public double getMelee(){return damage;}
+    public double getMelee() {
+        return damage;
+    }
 
-    public void setMelee(double melee){damage = melee;}
+    public void setMelee(double melee) {
+        damage = melee;
+    }
 
     public List<Attribute> getAttributes() {
         return attributes;

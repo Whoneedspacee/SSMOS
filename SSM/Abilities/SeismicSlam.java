@@ -1,20 +1,19 @@
 package SSM.Abilities;
 
-import SSM.*;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
+import SSM.Leap;
 import SSM.Utilities.DamageUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
 import java.util.List;
 
-public class SeismicSlam extends Leap {
+public class SeismicSlam extends Leap implements OwnerRightClickEvent {
 
     private double baseDamage = 9;
     private double range = 6;
@@ -23,14 +22,18 @@ public class SeismicSlam extends Leap {
         super();
         this.name = "Seismic Slam";
         this.cooldownTime = 8;
-        this.rightClickActivate = true;
         this.timed = false;
         this.endOnLand = true;
     }
 
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
+    }
+
     public void activate() {
         activity.put(owner.getUniqueId(), true);
-        timerList.put(owner.getUniqueId(), System.currentTimeMillis()+(long)activeTime*1000);
+        timerList.put(owner.getUniqueId(), System.currentTimeMillis() + (long) activeTime * 1000);
         Vector velocity = owner.getVelocity();
         velocity.setY(1.0);
         owner.setVelocity(velocity);
@@ -57,7 +60,6 @@ public class SeismicSlam extends Leap {
             }
         }
     }
-
 
 
 }

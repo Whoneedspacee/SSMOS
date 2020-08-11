@@ -1,7 +1,7 @@
 package SSM.Kits;
 
-import SSM.Abilities.SelectKit;
-import SSM.Attributes.Compass;
+import SSM.Abilities.Firefly;
+import SSM.Abilities.MilkSpiral;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
@@ -10,28 +10,34 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-public class KitChoose extends Kit {
+public class KitBlaze extends Kit {
 
-    public KitChoose() {
+    public KitBlaze() {
         super();
+
         this.damage = 6;
-        this.armor = 5;
-        this.speed = 0.21f;
-        this.regeneration = 0.4;
-        this.knockback = 0;
-        this.name = "Choose";
-        this.disguise = DisguiseType.WANDERING_TRADER;
+        this.armor = 6;
+        this.speed = 0.22f;
+        this.regeneration = 0.25;
+        this.knockback = 1.50;
+        this.disguise = DisguiseType.BLAZE;
+        this.name = "Blaze";
+        this.menuItem = Material.BLAZE_ROD;
     }
 
     public void equipKit(Player player) {
         super.equipKit(player);
+
         setArmor(Material.CHAINMAIL_BOOTS, 0);
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmor(Material.CHAINMAIL_HELMET, 3);
 
-        setItem(Material.CLOCK, 0, new SelectKit());
+        setItem(Material.IRON_SWORD, 0, new MilkSpiral());
+        setItem(Material.IRON_AXE, 1, new Firefly());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.9, 1, Sound.ENTITY_GHAST_SHOOT));
+        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
     }
+
 }

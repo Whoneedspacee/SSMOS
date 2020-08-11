@@ -18,10 +18,10 @@ public class ExpCharge extends Attribute {
 
     @Override
     public void run() {
-
         if (!owner.isDead()) {
-            xp = (owner.getExpToLevel()* expAdd)/owner.getExpToLevel();
-            owner.setExp(owner.getExp()+(xp));
+            xp = (owner.getExpToLevel() * expAdd) / owner.getExpToLevel();
+            owner.setExp(owner.getExp() + (xp));
         }
     }
+
 }

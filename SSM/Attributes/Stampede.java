@@ -1,26 +1,14 @@
 package SSM.Attributes;
 
-import SSM.*;
-import SSM.Utilities.DamageUtil;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.*;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;;
+import SSM.Attribute;
+import SSM.GameManagers.KitManager;
+import SSM.GameManagers.OwnerEvents.OwnerDealDamageEvent;
+import SSM.Kit;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
-
-public class Stampede extends Attribute {
+public class Stampede extends Attribute implements OwnerDealDamageEvent {
 
     private int ticksRunning = 0;
     private int timePerLevel; // seconds
@@ -37,7 +25,7 @@ public class Stampede extends Attribute {
 
     @Override
     public void run() {
-        Kit kit = SSM.playerKit.get(owner.getUniqueId());
+        Kit kit = KitManager.getPlayerKit(owner);
         if (owner.isSprinting()) {
             ticksRunning++;
         } else {
@@ -54,18 +42,15 @@ public class Stampede extends Attribute {
         }
     }
 
-    @EventHandler
-    public void endStampede(EntityDamageByEntityEvent e) {
-        if (!(e.getDamager() == owner)) {
-            return;
-        }
+    public void onOwnerDealDamage(EntityDamageByEntityEvent e) {
         if (level == 1) {
             return;
         }
-        Kit kit = SSM.playerKit.get(owner.getUniqueId());
+        Kit kit = KitManager.getPlayerKit(owner);
         ticksRunning = 0;
         kit.setMelee(kit.getMelee() - (level - 1));
         level = 1;
         owner.setSprinting(false);
     }
+
 }

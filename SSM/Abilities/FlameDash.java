@@ -1,28 +1,22 @@
 package SSM.Abilities;
 
 import SSM.Ability;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
-import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
-import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
 import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.util.Vector;
 
-import javax.xml.bind.ValidationException;
 import java.util.List;
 
-import me.libraryaddict.disguise.LibsDisguises;
-import me.libraryaddict.*;
-
-public class FlameDash extends Ability {
+public class FlameDash extends Ability implements OwnerRightClickEvent {
 
     private long time;
     private double duration = 0.75; //seconds
@@ -35,10 +29,18 @@ public class FlameDash extends Ability {
 
     public FlameDash() {
         super();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
         this.name = "Flame Dash";
         this.cooldownTime = 8;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        if (active) {
+            explode();
+            Bukkit.getScheduler().cancelTask(task);
+            return;
+        }
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {
@@ -68,19 +70,6 @@ public class FlameDash extends Ability {
 
     }
 
-    @EventHandler
-    public void click(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (player.getInventory().getItemInMainHand().getType() == Material.IRON_SHOVEL) {
-                if (active) {
-                    explode();
-                    Bukkit.getScheduler().cancelTask(task);
-                }
-            }
-        }
-    }
-
     private void explode() {
         active = false;
         watcher.setInvisible(false);
@@ -97,6 +86,6 @@ public class FlameDash extends Ability {
             LivingEntity target = (LivingEntity) entity;
             DamageUtil.dealDamage(owner, target, dist + 2, true, false);
         }
-
     }
+
 }

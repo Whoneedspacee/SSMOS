@@ -2,12 +2,12 @@ main: SSM.SSM
 name: Super_Smash_Mobs_2
 version: 1
 author: Heartlessknights, Whoneedspacee, Huxs
-description: 'Based SSM 2'
+description: 'An open source recreation of Super Smash Mobs'
 api-version: 1.15
 commands:
   kit:
     description: 'Applies the kit of the name entered'
-    usage: /kit KitName
+    usage: /kit
   damage:
     description: 'Inflicts the damage proposed'
     usage: /damage number

@@ -1,15 +1,15 @@
 package SSM.Attributes.DoubleJumps;
 
 import SSM.Attribute;
-import SSM.SSM;
-import org.bukkit.*;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
-import org.bukkit.util.Vector;
 
 public abstract class DoubleJump extends Attribute {
     protected double height;
@@ -40,7 +40,7 @@ public abstract class DoubleJump extends Attribute {
             return;
         }
 
-        if (player.getGameMode() == GameMode.CREATIVE){
+        if (player.getGameMode() == GameMode.CREATIVE) {
             return;
         }
 

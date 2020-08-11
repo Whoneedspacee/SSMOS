@@ -1,20 +1,14 @@
 package SSM.Abilities;
 
-import SSM.*;
+import SSM.Ability;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Sound;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LargeFireball;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-public class MagmaBlast extends Ability {
+public class MagmaBlast extends Ability implements OwnerRightClickEvent {
 
     private LargeFireball largeFireball;
 
@@ -22,11 +16,15 @@ public class MagmaBlast extends Ability {
         super();
         this.name = "Magma Blast";
         this.cooldownTime = 8;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {
-        owner.getWorld().playSound(owner.getLocation(),Sound.ENTITY_CREEPER_DEATH,1,1);
+        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_CREEPER_DEATH, 1, 1);
         largeFireball = owner.launchProjectile(LargeFireball.class);
         largeFireball.setCustomName("MagmaBlast");
         largeFireball.setVelocity(owner.getEyeLocation().getDirection().multiply(1.0D));

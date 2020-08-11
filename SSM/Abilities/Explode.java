@@ -1,17 +1,20 @@
 package SSM.Abilities;
 
 import SSM.Ability;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
 import java.util.List;
 
-public class Explode extends Ability {
+public class Explode extends Ability implements OwnerRightClickEvent {
 
     private double timeToExplode = 1.5; //Seconds
     private long time;
@@ -23,7 +26,11 @@ public class Explode extends Ability {
         super();
         this.name = "Explode";
         this.cooldownTime = 8;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {

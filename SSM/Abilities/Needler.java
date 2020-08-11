@@ -3,20 +3,18 @@ package SSM.Abilities;
 import SSM.Ability;
 import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class Blizzard extends Ability implements OwnerRightClickEvent {
+public class Needler extends Ability implements OwnerRightClickEvent {
 
-    int BlizzardAmount = 5;
+    int needleAmount = 6;
 
-    public Blizzard() {
+    public Needler() {
         super();
-        this.name = "Blizzard";
+        this.name = "Needler";
         this.cooldownTime = 0;
-        this.expUsed = 0.2F;
-        this.usesEnergy = true;
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
@@ -25,15 +23,15 @@ public class Blizzard extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        for (int i = 0; i < BlizzardAmount; i++) {
-            Snowball firing = owner.getWorld().spawn(owner.getEyeLocation(), Snowball.class);
+        for (int i = 0; i < needleAmount; i++) {
+            Arrow firing = owner.getWorld().spawn(owner.getEyeLocation(), Arrow.class);
             EntityProjectile projectile = new EntityProjectile(plugin, owner, name, firing);
             projectile.setDamage(1.0);
             projectile.setSpeed(1.0);
-            projectile.setKnockback(0.2);
-            projectile.setUpwardKnockback(0.1);
-            projectile.setHitboxSize(1.0);
-            projectile.setVariation(25);
+            projectile.setKnockback(0.4);
+            projectile.setUpwardKnockback(0.2);
+            projectile.setHitboxSize(0.5);
+            projectile.setVariation(18);
             projectile.launchProjectile();
         }
     }

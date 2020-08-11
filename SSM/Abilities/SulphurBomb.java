@@ -1,33 +1,39 @@
 package SSM.Abilities;
 
-import SSM.*;
+import SSM.Ability;
+import SSM.EntityProjectile;
+import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
-import org.bukkit.entity.*;
-import org.bukkit.event.Listener;;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Vector;
 
-public class SulphurBomb extends Ability {
+public class SulphurBomb extends Ability implements OwnerRightClickEvent {
 
     public SulphurBomb() {
         super();
         this.name = "Sulphur Bomb";
         this.cooldownTime = 3;
-        this.rightClickActivate = true;
+    }
+
+    public void onOwnerRightClick(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        checkAndActivate(player);
     }
 
     public void activate() {
         owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_CREEPER_DEATH, 10L, 1L);
         ItemStack sulphur = new ItemStack(Material.COAL, 1);
-            Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), sulphur);
-            BombProjectile projectile = new BombProjectile(plugin, owner, name, firing);
-            projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
-            projectile.launchProjectile();
+        Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), sulphur);
+        BombProjectile projectile = new BombProjectile(plugin, owner, name, firing);
+        projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
+        projectile.launchProjectile();
     }
 
     class BombProjectile extends EntityProjectile {

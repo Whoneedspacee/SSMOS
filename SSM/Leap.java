@@ -1,7 +1,6 @@
 package SSM;
 
 import org.bukkit.Bukkit;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -24,32 +23,29 @@ public abstract class Leap extends Ability {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public void activate() {
-        // This does nothing.
-    }
-
-    public void onLand(){
+    public void onLand() {
 
     }
-    public void onHit(LivingEntity target){
+
+    public void onHit(LivingEntity target) {
 
     }
 
     @EventHandler
-    public void hitbox(PlayerMoveEvent e){
+    public void hitbox(PlayerMoveEvent e) {
         Player player = e.getPlayer();
-        if (activity.get(player.getUniqueId()) == null){
+        if (activity.get(player.getUniqueId()) == null) {
             return;
         }
         List<Entity> nearby = owner.getNearbyEntities(hitbox, hitbox, hitbox);
         nearby.remove(owner);
-        if (nearby.isEmpty()){
+        if (nearby.isEmpty()) {
             return;
         }
-        if (!(nearby.get(0) instanceof LivingEntity)){
+        if (!(nearby.get(0) instanceof LivingEntity)) {
             return;
         }
-        LivingEntity target = (LivingEntity)nearby.get(0);
+        LivingEntity target = (LivingEntity) nearby.get(0);
         onHit(target);
         activity.remove(player.getUniqueId());
         timerList.remove(player.getUniqueId());
@@ -59,26 +55,27 @@ public abstract class Leap extends Ability {
         */
 
     }
+
     @EventHandler
-    public void whenEnd(PlayerMoveEvent e){
+    public void whenEnd(PlayerMoveEvent e) {
         Player player = e.getPlayer();
-        if (activity.get(player.getUniqueId()) == null){
+        if (activity.get(player.getUniqueId()) == null) {
             return;
         }
-        if ((System.currentTimeMillis() - (timerList.get(player.getUniqueId()) - activeTime*1000L)) < 200){
+        if ((System.currentTimeMillis() - (timerList.get(player.getUniqueId()) - activeTime * 1000L)) < 200) {
             return;
         }
-        if (!(player.getLocation().subtract(0, 0.001, 0).getBlock().isPassable()) && (activity.get(player.getUniqueId()) != null)){
+        if (!(player.getLocation().subtract(0, 0.001, 0).getBlock().isPassable()) && (activity.get(player.getUniqueId()) != null)) {
             onLand();
-            if (endOnLand){
+            if (endOnLand) {
                 activity.remove(player.getUniqueId());
                 timerList.remove(player.getUniqueId());
             }
         }
-        if (timed){
-            if (System.currentTimeMillis() < timerList.get(player.getUniqueId())){
+        if (timed) {
+            if (System.currentTimeMillis() < timerList.get(player.getUniqueId())) {
                 return;
-            }else{
+            } else {
                 timerList.remove(player.getUniqueId());
                 activity.remove(player.getUniqueId());
             }
