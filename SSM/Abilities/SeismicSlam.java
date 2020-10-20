@@ -22,8 +22,7 @@ public class SeismicSlam extends Leap implements OwnerRightClickEvent {
         super();
         this.name = "Seismic Slam";
         this.cooldownTime = 8;
-        this.timed = false;
-        this.endOnLand = true;
+        this.power = 1;
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
@@ -32,12 +31,7 @@ public class SeismicSlam extends Leap implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        activity.put(owner.getUniqueId(), true);
-        timerList.put(owner.getUniqueId(), System.currentTimeMillis() + (long) activeTime * 1000);
-        Vector velocity = owner.getVelocity();
-        velocity.setY(1.0);
-        owner.setVelocity(velocity);
-
+        super.init();
     }
 
     @Override
@@ -59,6 +53,11 @@ public class SeismicSlam extends Leap implements OwnerRightClickEvent {
                 entity.setVelocity(new Vector(velocity.getX(), 0.4, velocity.getZ()));
             }
         }
+    }
+
+    @Override
+    public void onHit(LivingEntity target){
+
     }
 
 

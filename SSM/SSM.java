@@ -100,13 +100,6 @@ public class SSM extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent event) {
-        String msg = event.getMessage();
-        msg = msg.replace(":b:", "" + ChatColor.DARK_RED + ChatColor.BOLD + "B" + ChatColor.RESET);
-        event.setMessage(msg);
-    }
-
-    @EventHandler
     public void stopHealthRegen(EntityRegainHealthEvent e) {
         e.setCancelled(true);
     }
@@ -123,29 +116,5 @@ public class SSM extends JavaPlugin implements Listener {
             ent.setHealth(0.0);
         }
     }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        Player player = e.getPlayer();
-        String name = player.getDisplayName();
-        e.setQuitMessage(ChatColor.YELLOW + name + " has left the server, cya soon!");
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) {
-        Player player = e.getPlayer();
-        player.setInvulnerable(false);
-        String name = player.getDisplayName();
-        e.setJoinMessage(ChatColor.YELLOW + "Welcome " + name + " to the SSM Open Source Testing Server!");
-        player.getServer().broadcastMessage(ChatColor.GRAY + "Map made by olivegard3n and SNXE");
-    }
-
-    @EventHandler
-    public void onProjectileLaunch(ProjectileHitEvent e) {
-        Projectile projectile = e.getEntity();
-        Entity target = e.getHitEntity();
-        if (target instanceof Player && ((Player) target).isBlocking()) {
-            ((Player) target).damage(2);
-        }
-    }
 }
+

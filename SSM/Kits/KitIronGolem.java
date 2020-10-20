@@ -3,13 +3,14 @@ package SSM.Kits;
 import SSM.Abilities.IronHook;
 import SSM.Abilities.SeismicSlam;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Attributes.Heavyweight;
+import SSM.Attributes.Potion;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 public class KitIronGolem extends Kit {
 
@@ -40,7 +41,7 @@ public class KitIronGolem extends Kit {
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
-        addAttribute(new Heavyweight());
+        addAttribute(new Potion(PotionEffectType.SLOW, 1));
     }
 
 }

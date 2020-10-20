@@ -17,8 +17,6 @@ public class SlimeSlam extends Leap implements OwnerRightClickEvent {
         this.name = "Slime Slam";
         this.cooldownTime = 6;
         this.power = 1.5;
-        this.timed = true;
-        this.activeTime = 2.5;
         this.endOnLand = true;
         this.hitbox = 1.0;
     }
@@ -29,9 +27,8 @@ public class SlimeSlam extends Leap implements OwnerRightClickEvent {
     }
 
     public void activate() {
+        super.init();
         owner.setVelocity(owner.getLocation().getDirection().multiply(power));
-        activity.put(owner.getUniqueId(), true);
-        timerList.put(owner.getUniqueId(), System.currentTimeMillis() + (long) activeTime * 1000);
     }
 
     @Override
@@ -44,6 +41,11 @@ public class SlimeSlam extends Leap implements OwnerRightClickEvent {
         Vector velocity = pre.normalize().multiply(1.35);
         target.setVelocity(new Vector(velocity.getX(), 0.5, velocity.getZ()));
         owner.setVelocity(new Vector(-velocity.getX(), 0.5, -velocity.getZ()));
+    }
+
+    @Override
+    public void onLand(){
+
     }
 
 }

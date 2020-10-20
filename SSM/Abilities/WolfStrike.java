@@ -16,9 +16,6 @@ public class WolfStrike extends Leap implements OwnerRightClickEvent {
         this.name = "Wolf Strike";
         this.cooldownTime = 8;
         this.power = 1.5;
-        this.timed = true;
-        this.activeTime = 2.5;
-        this.endOnLand = true;
         this.hitbox = 1.0;
     }
 
@@ -28,9 +25,8 @@ public class WolfStrike extends Leap implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        owner.setVelocity(owner.getLocation().getDirection().multiply(power));
-        activity.put(owner.getUniqueId(), true);
-        timerList.put(owner.getUniqueId(), System.currentTimeMillis() + (long) activeTime * 1000);
+        super.init();
+
     }
 
     @Override
@@ -41,6 +37,11 @@ public class WolfStrike extends Leap implements OwnerRightClickEvent {
         Vector pre = enemy.subtract(player);
         Vector velocity = pre.normalize().multiply(1.35);
         target.setVelocity(new Vector(velocity.getX(), 0.5, velocity.getZ()));
+
+    }
+
+    @Override
+    public void onLand(){
 
     }
 
