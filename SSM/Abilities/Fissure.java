@@ -34,16 +34,16 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
         Location loc = owner.getLocation();
         Vector dir = loc.getDirection();
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    cycle++;
-                    layerOne(dir, loc);
-                    if (cycle >= fissureLength) {
-                        stop();
-                        cycle = 0;
+                    @Override
+                    public void run() {
+                        cycle++;
+                        layerOne(dir, loc);
+                        if (cycle >= fissureLength) {
+                            stop();
+                            cycle = 0;
+                        }
                     }
-                }
-            }, 0L, 2L
+                }, 0L, 2L
         );
     }
 

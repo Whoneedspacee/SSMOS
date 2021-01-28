@@ -44,7 +44,7 @@ public class SlimeSlam extends Leap implements OwnerRightClickEvent {
     }
 
     @Override
-    public void onLand(){
+    public void onLand() {
 
     }
 

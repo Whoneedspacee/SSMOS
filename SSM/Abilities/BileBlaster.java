@@ -3,22 +3,14 @@ package SSM.Abilities;
 import SSM.Ability;
 import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
-import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.Vector;
-
-import java.util.List;
 
 public class BileBlaster extends Ability implements OwnerRightClickEvent {
 
@@ -40,7 +32,7 @@ public class BileBlaster extends Ability implements OwnerRightClickEvent {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if (increment > duration){
+                if (increment > duration) {
                     Bukkit.getScheduler().cancelTask(task);
                 }
                 ItemStack bile = new ItemStack(Material.ROTTEN_FLESH, 1);

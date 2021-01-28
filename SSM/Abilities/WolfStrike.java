@@ -41,7 +41,7 @@ public class WolfStrike extends Leap implements OwnerRightClickEvent {
     }
 
     @Override
-    public void onLand(){
+    public void onLand() {
 
     }
 

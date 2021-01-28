@@ -11,3 +11,6 @@ commands:
   damage:
     description: 'Inflicts the damage proposed'
     usage: /damage number
+  setspeed:
+    description: 'Sets the base speed of the player'
+    usage: /setspeed number

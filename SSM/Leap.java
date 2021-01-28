@@ -5,10 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public abstract class Leap extends Ability {
 
@@ -24,7 +21,7 @@ public abstract class Leap extends Ability {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    protected void init(){
+    protected void init() {
         owner.setVelocity(owner.getLocation().getDirection().multiply(power));
         active = true;
         hitDetection();
@@ -33,10 +30,10 @@ public abstract class Leap extends Ability {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if (!active){
+                if (!active) {
                     Bukkit.getScheduler().cancelTask(task);
                 }
-                if (timeActive > duration){
+                if (timeActive > duration) {
                     active = false;
                     Bukkit.getScheduler().cancelTask(task);
                 }
@@ -45,39 +42,39 @@ public abstract class Leap extends Ability {
         }, 0L, 1L);
     }
 
-    private void hitDetection(){
+    private void hitDetection() {
         hitDetection = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if (!active){
+                if (!active) {
                     Bukkit.getScheduler().cancelTask(hitDetection);
                 }
                 List<Entity> nearby = owner.getNearbyEntities(hitbox, hitbox, hitbox);
                 nearby.remove(owner);
-                for (Entity entity : nearby){
-                    if (!(entity instanceof LivingEntity)){
+                for (Entity entity : nearby) {
+                    if (!(entity instanceof LivingEntity)) {
                         return;
                     }
-                    LivingEntity target = (LivingEntity)entity;
+                    LivingEntity target = (LivingEntity) entity;
                     onHit(target);
                     active = false;
                 }
             }
-        },0L, 1L);
+        }, 0L, 1L);
     }
 
-    private void landDetection(){
+    private void landDetection() {
         landDetection = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if (!active){
+                if (!active) {
                     Bukkit.getScheduler().cancelTask(landDetection);
                 }
-                if (timeActive <= 5){
+                if (timeActive <= 5) {
                     return; // Prevents slam moves from immediately ending if you use them on the ground.
                 }
                 Block block = owner.getLocation().subtract(0, -0.001, 0).getBlock();
-                if (!block.isPassable()){
+                if (!block.isPassable()) {
                     onLand();
                     owner.sendMessage("test");
                 }
@@ -88,10 +85,6 @@ public abstract class Leap extends Ability {
     public abstract void onLand();
 
     public abstract void onHit(LivingEntity target);
-
-
-
-
 
 
 }

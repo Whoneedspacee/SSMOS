@@ -56,7 +56,7 @@ public class SeismicSlam extends Leap implements OwnerRightClickEvent {
     }
 
     @Override
-    public void onHit(LivingEntity target){
+    public void onHit(LivingEntity target) {
 
     }
 

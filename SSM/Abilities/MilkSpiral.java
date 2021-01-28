@@ -45,6 +45,7 @@ public class MilkSpiral extends Ability implements OwnerRightClickEvent {
             double iterations = spiralLength / iterationDiff;
             Vector v1 = new Vector(-lookDir.getZ(), 0, lookDir.getX()).normalize();
             Vector v2 = lookDir.getCrossProduct(v1);
+
             @Override
             public void run() {
                 if (i >= iterations) {
