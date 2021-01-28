@@ -72,6 +72,18 @@ public class SSM extends JavaPlugin implements Listener {
                 }
             }
         }
+		if (cmd.getName().equalsIgnoreCase("setspeed")) {
+            if (args.length == 1) {
+                try {
+                    float number = Float.parseFloat(args[0]);
+                    player.setWalkSpeed(number);
+                    return true;
+                } catch (NumberFormatException e) {
+                    player.sendMessage("You need to input a number!");
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
