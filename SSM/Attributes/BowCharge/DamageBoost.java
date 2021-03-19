@@ -4,6 +4,8 @@ import org.bukkit.entity.Arrow;
 
 public class DamageBoost extends BowCharge {
 
+    private Arrow firedArrow;
+
     public DamageBoost(double delay, double rate, int maxCharge) {
         super(delay, rate, maxCharge);
         this.name = "Charge Bow Damage";
@@ -11,7 +13,12 @@ public class DamageBoost extends BowCharge {
 
     @Override
     public void firedBow(Arrow arrow) {
-        arrow.setDamage(arrow.getDamage() + charge);
+        firedArrow = arrow;
+        checkAndActivate();
+    }
+
+    public void activate() {
+        firedArrow.setDamage(firedArrow.getDamage() + charge);
     }
 
 }

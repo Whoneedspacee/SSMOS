@@ -23,6 +23,10 @@ public class ItemGenerator extends Attribute {
 
     @Override
     public void run() {
+        checkAndActivate();
+    }
+
+    public void activate() {
         for (ItemStack check : owner.getInventory().getContents()) {
             if (check != null && check.getType() == item && check.getAmount() >= maxAmount) {
                 return;

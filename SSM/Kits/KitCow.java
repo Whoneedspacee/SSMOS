@@ -5,7 +5,6 @@ import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Attributes.Stampede;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -19,7 +18,6 @@ public class KitCow extends Kit {
         this.speed = 0.20f;
         this.regeneration = 0.25;
         this.knockback = 1.1;
-        this.disguise = DisguiseType.COW;
         this.name = "Cow";
         this.menuItem = Material.MILK_BUCKET;
     }

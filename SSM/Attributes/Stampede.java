@@ -25,6 +25,10 @@ public class Stampede extends Attribute implements OwnerDealDamageEvent {
 
     @Override
     public void run() {
+        checkAndActivate();
+    }
+
+    public void activate() {
         Kit kit = KitManager.getPlayerKit(owner);
         if (owner.isSprinting()) {
             ticksRunning++;

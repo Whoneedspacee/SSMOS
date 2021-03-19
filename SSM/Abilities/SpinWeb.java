@@ -4,6 +4,7 @@ import SSM.Ability;
 import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -26,8 +27,7 @@ public class SpinWeb extends Ability implements OwnerRightClickEvent {
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        checkAndActivate(player);
+        checkAndActivate();
     }
 
     public void activate() {
@@ -35,8 +35,8 @@ public class SpinWeb extends Ability implements OwnerRightClickEvent {
         ItemStack cobweb = new ItemStack(Material.COBWEB, 1);
         for (int i = 0; i < webAmount; i++) {
             Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), cobweb);
-            WebProjectile projectile = new WebProjectile(plugin, owner, name, firing);
-            projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
+            WebProjectile projectile = new WebProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);
+            projectile.setFirer(owner);
             projectile.launchProjectile();
         }
         owner.setVelocity(owner.getLocation().getDirection().multiply(1.5));
@@ -46,12 +46,12 @@ public class SpinWeb extends Ability implements OwnerRightClickEvent {
 
         protected double vanishTime = 4;
 
-        public WebProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
-            super(plugin, firer, name, projectile);
+        public WebProjectile(Plugin plugin, Location fireLocation, String name, Entity projectile) {
+            super(plugin, fireLocation, name, projectile);
             this.setDamage(6.0);
             this.setSpeed(1.8);
             this.setHitboxSize(1.0);
-            this.setVariation(30);
+            this.setSpread(30);
             this.setExpAdd(true);
             this.setFireOpposite(true);
         }

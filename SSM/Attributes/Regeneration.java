@@ -17,6 +17,10 @@ public class Regeneration extends Attribute {
 
     @Override
     public void run() {
+        checkAndActivate();
+    }
+
+    public void activate() {
         if (!owner.isDead()) {
             owner.setHealth(Math.min(owner.getHealth() + regen, 20));
         }

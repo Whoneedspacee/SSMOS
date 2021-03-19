@@ -5,7 +5,6 @@ import SSM.Abilities.MagmaBlast;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -14,13 +13,11 @@ public class KitMagmaCube extends Kit {
 
     public KitMagmaCube() {
         super();
-
         this.damage = 5;
         this.armor = 4;
         this.speed = 0.2f;
         this.regeneration = 0.35;
         this.knockback = 1.75;
-        this.disguise = DisguiseType.MAGMA_CUBE;
         this.name = "Magma_Cube";
         this.menuItem = Material.FIRE_CHARGE;
     }

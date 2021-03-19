@@ -4,7 +4,6 @@ import SSM.Abilities.SlimeSlam;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -13,13 +12,11 @@ public class KitSlime extends Kit {
 
     public KitSlime() {
         super();
-
         this.damage = 6;
         this.armor = 4;
         this.speed = 0.21f;
         this.regeneration = 0.35;
         this.knockback = 1.75;
-        this.disguise = DisguiseType.SLIME;
         this.name = "Slime";
         this.menuItem = Material.SLIME_BALL;
     }

@@ -1,8 +1,5 @@
 package SSM;
 
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
-import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
-import me.libraryaddict.disguise.disguisetypes.MobDisguise;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +22,6 @@ public class Kit {
     protected double regeneration = 0;
     protected float speed = 0f;
     public Material menuItem;
-    protected DisguiseType disguise;
 
     protected boolean hasDirectDoubleJump = false;
     protected double doubleJumpHeight = 0.8;
@@ -46,11 +42,6 @@ public class Kit {
         player.setWalkSpeed(speed);
         player.getInventory().clear();
         player.setExp(0);
-        MobDisguise disg = new MobDisguise(disguise);
-        disg.setEntity(player);
-        FlagWatcher watcher = disg.getWatcher();
-        watcher.setCustomName("" + owner.getName());
-        disg.startDisguise();
     }
 
     public void destroyKit() {

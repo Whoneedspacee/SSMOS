@@ -4,6 +4,7 @@ import SSM.Ability;
 import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -23,8 +24,7 @@ public class BileBlaster extends Ability implements OwnerRightClickEvent {
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        checkAndActivate(player);
+        checkAndActivate();
     }
 
     public void activate() {
@@ -37,8 +37,8 @@ public class BileBlaster extends Ability implements OwnerRightClickEvent {
                 }
                 ItemStack bile = new ItemStack(Material.ROTTEN_FLESH, 1);
                 Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), bile);
-                BileProjectile projectile = new BileProjectile(plugin, owner, name, firing);
-                projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
+                BileProjectile projectile = new BileProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);
+                projectile.setFirer(owner);
                 projectile.launchProjectile();
                 increment++;
             }
@@ -48,14 +48,14 @@ public class BileBlaster extends Ability implements OwnerRightClickEvent {
 
     class BileProjectile extends EntityProjectile {
 
-        public BileProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
-            super(plugin, firer, name, projectile);
+        public BileProjectile(Plugin plugin, Location fireLocation, String name, Entity projectile) {
+            super(plugin, fireLocation, name, projectile);
             this.setDamage(3.0);
             this.setSpeed(0.45);
             this.setKnockback(0.4);
             this.setUpwardKnockback(0.0);
             this.setHitboxSize(0.3);
-            this.setVariation(15);
+            this.setSpread(15);
             this.setFireOpposite(false);
         }
     }

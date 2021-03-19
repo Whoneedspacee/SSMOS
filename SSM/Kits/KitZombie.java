@@ -6,24 +6,19 @@ import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-
-//import SSM.Attributes.ClearProjectile;
 
 public class KitZombie extends Kit {
 
     public KitZombie() {
         super();
-
         this.damage = 5;
         this.armor = 5;
         this.speed = 0.2f;
         this.regeneration = 0.25;
-        this.knockback = 1.4; // idk the kb on zombie
-        this.disguise = DisguiseType.ZOMBIE;
+        this.knockback = 1.4;
         this.name = "Zombie";
         this.menuItem = Material.ROTTEN_FLESH;
     }

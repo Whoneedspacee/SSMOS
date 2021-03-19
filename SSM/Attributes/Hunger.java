@@ -5,7 +5,7 @@ import org.bukkit.GameMode;
 
 public class Hunger extends Attribute {
 
-    double delay;
+    protected double delay;
 
     public Hunger(double delay) {
         super();
@@ -15,8 +15,13 @@ public class Hunger extends Attribute {
 
     @Override
     public void run() {
-        if (owner.getGameMode() != GameMode.CREATIVE)
+        checkAndActivate();
+    }
+
+    public void activate() {
+        if (owner.getGameMode() != GameMode.CREATIVE) {
             owner.setFoodLevel(owner.getFoodLevel() - 1);
+        }
     }
 
 }

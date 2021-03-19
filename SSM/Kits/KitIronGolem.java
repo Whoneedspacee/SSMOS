@@ -6,7 +6,6 @@ import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Potion;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,13 +15,11 @@ public class KitIronGolem extends Kit {
 
     public KitIronGolem() {
         super();
-
         this.damage = 7;
         this.armor = 8;
         this.speed = 0.2f;
         this.regeneration = 0.2;
         this.knockback = 1.0;
-        this.disguise = DisguiseType.IRON_GOLEM;
         this.name = "Iron_Golem";
         this.menuItem = Material.IRON_BLOCK;
     }

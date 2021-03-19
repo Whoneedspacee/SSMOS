@@ -6,13 +6,20 @@ import org.bukkit.entity.Arrow;
 
 public class Barrage extends BowCharge {
 
+    private Arrow firedArrow;
+
     public Barrage(double delay, double rate, int maxCharge) {
         super(delay, rate, maxCharge);
         this.name = "Barrage";
     }
 
-    public void firedBow(Arrow p) {
-        double initialVelocity = p.getVelocity().length();
+    public void firedBow(Arrow arrow) {
+        firedArrow = arrow;
+        checkAndActivate();
+    }
+
+    public void activate() {
+        double initialVelocity = firedArrow.getVelocity().length();
         for (int i = 0; i < charge; i++) {
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                 @Override

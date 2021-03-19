@@ -18,11 +18,11 @@ import java.util.Random;
 public class EntityProjectile extends BukkitRunnable {
 
     protected Plugin plugin;
-    protected Player firer;
+    private Location fireLocation;
     protected String name;
     protected boolean expAdd = false;
     protected Entity projectile;
-    private Location overridePosition;
+    protected Player firer;
     private double time;
     private boolean timed = false;
     private boolean lastsOnGround = false;
@@ -30,26 +30,20 @@ public class EntityProjectile extends BukkitRunnable {
     private boolean clearOnFinish = true;
     private boolean direct = false;
     private boolean fired;
-    private boolean upwardKnockbackSet = true;
     private boolean pierce;
-    private double[] data;
+    private double damage;
+    private double speed;
+    private double knockback;
+    private double upwardKnockback;
+    private double hitboxRange;
+    private double spread;
     private int hungerGain;
 
-    public EntityProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
+    public EntityProjectile(Plugin plugin, Location fireLocation, String name, Entity projectile) {
         this.plugin = plugin;
-        this.firer = firer;
+        this.fireLocation = fireLocation;
         this.name = name;
         this.projectile = projectile;
-        this.data = new double[]{0, 0, 0, 0, 0, 0};
-    }
-
-    public double getRandomVariation() {
-        double variation = getVariation();
-        double randomAngle = Math.random() * variation / 2;
-        if (new Random().nextBoolean()) {
-            randomAngle *= -1;
-        }
-        return randomAngle * Math.PI / 180;
     }
 
     public void launchProjectile() {
@@ -61,17 +55,14 @@ public class EntityProjectile extends BukkitRunnable {
                 }
             }, (long) (time * 20));
         }
-        firer.setLevel(0);
         if (fired) {
             return;
         }
-        if (getOverridePosition() == null) {
-            setOverridePosition(firer.getEyeLocation());
-        }
+        fired = true;
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
             public void run() {
-                projectile.teleport(getOverridePosition());
+                projectile.teleport(fireLocation);
                 /*
                 The reason we need this is because if we don't have it, the teleport
                 literally doesn't work because apparently it's "too fast" and
@@ -90,16 +81,15 @@ public class EntityProjectile extends BukkitRunnable {
         if (getFireOpposite()) {
             direction.multiply(-1);
         }
-        direction.rotateAroundX(getRandomVariation());
-        direction.rotateAroundY(getRandomVariation());
-        direction.rotateAroundZ(getRandomVariation());
+        direction.rotateAroundX(EntityProjectile.getRandomSpread(spread));
+        direction.rotateAroundY(EntityProjectile.getRandomSpread(spread));
+        direction.rotateAroundZ(EntityProjectile.getRandomSpread(spread));
         if (direct) {
             projectile.setVelocity(direction.multiply(magnitude).setY(0).normalize());
         } else {
             projectile.setVelocity(direction.multiply(magnitude));
         }
         this.runTaskTimer(plugin, 0L, 1L);
-        fired = true;
     }
 
     @Override
@@ -141,7 +131,7 @@ public class EntityProjectile extends BukkitRunnable {
             double knockback = getKnockback();
             double upwardKnockback = getUpwardKnockback();
             Vector velocity = projectile.getVelocity();
-            if (upwardKnockbackSet) {
+            if (upwardKnockback != 0) {
                 VelocityUtil.addKnockback(firer, target, knockback, 0.5);
             } else {
                 velocity = velocity.normalize().multiply(knockback);
@@ -160,7 +150,7 @@ public class EntityProjectile extends BukkitRunnable {
     }
 
     public void onBlockHit() {
-
+        clearProjectile();
     }
 
     public boolean clearProjectile() {
@@ -171,122 +161,130 @@ public class EntityProjectile extends BukkitRunnable {
         return false;
     }
 
-    public void setOverridePosition(Location overridePosition) {
-        this.overridePosition = overridePosition;
+    public static double getRandomSpread(double range) {
+        double randomAngle = Math.random() * range / 2;
+        if (new Random().nextBoolean()) {
+            randomAngle *= -1;
+        }
+        return randomAngle * Math.PI / 180;
     }
 
-    public Location getOverridePosition() {
-        return overridePosition;
+    public Player getFirer() {
+        return firer;
     }
 
-
-    public void setFireOpposite(boolean fireOpposite) {
-        this.fireOpposite = fireOpposite;
-    }
+    public void setFirer(Player firer) { this.firer = firer; }
 
     public boolean getFireOpposite() {
         return fireOpposite;
     }
 
-    public void setClearOnFinish(boolean clearOnFinish) {
-        this.clearOnFinish = clearOnFinish;
+    public void setFireOpposite(boolean fireOpposite) {
+        this.fireOpposite = fireOpposite;
     }
 
     public boolean getClearOnFinish() {
         return clearOnFinish;
     }
 
-    public void setDamage(double damage) {
-        data[0] = damage;
+    public void setClearOnFinish(boolean clearOnFinish) {
+        this.clearOnFinish = clearOnFinish;
     }
 
     public double getDamage() {
-        return data[0];
+        return damage;
     }
 
-    public void setSpeed(double speed) {
-        data[1] = speed;
+    public void setDamage(double damage) {
+        this.damage = damage;
     }
 
     public double getSpeed() {
-        return data[1];
+        return speed;
     }
 
-    public void setKnockback(double knockback) {
-        data[2] = knockback;
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
     public double getKnockback() {
-        return data[2];
+        return knockback;
     }
 
-    public void setUpwardKnockback(double upwardKnockback) {
-        data[3] = upwardKnockback;
-        upwardKnockbackSet = true;
+    public void setKnockback(double knockback) {
+        this.knockback = knockback;
     }
 
     public double getUpwardKnockback() {
-        return data[3];
+        return upwardKnockback;
     }
 
-    public void setHitboxSize(double hitboxRange) {
-        data[4] = hitboxRange;
+    public void setUpwardKnockback(double upwardKnockback) {
+        this.upwardKnockback = upwardKnockback;
     }
 
     public double getHitboxSize() {
-        return data[4];
+        return hitboxRange;
     }
 
-    public void setVariation(double variation) {
-        data[5] = variation;
+    public void setHitboxSize(double hitboxRange) {
+        this.hitboxRange = hitboxRange;
     }
 
-    public double getVariation() {
-        return data[5];
+    public double getSpread() {
+        return spread;
+    }
+
+    public void setSpread(double spread) {
+        this.spread = spread;
     }
 
     public boolean getExpAdd() {
         return expAdd;
     }
 
-    public void setExpAdd(boolean expAdd1) {
-        expAdd = expAdd1;
+    public void setExpAdd(boolean expAdd) {
+        this.expAdd = expAdd;
     }
 
     public boolean getPierce() {
         return pierce;
     }
 
-    public void setPierce(boolean pierceBoolean) {
-        pierce = pierceBoolean;
+    public void setPierce(boolean pierce) {
+        this.pierce = pierce;
     }
 
     public boolean getLastsOnGround() {
         return lastsOnGround;
     }
 
-    public void setLastsOnGround(boolean lastsOnGround1) {
-        lastsOnGround = lastsOnGround1;
+    public void setLastsOnGround(boolean lastsOnGround) {
+        this.lastsOnGround = lastsOnGround;
     }
 
     public double getTime() {
         return time;
     }
 
-    public void setTime(double time1) {
-        time = time1;
+    public void setTime(double time) {
+        this.time = time;
     }
 
     public boolean getTimed() {
         return timed;
     }
 
-    public void setTimed(boolean timed1) {
-        timed = timed1;
+    public void setTimed(boolean timed) {
+        this.timed = timed;
     }
 
-    public void setDirect(boolean direct1) {
-        direct = direct1;
+    public boolean getDirect() {
+        return direct;
+    }
+
+    public void setDirect(boolean direct) {
+        this.direct = direct;
     }
 
 }

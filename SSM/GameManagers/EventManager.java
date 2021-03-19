@@ -34,6 +34,9 @@ public class EventManager implements Listener {
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         Ability ability = KitManager.getCurrentAbility(player);
+        if(ability == null) {
+            return;
+        }
         if (ability instanceof OwnerLeftClickEvent && (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK)) {
             OwnerLeftClickEvent leftClick = (OwnerLeftClickEvent) ability;
             leftClick.onOwnerLeftClick(e);

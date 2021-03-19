@@ -16,10 +16,10 @@ import org.bukkit.projectiles.ProjectileSource;
 
 public abstract class BowCharge extends Attribute {
 
-    double delay;
-    double rate;
-    int maxCharge;
-    int charge = 0;
+    protected double delay;
+    protected double rate;
+    protected int maxCharge;
+    protected int charge = 0;
 
     public BowCharge(double delay, double rate, int maxCharge) {
         super();
@@ -27,7 +27,6 @@ public abstract class BowCharge extends Attribute {
         this.delay = delay;
         this.rate = rate;
         this.maxCharge = maxCharge;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
@@ -93,7 +92,7 @@ public abstract class BowCharge extends Attribute {
         owner.playSound(owner.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F + 0.1F * charge);
     }
 
-    public abstract void firedBow(Arrow p);
+    public abstract void firedBow(Arrow arrow);
 
     public void finishFiring() {
         cancelTask();

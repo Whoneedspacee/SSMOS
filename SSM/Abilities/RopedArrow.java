@@ -20,8 +20,7 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
     }
 
     public void onOwnerLeftClick(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        checkAndActivate(player);
+        checkAndActivate();
     }
 
     public void activate() {

@@ -26,7 +26,7 @@ public class CooldownManager extends BukkitRunnable {
 
     public CooldownManager() {
         ourInstance = this;
-        this.runTaskTimer(plugin, 1, 1);
+        this.runTaskTimer(plugin, 0, 1);
         isRunning = true;
     }
 
@@ -73,7 +73,7 @@ public class CooldownManager extends BukkitRunnable {
      */
     public void addCooldown(String abilityName, long duration, Player abilityUser) {
         Kit kit = KitManager.getPlayerKit(abilityUser);
-        if (duration == 0) {
+        if (duration <= 0) {
             return;
         } else {
             cooldownData.add(new CooldownData(abilityName, duration, abilityUser));

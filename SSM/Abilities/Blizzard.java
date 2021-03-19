@@ -16,24 +16,23 @@ public class Blizzard extends Ability implements OwnerRightClickEvent {
         this.name = "Blizzard";
         this.cooldownTime = 0;
         this.expUsed = 0.2F;
-        this.usesEnergy = true;
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        checkAndActivate(player);
+        checkAndActivate();
     }
 
     public void activate() {
         for (int i = 0; i < BlizzardAmount; i++) {
             Snowball firing = owner.getWorld().spawn(owner.getEyeLocation(), Snowball.class);
-            EntityProjectile projectile = new EntityProjectile(plugin, owner, name, firing);
+            EntityProjectile projectile = new EntityProjectile(plugin, owner.getEyeLocation(), name, firing);
+            projectile.setFirer(owner);
             projectile.setDamage(1.0);
             projectile.setSpeed(1.0);
             projectile.setKnockback(0.2);
             projectile.setUpwardKnockback(0.1);
             projectile.setHitboxSize(1.0);
-            projectile.setVariation(25);
+            projectile.setSpread(25);
             projectile.launchProjectile();
         }
     }

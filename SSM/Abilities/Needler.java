@@ -18,20 +18,20 @@ public class Needler extends Ability implements OwnerRightClickEvent {
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        checkAndActivate(player);
+        checkAndActivate();
     }
 
     public void activate() {
         for (int i = 0; i < needleAmount; i++) {
             Arrow firing = owner.getWorld().spawn(owner.getEyeLocation(), Arrow.class);
-            EntityProjectile projectile = new EntityProjectile(plugin, owner, name, firing);
+            EntityProjectile projectile = new EntityProjectile(plugin, owner.getEyeLocation(), name, firing);
+            projectile.setFirer(owner);
             projectile.setDamage(1.0);
             projectile.setSpeed(1.0);
             projectile.setKnockback(0.4);
             projectile.setUpwardKnockback(0.2);
             projectile.setHitboxSize(0.5);
-            projectile.setVariation(18);
+            projectile.setSpread(18);
             projectile.launchProjectile();
         }
     }

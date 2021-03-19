@@ -3,10 +3,7 @@ package SSM.Abilities;
 import SSM.Ability;
 import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -24,15 +21,14 @@ public class IronHook extends Ability implements OwnerRightClickEvent {
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        checkAndActivate(player);
+        checkAndActivate();
     }
 
     public void activate() {
         ItemStack hook = new ItemStack(Material.TRIPWIRE_HOOK, 1);
         Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), hook);
-        HookProjectile projectile = new HookProjectile(plugin, owner, name, firing);
-        projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
+        HookProjectile projectile = new HookProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);
+        projectile.setFirer(owner);
         projectile.launchProjectile();
     }
 
@@ -40,12 +36,12 @@ public class IronHook extends Ability implements OwnerRightClickEvent {
 
         int runn = -1;
 
-        public HookProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
-            super(plugin, firer, name, projectile);
+        public HookProjectile(Plugin plugin, Location fireLocation, String name, Entity projectile) {
+            super(plugin, fireLocation, name, projectile);
             this.setDamage(6.0);
             this.setSpeed(1.8);
             this.setHitboxSize(1.0);
-            this.setVariation(0);
+            this.setSpread(0);
             this.setKnockback(-2.5);
             this.setUpwardKnockback(0.5);
             runn = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {

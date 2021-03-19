@@ -3,9 +3,6 @@ package SSM.Abilities;
 import SSM.Ability;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
-import me.libraryaddict.disguise.disguisetypes.MobDisguise;
-import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -22,8 +19,6 @@ public class FlameDash extends Ability implements OwnerRightClickEvent {
     private double duration = 0.75; //seconds
     private int task;
     private static Location oldLoc;
-    private MobDisguise disg;
-    private SlimeWatcher watcher;
     private boolean active;
 
 
@@ -39,20 +34,12 @@ public class FlameDash extends Ability implements OwnerRightClickEvent {
             Bukkit.getScheduler().cancelTask(task);
             return;
         }
-        Player player = e.getPlayer();
-        checkAndActivate(player);
+        checkAndActivate();
     }
 
     public void activate() {
         oldLoc = owner.getLocation();
         time = System.currentTimeMillis() + (int) (duration * 1000);
-
-        disg = new MobDisguise(DisguiseType.MAGMA_CUBE);
-        disg.setEntity(owner);
-        watcher = (SlimeWatcher) disg.getWatcher();
-        watcher.setInvisible(true);
-        watcher.setCustomNameVisible(false);
-        disg.startDisguise();
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
@@ -72,9 +59,6 @@ public class FlameDash extends Ability implements OwnerRightClickEvent {
 
     private void explode() {
         active = false;
-        watcher.setInvisible(false);
-        watcher.setCustomNameVisible(true);
-        disg.startDisguise();
         Location newLoc = owner.getLocation();
         double dist = oldLoc.distance(newLoc);
         List<Entity> nearby = owner.getNearbyEntities(2, 2, 2);

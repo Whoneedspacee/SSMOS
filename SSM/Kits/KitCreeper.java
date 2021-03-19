@@ -6,7 +6,6 @@ import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Hunger;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -20,7 +19,6 @@ public class KitCreeper extends Kit {
         this.speed = 0.2f;
         this.regeneration = 0.4;
         this.knockback = 1.65;
-        this.disguise = DisguiseType.CREEPER;
         this.name = "Creeper";
         this.menuItem = Material.GUNPOWDER;
     }

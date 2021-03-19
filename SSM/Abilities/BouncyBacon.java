@@ -3,6 +3,7 @@ package SSM.Abilities;
 import SSM.Ability;
 import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -19,31 +20,29 @@ public class BouncyBacon extends Ability implements OwnerRightClickEvent {
         super();
         this.name = "Bouncy Bacon";
         this.cooldownTime = 0;
-        this.usesEnergy = true;
         this.expUsed = 0.3f;
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        checkAndActivate(player);
+        checkAndActivate();
     }
 
     public void activate() {
         ItemStack pork = new ItemStack(Material.PORKCHOP, 1);
         Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), pork);
-        PorkProjectile projectile = new PorkProjectile(plugin, owner, name, firing);
-        projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
+        PorkProjectile projectile = new PorkProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);
+        projectile.setFirer(owner);
         projectile.launchProjectile();
     }
 
     class PorkProjectile extends EntityProjectile {
 
-        public PorkProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
-            super(plugin, firer, name, projectile);
+        public PorkProjectile(Plugin plugin, Location fireLocation, String name, Entity projectile) {
+            super(plugin, fireLocation, name, projectile);
             this.setDamage(4.0);
             this.setSpeed(1.8);
             this.setHitboxSize(0.6);
-            this.setVariation(0);
+            this.setSpread(0);
             this.setPierce(true);
             this.setKnockback(-1.0);
             this.setUpwardKnockback(0.5);

@@ -22,7 +22,6 @@ public class Ravage extends Attribute {
         this.damageIncrement = damageIncrement;
         this.expireTime = expireTime;
         this.name = "Ravage";
-        task = this.runTaskTimer(plugin, 0, 1L);
     }
 
     @EventHandler
@@ -30,6 +29,10 @@ public class Ravage extends Attribute {
         if (e.getDamager() != owner) {
             return;
         }
+        checkAndActivate();
+    }
+
+    public void activate() {
         Kit kit = KitManager.getPlayerKit(owner);
         if (!(kit.getMelee() + damageIncrement > damageCap)) {
             kit.setMelee(kit.getMelee() + damageIncrement);
@@ -43,7 +46,6 @@ public class Ravage extends Attribute {
                 combo = 0;
             }
         }, (long) (expireTime * 20));
-
     }
 
 }

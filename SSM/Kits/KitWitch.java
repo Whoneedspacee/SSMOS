@@ -3,7 +3,6 @@ package SSM.Kits;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -12,13 +11,11 @@ public class KitWitch extends Kit {
 
     public KitWitch() {
         super();
-
         this.damage = 6;
         this.armor = 5;
         this.speed = 0.21f;
         this.regeneration = 0.3;
         this.knockback = 1.5;
-        this.disguise = DisguiseType.WITCH;
         this.name = "Witch";
         this.menuItem = Material.POTION;
     }

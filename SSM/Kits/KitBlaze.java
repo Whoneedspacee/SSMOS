@@ -6,7 +6,6 @@ import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Potion;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,13 +15,11 @@ public class KitBlaze extends Kit {
 
     public KitBlaze() {
         super();
-
         this.damage = 6;
         this.armor = 6;
         this.speed = 0.22f;
         this.regeneration = 0.25;
         this.knockback = 1.50;
-        this.disguise = DisguiseType.BLAZE;
         this.name = "Blaze";
         this.menuItem = Material.BLAZE_ROD;
     }

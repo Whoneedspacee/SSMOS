@@ -5,7 +5,6 @@ import SSM.Attributes.DoubleJumps.DirectDoubleJump;
 import SSM.Attributes.Ravage;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -14,13 +13,11 @@ public class KitWolf extends Kit {
 
     public KitWolf() {
         super();
-
         this.damage = 5;
         this.armor = 4.5;
         this.speed = 0.2f;
         this.regeneration = 0.25;
         this.knockback = 1.6;
-        this.disguise = DisguiseType.WOLF;
         this.name = "Wolf";
         this.menuItem = Material.BONE;
     }

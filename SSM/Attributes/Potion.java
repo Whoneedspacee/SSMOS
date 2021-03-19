@@ -18,6 +18,10 @@ public class Potion extends Attribute {
 
     @Override
     public void run() {
+        checkAndActivate();
+    }
+
+    public void activate() {
         owner.addPotionEffect(new org.bukkit.potion.PotionEffect(effect, 70, level - 1));
     }
 

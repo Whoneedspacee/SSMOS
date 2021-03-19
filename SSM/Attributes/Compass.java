@@ -17,6 +17,10 @@ public class Compass extends Attribute {
 
     @Override
     public void run() {
+        checkAndActivate();
+    }
+
+    public void activate() {
         Location finalLoc = null;
         Location loc = owner.getLocation();
         double finalDist = 101;
@@ -34,6 +38,6 @@ public class Compass extends Attribute {
             }
         }
         owner.setCompassTarget(finalLoc);
-
     }
+
 }

@@ -1,6 +1,7 @@
 package SSM.Attributes.DoubleJumps;
 
 import SSM.Attribute;
+import SSM.Utilities.Utils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -12,13 +13,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 public abstract class DoubleJump extends Attribute {
+
     protected double height;
     protected double power;
     private int maxDoubleJumps;
     private static int remainingDoubleJumps = 0;
     private Sound doubleJumpSound;
-
-    protected abstract void jump(boolean perfectJumped);
+    protected boolean perfectJumped;
 
     public DoubleJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound) {
         super();
@@ -26,7 +27,6 @@ public abstract class DoubleJump extends Attribute {
         this.height = height;
         this.maxDoubleJumps = maxDoubleJumps;
         this.doubleJumpSound = doubleJumpSound;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     /**
@@ -52,12 +52,12 @@ public abstract class DoubleJump extends Attribute {
             player.getWorld().playSound(player.getLocation(), doubleJumpSound, 1f, 1f);
 
             //Jumping when directly on the ground seems to transfer Y velocity to horizontal velocity, or simply diminish Y. (Go very fast forward)
-            boolean perfectJumped = false;
+            perfectJumped = false;
             if (!player.getLocation().subtract(0, 0.001, 0).getBlock().isPassable()) {
                 perfectJumped = true;
             }
 
-            jump(perfectJumped);
+            jump();
 
             if (remainingDoubleJumps <= 0) {
                 player.setAllowFlight(false);
@@ -71,17 +71,19 @@ public abstract class DoubleJump extends Attribute {
     @EventHandler
     public void playerMoveEvent(PlayerMoveEvent e) {
         Player player = e.getPlayer();
-        World world = player.getWorld();
-        Location location = player.getLocation();
 
         if (!player.equals(owner)) {
             return;
         }
 
-        if (!world.getBlockAt(location.subtract(0, 0.5, 0)).isPassable()) {
-            remainingDoubleJumps = maxDoubleJumps;
-            player.setAllowFlight(true);
+        if (Utils.playerIsOnGround(owner)) {
+            resetDoubleJumps();
         }
+    }
+
+    public void resetDoubleJumps() {
+        remainingDoubleJumps = maxDoubleJumps;
+        owner.setAllowFlight(true);
     }
 
     @EventHandler
@@ -89,6 +91,12 @@ public abstract class DoubleJump extends Attribute {
         if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
             e.setCancelled(true);
         }
+    }
+
+    protected abstract void jump();
+
+    public void activate() {
+        jump();
     }
 
 }

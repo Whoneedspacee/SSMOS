@@ -1,9 +1,9 @@
 main: SSM.SSM
 name: Super_Smash_Mobs_2
 version: 1
-author: Heartlessknights, Whoneedspacee, Huxs
+author: Whoneedspacee, SirInHueman, Huxs
 description: 'An open source recreation of Super Smash Mobs'
-api-version: 1.15
+api-version: 1.16
 commands:
   kit:
     description: 'Applies the kit of the name entered'

@@ -4,13 +4,11 @@ import SSM.Abilities.InkShotgun;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class KitSquid extends Kit {
-
 
     public KitSquid() {
         super();
@@ -20,7 +18,6 @@ public class KitSquid extends Kit {
         this.regeneration = 0.25;
         this.knockback = 1.5;
         this.name = "Sky_Squid";
-        this.disguise = DisguiseType.SQUID;
         this.menuItem = Material.INK_SAC;
     }
 

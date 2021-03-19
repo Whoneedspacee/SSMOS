@@ -32,8 +32,7 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-        checkAndActivate(player);
+        checkAndActivate();
     }
 
     public void activate() {
@@ -45,8 +44,8 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
             boneMeta.setDisplayName("bone" + i);
             bone.setItemMeta(boneMeta);
             Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), bone);
-            BoneProjectile projectile = new BoneProjectile(plugin, owner, name, firing);
-            projectile.setOverridePosition(owner.getEyeLocation().subtract(0, -1, 0));
+            BoneProjectile projectile = new BoneProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);
+            projectile.setFirer(owner);
             projectile.launchProjectile();
         }
         List<Entity> canHit = owner.getNearbyEntities(range, range, range);
@@ -68,14 +67,14 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
 
     class BoneProjectile extends EntityProjectile {
 
-        public BoneProjectile(Plugin plugin, Player firer, String name, Entity projectile) {
-            super(plugin, firer, name, projectile);
+        public BoneProjectile(Plugin plugin, Location fireLocation, String name, Entity projectile) {
+            super(plugin, fireLocation, name, projectile);
             this.setDamage(0.0);
             this.setSpeed(0.5 + Math.random() * 0.3);
             this.setKnockback(0.0);
             this.setUpwardKnockback(0.0);
             this.setHitboxSize(0.0);
-            this.setVariation(360);
+            this.setSpread(360);
             this.setFireOpposite(false);
         }
     }

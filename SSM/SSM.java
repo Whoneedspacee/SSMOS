@@ -26,10 +26,6 @@ public class SSM extends JavaPlugin implements Listener {
 
     private static JavaPlugin ourInstance;
 
-    public static void main(String[] args) {
-        // for testing junk
-    }
-
     public static JavaPlugin getInstance() {
         return ourInstance;
     }
@@ -42,7 +38,6 @@ public class SSM extends JavaPlugin implements Listener {
         new EventManager();
         new KitManager();
         new MeleeManager();
-        this.getCommand("kit").setExecutor(KitManager.getInstance());
     }
 
     @Override

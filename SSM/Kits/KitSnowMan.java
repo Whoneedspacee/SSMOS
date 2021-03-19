@@ -5,7 +5,6 @@ import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
 import SSM.Kit;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -14,13 +13,11 @@ public class KitSnowMan extends Kit {
 
     public KitSnowMan() {
         super();
-
         this.damage = 7;
         this.armor = 6;
         this.speed = 0.23f;
         this.regeneration = 0.2;
         this.knockback = 1.4;
-        this.disguise = DisguiseType.SNOWMAN;
         this.name = "Snowman";
         this.menuItem = Material.PUMPKIN;
     }
@@ -38,6 +35,6 @@ public class KitSnowMan extends Kit {
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
-        addAttribute(new ExpCharge(0.01F, 1));
+        addAttribute(new ExpCharge(0.01F, 1, false));
     }
 }
