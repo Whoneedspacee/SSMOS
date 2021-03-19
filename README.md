@@ -1,4 +1,4 @@
-# SSM2
+# SSMOS
 
 SSM Open Source Recreation for community usage
 
