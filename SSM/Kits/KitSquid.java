@@ -18,7 +18,7 @@ public class KitSquid extends Kit {
         this.regeneration = 0.25;
         this.knockback = 1.5;
         this.name = "Sky_Squid";
-        this.menuItem = Material.INK_SAC;
+        this.menuItem = Material.INK_SACK;
     }
 
     public void equipKit(Player player) {
@@ -30,9 +30,9 @@ public class KitSquid extends Kit {
 
         setItem(Material.IRON_AXE, 0, new InkShotgun());
         setItem(Material.IRON_SWORD, 1);
-        setItem(Material.IRON_SHOVEL, 2);
+        setItem(Material.IRON_SPADE, 2);
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
+        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
     }
 }

@@ -4,8 +4,8 @@ import SSM.Ability;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.GameManagers.OwnerEvents.OwnerTakeDamageEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -36,7 +36,7 @@ public class Firefly extends Ability implements OwnerRightClickEvent, OwnerTakeD
     public void activate() {
         fireflyTime = 0;
         i = 0;
-        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 1.0F, 1.2F);
+        owner.getWorld().playSound(owner.getLocation(), Sound.BLAZE_BREATH, 1.0F, 1.2F);
 
         stall = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
@@ -44,7 +44,7 @@ public class Firefly extends Ability implements OwnerRightClickEvent, OwnerTakeD
                 i++;
                 owner.setLastDamage(0.0);
                 owner.setVelocity(new Vector(0, 0, 0));
-                owner.getWorld().spawnParticle(Particle.FLAME, owner.getLocation(), 1);
+                owner.getWorld().playEffect(owner.getLocation(), Effect.FLAME, 1);
                 if (i >= 15) {
                     Bukkit.getScheduler().cancelTask(stall);
                     i = 0;
@@ -55,11 +55,11 @@ public class Firefly extends Ability implements OwnerRightClickEvent, OwnerTakeD
             @Override
             public void run() {
                 if (fireflyTime <= 40) {
-                    owner.setInvulnerable(true);
+                    owner.setNoDamageTicks(100000);
                     fireflyTime++;
-                    owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 0.6F, 1.2F);
+                    owner.getWorld().playSound(owner.getLocation(), Sound.EXPLODE, 0.6F, 1.2F);
                     owner.setVelocity((owner.getLocation().getDirection().multiply(0.7D).add(new Vector(0.0D, 0.1D, 0.0D))));
-                    owner.getWorld().spawnParticle(Particle.FLAME, owner.getLocation(), 10);
+                    owner.getWorld().playEffect(owner.getLocation(), Effect.FLAME, 10);
                     List<Entity> canHit = owner.getNearbyEntities(2, 2, 2);
                     canHit.remove(owner);
 
@@ -82,7 +82,7 @@ public class Firefly extends Ability implements OwnerRightClickEvent, OwnerTakeD
                         }
                     }
                     if (fireflyTime >= 40) {
-                        owner.setInvulnerable(false);
+                        owner.setNoDamageTicks(0);
                         Bukkit.getScheduler().cancelTask(runn);
                     }
                 }

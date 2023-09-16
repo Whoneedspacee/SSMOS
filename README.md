@@ -6,8 +6,8 @@ Feel free to fork the code and edit at your leisure
 
 This main repository will be mainly used for keeping up to date with the main version
 
-For questions message Space#0089 on discord or feel free to ask directly by making an issue here
+For questions message Space#3169 on discord or feel free to ask directly by making an issue here
 
 # Dependencies (required)	
 
-Spigot 1.16.5
+Spigot 1.8.9

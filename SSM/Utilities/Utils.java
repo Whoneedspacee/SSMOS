@@ -2,8 +2,12 @@ package SSM.Utilities;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_8_R3.ChatComponentText;
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -16,7 +20,8 @@ public class Utils {
      * @param player  player receiving the message
      */
     public static void sendActionBarMessage(String message, Player player) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+        PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(message), (byte)2);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
     public static void sendServerMessageToPlayer(String message, Player player, ServerMessageType type) {
@@ -24,7 +29,7 @@ public class Utils {
     }
 
     public static boolean holdingItemWithName(Player player, String name) {
-        ItemMeta itemMeta = player.getInventory().getItemInMainHand().getItemMeta();
+        ItemMeta itemMeta = player.getInventory().getItemInHand().getItemMeta();
         if (itemMeta != null) {
             return itemMeta.getDisplayName().equals(name);
         }
@@ -44,8 +49,13 @@ public class Utils {
     public static boolean playerIsOnGround(Player player) {
         World world = player.getWorld();
         Location location = player.getLocation();
-        if (!world.getBlockAt(location.subtract(0, 0.5, 0)).isPassable()) {
-            return true;
+        double[] coords = {-0.3, 0, 0.3};
+        for(double x : coords) {
+            for(double z : coords) {
+                if (!world.getBlockAt(player.getLocation().subtract(x, 0.5, z)).getType().isTransparent()) {
+                    return true;
+                }
+            }
         }
         return false;
     }

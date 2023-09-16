@@ -20,7 +20,7 @@ public class KitCreeper extends Kit {
         this.regeneration = 0.4;
         this.knockback = 1.65;
         this.name = "Creeper";
-        this.menuItem = Material.GUNPOWDER;
+        this.menuItem = Material.SULPHUR;
     }
 
     public void equipKit(Player player) {
@@ -31,10 +31,10 @@ public class KitCreeper extends Kit {
         setArmor(Material.LEATHER_HELMET, 3);
 
         setItem(Material.IRON_AXE, 0, new SulphurBomb());
-        setItem(Material.IRON_SHOVEL, 1, new Explode());
+        setItem(Material.IRON_SPADE, 1, new Explode());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
+        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Hunger(10));
     }
 }

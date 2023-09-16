@@ -3,9 +3,9 @@ package SSM.Abilities;
 import SSM.Ability;
 import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -28,7 +28,7 @@ public class SulphurBomb extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_CREEPER_DEATH, 10L, 1L);
+        owner.getWorld().playSound(owner.getLocation(), Sound.CREEPER_DEATH, 10L, 1L);
         ItemStack sulphur = new ItemStack(Material.COAL, 1);
         Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), sulphur);
         BombProjectile projectile = new BombProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);
@@ -50,7 +50,7 @@ public class SulphurBomb extends Ability implements OwnerRightClickEvent {
 
         @Override
         public boolean onHit(LivingEntity target) {
-            owner.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, projectile.getLocation(), 1);
+            owner.getWorld().playEffect(projectile.getLocation(), Effect.EXPLOSION_LARGE, 1);
             return super.onHit(target);
         }
     }

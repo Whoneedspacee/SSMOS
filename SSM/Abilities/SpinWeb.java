@@ -31,8 +31,8 @@ public class SpinWeb extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_SPIDER_DEATH, 10L, 1L);
-        ItemStack cobweb = new ItemStack(Material.COBWEB, 1);
+        owner.getWorld().playSound(owner.getLocation(), Sound.SPIDER_DEATH, 10L, 1L);
+        ItemStack cobweb = new ItemStack(Material.WEB, 1);
         for (int i = 0; i < webAmount; i++) {
             Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), cobweb);
             WebProjectile projectile = new WebProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);
@@ -60,10 +60,10 @@ public class SpinWeb extends Ability implements OwnerRightClickEvent {
         public boolean onHit(LivingEntity target) {
             Block replace = projectile.getLocation().getBlock();
             Material replacedType = replace.getType();
-            if (replacedType == Material.COBWEB) {
+            if (replacedType == Material.WEB) {
                 return super.onHit(target);
             }
-            replace.setType(Material.COBWEB);
+            replace.setType(Material.WEB);
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                 @Override
                 public void run() {

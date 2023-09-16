@@ -2,10 +2,7 @@ package SSM.Attributes.DoubleJumps;
 
 import SSM.Attribute;
 import SSM.Utilities.Utils;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -45,6 +42,9 @@ public abstract class DoubleJump extends Attribute {
         }
 
         e.setCancelled(true);
+        player.setFlying(false);
+        player.setAllowFlight(false);
+        player.setFallDistance(0);
 
         if (remainingDoubleJumps > 0) {
             remainingDoubleJumps--;
@@ -53,7 +53,7 @@ public abstract class DoubleJump extends Attribute {
 
             //Jumping when directly on the ground seems to transfer Y velocity to horizontal velocity, or simply diminish Y. (Go very fast forward)
             perfectJumped = false;
-            if (!player.getLocation().subtract(0, 0.001, 0).getBlock().isPassable()) {
+            if (!player.getLocation().subtract(0, 0.001, 0).getBlock().getType().isTransparent()) {
                 perfectJumped = true;
             }
 

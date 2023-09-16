@@ -1,9 +1,9 @@
 package SSM;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -64,7 +64,7 @@ public class Kit {
         }
         ItemStack item = new ItemStack(itemMaterial);
         ItemMeta meta = item.getItemMeta();
-        meta.setUnbreakable(true);
+        meta.spigot().setUnbreakable(true);
         item.setItemMeta(meta);
         ItemStack[] armor = owner.getInventory().getArmorContents();
         armor[armorSlot] = item;
@@ -87,9 +87,9 @@ public class Kit {
         }
         if (meta instanceof Damageable) {
             Damageable damageable = (Damageable) meta;
-            damageable.setDamage((int) damage);
+            damageable.damage((int) damage);
         }
-        meta.setUnbreakable(true);
+        meta.spigot().setUnbreakable(true);
         item.setItemMeta(meta);
         owner.getInventory().setItem(inventorySlot, item);
     }

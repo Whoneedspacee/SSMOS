@@ -30,10 +30,10 @@ public class KitCow extends Kit {
         setArmor(Material.IRON_HELMET, 3);
 
         setItem(Material.IRON_AXE, 0);
-        setItem(Material.IRON_SHOVEL, 1, new MilkSpiral());
+        setItem(Material.IRON_SPADE, 1, new MilkSpiral());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Stampede(3, 3));
     }
 }

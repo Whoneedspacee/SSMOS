@@ -47,8 +47,8 @@ public class IronHook extends Ability implements OwnerRightClickEvent {
             runn = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
                 @Override
                 public void run() {
-                    firer.getWorld().playSound(projectile.getLocation(), Sound.ITEM_FLINTANDSTEEL_USE, 1, 1);
-                    firer.getWorld().spawnParticle(Particle.CRIT, projectile.getLocation(), 0);
+                    firer.getWorld().playSound(projectile.getLocation(), Sound.FIRE_IGNITE, 1, 1);
+                    firer.getWorld().playEffect(projectile.getLocation(), Effect.CRIT, 0);
                 }
             }, 0, 1);
         }

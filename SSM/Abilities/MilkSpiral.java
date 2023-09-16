@@ -2,30 +2,24 @@ package SSM.Abilities;
 
 import SSM.Ability;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
-import org.bukkit.Bukkit;
+import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
+import org.bukkit.Effect;
 import org.bukkit.Location;
-import org.bukkit.Particle;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
 public class MilkSpiral extends Ability implements OwnerRightClickEvent {
 
-    // length in blocks
-    private int spiralLength = 40;
-    // particle density of a the circle
-    private int particleDensity = 40;
-    // amount the center of our circle moves per iteration
-    private double iterationDiff = 0.2;
-    // initial distance
-    private double initialDistance = 2;
-    // task for spiral
-    private int task;
+    // Block Range
+    private double range = 7;
 
     public MilkSpiral() {
         super();
-        this.name = "Milk Spiral";
+        this.name = "Sonic Hurr";
         this.cooldownTime = 0.5;
     }
 
@@ -34,33 +28,37 @@ public class MilkSpiral extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        Bukkit.getScheduler().cancelTask(task);
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            int i = 0;
-            World world = owner.getWorld();
-            Location ownerLocation = owner.getEyeLocation();
-            Vector ownerPosition = ownerLocation.toVector();
-            Vector lookDir = ownerLocation.getDirection();
-            double iterations = spiralLength / iterationDiff;
-            Vector v1 = new Vector(-lookDir.getZ(), 0, lookDir.getX()).normalize();
-            Vector v2 = lookDir.getCrossProduct(v1);
-
-            @Override
-            public void run() {
-                if (i >= iterations) {
-                    Bukkit.getScheduler().cancelTask(task);
-                }
-                double angle = i * (2 * Math.PI / particleDensity);
-                Vector linePos = ownerPosition.clone().add(lookDir.clone().multiply(initialDistance + i * iterationDiff));
-                Vector circlePosFirst = v1.clone().multiply(Math.cos(angle)).add(v2.clone().multiply(Math.sin(angle)));
-                Vector circlePosSecond = circlePosFirst.clone().multiply(-1);
-                Vector finalPosFirst = linePos.clone().add(circlePosFirst);
-                Vector finalPosSecond = linePos.clone().add(circlePosSecond);
-                world.spawnParticle(Particle.FIREWORKS_SPARK, finalPosFirst.toLocation(world), 0, 0, 0, 0, 0, null, true);
-                world.spawnParticle(Particle.FIREWORKS_SPARK, finalPosSecond.toLocation(world), 0, 0, 0, 0, 0, null, true);
-                i++;
-            }
-        }, 0L, 0L);
+        World world = owner.getWorld();
+        Location ownerLoc = owner.getEyeLocation();
+        Vector dir = ownerLoc.getDirection().normalize();
+        Vector ownerPos = ownerLoc.toVector().add(dir.clone());
+        Vector v1 = new Vector(-dir.getZ(), 0, dir.getX()).normalize();
+        Vector v2 = dir.getCrossProduct(v1);
+        world.playSound(ownerLoc, Sound.VILLAGER_IDLE, 1.0F, 1.0F);
+        double i = 0;
+        double theta = 0;
+        while(i < range) {
+            // Full rotation happens every 4 blocks, which means
+            // when i += 4, theta += 2PI, so i += 1 means theta += PI/2
+            i += 1.0/20;
+            theta += (Math.PI / 2) / 20;
+            Vector cone_pos = v1.clone().multiply(Math.cos(theta)).add(v2.clone().multiply(Math.sin(theta))).normalize().multiply(Math.min(i, 2));
+            Vector opposite_cone_pos = cone_pos.clone().multiply(-1);
+            Vector world_cone_pos = ownerPos.clone().add(dir.clone().multiply(i)).add(cone_pos);
+            Vector opposite_world_cone_pos = ownerPos.clone().add(dir.clone().multiply(i)).add(opposite_cone_pos);
+            Location first = world_cone_pos.toLocation(world);
+            Location second = opposite_world_cone_pos.toLocation(world);
+            PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.CLOUD, false,
+                    (float) first.getX(), (float) first.getY(), (float) first.getZ(),
+                    0, 0, 0,
+                    0, 0, 0);
+            ((CraftPlayer) owner).getHandle().playerConnection.sendPacket(packet);
+            packet = new PacketPlayOutWorldParticles(EnumParticle.CLOUD, false,
+                    (float) second.getX(), (float) second.getY(), (float) second.getZ(),
+                    0, 0, 0,
+                    0, 0, 0);
+            ((CraftPlayer) owner).getHandle().playerConnection.sendPacket(packet);
+        }
     }
 
 }

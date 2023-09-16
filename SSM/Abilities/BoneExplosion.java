@@ -22,7 +22,7 @@ import java.util.List;
 public class BoneExplosion extends Ability implements OwnerRightClickEvent {
 
     private int boneAmount = 40;
-    private double range = 5;
+    private double range = 7;
     private double baseDamage = 6;
 
     public BoneExplosion() {
@@ -37,7 +37,7 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
 
     public void activate() {
         Location loc = owner.getLocation();
-        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_SKELETON_DEATH, 10L, 1L);
+        owner.getWorld().playSound(owner.getLocation(), Sound.SKELETON_DEATH, 10L, 1L);
         ItemStack bone = new ItemStack(Material.BONE, 1);
         for (int i = 0; i < boneAmount; i++) {
             ItemMeta boneMeta = bone.getItemMeta();

@@ -14,3 +14,9 @@ commands:
   setspeed:
     description: 'Sets the base speed of the player'
     usage: /setspeed number
+  jump:
+    description: 'Does a jump'
+    usage: /jump
+  move:
+    description: 'Does a move'
+    usage: /move

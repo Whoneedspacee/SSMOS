@@ -81,9 +81,12 @@ public class EntityProjectile extends BukkitRunnable {
         if (getFireOpposite()) {
             direction.multiply(-1);
         }
-        direction.rotateAroundX(EntityProjectile.getRandomSpread(spread));
-        direction.rotateAroundY(EntityProjectile.getRandomSpread(spread));
-        direction.rotateAroundZ(EntityProjectile.getRandomSpread(spread));
+        double yaw = Math.atan2(direction.getZ(), direction.getX()) + EntityProjectile.getRandomSpread(spread);
+        double xz = Math.sqrt(direction.getX() * direction.getX() + direction.getZ() * direction.getZ());
+        double pitch = Math.atan2(direction.getY(), xz)  + EntityProjectile.getRandomSpread(spread);
+        direction.setX(Math.cos(pitch) * Math.cos(yaw));
+        direction.setZ(Math.cos(pitch) * Math.sin(yaw));
+        direction.setY(Math.sin(pitch));
         if (direct) {
             projectile.setVelocity(direction.multiply(magnitude).setY(0).normalize());
         } else {

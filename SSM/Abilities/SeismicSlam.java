@@ -36,7 +36,7 @@ public class SeismicSlam extends Leap implements OwnerRightClickEvent {
     @Override
     public void onLand() {
         Location loc = owner.getLocation();
-        owner.getWorld().playSound(owner.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0F, 1.0F);
+        owner.getWorld().playSound(owner.getLocation(), Sound.DIG_STONE, 1.0F, 1.0F);
 
         List<Entity> canHit = owner.getNearbyEntities(range, range, range);
         canHit.remove(owner);

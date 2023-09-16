@@ -49,7 +49,7 @@ public class FlameDash extends Ability implements OwnerRightClickEvent {
                     explode();
                 }
                 owner.setVelocity(oldLoc.getDirection().setY(0).normalize().multiply(1));
-                owner.getWorld().playSound(owner.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1, 2);
+                owner.getWorld().playSound(owner.getLocation(), Sound.FIZZ, 1, 2);
                 active = Bukkit.getScheduler().isCurrentlyRunning(task);
 
             }

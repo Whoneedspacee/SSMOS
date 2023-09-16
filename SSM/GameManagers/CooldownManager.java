@@ -44,7 +44,7 @@ public class CooldownManager extends BukkitRunnable {
 
                 Utils.sendServerMessageToPlayer("§7You can use §a" + currData.abilityName + "§7.", currData.abilityUser, ServerMessageType.RECHARGE);
                 if (Utils.holdingItemWithName(currData.abilityUser, currData.abilityName)) {
-                    currData.abilityUser.playSound(currData.abilityUser.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 24.0f);
+                    currData.abilityUser.playSound(currData.abilityUser.getLocation(), Sound.NOTE_PLING, 1.0f, 24.0f);
                 }
             }
 

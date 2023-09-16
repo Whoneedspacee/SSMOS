@@ -32,7 +32,7 @@ public class KitSlime extends Kit {
         setItem(Material.IRON_AXE, 1, new SlimeSlam());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.9, 1, Sound.ENTITY_GHAST_SHOOT));
+        addAttribute(new GenericDoubleJump(0.61, 0.9, 1, Sound.GHAST_FIREBALL));
 
     }
 

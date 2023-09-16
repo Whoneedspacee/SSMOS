@@ -29,8 +29,8 @@ public class InkShotgun extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 10L, 1L);
-        ItemStack ink = new ItemStack(Material.INK_SAC, inkAmount);
+        owner.getWorld().playSound(owner.getLocation(), Sound.GHAST_FIREBALL, 10L, 1L);
+        ItemStack ink = new ItemStack(Material.INK_SACK, inkAmount);
         for (int i = 0; i < inkAmount; i++) {
             Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), ink);
             InkProjectile projectile = new InkProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);

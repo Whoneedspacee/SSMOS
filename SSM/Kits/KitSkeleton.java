@@ -37,7 +37,7 @@ public class KitSkeleton extends Kit {
 
         addAttribute(new ItemGenerator(Material.ARROW, 1, 3, 3));
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Barrage(1.1, 0.25, 5));
     }
 

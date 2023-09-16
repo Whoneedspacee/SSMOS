@@ -28,10 +28,10 @@ public class KitWitch extends Kit {
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
         setItem(Material.IRON_AXE, 0);
-        setItem(Material.IRON_SHOVEL, 1);
+        setItem(Material.IRON_SPADE, 1);
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
+        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
     }
 
 }

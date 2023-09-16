@@ -23,7 +23,7 @@ public class MagmaBlast extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_CREEPER_DEATH, 1, 1);
+        owner.getWorld().playSound(owner.getLocation(), Sound.CREEPER_DEATH, 1, 1);
         largeFireball = owner.launchProjectile(LargeFireball.class);
         largeFireball.setCustomName("MagmaBlast");
         largeFireball.setVelocity(owner.getEyeLocation().getDirection().multiply(1.0D));

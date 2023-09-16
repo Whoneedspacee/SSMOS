@@ -35,7 +35,7 @@ public abstract class BowCharge extends Attribute {
         if (player != owner) {
             return;
         }
-        if (player.getInventory().getItemInMainHand().getType() != Material.BOW) {
+        if (player.getInventory().getItemInHand().getType() != Material.BOW) {
             return;
         }
         if (!player.getInventory().contains(Material.ARROW)) {
@@ -89,7 +89,7 @@ public abstract class BowCharge extends Attribute {
 
     public void incrementedCharge() {
         owner.setExp(Math.min(0.9999F, (float) charge / maxCharge));
-        owner.playSound(owner.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F + 0.1F * charge);
+        owner.playSound(owner.getLocation(), Sound.CLICK, 1.0F, 1.0F + 0.1F * charge);
     }
 
     public abstract void firedBow(Arrow arrow);

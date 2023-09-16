@@ -33,7 +33,7 @@ public class Explode extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        owner.getWorld().playSound(owner.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 1, 2);
+        owner.getWorld().playSound(owner.getLocation(), Sound.CREEPER_HISS, 1, 2);
         time = System.currentTimeMillis() + (int) (timeToExplode * 1000);
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override

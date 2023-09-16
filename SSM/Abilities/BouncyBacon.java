@@ -28,7 +28,7 @@ public class BouncyBacon extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        ItemStack pork = new ItemStack(Material.PORKCHOP, 1);
+        ItemStack pork = new ItemStack(Material.PORK, 1);
         Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), pork);
         PorkProjectile projectile = new PorkProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);
         projectile.setFirer(owner);

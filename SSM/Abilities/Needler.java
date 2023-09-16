@@ -3,18 +3,24 @@ package SSM.Abilities;
 import SSM.Ability;
 import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitTask;
 
 public class Needler extends Ability implements OwnerRightClickEvent {
 
-    int needleAmount = 6;
+    private int needleAmount = 6;
+    private int fired = 0;
+    private BukkitTask taskID;
 
     public Needler() {
         super();
         this.name = "Needler";
-        this.cooldownTime = 0;
+        this.cooldownTime = 2.5;
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
@@ -22,17 +28,19 @@ public class Needler extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        for (int i = 0; i < needleAmount; i++) {
-            Arrow firing = owner.getWorld().spawn(owner.getEyeLocation(), Arrow.class);
-            EntityProjectile projectile = new EntityProjectile(plugin, owner.getEyeLocation(), name, firing);
-            projectile.setFirer(owner);
-            projectile.setDamage(1.0);
-            projectile.setSpeed(1.0);
-            projectile.setKnockback(0.4);
-            projectile.setUpwardKnockback(0.2);
-            projectile.setHitboxSize(0.5);
-            projectile.setSpread(18);
-            projectile.launchProjectile();
-        }
+        taskID = Bukkit.getScheduler().runTaskTimer(plugin, () ->
+        {
+            if(!owner.isBlocking() || fired >= 6) {
+                fired = 0;
+                Bukkit.getScheduler().cancelTask(taskID.getTaskId());
+                return;
+            }
+            Arrow arrow = owner.launchProjectile(Arrow.class);
+            arrow.setCustomName("Needler");
+            arrow.setMetadata("Needler", new FixedMetadataValue(plugin, 1));
+            arrow.setVelocity(owner.getLocation().getDirection().multiply(2.4));
+            owner.playSound(owner.getLocation(), Sound.SPIDER_IDLE, 10L, 1L);
+            fired++;
+        }, 0L, 2L);
     }
 }

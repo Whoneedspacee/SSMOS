@@ -118,7 +118,7 @@ public class KitManager implements CommandExecutor, Listener {
             return null;
         }
         List<Attribute> attributes = kit.getAttributes();
-        String currentItemName = player.getInventory().getItemInMainHand().getItemMeta().getDisplayName();
+        String currentItemName = player.getInventory().getItemInHand().getItemMeta().getDisplayName();
         Ability ability = null;
         for (Attribute attribute : attributes) {
             if (!(attribute instanceof Ability)) {

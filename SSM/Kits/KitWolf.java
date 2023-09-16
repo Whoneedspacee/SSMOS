@@ -29,10 +29,10 @@ public class KitWolf extends Kit {
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
         setItem(Material.IRON_AXE, 0);
-        setItem(Material.IRON_SHOVEL, 1, new WolfStrike());
+        setItem(Material.IRON_SPADE, 1, new WolfStrike());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new DirectDoubleJump(1.0, 0.2, 1, Sound.ENTITY_GHAST_SHOOT));
+        addAttribute(new DirectDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Ravage(8, 1, 3));
 
     }

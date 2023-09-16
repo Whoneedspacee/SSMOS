@@ -1,6 +1,7 @@
 package SSM;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -74,7 +75,7 @@ public abstract class Leap extends Ability {
                     return; // Prevents slam moves from immediately ending if you use them on the ground.
                 }
                 Block block = owner.getLocation().subtract(0, -0.001, 0).getBlock();
-                if (!block.isPassable()) {
+                if (block.getType() != Material.AIR) {
                     onLand();
                     owner.sendMessage("test");
                 }

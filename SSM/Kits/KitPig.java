@@ -19,7 +19,7 @@ public class KitPig extends Kit {
         this.regeneration = 0.25;
         this.knockback = 1.5;
         this.name = "Pig";
-        this.menuItem = Material.PORKCHOP;
+        this.menuItem = Material.PORK;
     }
 
     public void equipKit(Player player) {
@@ -29,10 +29,10 @@ public class KitPig extends Kit {
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
         setItem(Material.IRON_AXE, 0, new BouncyBacon());
-        setItem(Material.IRON_SHOVEL, 1);
+        setItem(Material.IRON_SPADE, 1);
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
+        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
         addAttribute(new ExpCharge(0.011F, 1, false));
     }
 }

@@ -34,10 +34,10 @@ public class KitIronGolem extends Kit {
 
         setItem(Material.IRON_AXE, 0);
         setItem(Material.IRON_PICKAXE, 1, new IronHook());
-        setItem(Material.IRON_SHOVEL, 2, new SeismicSlam());
+        setItem(Material.IRON_SPADE, 2, new SeismicSlam());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.ENTITY_GHAST_SHOOT));
+        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Potion(PotionEffectType.SLOW, 1));
     }
 

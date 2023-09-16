@@ -1,6 +1,9 @@
 package SSM.Attributes.DoubleJumps;
 
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityVelocity;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.util.Vector;
 
 public class DirectDoubleJump extends DoubleJump {
 
@@ -10,8 +13,21 @@ public class DirectDoubleJump extends DoubleJump {
 
     @Override
     protected void jump() {
-        double frictionModifier = perfectJumped ? -0.2 : 0;
-        owner.setVelocity(owner.getLocation().getDirection().multiply(power));//.add(new Vector(0, height, 0)));
+        Vector direction = owner.getLocation().getDirection();
+        direction.normalize();
+        direction.multiply(power);
+        direction.setY(direction.getY() + 0.2);
+        if(direction.getY() >= height) {
+            direction.setY(height);
+        }
+        if(perfectJumped) {
+            direction.setY(direction.getY() + 0.2);
+        }
+        // For some reason player setVelocity results in the sent packet being reduced
+        // For no real consistent reason due to serverside predictions more than likely
+        // Rather than delve into that, it was far easier to just send the values
+        ((CraftPlayer) owner).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityVelocity(owner.getEntityId(),
+                direction.getX(), direction.getY(), direction.getZ()));
     }
 
 }
