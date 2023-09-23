@@ -1,9 +1,8 @@
 package SSM.Attributes;
 
-import SSM.Attribute;
 import SSM.GameManagers.KitManager;
 import SSM.GameManagers.OwnerEvents.OwnerDealDamageEvent;
-import SSM.Kit;
+import SSM.Kits.Kit;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;

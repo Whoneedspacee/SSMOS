@@ -1,8 +1,8 @@
 package SSM.GameManagers;
 
-import SSM.Ability;
-import SSM.Attribute;
-import SSM.Kit;
+import SSM.Abilities.Ability;
+import SSM.Attributes.Attribute;
+import SSM.Kits.Kit;
 import SSM.Kits.*;
 import SSM.SSM;
 import org.bukkit.Bukkit;
@@ -118,18 +118,11 @@ public class KitManager implements CommandExecutor, Listener {
             return null;
         }
         List<Attribute> attributes = kit.getAttributes();
-        String currentItemName = player.getInventory().getItemInHand().getItemMeta().getDisplayName();
-        Ability ability = null;
-        for (Attribute attribute : attributes) {
-            if (!(attribute instanceof Ability)) {
-                continue;
-            }
-            if (attribute.name.equalsIgnoreCase(currentItemName)) {
-                ability = (Ability) attribute;
-                break;
-            }
+        if(player.getInventory().getItemInHand().getItemMeta() == null) {
+            return null;
         }
-        return ability;
+        int currentSlot = player.getInventory().getHeldItemSlot();
+        return kit.getAbilityInSlot(currentSlot);
     }
 
     public static Kit getPlayerKit(Player player) {

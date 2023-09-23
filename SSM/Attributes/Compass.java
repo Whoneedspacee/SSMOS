@@ -1,6 +1,5 @@
 package SSM.Attributes;
 
-import SSM.Attribute;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

@@ -6,7 +6,6 @@ import SSM.Attributes.Climb;
 import SSM.Attributes.DoubleJumps.DirectDoubleJump;
 import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
-import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -17,13 +16,10 @@ public class KitSpider extends Kit {
         super();
         this.damage = 6;
         this.armor = 5.5;
-        this.speed = 0.21f;
         this.regeneration = 0.25;
         this.knockback = 1.5;
         this.name = "Spider";
         this.hasDirectDoubleJump = true;
-        this.doubleJumpHeight = 0.1;
-        this.doubleJumpPower = 1.5;
         this.menuItem = Material.SPIDER_EYE;
     }
 

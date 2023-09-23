@@ -1,15 +1,20 @@
 package SSM.Abilities;
 
-import SSM.Ability;
-import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.List;
 
 public class Needler extends Ability implements OwnerRightClickEvent {
 
@@ -21,6 +26,7 @@ public class Needler extends Ability implements OwnerRightClickEvent {
         super();
         this.name = "Needler";
         this.cooldownTime = 2.5;
+        this.usage = AbilityUsage.BLOCKING;
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
@@ -35,12 +41,30 @@ public class Needler extends Ability implements OwnerRightClickEvent {
                 Bukkit.getScheduler().cancelTask(taskID.getTaskId());
                 return;
             }
-            Arrow arrow = owner.launchProjectile(Arrow.class);
+            Arrow arrow = owner.getWorld().spawnArrow(owner.getEyeLocation().add(owner.getLocation().getDirection()),
+                    owner.getLocation().getDirection(), 1.2f, 6);
+            arrow.setShooter(owner);
             arrow.setCustomName("Needler");
             arrow.setMetadata("Needler", new FixedMetadataValue(plugin, 1));
-            arrow.setVelocity(owner.getLocation().getDirection().multiply(2.4));
-            owner.playSound(owner.getLocation(), Sound.SPIDER_IDLE, 10L, 1L);
+            owner.playSound(owner.getLocation(), Sound.SPIDER_IDLE, 0.8f, 2f);
             fired++;
-        }, 0L, 2L);
+        }, 0L, 0L);
+    }
+
+    @EventHandler
+    public void arrowDamage(EntityDamageByEntityEvent e) {
+        if(e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+            if(e.getDamager() instanceof Arrow) {
+                Arrow arrow = (Arrow) e.getDamager();
+                List<MetadataValue> data = arrow.getMetadata("Needler");
+                if(data.size() > 0) {
+                    e.setDamage(1.1);
+                    if(e.getEntity() instanceof LivingEntity) {
+                        LivingEntity livingentity = (LivingEntity) e.getEntity();
+                        livingentity.setNoDamageTicks(0);
+                    }
+                }
+            }
+        }
     }
 }

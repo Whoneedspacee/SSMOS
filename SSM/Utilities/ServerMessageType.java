@@ -3,7 +3,8 @@ package SSM.Utilities;
 public enum ServerMessageType {
     GAME("§9Game>"),
     RECHARGE("§9Recharge>"),
-    DEATH("§9Death>");
+    DEATH("§9Death>"),
+    SKILL("§9Skill>");
 
     private String message;
 

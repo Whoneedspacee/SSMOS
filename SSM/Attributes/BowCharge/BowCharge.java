@@ -1,6 +1,6 @@
 package SSM.Attributes.BowCharge;
 
-import SSM.Attribute;
+import SSM.Attributes.Attribute;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;

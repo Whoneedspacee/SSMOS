@@ -1,10 +1,9 @@
 package SSM.Abilities;
 
-import SSM.Ability;
 import SSM.GameManagers.OwnerEvents.OwnerLeftClickEvent;
+import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -20,7 +19,8 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
     public RopedArrow() {
         super();
         this.name = "Roped Arrow";
-        this.cooldownTime = 8;
+        this.cooldownTime = 5;
+        this.usage = AbilityUsage.LEFT_CLICK;
     }
 
     public void onOwnerLeftClick(PlayerInteractEvent e) {
@@ -57,7 +57,9 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
             velocity.setY(velocity.getY() + 0.2);
         }
         owner.setVelocity(velocity);
-        arrow.remove();
+
+        arrow.getWorld().playSound(arrow.getLocation(), Sound.ARROW_HIT, 2.5f, 0.5f);
+        arrow = null;
     }
 
     @EventHandler
@@ -66,7 +68,7 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
             if(e.getDamager() instanceof Arrow) {
                 Arrow arrow = (Arrow) e.getDamager();
                 if(arrow.hasMetadata("Roped Arrow")) {
-                    e.setDamage(4.0);
+                    e.setDamage(6.0);
                 }
             }
         }

@@ -1,6 +1,5 @@
 package SSM.Abilities;
 
-import SSM.Ability;
 import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Effect;
@@ -10,7 +9,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -30,22 +28,21 @@ public class SulphurBomb extends Ability implements OwnerRightClickEvent {
     public void activate() {
         owner.getWorld().playSound(owner.getLocation(), Sound.CREEPER_DEATH, 10L, 1L);
         ItemStack sulphur = new ItemStack(Material.COAL, 1);
-        Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), sulphur);
-        BombProjectile projectile = new BombProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);
+        Item firing = owner.getWorld().dropItem(owner.getEyeLocation().subtract(0, -1, 0), sulphur);
+        BombProjectile projectile = new BombProjectile(plugin, name, firing);
         projectile.setFirer(owner);
         projectile.launchProjectile();
     }
 
     class BombProjectile extends EntityProjectile {
 
-        public BombProjectile(Plugin plugin, Location fireLocation, String name, Entity projectile) {
-            super(plugin, fireLocation, name, projectile);
+        public BombProjectile(Plugin plugin, String name, Entity projectile) {
+            super(plugin, name, projectile);
             this.setDamage(6.0);
             this.setSpeed(1.8);
             this.setHitboxSize(1.0);
             this.setSpread(0);
             this.setKnockback(2.5);
-            this.setUpwardKnockback(0.5);
         }
 
         @Override

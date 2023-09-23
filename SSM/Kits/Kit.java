@@ -1,5 +1,8 @@
-package SSM;
+package SSM.Kits;
 
+import SSM.Abilities.Ability;
+import SSM.Attributes.Attribute;
+import SSM.SSM;
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -10,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Kit {
+public abstract class Kit {
 
     /*  You must add your new kits to the allkits list in the main SSM.java file! */
 
@@ -20,14 +23,12 @@ public class Kit {
     protected double armor = 0;
     protected double knockback = 0;
     protected double regeneration = 0;
-    protected float speed = 0f;
     public Material menuItem;
 
     protected boolean hasDirectDoubleJump = false;
-    protected double doubleJumpHeight = 0.8;
-    protected double doubleJumpPower = 0.61;
 
     protected List<Attribute> attributes = new ArrayList<Attribute>();
+    protected Ability[] hotbarAbilities = new Ability[9];
 
     protected JavaPlugin plugin;
     protected Player owner;
@@ -39,9 +40,13 @@ public class Kit {
     public void equipKit(Player player) {
         destroyKit();
         owner = player;
-        player.setWalkSpeed(speed);
         player.getInventory().clear();
+        player.getInventory().setHelmet(null);
+        player.getInventory().setChestplate(null);
+        player.getInventory().setLeggings(null);
+        player.getInventory().setBoots(null);
         player.setExp(0);
+        hotbarAbilities = new Ability[9];
     }
 
     public void destroyKit() {
@@ -83,7 +88,7 @@ public class Kit {
         ItemMeta meta = item.getItemMeta();
         if (ability != null) {
             addAttribute(ability);
-            meta.setDisplayName(ability.name);
+            meta.setDisplayName("§e§l" + ability.getUsage().toString() + "§f§l" + " - " + "§a§l" + ability.name);
         }
         if (meta instanceof Damageable) {
             Damageable damageable = (Damageable) meta;
@@ -92,6 +97,7 @@ public class Kit {
         meta.spigot().setUnbreakable(true);
         item.setItemMeta(meta);
         owner.getInventory().setItem(inventorySlot, item);
+        hotbarAbilities[inventorySlot] = ability;
     }
 
     public String getName() {
@@ -118,15 +124,11 @@ public class Kit {
         return attributes;
     }
 
+    public Ability getAbilityInSlot(int inventorySlot) {
+        return hotbarAbilities[inventorySlot];
+    }
+
     public boolean hasDirectDoubleJump() {
         return hasDirectDoubleJump;
-    }
-
-    public double getDoubleJumpHeight() {
-        return doubleJumpHeight;
-    }
-
-    public double getDoubleJumpPower() {
-        return doubleJumpPower;
     }
 }

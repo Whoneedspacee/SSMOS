@@ -4,7 +4,6 @@ import SSM.Abilities.FlameDash;
 import SSM.Abilities.MagmaBlast;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
-import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -15,7 +14,6 @@ public class KitMagmaCube extends Kit {
         super();
         this.damage = 5;
         this.armor = 4;
-        this.speed = 0.2f;
         this.regeneration = 0.35;
         this.knockback = 1.75;
         this.name = "Magma_Cube";
@@ -33,6 +31,6 @@ public class KitMagmaCube extends Kit {
         setItem(Material.IRON_SPADE, 1, new FlameDash());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 1.0, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
     }
 }

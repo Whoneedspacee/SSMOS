@@ -1,6 +1,5 @@
 package SSM.Abilities;
 
-import SSM.Ability;
 import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Location;
@@ -9,7 +8,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -32,8 +30,8 @@ public class InkShotgun extends Ability implements OwnerRightClickEvent {
         owner.getWorld().playSound(owner.getLocation(), Sound.GHAST_FIREBALL, 10L, 1L);
         ItemStack ink = new ItemStack(Material.INK_SACK, inkAmount);
         for (int i = 0; i < inkAmount; i++) {
-            Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), ink);
-            InkProjectile projectile = new InkProjectile(plugin, owner.getEyeLocation().subtract(0, -1, 0), name, firing);
+            Item firing = owner.getWorld().dropItem(owner.getEyeLocation().subtract(0, -1, 0), ink);
+            InkProjectile projectile = new InkProjectile(plugin, name, firing);
             projectile.setFirer(owner);
             projectile.launchProjectile();
         }
@@ -41,15 +39,13 @@ public class InkShotgun extends Ability implements OwnerRightClickEvent {
 
     class InkProjectile extends EntityProjectile {
 
-        public InkProjectile(Plugin plugin, Location fireLocation, String name, Entity projectile) {
-            super(plugin, fireLocation, name, projectile);
+        public InkProjectile(Plugin plugin, String name, Entity projectile) {
+            super(plugin, name, projectile);
             this.setDamage(1.5);
             this.setSpeed(1 + Math.random() * 0.5);
             this.setKnockback(1.0);
-            this.setUpwardKnockback(0.5);
             this.setHitboxSize(0.5);
             this.setSpread(15);
-            this.setExpAdd(true);
             this.setFireOpposite(false);
         }
 

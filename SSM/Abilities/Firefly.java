@@ -1,6 +1,5 @@
 package SSM.Abilities;
 
-import SSM.Ability;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.GameManagers.OwnerEvents.OwnerTakeDamageEvent;
 import org.bukkit.Bukkit;
@@ -9,7 +8,6 @@ import org.bukkit.EntityEffect;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;

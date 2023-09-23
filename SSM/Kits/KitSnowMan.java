@@ -4,7 +4,6 @@ import SSM.Abilities.Blizzard;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
-import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -15,7 +14,6 @@ public class KitSnowMan extends Kit {
         super();
         this.damage = 7;
         this.armor = 6;
-        this.speed = 0.23f;
         this.regeneration = 0.2;
         this.knockback = 1.4;
         this.name = "Snowman";
@@ -34,7 +32,7 @@ public class KitSnowMan extends Kit {
         setItem(Material.IRON_AXE, 1);
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new ExpCharge(0.01F, 1, false));
     }
 }

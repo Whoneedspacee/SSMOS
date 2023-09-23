@@ -5,7 +5,6 @@ import SSM.Abilities.SulphurBomb;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Hunger;
 import SSM.Attributes.Regeneration;
-import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,7 +15,6 @@ public class KitCreeper extends Kit {
         super();
         this.damage = 6;
         this.armor = 4;
-        this.speed = 0.2f;
         this.regeneration = 0.4;
         this.knockback = 1.65;
         this.name = "Creeper";
@@ -34,7 +32,7 @@ public class KitCreeper extends Kit {
         setItem(Material.IRON_SPADE, 1, new Explode());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Hunger(10));
     }
 }

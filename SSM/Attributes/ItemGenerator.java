@@ -1,6 +1,5 @@
 package SSM.Attributes;
 
-import SSM.Attribute;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;

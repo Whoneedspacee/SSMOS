@@ -1,29 +1,66 @@
 package SSM.Utilities;
 
 import SSM.GameManagers.KitManager;
-import SSM.Kit;
+import SSM.Kits.Kit;
+import com.avaje.ebean.validation.NotNull;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
+import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityVelocity;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class VelocityUtil {
 
-    public static void addKnockback(Player owner, LivingEntity target, double amount, double ylimit) {
-        Vector ownerLocation = owner.getLocation().toVector();
-        Vector enemyLocation = target.getLocation().toVector();
-        if (!(target instanceof Player)) {
-            Vector init = enemyLocation.subtract(ownerLocation);
-            Vector finalVel = init.normalize().multiply(amount);
-            target.setVelocity(new Vector(finalVel.getX(), ylimit, finalVel.getZ()));
-            return;
+    public static void setVelocity(Entity entity, Vector velocity) {
+        net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+        nmsEntity.motX = velocity.getX();
+        nmsEntity.motY = velocity.getY();
+        nmsEntity.motZ = velocity.getZ();
+        if(entity instanceof Player) {
+            Player player = (Player) entity;
+            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+            Utils.sendPacket(player, new PacketPlayOutEntityVelocity(entityPlayer));
         }
-        Player enemy = (Player) target;
-        Kit kit = KitManager.getPlayerKit(enemy);
-        double kbToApply = 0.5 + ((1 - (target.getHealth() / 20)) * amount) * kit.getKnockback();
-        Vector difference = enemyLocation.subtract(ownerLocation);
-        Vector finalVel = difference.normalize().multiply(kbToApply);
-        target.setVelocity(new Vector(finalVel.getX(), ylimit, finalVel.getZ()));
-
-
     }
+
+    public static void setVelocity(Entity ent, double str, double yAdd, double yMax, boolean groundBoost)
+    {
+        setVelocity(ent, ent.getLocation().getDirection(), str, false, 0, yAdd, yMax, groundBoost);
+    }
+
+    public static void setVelocity(Entity ent, Vector vec, double str, boolean ySet, double yBase, double yAdd, double yMax, boolean groundBoost)
+    {
+        if (Double.isNaN(vec.getX()) || Double.isNaN(vec.getY()) || Double.isNaN(vec.getZ()) || vec.length() == 0)
+            return;
+
+        //YSet
+        if (ySet)
+            vec.setY(yBase);
+
+        //Modify
+        vec.normalize();
+        vec.multiply(str);
+
+        //YAdd
+        vec.setY(vec.getY() + yAdd);
+
+        //Limit
+        if (vec.getY() > yMax)
+            vec.setY(yMax);
+
+        if (groundBoost)
+            if (ent.isOnGround())
+                vec.setY(vec.getY() + 0.2);
+
+        //Velocity
+        ent.setFallDistance(0);
+
+        VelocityUtil.setVelocity(ent, vec);
+    }
+
 }

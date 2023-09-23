@@ -1,6 +1,6 @@
 package SSM.Attributes.DoubleJumps;
 
-import SSM.Attribute;
+import SSM.Attributes.Attribute;
 import SSM.Utilities.Utils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -14,9 +14,9 @@ public abstract class DoubleJump extends Attribute {
     protected double height;
     protected double power;
     private int maxDoubleJumps;
-    private static int remainingDoubleJumps = 0;
+    private int remainingDoubleJumps = 0;
     private Sound doubleJumpSound;
-    protected boolean perfectJumped;
+    private int task = -1;
 
     public DoubleJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound) {
         super();
@@ -24,6 +24,14 @@ public abstract class DoubleJump extends Attribute {
         this.height = height;
         this.maxDoubleJumps = maxDoubleJumps;
         this.doubleJumpSound = doubleJumpSound;
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if (Utils.entityIsOnGround(owner)) {
+                    resetDoubleJumps();
+                }
+            }
+        }, 0L, 0L);
     }
 
     /**
@@ -46,38 +54,20 @@ public abstract class DoubleJump extends Attribute {
         player.setAllowFlight(false);
         player.setFallDistance(0);
 
+        if(remainingDoubleJumps <= 0) {
+            Bukkit.broadcastMessage("Remaining jumps were 0 even though you toggled flight... what?");
+        }
+
         if (remainingDoubleJumps > 0) {
             remainingDoubleJumps--;
 
             player.getWorld().playSound(player.getLocation(), doubleJumpSound, 1f, 1f);
-
-            //Jumping when directly on the ground seems to transfer Y velocity to horizontal velocity, or simply diminish Y. (Go very fast forward)
-            perfectJumped = false;
-            if (!player.getLocation().subtract(0, 0.001, 0).getBlock().getType().isTransparent()) {
-                perfectJumped = true;
-            }
 
             jump();
 
             if (remainingDoubleJumps <= 0) {
                 player.setAllowFlight(false);
             }
-        }
-    }
-
-    /**
-     * Give player double jumps back when on the ground
-     */
-    @EventHandler
-    public void playerMoveEvent(PlayerMoveEvent e) {
-        Player player = e.getPlayer();
-
-        if (!player.equals(owner)) {
-            return;
-        }
-
-        if (Utils.playerIsOnGround(owner)) {
-            resetDoubleJumps();
         }
     }
 

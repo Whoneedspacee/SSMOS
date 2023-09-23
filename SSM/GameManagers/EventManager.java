@@ -1,7 +1,7 @@
 package SSM.GameManagers;
 
-import SSM.Ability;
-import SSM.Attribute;
+import SSM.Abilities.Ability;
+import SSM.Attributes.Attribute;
 import SSM.GameManagers.OwnerEvents.OwnerDealDamageEvent;
 import SSM.GameManagers.OwnerEvents.OwnerLeftClickEvent;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
@@ -52,6 +52,9 @@ public class EventManager implements Listener {
         Entity entity = e.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
+            if(KitManager.getPlayerKit(player) == null) {
+                return;
+            }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
             for (Attribute attribute : attributes) {
                 if (attribute instanceof OwnerTakeDamageEvent) {
@@ -67,6 +70,9 @@ public class EventManager implements Listener {
         Entity entity = e.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
+            if(KitManager.getPlayerKit(player) == null) {
+                return;
+            }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
             for (Attribute attribute : attributes) {
                 if (attribute instanceof OwnerDealDamageEvent) {

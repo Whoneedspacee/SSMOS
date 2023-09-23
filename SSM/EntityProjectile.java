@@ -4,10 +4,12 @@ import SSM.Utilities.DamageUtil;
 import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -20,7 +22,6 @@ public class EntityProjectile extends BukkitRunnable {
     protected Plugin plugin;
     private Location fireLocation;
     protected String name;
-    protected boolean expAdd = false;
     protected Entity projectile;
     protected Player firer;
     private double time;
@@ -31,17 +32,16 @@ public class EntityProjectile extends BukkitRunnable {
     private boolean direct = false;
     private boolean fired;
     private boolean pierce;
+    private boolean resetDamageTicks = false;
     private double damage;
     private double speed;
     private double knockback;
-    private double upwardKnockback;
     private double hitboxRange;
     private double spread;
     private int hungerGain;
 
-    public EntityProjectile(Plugin plugin, Location fireLocation, String name, Entity projectile) {
+    public EntityProjectile(Plugin plugin, String name, Entity projectile) {
         this.plugin = plugin;
-        this.fireLocation = fireLocation;
         this.name = name;
         this.projectile = projectile;
     }
@@ -59,18 +59,20 @@ public class EntityProjectile extends BukkitRunnable {
             return;
         }
         fired = true;
-        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+        /*Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
             public void run() {
-                projectile.teleport(fireLocation);
+                //projectile.teleport(fireLocation);
+                //I have no idea if I wrote this comment but all this does is create a desync between
+                //Entity location on the client and server, so I removed it
+                //Just use the drop location for the entity
                 /*
                 The reason we need this is because if we don't have it, the teleport
                 literally doesn't work because apparently it's "too fast" and
                 tries to teleport the entity before it exists
                 (learned the hard way)
-                 */
             }
-        }, 2L);
+        }, 2L);*/
         projectile.setCustomName(name);
         if (projectile instanceof Item) {
             Item item = (Item) projectile;
@@ -87,12 +89,16 @@ public class EntityProjectile extends BukkitRunnable {
         direction.setX(Math.cos(pitch) * Math.cos(yaw));
         direction.setZ(Math.cos(pitch) * Math.sin(yaw));
         direction.setY(Math.sin(pitch));
-        if (direct) {
-            projectile.setVelocity(direction.multiply(magnitude).setY(0).normalize());
-        } else {
-            projectile.setVelocity(direction.multiply(magnitude));
-        }
+        doVelocity(direction, direct);
         this.runTaskTimer(plugin, 0L, 1L);
+    }
+
+    public void doVelocity(Vector direction, boolean direct) {
+        if (direct) {
+            VelocityUtil.setVelocity(projectile, direction.multiply(getSpeed()).setY(0).normalize());
+        } else {
+            VelocityUtil.setVelocity(projectile, direction.multiply(getSpeed()));
+        }
     }
 
     @Override
@@ -103,9 +109,7 @@ public class EntityProjectile extends BukkitRunnable {
             return;
         }
         double hitboxRange = getHitboxSize();
-        List<Entity> canHit = projectile.getNearbyEntities(hitboxRange, hitboxRange, hitboxRange);
-        canHit.remove(projectile);
-        canHit.remove(firer);
+        List<Entity> canHit = hitDetection();
         if (canHit.size() <= 0) {
             return;
         }
@@ -122,34 +126,43 @@ public class EntityProjectile extends BukkitRunnable {
         }
     }
 
+    public List<Entity> hitDetection() {
+        List<Entity> canHit = projectile.getNearbyEntities(hitboxRange, hitboxRange, hitboxRange);
+        canHit.remove(projectile);
+        canHit.remove(firer);
+        return canHit;
+    }
+
     public boolean onHit(LivingEntity target) {
         boolean success = target != null;
         if (success) {
-            if (target.getNoDamageTicks() > 1) {
-                target.setNoDamageTicks(0);
-            }
+            //This is stupid, who wrote this
+            //if (target.getNoDamageTicks() > 1) {
+            //    target.setNoDamageTicks(0);
+            //}
+            firer.playSound(firer.getLocation(), Sound.ORB_PICKUP, 1.0f, 1.25f);
             double damage = getDamage();
-            DamageUtil.dealDamage(firer, target, damage, true, expAdd);
+            DamageUtil.damage(target, firer, damage, knockback,
+                    pierce, EntityDamageEvent.DamageCause.CUSTOM, projectile.getLocation(), resetDamageTicks);
             firer.setFoodLevel(firer.getFoodLevel() + hungerGain);
-            double knockback = getKnockback();
-            double upwardKnockback = getUpwardKnockback();
-            Vector velocity = projectile.getVelocity();
-            if (upwardKnockback != 0) {
-                VelocityUtil.addKnockback(firer, target, knockback, 0.5);
-            } else {
-                velocity = velocity.normalize().multiply(knockback);
-                target.setVelocity(velocity);
-            }
+            doKnockback(target);
         } else {
+            onBlockHit();
             if (!lastsOnGround) {
                 projectile.remove();
             }
-            onBlockHit();
         }
         if (!pierce) {
             clearProjectile();
         }
         return success;
+    }
+
+    public void doKnockback(LivingEntity target) {
+        double knockback = getKnockback();
+        Vector velocity = projectile.getVelocity();
+        velocity = velocity.normalize().multiply(knockback);
+        target.setVelocity(velocity);
     }
 
     public void onBlockHit() {
@@ -218,14 +231,6 @@ public class EntityProjectile extends BukkitRunnable {
         this.knockback = knockback;
     }
 
-    public double getUpwardKnockback() {
-        return upwardKnockback;
-    }
-
-    public void setUpwardKnockback(double upwardKnockback) {
-        this.upwardKnockback = upwardKnockback;
-    }
-
     public double getHitboxSize() {
         return hitboxRange;
     }
@@ -240,14 +245,6 @@ public class EntityProjectile extends BukkitRunnable {
 
     public void setSpread(double spread) {
         this.spread = spread;
-    }
-
-    public boolean getExpAdd() {
-        return expAdd;
-    }
-
-    public void setExpAdd(boolean expAdd) {
-        this.expAdd = expAdd;
     }
 
     public boolean getPierce() {
@@ -289,5 +286,11 @@ public class EntityProjectile extends BukkitRunnable {
     public void setDirect(boolean direct) {
         this.direct = direct;
     }
+
+    public boolean getResetDamageTicks() {
+        return resetDamageTicks;
+    }
+
+    public void setResetDamageTicks(boolean resetDamageTicks) { this.resetDamageTicks = resetDamageTicks; }
 
 }

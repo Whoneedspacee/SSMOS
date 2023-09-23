@@ -1,10 +1,8 @@
 package SSM.Abilities;
 
-import SSM.Ability;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.Sound;

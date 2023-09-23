@@ -1,16 +1,15 @@
 package SSM;
 
 import SSM.GameManagers.CooldownManager;
+import SSM.GameManagers.DamageManager;
 import SSM.GameManagers.EventManager;
 import SSM.GameManagers.KitManager;
-import SSM.GameManagers.MeleeManager;
 import SSM.Utilities.DamageUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -24,9 +23,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
@@ -45,7 +43,10 @@ public class SSM extends JavaPlugin implements Listener {
         new CooldownManager();
         new EventManager();
         new KitManager();
-        new MeleeManager();
+        new DamageManager();
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            KitManager.equipPlayer(player, KitManager.getAllKits().get(0));
+        }
     }
 
     @Override
@@ -59,7 +60,7 @@ public class SSM extends JavaPlugin implements Listener {
             if (args.length == 1) {
                 try {
                     int number = Integer.parseInt(args[0]);
-                    DamageUtil.dealDamage(player, number);
+                    DamageUtil.damage(player, null, number);
                     player.sendMessage("You were dealt " + number + " damage");
                     return true;
                 } catch (NumberFormatException e) {
@@ -113,6 +114,38 @@ public class SSM extends JavaPlugin implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerMessage(AsyncPlayerChatEvent e) {
+        String message = e.getMessage();
+        String playerName = e.getPlayer().getName();
+        String newMessage = ChatColor.YELLOW + playerName + ChatColor.WHITE + " " + message;
+        if(e.getPlayer().isOp()) {
+            newMessage = ChatColor.RED + playerName + ChatColor.WHITE + " " + message;
+        }
+        e.setFormat(newMessage);
+    }
+
+    @EventHandler
+    public void onWeatherChangeEvent(WeatherChangeEvent e) {
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onItemPickup(PlayerPickupItemEvent e) {
+        if(e.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onItemDrop(PlayerDropItemEvent e) {
+        if(e.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
+        e.setCancelled(true);
+    }
+
     /*@EventHandler
     public void onPlayerJoin(PlayerMoveEvent e) {
         Location temp = e.getTo().clone().subtract(e.getFrom());
@@ -120,11 +153,12 @@ public class SSM extends JavaPlugin implements Listener {
         e.getPlayer().sendMessage(print);
     }*/
 
-    /*@EventHandler
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        injectPlayer(e.getPlayer());
+        //injectPlayer(e.getPlayer());
     }
 
+    /*
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         removePlayer(e.getPlayer());

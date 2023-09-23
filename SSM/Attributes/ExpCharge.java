@@ -1,7 +1,7 @@
 package SSM.Attributes;
 
-import SSM.Attribute;
 import SSM.Utilities.Utils;
+import org.bukkit.entity.Player;
 
 public class ExpCharge extends Attribute {
 
@@ -20,16 +20,24 @@ public class ExpCharge extends Attribute {
 
     @Override
     public void run() {
-        if(groundCharge && !Utils.playerIsOnGround(owner)) {
+        if(groundCharge && !Utils.entityIsOnGround(owner)) {
             return;
         }
         checkAndActivate();
     }
 
+    @Override
+    public void setOwner(Player owner) {
+        if(owner != null) {
+            owner.setExp(1.0f - expAdd);
+        }
+        super.setOwner(owner);
+    }
+
     public void activate() {
         if (!owner.isDead()) {
             float xp = owner.getExp();
-            owner.setExp(Math.min(xp + expAdd, 1f));
+            owner.setExp(Math.min(xp + expAdd, 1.0f));
         }
     }
 

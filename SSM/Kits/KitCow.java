@@ -4,7 +4,6 @@ import SSM.Abilities.MilkSpiral;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Attributes.Stampede;
-import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -15,7 +14,6 @@ public class KitCow extends Kit {
         super();
         this.damage = 6;
         this.armor = 7;
-        this.speed = 0.20f;
         this.regeneration = 0.25;
         this.knockback = 1.1;
         this.name = "Cow";

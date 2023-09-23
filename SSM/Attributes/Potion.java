@@ -1,6 +1,5 @@
 package SSM.Attributes;
 
-import SSM.Attribute;
 import org.bukkit.potion.PotionEffectType;
 
 public class Potion extends Attribute {

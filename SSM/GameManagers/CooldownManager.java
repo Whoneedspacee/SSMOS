@@ -1,6 +1,8 @@
 package SSM.GameManagers;
 
-import SSM.Kit;
+import SSM.Abilities.Ability;
+import SSM.Attributes.Attribute;
+import SSM.Kits.Kit;
 import SSM.SSM;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
@@ -39,26 +41,28 @@ public class CooldownManager extends BukkitRunnable {
         for (Iterator<CooldownData> cdDataIterator = cooldownData.iterator(); cdDataIterator.hasNext(); ) {
             CooldownData currData = cdDataIterator.next();
 
+            Ability using = KitManager.getCurrentAbility(currData.getAbilityUser());
+
+            if(using != null && using.equals(currData.getAttribute())) {
+                displayCooldownTo(currData.getAbilityUser(), currData);
+            }
+
             if (currData.getRemainingTimeMs() <= 0) {
                 cdDataIterator.remove();
 
-                Utils.sendServerMessageToPlayer("§7You can use §a" + currData.abilityName + "§7.", currData.abilityUser, ServerMessageType.RECHARGE);
-                if (Utils.holdingItemWithName(currData.abilityUser, currData.abilityName)) {
-                    currData.abilityUser.playSound(currData.abilityUser.getLocation(), Sound.NOTE_PLING, 1.0f, 24.0f);
-                }
-            }
-
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (Utils.holdingItemWithName(player, currData.abilityName) && player.equals(currData.abilityUser)) {
-                    displayCooldownTo(player, currData);
+                Utils.sendServerMessageToPlayer("§7You can use §a" + currData.getAttribute().name + "§7.",
+                        currData.getAbilityUser(), ServerMessageType.RECHARGE);
+                Utils.sendActionBarMessage("§a§l" + currData.getAttribute().name + " Recharged", currData.getAbilityUser());
+                if (KitManager.getCurrentAbility(currData.getAbilityUser()).equals(currData.getAttribute())) {
+                    currData.getAbilityUser().playSound(currData.getAbilityUser().getLocation(), Sound.NOTE_PLING, 1.0f, 24.0f);
                 }
             }
         }
     }
 
-    public long getRemainingTimeFor(String abilityName, Player abilityUser) {
+    public long getRemainingTimeFor(Attribute attribute, Player abilityUser) {
         for (CooldownData cd : cooldownData) {
-            if (cd.abilityName.equals(abilityName) && cd.abilityUser.equals(abilityUser)) {
+            if (cd.getAttribute().equals(attribute) && cd.abilityUser.equals(abilityUser)) {
                 return cd.getRemainingTimeMs();
             }
         }
@@ -67,16 +71,17 @@ public class CooldownManager extends BukkitRunnable {
     }
 
     /**
-     * @param abilityName name used to reference cooldown (should be abilityName)
+     * @param attribute     used to reference cooldown (should be ability)
      * @param duration    time in milliseconds for cooldown duration
      * @param abilityUser player using the ability (cooldownData linked with this player)
      */
-    public void addCooldown(String abilityName, long duration, Player abilityUser) {
+    public void addCooldown(Attribute attribute, long duration, Player abilityUser) {
         Kit kit = KitManager.getPlayerKit(abilityUser);
         if (duration <= 0) {
             return;
         } else {
-            cooldownData.add(new CooldownData(abilityName, duration, abilityUser));
+            cooldownData.add(new CooldownData(attribute, duration, abilityUser));
+            Utils.sendServerMessageToPlayer("§7You used §a" + attribute.name + "§7.", abilityUser, ServerMessageType.SKILL);
         }
     }
 
@@ -86,7 +91,7 @@ public class CooldownManager extends BukkitRunnable {
     private void displayCooldownTo(Player player, CooldownData cd) {
         int barLength = 24;
         int startRedBarInterval = barLength - (int) ((cd.getRemainingTimeMs() / (double) cd.duration) * barLength); // Val between 0 - 1
-        StringBuilder sb = new StringBuilder("§f§l" + cd.abilityName + " ");
+        StringBuilder sb = new StringBuilder("      §f§l" + cd.getAttribute().name + " ");
         for (int i = 0; i < barLength; i++) {
             if (i < startRedBarInterval) {
                 sb.append("§a▌");
@@ -95,7 +100,7 @@ public class CooldownManager extends BukkitRunnable {
             }
         }
 
-        sb.append("  §f" + Utils.msToSeconds(cd.getRemainingTimeMs()) + " Seconds");
+        sb.append(" §f" + Utils.msToSeconds(cd.getRemainingTimeMs()) + " Seconds");
         Utils.sendActionBarMessage(sb.toString(), player);
     }
 
@@ -109,12 +114,12 @@ public class CooldownManager extends BukkitRunnable {
      */
     private class CooldownData {
         private Player abilityUser;
-        private String abilityName;
+        private Attribute attribute ;
         private long duration;
         private long startTime;
 
-        CooldownData(String abilityName, long duration, Player abilityUser) {
-            this.abilityName = abilityName;
+        CooldownData(Attribute attribute, long duration, Player abilityUser) {
+            this.attribute = attribute;
             this.duration = duration;
             startTime = System.currentTimeMillis();
             this.abilityUser = abilityUser;
@@ -128,8 +133,8 @@ public class CooldownManager extends BukkitRunnable {
             return abilityUser;
         }
 
-        String getAbilityName() {
-            return abilityName;
+        Attribute getAttribute() {
+            return attribute;
         }
     }
 }

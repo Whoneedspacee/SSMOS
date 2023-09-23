@@ -1,6 +1,5 @@
 package SSM.Attributes;
 
-import SSM.Attribute;
 import org.bukkit.GameMode;
 
 public class Hunger extends Attribute {

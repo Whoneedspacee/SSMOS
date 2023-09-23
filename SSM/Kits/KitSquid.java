@@ -3,7 +3,6 @@ package SSM.Kits;
 import SSM.Abilities.InkShotgun;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
-import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -14,7 +13,6 @@ public class KitSquid extends Kit {
         super();
         this.damage = 6;
         this.armor = 5;
-        this.speed = 0.24f;
         this.regeneration = 0.25;
         this.knockback = 1.5;
         this.name = "Sky_Squid";
@@ -33,6 +31,6 @@ public class KitSquid extends Kit {
         setItem(Material.IRON_SPADE, 2);
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
     }
 }

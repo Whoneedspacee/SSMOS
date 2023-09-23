@@ -2,7 +2,6 @@ package SSM.Kits;
 
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
-import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -13,7 +12,6 @@ public class KitWitch extends Kit {
         super();
         this.damage = 6;
         this.armor = 5;
-        this.speed = 0.21f;
         this.regeneration = 0.3;
         this.knockback = 1.5;
         this.name = "Witch";
@@ -31,7 +29,7 @@ public class KitWitch extends Kit {
         setItem(Material.IRON_SPADE, 1);
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
     }
 
 }

@@ -1,6 +1,5 @@
 package SSM.Abilities;
 
-import SSM.Ability;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
@@ -8,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.List;
@@ -68,7 +66,7 @@ public class FlameDash extends Ability implements OwnerRightClickEvent {
                 continue;
             }
             LivingEntity target = (LivingEntity) entity;
-            DamageUtil.dealDamage(owner, target, dist + 2, true, false);
+            DamageUtil.damage(target, owner, dist + 2);
         }
     }
 

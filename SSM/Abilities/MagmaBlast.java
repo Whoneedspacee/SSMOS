@@ -1,10 +1,8 @@
 package SSM.Abilities;
 
-import SSM.Ability;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import org.bukkit.Sound;
 import org.bukkit.entity.LargeFireball;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 

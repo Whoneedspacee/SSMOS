@@ -5,7 +5,6 @@ import SSM.Attributes.BowCharge.DamageBoost;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
-import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,7 +15,6 @@ public class KitZombie extends Kit {
         super();
         this.damage = 5;
         this.armor = 5;
-        this.speed = 0.2f;
         this.regeneration = 0.25;
         this.knockback = 1.4;
         this.name = "Zombie";
@@ -36,7 +34,7 @@ public class KitZombie extends Kit {
 
         addAttribute(new ItemGenerator(Material.ARROW, 1, 2, 3));
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new DamageBoost(1.1, 0.25, 5));
     }
 }

@@ -1,6 +1,7 @@
-package SSM;
+package SSM.Attributes;
 
 import SSM.GameManagers.CooldownManager;
+import SSM.SSM;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -11,12 +12,29 @@ import org.bukkit.scheduler.BukkitTask;
 
 public abstract class Attribute extends BukkitRunnable implements Listener {
 
+    public enum AbilityUsage {
+        LEFT_CLICK("Left-Click"),
+        RIGHT_CLICK("Right-Click"),
+        BLOCKING("Hold/Release Block");
+
+        private String message;
+
+        AbilityUsage(String message) {
+            this.message = message;
+        }
+
+        public String toString() {
+            return message;
+        }
+    }
+
     public String name = "Base";
     protected Plugin plugin;
     protected Player owner;
     protected BukkitTask task;
     protected double cooldownTime = 0;
     protected float expUsed = 0;
+    protected AbilityUsage usage = AbilityUsage.RIGHT_CLICK;
 
     public Attribute() {
         this.plugin = SSM.getInstance();
@@ -24,14 +42,14 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     }
 
     public void checkAndActivate() {
-        if (CooldownManager.getInstance().getRemainingTimeFor(name, owner) <= 0) {
+        if (CooldownManager.getInstance().getRemainingTimeFor(this, owner) <= 0) {
             if (expUsed > 0) {
                 if (owner.getExp() < expUsed) {
                     return;
                 }
                 owner.setExp(owner.getExp() - expUsed);
             }
-            CooldownManager.getInstance().addCooldown(name, (long) (cooldownTime * 1000), owner);
+            CooldownManager.getInstance().addCooldown(this, (long) (cooldownTime * 1000), owner);
             activate();
         }
     }
@@ -59,6 +77,10 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
 
     public void setOwner(Player owner) {
         this.owner = owner;
+    }
+
+    public AbilityUsage getUsage() {
+        return usage;
     }
 
 }

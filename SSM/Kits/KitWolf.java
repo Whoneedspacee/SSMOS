@@ -4,7 +4,6 @@ import SSM.Abilities.WolfStrike;
 import SSM.Attributes.DoubleJumps.DirectDoubleJump;
 import SSM.Attributes.Ravage;
 import SSM.Attributes.Regeneration;
-import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -15,7 +14,6 @@ public class KitWolf extends Kit {
         super();
         this.damage = 5;
         this.armor = 4.5;
-        this.speed = 0.2f;
         this.regeneration = 0.25;
         this.knockback = 1.6;
         this.name = "Wolf";

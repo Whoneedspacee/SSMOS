@@ -5,7 +5,6 @@ import SSM.Abilities.MilkSpiral;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Potion;
 import SSM.Attributes.Regeneration;
-import SSM.Kit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -17,7 +16,6 @@ public class KitBlaze extends Kit {
         super();
         this.damage = 6;
         this.armor = 6;
-        this.speed = 0.22f;
         this.regeneration = 0.25;
         this.knockback = 1.50;
         this.name = "Blaze";
@@ -36,7 +34,7 @@ public class KitBlaze extends Kit {
         setItem(Material.IRON_AXE, 1, new Firefly());
 
         addAttribute(new Regeneration(regeneration, 1));
-        addAttribute(new GenericDoubleJump(0.61, 0.8, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Potion(PotionEffectType.SPEED, 1));
     }
 

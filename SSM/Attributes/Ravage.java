@@ -1,8 +1,7 @@
 package SSM.Attributes;
 
-import SSM.Attribute;
 import SSM.GameManagers.KitManager;
-import SSM.Kit;
+import SSM.Kits.Kit;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
