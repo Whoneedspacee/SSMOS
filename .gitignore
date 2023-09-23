@@ -5,12 +5,4 @@
 /SSM2.gpj
 /production
 /SSMOS.iml
-/target/classes/SSM/Abilities/*.class
-/target/classes/SSM/Attributes/*.class
-/target/classes/SSM/Attributes/BowCharge/*.class
-/target/classes/SSM/Attributes/DoubleJumps/*.class
-/target/classes/SSM/*.class
-/target/classes/SSM/GameManagers/*.class
-/target/classes/SSM/GameManagers/OwnerEvents/*.class
-/target/classes/SSM/Kits/*.class
-/target/classes/SSM/Utilities/*.class
+/target
