@@ -2,10 +2,7 @@ package SSM.GameManagers;
 
 import SSM.Abilities.Ability;
 import SSM.Attributes.Attribute;
-import SSM.GameManagers.OwnerEvents.OwnerDealDamageEvent;
-import SSM.GameManagers.OwnerEvents.OwnerLeftClickEvent;
-import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
-import SSM.GameManagers.OwnerEvents.OwnerTakeDamageEvent;
+import SSM.GameManagers.OwnerEvents.*;
 import SSM.SSM;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -67,17 +64,31 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent e) {
-        Entity entity = e.getEntity();
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
+        Entity damagee = e.getEntity();
+        Entity damager = e.getDamager();
+        if (damager instanceof Player) {
+            Player player = (Player) damager;
             if(KitManager.getPlayerKit(player) == null) {
                 return;
             }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
             for (Attribute attribute : attributes) {
-                if (attribute instanceof OwnerDealDamageEvent) {
-                    OwnerDealDamageEvent dealDamage = (OwnerDealDamageEvent) attribute;
-                    dealDamage.onOwnerDealDamage(e);
+                if (attribute instanceof OwnerDamageEntityEvent) {
+                    OwnerDamageEntityEvent damageEntityEvent = (OwnerDamageEntityEvent) attribute;
+                    damageEntityEvent.onOwnerDamageEntity(e);
+                }
+            }
+        }
+        if(damagee instanceof Player) {
+            Player player = (Player) damagee;
+            if(KitManager.getPlayerKit(player) == null) {
+                return;
+            }
+            List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
+            for (Attribute attribute : attributes) {
+                if (attribute instanceof EntityDamageOwnerEvent) {
+                    EntityDamageOwnerEvent damageOwnerEvent = (EntityDamageOwnerEvent) attribute;
+                    damageOwnerEvent.onEntityDamageOwner(e);
                 }
             }
         }

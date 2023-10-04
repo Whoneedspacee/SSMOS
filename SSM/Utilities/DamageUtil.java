@@ -1,7 +1,9 @@
 package SSM.Utilities;
 
 import SSM.GameManagers.KitManager;
+import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -25,18 +27,19 @@ public class DamageUtil {
         if(!canDamage(damagee)) {
             return;
         }
-        double damageReduction = 1;
+        double damageMultiplier = 1;
         if(damagee instanceof Player) {
             Player player = (Player) damagee;
             if(KitManager.getPlayerKit((player)) != null) {
-                damageReduction = 1 - KitManager.getPlayerKit(player).getArmor() * 0.08f;
+                damageMultiplier = 1 - KitManager.getPlayerKit(player).getArmor() * 0.08f;
             }
         }
         if(ignoreArmor) {
-            damageReduction = 1;
+            damageMultiplier = 1;
         }
         double previousHealth = damagee.getHealth();
-        damagee.damage(damage * damageReduction);
+        damagee.damage(damage * damageMultiplier);
+        // Something cancelled our damage probably, so let's just pretend we never got hit
         if(damagee.getHealth() == previousHealth) {
             return;
         }
@@ -49,6 +52,8 @@ public class DamageUtil {
         }
         if (knockbackMultiplier > 0)
         {
+            // Don't stack knockback
+            VelocityUtil.setVelocity(damagee, new Vector(0, 0, 0));
             double knockback = Math.max(damage, 2);
             knockback = Math.log10(knockback);
             knockback *= knockbackMultiplier;
@@ -75,7 +80,8 @@ public class DamageUtil {
 
             double vel = 0.2 + trajectory.length() * 0.8;
 
-            VelocityUtil.setVelocity(damagee, trajectory, vel, false, 0, Math.abs(0.2 * knockback), 0.4 + (0.04 * knockback), true);
+            VelocityUtil.setVelocity(damagee, trajectory, vel, false,
+                    0, Math.abs(0.2 * knockback), 0.4 + (0.04 * knockback), true);
         }
 
     }
@@ -89,6 +95,12 @@ public class DamageUtil {
     }
 
     public static boolean canDamage(LivingEntity check) {
+        if(check instanceof Player) {
+            Player player = (Player) check;
+            if(player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE) {
+                return false;
+            }
+        }
         if ((float) check.getNoDamageTicks() > (float) check.getMaximumNoDamageTicks() / 2.0F)
         {
             return false;

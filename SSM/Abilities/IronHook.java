@@ -37,17 +37,15 @@ public class IronHook extends Ability implements OwnerRightClickEvent {
 
     class HookProjectile extends EntityProjectile {
 
-        int runn = -1;
+        int hook_task = -1;
 
         public HookProjectile(Plugin plugin, String name, Entity projectile) {
             super(plugin, name, projectile);
             this.setDamage(6.0);
             this.setSpeed(1.8);
             this.setHitboxSize(1.0);
-            this.setSpread(0);
-            this.setKnockback(-2.5);
             this.setResetDamageTicks(true);
-            runn = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            hook_task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
                 @Override
                 public void run() {
                     firer.getWorld().playSound(projectile.getLocation(), Sound.FIRE_IGNITE, 1.4f, 0.8f);
@@ -59,14 +57,14 @@ public class IronHook extends Ability implements OwnerRightClickEvent {
         }
 
         @Override
-        public void doVelocity(Vector direction, boolean direct) {
+        public void doVelocity() {
             VelocityUtil.setVelocity(projectile, owner.getLocation().getDirection(),
                     1.8, false, 0, 0.2, 10, false);
         }
 
         @Override
         public boolean onHit(LivingEntity target) {
-            Bukkit.getScheduler().cancelTask(runn);
+            Bukkit.getScheduler().cancelTask(hook_task);
             this.setDamage(projectile.getVelocity().length() * 4);
             return super.onHit(target);
         }

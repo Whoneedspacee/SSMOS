@@ -1,20 +1,16 @@
 package SSM.Utilities;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import SSM.Attributes.Attribute;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collection;
 
 public class Utils {
 
@@ -25,12 +21,20 @@ public class Utils {
      * @param player  player receiving the message
      */
     public static void sendActionBarMessage(String message, Player player) {
-        PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(message), (byte)2);
+        PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(message), (byte) 2);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
     }
 
     public static void sendServerMessageToPlayer(String message, Player player, ServerMessageType type) {
         player.sendMessage(type + " " + message);
+    }
+
+    public static void sendAttributeMessage(Attribute attribute, Player player, ServerMessageType type) {
+        sendAttributeMessage(attribute.getUseMessage(), attribute.name, player, type);
+    }
+
+    public static void sendAttributeMessage(String primary_message, String secondary_message, Player player, ServerMessageType type) {
+        sendServerMessageToPlayer("§7" + primary_message + " §a" + secondary_message + "§7.", player, type);
     }
 
     public static boolean holdingItemWithName(Player player, String name) {
@@ -75,7 +79,7 @@ public class Utils {
     }
 
     public static void playParticle(EnumParticle particle, Location location, float offsetX, float offsetY, float offsetZ,
-                                    float speed, int count, int dist, List<Player> players)
+                                    float speed, int count, int dist, Collection<Player> players)
     {
         PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(particle, true,
                 (float) location.getX(), (float) location.getY(), (float) location.getZ(),

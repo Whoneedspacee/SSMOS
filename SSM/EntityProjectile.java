@@ -51,6 +51,7 @@ public class EntityProjectile extends BukkitRunnable {
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                 @Override
                 public void run() {
+                    onHit(null);
                     projectile.remove();
                 }
             }, (long) (time * 20));
@@ -73,11 +74,18 @@ public class EntityProjectile extends BukkitRunnable {
                 (learned the hard way)
             }
         }, 2L);*/
-        projectile.setCustomName(name);
+        if(!(projectile instanceof LivingEntity)) {
+            projectile.setCustomName(name);
+        }
         if (projectile instanceof Item) {
             Item item = (Item) projectile;
             item.setPickupDelay(1000000);
         }
+        doVelocity();
+        this.runTaskTimer(plugin, 0L, 1L);
+    }
+
+    public void doVelocity() {
         double magnitude = getSpeed();
         Vector direction = firer.getLocation().getDirection();
         if (getFireOpposite()) {
@@ -89,11 +97,6 @@ public class EntityProjectile extends BukkitRunnable {
         direction.setX(Math.cos(pitch) * Math.cos(yaw));
         direction.setZ(Math.cos(pitch) * Math.sin(yaw));
         direction.setY(Math.sin(pitch));
-        doVelocity(direction, direct);
-        this.runTaskTimer(plugin, 0L, 1L);
-    }
-
-    public void doVelocity(Vector direction, boolean direct) {
         if (direct) {
             VelocityUtil.setVelocity(projectile, direction.multiply(getSpeed()).setY(0).normalize());
         } else {
@@ -117,7 +120,7 @@ public class EntityProjectile extends BukkitRunnable {
             if (!(entity instanceof LivingEntity)) {
                 continue;
             }
-            if (entity.getName().equalsIgnoreCase(projectile.getName())) {
+            if (entity.equals(projectile)) {
                 continue;
             }
             LivingEntity target = (LivingEntity) canHit.get(0);

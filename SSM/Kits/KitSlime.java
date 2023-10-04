@@ -1,7 +1,9 @@
 package SSM.Kits;
 
+import SSM.Abilities.SlimeRocket;
 import SSM.Abilities.SlimeSlam;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
+import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -26,10 +28,11 @@ public class KitSlime extends Kit {
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmor(Material.CHAINMAIL_HELMET, 3);
 
-        setItem(Material.IRON_SWORD, 0, null);
+        setItem(Material.IRON_SWORD, 0, new SlimeRocket());
         setItem(Material.IRON_AXE, 1, new SlimeSlam());
 
         addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new ExpCharge(0.005f, 1, false));
         addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
 
     }

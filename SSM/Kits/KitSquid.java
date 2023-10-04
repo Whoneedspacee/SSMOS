@@ -1,10 +1,13 @@
 package SSM.Kits;
 
+import SSM.Abilities.FishFlurry;
 import SSM.Abilities.InkShotgun;
+import SSM.Abilities.SuperSquid;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Fish;
 import org.bukkit.entity.Player;
 
 public class KitSquid extends Kit {
@@ -27,8 +30,8 @@ public class KitSquid extends Kit {
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
         setItem(Material.IRON_AXE, 0, new InkShotgun());
-        setItem(Material.IRON_SWORD, 1);
-        setItem(Material.IRON_SPADE, 2);
+        setItem(Material.IRON_SWORD, 1, new SuperSquid());
+        setItem(Material.IRON_SPADE, 2, new FishFlurry());
 
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));

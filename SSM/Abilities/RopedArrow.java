@@ -36,7 +36,7 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
 
     @EventHandler
     public void pullToArrow(ProjectileHitEvent e) {
-        if (e.getEntity() != arrow) {
+        if (!e.getEntity().equals(arrow)) {
             return;
         }
         Vector p = owner.getLocation().toVector();

@@ -155,7 +155,7 @@ public class SSM extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        //injectPlayer(e.getPlayer());
+        e.getPlayer().setFoodLevel(20);
     }
 
     /*

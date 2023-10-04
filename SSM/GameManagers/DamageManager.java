@@ -69,6 +69,9 @@ public class DamageManager implements Listener {
                 player.playSound(player.getLocation(), Sound.ORB_PICKUP, 0.5f, 0.5f);
             }
         }
+        else if(e.getCause() == DamageCause.ENTITY_ATTACK) {
+            DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), e.getDamage());
+        }
         else {
             Bukkit.broadcastMessage("Unhandled Cause: " + e.getCause().toString());
         }

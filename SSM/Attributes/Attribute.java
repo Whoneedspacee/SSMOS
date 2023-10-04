@@ -35,6 +35,7 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     protected double cooldownTime = 0;
     protected float expUsed = 0;
     protected AbilityUsage usage = AbilityUsage.RIGHT_CLICK;
+    protected String useMessage = "You used";
 
     public Attribute() {
         this.plugin = SSM.getInstance();
@@ -82,5 +83,7 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     public AbilityUsage getUsage() {
         return usage;
     }
+
+    public String getUseMessage() { return useMessage; }
 
 }

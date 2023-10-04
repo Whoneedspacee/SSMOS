@@ -4,14 +4,12 @@ import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -20,11 +18,11 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpinWeb extends Ability implements OwnerRightClickEvent {
+public class FishFlurry extends Ability implements OwnerRightClickEvent {
 
     protected int webAmount = 20;
 
-    public SpinWeb() {
+    public FishFlurry() {
         super();
         this.name = "Spin Web";
         this.cooldownTime = 10;

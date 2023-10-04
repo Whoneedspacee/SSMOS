@@ -50,7 +50,7 @@ public class CooldownManager extends BukkitRunnable {
             if (currData.getRemainingTimeMs() <= 0) {
                 cdDataIterator.remove();
 
-                Utils.sendServerMessageToPlayer("§7You can use §a" + currData.getAttribute().name + "§7.",
+                Utils.sendAttributeMessage("You can use", currData.getAttribute().name,
                         currData.getAbilityUser(), ServerMessageType.RECHARGE);
                 Utils.sendActionBarMessage("§a§l" + currData.getAttribute().name + " Recharged", currData.getAbilityUser());
                 if (KitManager.getCurrentAbility(currData.getAbilityUser()).equals(currData.getAttribute())) {
@@ -70,6 +70,26 @@ public class CooldownManager extends BukkitRunnable {
         return 0;
     }
 
+    public long getTimeElapsedFor(Attribute attribute, Player abilityUser) {
+        for (CooldownData cd : cooldownData) {
+            if (cd.getAttribute().equals(attribute) && cd.abilityUser.equals(abilityUser)) {
+                return cd.getTimeElapsedMs();
+            }
+        }
+
+        return 0;
+    }
+
+    public long getStartTimeFor(Attribute attribute, Player abilityUser) {
+        for (CooldownData cd : cooldownData) {
+            if (cd.getAttribute().equals(attribute) && cd.abilityUser.equals(abilityUser)) {
+                return cd.getStartTime();
+            }
+        }
+
+        return 0;
+    }
+
     /**
      * @param attribute     used to reference cooldown (should be ability)
      * @param duration    time in milliseconds for cooldown duration
@@ -81,7 +101,7 @@ public class CooldownManager extends BukkitRunnable {
             return;
         } else {
             cooldownData.add(new CooldownData(attribute, duration, abilityUser));
-            Utils.sendServerMessageToPlayer("§7You used §a" + attribute.name + "§7.", abilityUser, ServerMessageType.SKILL);
+            Utils.sendAttributeMessage(attribute.getUseMessage(), attribute.name, abilityUser, ServerMessageType.SKILL);
         }
     }
 
@@ -128,6 +148,10 @@ public class CooldownManager extends BukkitRunnable {
         long getRemainingTimeMs() {
             return startTime + duration - System.currentTimeMillis();
         }
+
+        long getTimeElapsedMs() { return System.currentTimeMillis() - startTime; }
+
+        long getStartTime() { return startTime; }
 
         Player getAbilityUser() {
             return abilityUser;

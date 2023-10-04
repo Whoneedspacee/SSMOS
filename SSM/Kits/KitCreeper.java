@@ -4,6 +4,7 @@ import SSM.Abilities.Explode;
 import SSM.Abilities.SulphurBomb;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Hunger;
+import SSM.Attributes.LightningShield;
 import SSM.Attributes.Regeneration;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -34,5 +35,6 @@ public class KitCreeper extends Kit {
         addAttribute(new Regeneration(regeneration, 1));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Hunger(10));
+        addAttribute(new LightningShield());
     }
 }
