@@ -125,7 +125,6 @@ public class EntityProjectile extends BukkitRunnable {
             }
             LivingEntity target = (LivingEntity) canHit.get(0);
             onHit(target);
-            break;
         }
     }
 

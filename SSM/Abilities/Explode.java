@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
@@ -71,7 +72,7 @@ public class Explode extends Ability implements OwnerRightClickEvent {
             Location playerLoc = owner.getLocation();
             Location targetLoc = target.getLocation();
             double dist = playerLoc.distance(targetLoc);
-            DamageUtil.damage(target, owner, (range - dist) * (double) (baseDamage / range));
+            DamageUtil.damage(target, owner, (range - dist) * (double) (baseDamage / range), 2.5f, false);
         }
     }
 }

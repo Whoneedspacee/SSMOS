@@ -59,50 +59,46 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
 
     public void activate() {
         already_hit.clear();
-        Block startblock = owner.getLocation().getBlock();
-        Location loc = owner.getLocation().add(0, 1, 0);
-        // Project onto the XZ plane
-        final Vector dir = loc.getDirection().setY(0).normalize().multiply(0.1);
-        Location checkloc = loc.clone().add(dir.multiply(5));
-        if(checkloc.getBlock().getType() != Material.AIR) {
-            return;
-        }
-        List<Block> to_place = new ArrayList<Block>();
-        Block last_block = null;
-        int placed = 0;
-        while(loc.distance(checkloc) <= fissureLength) {
+        Location startloc = owner.getLocation().subtract(0, 0.4, 0);
+        Vector dir = startloc.getDirection().setY(0).normalize().multiply(0.1);
+        Location checkloc = startloc.clone();
+        List<Block> path = new ArrayList<Block>();
+        while (Utils.getXZDistance(startloc, checkloc) < 14) {
             checkloc.add(dir);
-            Location blockloc = getBlockUnderneath(checkloc);
-            if (blockloc == null) {
-                break;
-            }
-            Block blockUnderneath = blockloc.getBlock();
-            if(to_place.contains(blockUnderneath)) {
+
+            Block block = checkloc.getBlock();
+
+            if (block.equals(startloc.getBlock())) {
                 continue;
             }
-            if (blockUnderneath.getX() == startblock.getX() && blockUnderneath.getZ() == startblock.getZ()) {
+            if (path.contains(block)) {
                 continue;
             }
-            if (last_block != null && last_block.getLocation().distance(blockUnderneath.getLocation()) > 1.75) {
-                break;
+            if ((block.getRelative(BlockFace.UP).getType().isSolid())) {
+                checkloc.add(0, 1, 0);
+                block = checkloc.getBlock();
+                if (block.getRelative(BlockFace.UP).getType().isSolid()) {
+                    break;
+                }
+            } else if (!block.getType().isSolid()) {
+                checkloc.add(0, -1, 0);
+                block = checkloc.getBlock();
+
+                if (!block.getType().isSolid()) {
+                    return;
+                }
             }
-            if (last_block != null && last_block.equals(blockUnderneath)) {
+            if (block.getLocation().add(0.5, 0.5, 0.5).distance(checkloc) > 0.5) {
                 continue;
             }
-            // Height Change
-            if(last_block != null) {
-                checkloc.add(0, blockUnderneath.getY() - last_block.getY(), 0);
+            path.add(block);
+            if(path.size() > 3) {
+                path.add(block.getRelative(0, 1, 0));
             }
-            placed++;
-            to_place.add(blockUnderneath.getRelative(0, 1, 0));
-            if(placed > 3) {
-                to_place.add(blockUnderneath.getRelative(0, 2, 0));
-            }
-            last_block = blockUnderneath;
-            // Slowness
-            for (Player player : blockUnderneath.getWorld().getPlayers()) {
+            checkloc.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getTypeId());
+            for (Player player : block.getWorld().getPlayers()) {
                 if (!player.equals(owner)) {
-                    if (blockUnderneath.getLocation().add(0.5, 0.5, 0.5).distance(player.getLocation()) < 1.5) {
+                    if (block.getLocation().add(0.5, 0.5, 0.5).distance(player.getLocation()) < 1.5) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 1));
                     }
                 }
@@ -110,7 +106,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
         }
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            ListIterator<Block> iterator = to_place.listIterator();
+            ListIterator<Block> iterator = path.listIterator();
             Block next_block = null;
             Block last_block = null;
 
@@ -120,7 +116,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
                     stop();
                     return;
                 }
-                next_block = iterator.next();
+                next_block = iterator.next().getRelative(0, 1, 0);
                 // New column, skip a tick
                 if(last_block != null) {
                     if(last_block.getX() != next_block.getX() || last_block.getZ() != next_block.getZ()) {
@@ -146,7 +142,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
                         continue;
                     }
                     LivingEntity living = (LivingEntity) hit;
-                    int distance = (int) hit.getLocation().distance(to_place.get(0).getLocation());
+                    int distance = (int) hit.getLocation().distance(path.get(0).getLocation());
                     DamageUtil.damage(living, owner, 4 + distance);
                     Vector direction = living.getLocation().toVector().subtract(next_block.getLocation().toVector()).setY(0).normalize();
                     VelocityUtil.setVelocity(living, direction,
@@ -159,12 +155,12 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
     }
 
     private Location getBlockUnderneath(Location loc) {
-        if(loc.getBlock().getType() != Material.AIR && loc.getBlock().getType().isSolid()) {
-            return null;
+        if(loc.getBlock().getType().isSolid()) {
+            return loc.getBlock().getLocation();
         }
         while(loc.getY() > 0) {
             loc = loc.getBlock().getRelative(BlockFace.DOWN).getLocation();
-            if(loc.getBlock().getType() == Material.AIR || !loc.getBlock().getType().isSolid()) {
+            if(!loc.getBlock().getType().isSolid()) {
                 continue;
             }
             return loc;

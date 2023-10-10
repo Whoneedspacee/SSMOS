@@ -46,7 +46,7 @@ public class SlimeSlam extends Ability implements OwnerRightClickEvent {
                         return;
                     }
                     LivingEntity living = (LivingEntity) entity;
-                    if(!DamageUtil.canDamage(living)) {
+                    if(!DamageUtil.canDamage(living, damage)) {
                         continue;
                     }
                     doSlam(living);

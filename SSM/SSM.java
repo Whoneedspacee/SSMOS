@@ -1,9 +1,8 @@
 package SSM;
 
-import SSM.GameManagers.CooldownManager;
-import SSM.GameManagers.DamageManager;
-import SSM.GameManagers.EventManager;
-import SSM.GameManagers.KitManager;
+import SSM.GameManagers.*;
+import SSM.GameManagers.Disguise.Disguise;
+import SSM.Kits.KitSkeleton;
 import SSM.Utilities.DamageUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -44,13 +43,19 @@ public class SSM extends JavaPlugin implements Listener {
         new EventManager();
         new KitManager();
         new DamageManager();
+        new DisguiseManager();
+        // Do not do anything before manager creation please
         for(Player player : Bukkit.getOnlinePlayers()) {
+            Bukkit.broadcastMessage("Equipped: " + player.getName());
             KitManager.equipPlayer(player, KitManager.getAllKits().get(0));
         }
     }
 
     @Override
     public void onDisable() {
+        for(Disguise disguise : DisguiseManager.disguises.values()) {
+            disguise.deleteLiving();
+        }
     }
 
     @Override
@@ -110,7 +115,17 @@ public class SSM extends JavaPlugin implements Listener {
         Block blockIn = e.getTo().getBlock();
         Block blockOn = e.getFrom().getBlock().getRelative(BlockFace.DOWN);
         if (blockIn.isLiquid() && !player.isDead()) {
-            player.setHealth(0.0);
+            DamageUtil.damage(player, null, 1000, 0, true);
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent e) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
+            LivingEntity ent = (LivingEntity) e.getEntity();
+            //ent.getWorld().strikeLightningEffect(ent.getLocation());
+            DamageUtil.damage(ent, null, 1000, 0, true);
+            e.setCancelled(true);
         }
     }
 
@@ -146,62 +161,10 @@ public class SSM extends JavaPlugin implements Listener {
         e.setCancelled(true);
     }
 
-    /*@EventHandler
-    public void onPlayerJoin(PlayerMoveEvent e) {
-        Location temp = e.getTo().clone().subtract(e.getFrom());
-        String print = String.format("%.5f, %.5f, %.5f", temp.getX(), temp.getY(), temp.getZ());
-        e.getPlayer().sendMessage(print);
-    }*/
-
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         e.getPlayer().setFoodLevel(20);
     }
-
-    /*
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        removePlayer(e.getPlayer());
-    }
-
-    public void injectPlayer(Player player) {
-        ChannelDuplexHandler channelDuplexHandler = new ChannelDuplexHandler() {
-
-            @Override
-            public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
-                super.channelRead(channelHandlerContext, packet);
-            }
-
-            @Override
-            public void write(ChannelHandlerContext channelHandlerContext, Object packet, ChannelPromise channelPromise) throws Exception {
-                //if the server is sending a packet, the function "write" will be called. If you want to cancel a specific packet, just use return; Please keep in mind that using the return thing can break the intire server when using the return thing without knowing what you are doing.
-                super.write(channelHandlerContext, packet, channelPromise);
-                if(packet instanceof PacketPlayOutEntityVelocity) {
-                    PacketPlayOutEntityVelocity velocity_packet = (PacketPlayOutEntityVelocity) packet;
-                    PacketDataSerializer data = new PacketDataSerializer(Unpooled.buffer());
-                    velocity_packet.b(data);
-                    //player.sendMessage(data.readInt() + " " + player.getEntityId());
-                    //if(player.getEntityId() != data.readInt()) {
-                    //    player.sendMessage(data.readShort() + ", " + data.readShort() + ", " + data.readShort());
-                    //}
-                }
-            }
-
-
-        };
-
-        ChannelPipeline pipeline = ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel.pipeline();
-        pipeline.addBefore("packet_handler", player.getName(), channelDuplexHandler);
-
-    }
-
-    public void removePlayer(Player player) {
-        Channel channel = ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel;
-        channel.eventLoop().submit(() -> {
-            channel.pipeline().remove(player.getName());
-            return null;
-        });
-    }*/
 
     @EventHandler
     public void stopHealthRegen(EntityRegainHealthEvent e) {
@@ -213,12 +176,5 @@ public class SSM extends JavaPlugin implements Listener {
         e.setCancelled(true);
     }
 
-    @EventHandler
-    public void onDamage(EntityDamageEvent e) {
-        if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            LivingEntity ent = (LivingEntity) e.getEntity();
-            ent.setHealth(0.0);
-        }
-    }
 }
 

@@ -1,9 +1,11 @@
 package SSM.Attributes;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.List;
 
 public class Compass extends Attribute {
@@ -23,7 +25,7 @@ public class Compass extends Attribute {
         Location finalLoc = null;
         Location loc = owner.getLocation();
         double finalDist = 101;
-        List<Entity> nearby = owner.getNearbyEntities(100, 100, 100);
+        Collection<? extends Player> nearby = Bukkit.getOnlinePlayers();
         nearby.remove(owner);
         for (Entity ent : nearby) {
             if (!(ent instanceof Player)) {

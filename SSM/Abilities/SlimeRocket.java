@@ -45,6 +45,7 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
+        long activation_ms = System.currentTimeMillis();
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () ->
         {
             if(!owner.isBlocking()) {
@@ -54,7 +55,7 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
                 return;
             }
             long elapsed_ms = CooldownManager.getInstance().getTimeElapsedFor(this, owner);
-            double elapsed_sound = Math.min(3, (double)(System.currentTimeMillis() - elapsed_ms)/1000d);
+            double elapsed_sound = Math.min(3, (double)(System.currentTimeMillis() - activation_ms)/1000d);
             if(owner.getExp() < 0.1 || elapsed_ms >= 5000) {
                 // Fire Slime
                 Bukkit.getScheduler().cancelTask(task);
@@ -124,6 +125,7 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
     class SlimeProjectile extends EntityProjectile {
 
         double charge = 0;
+        private List<Entity> already_hit = new ArrayList<Entity>();
 
         public SlimeProjectile(Plugin plugin, String name, Entity projectile, double charge) {
             super(plugin, name, projectile);
@@ -143,6 +145,10 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
 
         @Override
         public boolean onHit(LivingEntity target) {
+            if(already_hit.contains(target)) {
+                return false;
+            }
+            already_hit.add(target);
             Slime slime = (Slime) projectile;
             this.setDamage(3 + slime.getSize() * 3);
             return super.onHit(target);

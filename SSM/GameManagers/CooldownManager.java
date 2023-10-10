@@ -53,7 +53,8 @@ public class CooldownManager extends BukkitRunnable {
                 Utils.sendAttributeMessage("You can use", currData.getAttribute().name,
                         currData.getAbilityUser(), ServerMessageType.RECHARGE);
                 Utils.sendActionBarMessage("§a§l" + currData.getAttribute().name + " Recharged", currData.getAbilityUser());
-                if (KitManager.getCurrentAbility(currData.getAbilityUser()).equals(currData.getAttribute())) {
+                Ability ability = KitManager.getCurrentAbility(currData.getAbilityUser());
+                if (ability != null && ability.equals(currData.getAttribute())) {
                     currData.getAbilityUser().playSound(currData.getAbilityUser().getLocation(), Sound.NOTE_PLING, 1.0f, 24.0f);
                 }
             }

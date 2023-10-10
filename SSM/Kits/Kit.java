@@ -2,6 +2,7 @@ package SSM.Kits;
 
 import SSM.Abilities.Ability;
 import SSM.Attributes.Attribute;
+import SSM.GameManagers.DisguiseManager;
 import SSM.SSM;
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
@@ -23,7 +24,7 @@ public abstract class Kit {
     protected double armor = 0;
     protected double knockback = 0;
     protected double regeneration = 0;
-    public Material menuItem;
+    protected Material menuItem;
 
     protected boolean hasDirectDoubleJump = false;
 
@@ -50,6 +51,7 @@ public abstract class Kit {
     }
 
     public void destroyKit() {
+        DisguiseManager.removeDisguise(owner);
         owner = null;
         for (Attribute attribute : attributes) {
             attribute.remove();
@@ -98,6 +100,14 @@ public abstract class Kit {
         item.setItemMeta(meta);
         owner.getInventory().setItem(inventorySlot, item);
         hotbarAbilities[inventorySlot] = ability;
+    }
+
+    public ItemStack getMenuItemStack() {
+        return new ItemStack(menuItem, 1);
+    }
+
+    public Material getMenuItemType() {
+        return menuItem;
     }
 
     public String getName() {

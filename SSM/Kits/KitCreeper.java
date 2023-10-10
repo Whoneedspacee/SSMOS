@@ -32,9 +32,9 @@ public class KitCreeper extends Kit {
         setItem(Material.IRON_AXE, 0, new SulphurBomb());
         setItem(Material.IRON_SPADE, 1, new Explode());
 
-        addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new Hunger(10));
+        //addAttribute(new Hunger(10));
         addAttribute(new LightningShield());
     }
 }

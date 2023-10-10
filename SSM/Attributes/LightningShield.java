@@ -49,6 +49,9 @@ public class LightningShield extends Attribute implements OwnerTakeDamageEvent, 
 
     @Override
     public void onOwnerTakeDamage(EntityDamageEvent e) {
+        if(e.isCancelled()) {
+            return;
+        }
         // This happens after EntityDamageByEntityEvent so this is fine
         if(e.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
                 e.getCause() != EntityDamageEvent.DamageCause.FIRE_TICK) {

@@ -16,7 +16,7 @@ public class KitMagmaCube extends Kit {
         this.armor = 4;
         this.regeneration = 0.35;
         this.knockback = 1.75;
-        this.name = "Magma_Cube";
+        this.name = "Magma Cube";
         this.menuItem = Material.FIREWORK_CHARGE;
     }
 
@@ -30,7 +30,7 @@ public class KitMagmaCube extends Kit {
         setItem(Material.IRON_AXE, 0, new MagmaBlast());
         setItem(Material.IRON_SPADE, 1, new FlameDash());
 
-        addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
     }
 }

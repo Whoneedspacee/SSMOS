@@ -1,6 +1,7 @@
 package SSM.Abilities;
 
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
+import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -58,11 +59,9 @@ public class Needler extends Ability implements OwnerRightClickEvent {
                 Arrow arrow = (Arrow) e.getDamager();
                 List<MetadataValue> data = arrow.getMetadata("Needler");
                 if(data.size() > 0) {
-                    e.setDamage(1.1);
-                    if(e.getEntity() instanceof LivingEntity) {
-                        LivingEntity livingentity = (LivingEntity) e.getEntity();
-                        livingentity.setNoDamageTicks(0);
-                    }
+                    e.setCancelled(true);
+                    DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) arrow.getShooter(), 1.1,
+                            1.0, false, EntityDamageEvent.DamageCause.CUSTOM, null, true);
                 }
             }
         }

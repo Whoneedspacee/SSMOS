@@ -21,6 +21,7 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
         this.name = "Roped Arrow";
         this.cooldownTime = 5;
         this.usage = AbilityUsage.LEFT_CLICK;
+        this.useMessage = "You fired";
     }
 
     public void onOwnerLeftClick(PlayerInteractEvent e) {

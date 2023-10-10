@@ -78,6 +78,10 @@ public class Utils {
         return false;
     }
 
+    public static double getXZDistance(Location first, Location second) {
+        return Math.sqrt(Math.pow(first.getX() - second.getX(), 2) + Math.pow(first.getZ() - second.getZ(), 2));
+    }
+
     public static void playParticle(EnumParticle particle, Location location, float offsetX, float offsetY, float offsetZ,
                                     float speed, int count, int dist, Collection<Player> players)
     {
@@ -96,6 +100,21 @@ public class Utils {
 
     public static void sendPacket(Player player, Packet packet) {
         ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+    }
+
+    public static void sendPacketToAllBut(Player exclude, Packet packet) {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            if(player.equals(exclude)) {
+                continue;
+            }
+            sendPacket(player, packet);
+        }
+    }
+
+    public static void sendPacketToAll(Packet packet) {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            sendPacket(player, packet);
+        }
     }
 
 }

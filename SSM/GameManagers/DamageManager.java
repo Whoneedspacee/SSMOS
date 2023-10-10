@@ -39,9 +39,6 @@ public class DamageManager implements Listener {
         // Cancel the event since we're going to handle all the information
         Entity entity = e.getDamager();
         e.setCancelled(true);
-        if(!DamageUtil.canDamage((LivingEntity) e.getEntity())) {
-            return;
-        }
         if (entity instanceof Player) {
             Player player = (Player) entity;
             Kit playerKit = KitManager.getPlayerKit(player);
@@ -49,28 +46,30 @@ public class DamageManager implements Listener {
                 return;
             }
             if(e.getEntity() instanceof LivingEntity && e.getDamager() instanceof LivingEntity) {
-                DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), playerKit.getMelee());
+                DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), playerKit.getMelee(),
+                        1.0, false, DamageCause.ENTITY_ATTACK);
             }
         }
         else if(entity instanceof Projectile) {
+            // We are technically checking this twice but this is easier to avoid stuff like arrow dings
+            if(!DamageUtil.canDamage((LivingEntity) e.getEntity(), e.getDamage())) {
+                return;
+            }
             Projectile projectile = (Projectile) entity;
             LivingEntity livingEntity = null;
             if(projectile.getShooter() instanceof LivingEntity) {
                 livingEntity = (LivingEntity) projectile.getShooter();
             }
             DamageUtil.damage((LivingEntity) e.getEntity(), livingEntity, e.getDamage(),
-                    1.0, false, EntityDamageEvent.DamageCause.CUSTOM, entity.getLocation());
+                    1.0, false, DamageCause.PROJECTILE, projectile.getLocation());
             if(projectile instanceof Arrow && projectile.getShooter() instanceof Player) {
-                List<MetadataValue> data = projectile.getMetadata("Needler");
-                if(data.size() > 0) {
-                    return;
-                }
                 Player player = (Player) projectile.getShooter();
                 player.playSound(player.getLocation(), Sound.ORB_PICKUP, 0.5f, 0.5f);
             }
         }
         else if(e.getCause() == DamageCause.ENTITY_ATTACK) {
-            DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), e.getDamage());
+            DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), e.getDamage(),
+                    1.0, false, DamageCause.ENTITY_ATTACK);
         }
         else {
             Bukkit.broadcastMessage("Unhandled Cause: " + e.getCause().toString());

@@ -6,6 +6,9 @@ import SSM.Abilities.SeismicSlam;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Potion;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.Disguise.IronGolemDisguise;
+import SSM.GameManagers.Disguise.SkeletonDisguise;
+import SSM.GameManagers.DisguiseManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -19,7 +22,7 @@ public class KitIronGolem extends Kit {
         this.armor = 8;
         this.regeneration = 0.2;
         this.knockback = 1.0;
-        this.name = "Iron_Golem";
+        this.name = "Iron Golem";
         this.menuItem = Material.IRON_BLOCK;
     }
 
@@ -35,9 +38,11 @@ public class KitIronGolem extends Kit {
         setItem(Material.IRON_PICKAXE, 1, new IronHook());
         setItem(Material.IRON_SPADE, 2, new SeismicSlam());
 
-        addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Potion(PotionEffectType.SLOW, 1));
+
+        DisguiseManager.addDisguise(owner, new IronGolemDisguise(owner));
     }
 
 }

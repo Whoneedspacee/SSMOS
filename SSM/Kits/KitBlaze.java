@@ -33,7 +33,7 @@ public class KitBlaze extends Kit {
         setItem(Material.IRON_SWORD, 0, new MilkSpiral());
         setItem(Material.IRON_AXE, 1, new Firefly());
 
-        addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Potion(PotionEffectType.SPEED, 1));
     }

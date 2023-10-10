@@ -29,7 +29,7 @@ public class KitWolf extends Kit {
         setItem(Material.IRON_AXE, 0);
         setItem(Material.IRON_SPADE, 1, new WolfStrike());
 
-        addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new DirectDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Ravage(8, 1, 3));
 

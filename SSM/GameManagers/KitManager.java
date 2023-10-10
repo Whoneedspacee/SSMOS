@@ -36,14 +36,21 @@ public class KitManager implements CommandExecutor, Listener {
         allKits.add(new KitSlime());
         allKits.add(new KitSquid());
         allKits.add(new KitCreeper());
+        allKits.add(new KitEnderman());
         allKits.add(new KitSnowMan());
         allKits.add(new KitWolf());
         allKits.add(new KitMagmaCube());
         allKits.add(new KitWitch());
+        allKits.add(new KitWitherSkeleton());
+        allKits.add(new KitZombie());
         allKits.add(new KitCow());
+        allKits.add(new KitSkeletonHorse());
         allKits.add(new KitPig());
         allKits.add(new KitBlaze());
-        allKits.add(new KitZombie());
+        allKits.add(new KitChicken());
+        allKits.add(new KitGuardian());
+        allKits.add(new KitSheep());
+        allKits.add(new KitVillager());
         allKits = Collections.unmodifiableList(allKits);
         Bukkit.getPluginManager().registerEvents(this, plugin);
         plugin.getCommand("kit").setExecutor(this);
@@ -79,9 +86,25 @@ public class KitManager implements CommandExecutor, Listener {
                 return true;
             }
             Player player = (Player) sender;
+            if(args.length >= 1) {
+                StringBuilder builder = new StringBuilder();
+                for (String value : args) {
+                    builder.append(value);
+                    builder.append(" ");
+                }
+                builder.deleteCharAt(builder.length() - 1);
+                String kitname = builder.toString();
+                for (Kit kit : KitManager.getAllKits()) {
+                    if(kit.getName().equalsIgnoreCase(kitname)) {
+                        KitManager.equipPlayer(player, kit);
+                        return true;
+                    }
+                }
+                return false;
+            }
             Inventory selectKit = Bukkit.createInventory(player, 54, ChatColor.BLUE + "Select Your Kit");
             for (Kit kit : KitManager.getAllKits()) {
-                ItemStack item = new ItemStack(kit.menuItem);
+                ItemStack item = kit.getMenuItemStack();
                 ItemMeta itemMeta = item.getItemMeta();
                 itemMeta.setDisplayName(ChatColor.RESET + kit.getName().replace("_", " "));
                 item.setItemMeta(itemMeta);
@@ -102,7 +125,7 @@ public class KitManager implements CommandExecutor, Listener {
         }
         if (e.getView().getTitle().contains("Kit")) {
             for (Kit kit : KitManager.getAllKits()) {
-                if (item.getType() == kit.menuItem) {
+                if (item.getType().equals(kit.getMenuItemType())) {
                     KitManager.equipPlayer(player, kit);
                     player.closeInventory();
                     break;

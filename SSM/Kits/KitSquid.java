@@ -33,7 +33,7 @@ public class KitSquid extends Kit {
         setItem(Material.IRON_SWORD, 1, new SuperSquid());
         setItem(Material.IRON_SPADE, 2, new FishFlurry());
 
-        addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
     }
 }

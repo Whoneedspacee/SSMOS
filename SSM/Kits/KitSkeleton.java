@@ -6,6 +6,9 @@ import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.Disguise.SkeletonDisguise;
+import SSM.GameManagers.Disguise.ZombieDisguise;
+import SSM.GameManagers.DisguiseManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -34,9 +37,11 @@ public class KitSkeleton extends Kit {
         setItem(Material.BOW, 1, new RopedArrow());
 
         addAttribute(new ItemGenerator(Material.ARROW, 1, 3, 3));
-        addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Barrage(1.1, 0.25, 5));
+
+        DisguiseManager.addDisguise(owner, new SkeletonDisguise(owner));
     }
 
 }

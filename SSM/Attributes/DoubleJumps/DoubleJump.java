@@ -5,6 +5,7 @@ import SSM.Utilities.Utils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
@@ -76,7 +77,7 @@ public abstract class DoubleJump extends Attribute {
         owner.setAllowFlight(true);
     }
 
-    @EventHandler
+    @EventHandler(priority= EventPriority.LOWEST)
     public void entityDamageEvent(EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
             e.setCancelled(true);

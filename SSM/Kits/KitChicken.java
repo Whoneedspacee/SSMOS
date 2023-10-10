@@ -1,36 +1,37 @@
 package SSM.Kits;
 
-import SSM.Abilities.BouncyBacon;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.Disguise.ChickenDisguise;
+import SSM.GameManagers.DisguiseManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-public class KitPig extends Kit {
+public class KitChicken extends Kit {
 
-    public KitPig() {
+    public KitChicken() {
         super();
-        this.damage = 5;
-        this.armor = 5;
+        this.damage = 4.5;
+        this.armor = 2.5;
         this.regeneration = 0.25;
-        this.knockback = 1.5;
-        this.name = "Pig";
-        this.menuItem = Material.PORK;
+        this.knockback = 2.0;
+        this.name = "Chicken";
+        this.menuItem = Material.EGG;
     }
 
     public void equipKit(Player player) {
         super.equipKit(player);
-        setArmor(Material.CHAINMAIL_BOOTS, 0);
-        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
+
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
-        setItem(Material.IRON_AXE, 0, new BouncyBacon());
-        setItem(Material.IRON_SPADE, 1);
+        setItem(Material.IRON_SWORD, 0, null);
+        setItem(Material.IRON_AXE, 1, null);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new ExpCharge(0.011F, 1, false));
+
+        DisguiseManager.addDisguise(owner, new ChickenDisguise(owner));
     }
+
 }

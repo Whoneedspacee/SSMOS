@@ -32,7 +32,7 @@ public class KitSpider extends Kit {
         setItem(Material.IRON_SWORD, 0, new Needler());
         setItem(Material.IRON_AXE, 1, new SpinWeb());
 
-        addAttribute(new Regeneration(regeneration, 1));
+        addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new ExpCharge(0.005f, 1, true));
         addAttribute(new Climb(0.2));
         addAttribute(new DirectDoubleJump(1.0, 1.0, 1, Sound.SPIDER_IDLE));
