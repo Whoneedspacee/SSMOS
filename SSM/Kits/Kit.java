@@ -4,6 +4,9 @@ import SSM.Abilities.Ability;
 import SSM.Attributes.Attribute;
 import SSM.GameManagers.DisguiseManager;
 import SSM.SSM;
+import net.minecraft.server.v1_8_R3.Packet;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -24,6 +27,7 @@ public abstract class Kit {
     protected double armor = 0;
     protected double knockback = 0;
     protected double regeneration = 0;
+    protected boolean invincible = false;
     protected Material menuItem;
 
     protected boolean hasDirectDoubleJump = false;
@@ -33,13 +37,23 @@ public abstract class Kit {
 
     protected JavaPlugin plugin;
     protected Player owner;
+    private boolean created = false;
 
+    // Kits are singleton, do not create them a second time
     public Kit() {
         this.plugin = SSM.getInstance();
     }
 
     public void equipKit(Player player) {
-        destroyKit();
+        if(created) {
+            Bukkit.broadcastMessage(ChatColor.RED + "Tried to equip same kit instance twice.");
+            return;
+        }
+        if(player == null) {
+            Bukkit.broadcastMessage(ChatColor.RED + "Tried to equip null player.");
+            return;
+        }
+        created = true;
         owner = player;
         player.getInventory().clear();
         player.getInventory().setHelmet(null);
@@ -125,6 +139,12 @@ public abstract class Kit {
     public double getMelee() {
         return damage;
     }
+
+    public void setInvincible(boolean set) {
+        invincible = set;
+    }
+
+    public boolean isInvincible() { return invincible; }
 
     public void setMelee(double melee) {
         damage = melee;

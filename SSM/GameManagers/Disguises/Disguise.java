@@ -1,4 +1,4 @@
-package SSM.GameManagers.Disguise;
+package SSM.GameManagers.Disguises;
 
 import SSM.Utilities.Utils;
 import net.minecraft.server.v1_8_R3.*;
@@ -10,12 +10,6 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.*;
 import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.NameTagVisibility;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
-
-import javax.xml.crypto.Data;
 
 public abstract class Disguise {
 
@@ -62,18 +56,9 @@ public abstract class Disguise {
         armorstand = new EntityArmorStand(((CraftWorld) owner.getWorld()).getHandle());
         armorstand.setCustomName(ChatColor.YELLOW + owner.getName());
         armorstand.setCustomNameVisible(true);
+        // Had no idea this existed, but seems like this is what other servers must be doing
+        ((CraftArmorStand) armorstand.getBukkitEntity()).setMarker(true);
         squid = new EntitySquid(((CraftWorld) owner.getWorld()).getHandle());
-        /*ArmorStand as = (ArmorStand) owner.getWorld().spawnEntity(owner.getLocation(), EntityType.ARMOR_STAND);
-        as.setCustomName(ChatColor.YELLOW + owner.getName());
-        as.setCustomNameVisible(true);
-        as.setGravity(false);
-        as.setVisible(true);
-        as.setSmall(false);
-        Squid squid = (Squid) owner.getWorld().spawnEntity(owner.getLocation(), EntityType.SQUID);
-        squid.setPassenger(as);
-        living.getBukkitEntity().setPassenger(squid);*/
-        //squid.getBukkitEntity().setPassenger(armorstand.getBukkitEntity());
-        //living.getBukkitEntity().setPassenger(armorstand.getBukkitEntity());
         for(Player player : Bukkit.getOnlinePlayers()) {
             if(player.equals(owner)) {
                 continue;
@@ -83,30 +68,36 @@ public abstract class Disguise {
     }
 
     public void showDisguise(Player player) {
-        living.setLocation(owner.getLocation().getX(), owner.getLocation().getY(), owner.getLocation().getZ(),
+        // Armor Stand Destroy (if player sees them already)
+        PacketPlayOutEntityDestroy destroy_packet = new PacketPlayOutEntityDestroy(armorstand.getId());
+        Utils.sendPacket(player, destroy_packet);
+        // Squid Stand Destroy (if player sees them already)
+        destroy_packet = new PacketPlayOutEntityDestroy(squid.getId());
+        Utils.sendPacket(player, destroy_packet);
+        living.setPositionRotation(owner.getLocation().getX(), owner.getLocation().getY(), owner.getLocation().getZ(),
                 owner.getLocation().getYaw(), owner.getLocation().getPitch());
         PacketPlayOutSpawnEntityLiving living_packet = new PacketPlayOutSpawnEntityLiving(living);
         Utils.sendPacket(player, living_packet);
-        // Armor Stand Spawn
-        armorstand.setLocation(owner.getLocation().getX(), owner.getLocation().getY(), owner.getLocation().getZ(),
-                owner.getLocation().getYaw(), owner.getLocation().getPitch());
-        PacketPlayOutSpawnEntityLiving armorstand_packet = new PacketPlayOutSpawnEntityLiving(armorstand);
-        Utils.sendPacket(player, armorstand_packet);
         // Squid Spawn
-        squid.setLocation(owner.getLocation().getX(), owner.getLocation().getY(), owner.getLocation().getZ(),
+        squid.setPositionRotation(owner.getLocation().getX(), living.locY + living.an() + squid.am(), owner.getLocation().getZ(),
                 owner.getLocation().getYaw(), owner.getLocation().getPitch());
         PacketPlayOutSpawnEntityLiving squid_packet = new PacketPlayOutSpawnEntityLiving(squid);
         Utils.sendPacket(player, squid_packet);
+        // Armor Stand Spawn
+        armorstand.setPositionRotation(owner.getLocation().getX(), squid.locY + squid.an() + armorstand.am(), owner.getLocation().getZ(),
+                owner.getLocation().getYaw(), owner.getLocation().getPitch());
+        PacketPlayOutSpawnEntityLiving armorstand_packet = new PacketPlayOutSpawnEntityLiving(armorstand);
+        Utils.sendPacket(player, armorstand_packet);
         // Invisibility for Armor Stand
-        /*DataWatcher dw = armorstand.getDataWatcher();
+        DataWatcher dw = armorstand.getDataWatcher();
         dw.watch(0, (byte) 0x20);
         PacketPlayOutEntityMetadata invisiblity_packet = new PacketPlayOutEntityMetadata(armorstand.getId(), dw, true);
-        Utils.sendPacketToAll(invisiblity_packet);
+        Utils.sendPacket(player, invisiblity_packet);
         // Invisibility for Squid
         dw = squid.getDataWatcher();
         dw.watch(0, (byte) 0x20);
         invisiblity_packet = new PacketPlayOutEntityMetadata(squid.getId(), dw, true);
-        Utils.sendPacketToAll(invisiblity_packet);*/
+        Utils.sendPacket(player, invisiblity_packet);
     }
 
     public void update() {
@@ -117,22 +108,17 @@ public abstract class Disguise {
         PacketPlayOutRemoveEntityEffect remove_effect_packet = new PacketPlayOutRemoveEntityEffect(owner.getEntityId(), new MobEffect(
                 MobEffectList.INVISIBILITY.id, 0));
         Utils.sendPacket(owner, remove_effect_packet);
-        // Hide the armor too
+        // Hide the armor and weapon too
         PacketPlayOutEntityEquipment handPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 0, null);
         PacketPlayOutEntityEquipment helmetPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 1, null);
         PacketPlayOutEntityEquipment chestPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 2, null);
         PacketPlayOutEntityEquipment legPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 3, null);
         PacketPlayOutEntityEquipment bootsPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 4, null);
-        for(Player hidefrom : Bukkit.getOnlinePlayers()) {
-            if(owner.equals(hidefrom)) {
-                continue;
-            }
-            Utils.sendPacket(hidefrom, handPacket);
-            Utils.sendPacket(hidefrom, helmetPacket);
-            Utils.sendPacket(hidefrom, chestPacket);
-            Utils.sendPacket(hidefrom, legPacket);
-            Utils.sendPacket(hidefrom, bootsPacket);
-        }
+        Utils.sendPacketToAllBut(owner, handPacket);
+        Utils.sendPacketToAllBut(owner, helmetPacket);
+        Utils.sendPacketToAllBut(owner, chestPacket);
+        Utils.sendPacketToAllBut(owner, legPacket);
+        Utils.sendPacketToAllBut(owner, bootsPacket);
         // Hide the mob from the disguised player
         PacketPlayOutEntityDestroy disguise_destroy_packet = new PacketPlayOutEntityDestroy(living.getId());
         Utils.sendPacket(owner, disguise_destroy_packet);
@@ -140,6 +126,7 @@ public abstract class Disguise {
         if(living.dead) {
             return;
         }
+        living.onGround = Utils.entityIsOnGround(owner);
         living.setPositionRotation(location.getX(), location.getY(), location.getZ(),
                 owner.getLocation().getYaw(), owner.getLocation().getPitch());
         PacketPlayOutEntityTeleport teleport_packet = new PacketPlayOutEntityTeleport(living);
@@ -153,7 +140,7 @@ public abstract class Disguise {
                 owner.getLocation().getYaw(), owner.getLocation().getPitch());
         teleport_packet = new PacketPlayOutEntityTeleport(squid);
         Utils.sendPacketToAllBut(owner, teleport_packet);
-        armorstand.setPositionRotation(location.getX(), squid.locY - 1.25f, location.getZ(),
+        armorstand.setPositionRotation(location.getX(), squid.locY + squid.an() + armorstand.am(), location.getZ(),
                 owner.getLocation().getYaw(), owner.getLocation().getPitch());
         teleport_packet = new PacketPlayOutEntityTeleport(armorstand);
         Utils.sendPacketToAllBut(owner, teleport_packet);

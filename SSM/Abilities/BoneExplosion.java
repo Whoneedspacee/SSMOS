@@ -63,6 +63,9 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
         canHit.remove(owner);
         for (Entity entity : canHit) {
             if ((entity instanceof LivingEntity)) {
+                if(!DamageUtil.canDamage((LivingEntity) entity, baseDamage)) {
+                    continue;
+                }
                 double dist = loc.distance(entity.getLocation());
                 DamageUtil.damage((LivingEntity) entity, owner, baseDamage,
                         2.5, false, DamageCause.CUSTOM, null);

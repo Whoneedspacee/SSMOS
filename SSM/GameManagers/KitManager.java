@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,10 +24,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-public class KitManager implements CommandExecutor, Listener {
+public class KitManager implements Listener {
 
     private static KitManager ourInstance;
-    private static HashMap<UUID, Kit> playerKit = new HashMap<UUID, Kit>();
+    private static HashMap<Player, Kit> playerKit = new HashMap<Player, Kit>();
     private List<Kit> allKits = new ArrayList<Kit>();
     private JavaPlugin plugin = SSM.getInstance();
 
@@ -53,14 +55,13 @@ public class KitManager implements CommandExecutor, Listener {
         allKits.add(new KitVillager());
         allKits = Collections.unmodifiableList(allKits);
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        plugin.getCommand("kit").setExecutor(this);
         ourInstance = this;
     }
 
     public static void equipPlayer(Player player, Kit check) {
-        Kit kit = playerKit.get(player.getUniqueId());
-        if (kit != null) {
-            kit.destroyKit();
+        Kit kit = playerKit.get(player);
+        if(kit != null) {
+            unequipPlayer(player);
         }
         try {
             kit = check.getClass().getDeclaredConstructor().newInstance();
@@ -76,44 +77,51 @@ public class KitManager implements CommandExecutor, Listener {
         if (kit != null) {
             kit.equipKit(player);
         }
-        playerKit.put(player.getUniqueId(), kit);
+        playerKit.put(player, kit);
+        DisplayManager.buildScoreboard();
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("kit")) {
-            if (!(sender instanceof Player)) {
-                return true;
-            }
-            Player player = (Player) sender;
-            if(args.length >= 1) {
-                StringBuilder builder = new StringBuilder();
-                for (String value : args) {
-                    builder.append(value);
-                    builder.append(" ");
-                }
-                builder.deleteCharAt(builder.length() - 1);
-                String kitname = builder.toString();
-                for (Kit kit : KitManager.getAllKits()) {
-                    if(kit.getName().equalsIgnoreCase(kitname)) {
-                        KitManager.equipPlayer(player, kit);
-                        return true;
-                    }
-                }
-                return false;
-            }
-            Inventory selectKit = Bukkit.createInventory(player, 54, ChatColor.BLUE + "Select Your Kit");
-            for (Kit kit : KitManager.getAllKits()) {
-                ItemStack item = kit.getMenuItemStack();
-                ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.setDisplayName(ChatColor.RESET + kit.getName().replace("_", " "));
-                item.setItemMeta(itemMeta);
-                selectKit.addItem(item);
-                player.openInventory(selectKit);
-            }
-            return true;
+    public static void unequipPlayer(Player player) {
+        Kit kit = playerKit.get(player);
+        if(kit == null) {
+            return;
         }
-        return false;
+        kit.destroyKit();
+        playerKit.remove(player);
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
+        player.setFlying(false);
+        player.setAllowFlight(false);
+    }
+
+    public static Ability getCurrentAbility(Player player) {
+        Kit kit = KitManager.getPlayerKit(player);
+        if (kit == null) {
+            return null;
+        }
+        List<Attribute> attributes = kit.getAttributes();
+        if(player.getInventory().getItemInHand().getItemMeta() == null) {
+            return null;
+        }
+        int currentSlot = player.getInventory().getHeldItemSlot();
+        return kit.getAbilityInSlot(currentSlot);
+    }
+
+    public static Kit getPlayerKit(Player player) {
+        return playerKit.get(player);
+    }
+
+    public static List<Kit> getAllKits() {
+        return KitManager.getInstance().allKits;
+    }
+
+    public static KitManager getInstance() {
+        return ourInstance;
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        playerKit.remove(e.getPlayer());
     }
 
     @EventHandler
@@ -133,31 +141,6 @@ public class KitManager implements CommandExecutor, Listener {
             }
             e.setCancelled(true);
         }
-    }
-
-    public static Ability getCurrentAbility(Player player) {
-        Kit kit = KitManager.getPlayerKit(player);
-        if (kit == null) {
-            return null;
-        }
-        List<Attribute> attributes = kit.getAttributes();
-        if(player.getInventory().getItemInHand().getItemMeta() == null) {
-            return null;
-        }
-        int currentSlot = player.getInventory().getHeldItemSlot();
-        return kit.getAbilityInSlot(currentSlot);
-    }
-
-    public static Kit getPlayerKit(Player player) {
-        return KitManager.getInstance().playerKit.get(player.getUniqueId());
-    }
-
-    public static List<Kit> getAllKits() {
-        return KitManager.getInstance().allKits;
-    }
-
-    public static KitManager getInstance() {
-        return ourInstance;
     }
 
 }

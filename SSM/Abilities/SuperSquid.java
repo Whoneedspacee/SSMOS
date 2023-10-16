@@ -1,5 +1,6 @@
 package SSM.Abilities;
 
+import SSM.GameManagers.KitManager;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.GameManagers.OwnerEvents.OwnerTakeDamageEvent;
 import SSM.Utilities.VelocityUtil;
@@ -18,7 +19,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
 
-public class SuperSquid extends Ability implements OwnerRightClickEvent, OwnerTakeDamageEvent {
+public class SuperSquid extends Ability implements OwnerRightClickEvent {
 
     private int task = -1;
     private boolean active = false;
@@ -40,12 +41,16 @@ public class SuperSquid extends Ability implements OwnerRightClickEvent, OwnerTa
             @Override
             public void run() {
                 ticks++;
-                active = true;
-                if(!owner.isBlocking() || ticks >= 22) {
+                if(KitManager.getPlayerKit(owner) == null) {
                     Bukkit.getScheduler().cancelTask(task);
-                    active = false;
                     return;
                 }
+                if(!owner.isBlocking() || ticks >= 22) {
+                    Bukkit.getScheduler().cancelTask(task);
+                    KitManager.getPlayerKit(owner).setInvincible(false);
+                    return;
+                }
+                KitManager.getPlayerKit(owner).setInvincible(true);
                 VelocityUtil.setVelocity(owner, 0.6, 0.1, 1, true);
                 owner.getWorld().playSound(owner.getLocation(), Sound.SPLASH2, 0.2f, 1f);
                 owner.getWorld().playEffect(owner.getLocation(), Effect.STEP_SOUND, 8);
@@ -53,10 +58,4 @@ public class SuperSquid extends Ability implements OwnerRightClickEvent, OwnerTa
         }, 0L, 0L);
     }
 
-    @Override
-    public void onOwnerTakeDamage(EntityDamageEvent e) {
-        if(active) {
-            e.setCancelled(true);
-        }
-    }
 }

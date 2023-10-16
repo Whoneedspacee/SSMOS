@@ -3,11 +3,11 @@ package SSM.Kits;
 import SSM.Abilities.BoneExplosion;
 import SSM.Abilities.RopedArrow;
 import SSM.Attributes.BowCharge.Barrage;
+import SSM.Attributes.Compass;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
-import SSM.GameManagers.Disguise.SkeletonDisguise;
-import SSM.GameManagers.Disguise.ZombieDisguise;
+import SSM.GameManagers.Disguises.SkeletonDisguise;
 import SSM.GameManagers.DisguiseManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -35,11 +35,13 @@ public class KitSkeleton extends Kit {
 
         setItem(Material.IRON_AXE, 0, new BoneExplosion());
         setItem(Material.BOW, 1, new RopedArrow());
+        setItem(Material.COMPASS, 2, null);
 
         addAttribute(new ItemGenerator(Material.ARROW, 1, 3, 3));
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Barrage(1.1, 0.25, 5));
+        addAttribute(new Compass());
 
         DisguiseManager.addDisguise(owner, new SkeletonDisguise(owner));
     }

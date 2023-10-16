@@ -6,6 +6,8 @@ import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.Disguises.EndermanDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -35,6 +37,8 @@ public class KitEnderman extends Kit {
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
+
+        DisguiseManager.addDisguise(owner, new EndermanDisguise(owner));
     }
 
 }

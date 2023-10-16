@@ -5,6 +5,8 @@ import SSM.Abilities.SlimeSlam;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.Disguises.SlimeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -35,6 +37,7 @@ public class KitSlime extends Kit {
         addAttribute(new ExpCharge(0.005f, 1, false));
         addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
 
+        DisguiseManager.addDisguise(owner, new SlimeDisguise(owner));
     }
 
 }

@@ -6,6 +6,8 @@ import SSM.Attributes.Climb;
 import SSM.Attributes.DoubleJumps.DirectDoubleJump;
 import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.Disguises.SpiderDisguise;
+import SSM.GameManagers.DisguiseManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -36,6 +38,8 @@ public class KitSpider extends Kit {
         addAttribute(new ExpCharge(0.005f, 1, true));
         addAttribute(new Climb(0.2));
         addAttribute(new DirectDoubleJump(1.0, 1.0, 1, Sound.SPIDER_IDLE));
+
+        DisguiseManager.addDisguise(owner, new SpiderDisguise(owner));
     }
 
 }

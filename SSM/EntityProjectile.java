@@ -51,8 +51,10 @@ public class EntityProjectile extends BukkitRunnable {
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                 @Override
                 public void run() {
-                    onHit(null);
-                    projectile.remove();
+                    if(!projectile.isDead()) {
+                        onHit(null);
+                        projectile.remove();
+                    }
                 }
             }, (long) (time * 20));
         }
@@ -123,7 +125,7 @@ public class EntityProjectile extends BukkitRunnable {
             if (entity.equals(projectile)) {
                 continue;
             }
-            LivingEntity target = (LivingEntity) canHit.get(0);
+            LivingEntity target = (LivingEntity) entity;
             onHit(target);
         }
     }

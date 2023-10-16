@@ -4,6 +4,8 @@ import SSM.Abilities.Blizzard;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.Disguises.SnowmanDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -34,5 +36,7 @@ public class KitSnowMan extends Kit {
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new ExpCharge(0.01F, 1, false));
+
+        DisguiseManager.addDisguise(owner, new SnowmanDisguise(owner));
     }
 }

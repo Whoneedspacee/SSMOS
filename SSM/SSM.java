@@ -1,20 +1,13 @@
 package SSM;
 
+import SSM.Commands.*;
+import SSM.Commands.CommandStop;
 import SSM.GameManagers.*;
-import SSM.GameManagers.Disguise.Disguise;
-import SSM.Kits.KitSkeleton;
+import SSM.GameManagers.Disguises.Disguise;
 import SSM.Utilities.DamageUtil;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.*;
-import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.*;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +18,6 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Vector;
 
 public class SSM extends JavaPlugin implements Listener {
 
@@ -44,11 +36,23 @@ public class SSM extends JavaPlugin implements Listener {
         new KitManager();
         new DamageManager();
         new DisguiseManager();
+        new GameManager();
+        new DisplayManager();
+        this.getCommand("start").setExecutor(new CommandStart());
+        this.getCommand("stop").setExecutor(new CommandStop());
+        this.getCommand("getstate").setExecutor(new CommandGetState());
+        this.getCommand("tpworld").setExecutor(new CommandTeleportWorld());
+        this.getCommand("getloadedworlds").setExecutor(new CommandGetLoadedWorlds());
+        this.getCommand("loadworld").setExecutor(new CommandLoadWorld());
+        this.getCommand("kit").setExecutor(new CommandKit());
+        this.getCommand("damage").setExecutor(new CommandDamage());
+        this.getCommand("setspeed").setExecutor(new CommandSetSpeed());
+        this.getCommand("move").setExecutor(new CommandMove());
+        this.getCommand("jump").setExecutor(new CommandJump());
+        this.getCommand("vote").setExecutor(new CommandVote());
+        this.getCommand("spectate").setExecutor(new CommandSpectate());
+        this.getCommand("unloadworld").setExecutor(new CommandUnloadWorld());
         // Do not do anything before manager creation please
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            Bukkit.broadcastMessage("Equipped: " + player.getName());
-            KitManager.equipPlayer(player, KitManager.getAllKits().get(0));
-        }
     }
 
     @Override
@@ -58,74 +62,52 @@ public class SSM extends JavaPlugin implements Listener {
         }
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Player player = (Player) sender;
-        if (cmd.getName().equalsIgnoreCase("damage")) {
-            if (args.length == 1) {
-                try {
-                    int number = Integer.parseInt(args[0]);
-                    DamageUtil.damage(player, null, number);
-                    player.sendMessage("You were dealt " + number + " damage");
-                    return true;
-                } catch (NumberFormatException e) {
-                    player.sendMessage("You need to input a number!");
-                    return true;
-                }
-            }
-        }
-        if (cmd.getName().equalsIgnoreCase("setspeed")) {
-            if (args.length == 1) {
-                try {
-                    float number = Float.parseFloat(args[0]);
-                    player.setWalkSpeed(number);
-                    return true;
-                } catch (NumberFormatException e) {
-                    player.sendMessage("You need to input a number!");
-                    return true;
-                }
-            }
-        }
-        // Should be 8000 in the velocity packet
-        if (cmd.getName().equalsIgnoreCase("jump")) {
-            CraftPlayer craftplayer = (CraftPlayer) player;
-            float power = 1;
-            if(args.length == 1) {
-                power = Float.parseFloat(args[0]);
-            }
-            craftplayer.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityVelocity(player.getEntityId(), 0, power, 0));
-            return true;
-        }
-        // Should be 8000 in the velocity packet
-        if (cmd.getName().equalsIgnoreCase("move")) {
-            CraftPlayer craftplayer = (CraftPlayer) player;
-            float power = 1;
-            if(args.length == 1) {
-                power = Float.parseFloat(args[0]);
-            }
-            craftplayer.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityVelocity(player.getEntityId(), power, 0, 0));
-            return true;
-        }
-        return false;
-    }
-
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         Block blockIn = e.getTo().getBlock();
         Block blockOn = e.getFrom().getBlock().getRelative(BlockFace.DOWN);
-        if (blockIn.isLiquid() && !player.isDead()) {
+        if (blockIn.isLiquid() && DamageUtil.canDamage(player, 1000)) {
             DamageUtil.damage(player, null, 1000, 0, true);
         }
     }
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            LivingEntity ent = (LivingEntity) e.getEntity();
-            //ent.getWorld().strikeLightningEffect(ent.getLocation());
-            DamageUtil.damage(ent, null, 1000, 0, true);
+        if(e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
+            if(e.getEntity() instanceof Player) {
+                Player player = (Player) e.getEntity();
+                if(KitManager.getPlayerKit(player) != null) {
+                    if(KitManager.getPlayerKit(player).isInvincible()) {
+                        e.setCancelled(true);
+                        return;
+                    }
+                }
+            }
+            DamageUtil.damage((LivingEntity) e.getEntity(), null, e.getDamage(), 0, true, EntityDamageEvent.DamageCause.FIRE);
+            e.setDamage(0);
+            e.setCancelled(false);
+        }
+        if(e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
             e.setCancelled(true);
+        }
+        if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            e.setCancelled(true);
+            return;
+        }
+        if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.VOID ||
+        e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.LAVA) {
+            Player player = (Player) e.getEntity();
+            if(DamageUtil.canDamage(player, 1000)) {
+                player.getWorld().strikeLightningEffect(player.getLocation());
+                DamageUtil.damage((LivingEntity) e.getEntity(), null, 1000, 0, true, EntityDamageEvent.DamageCause.VOID);
+            }
+            player.teleport(player.getWorld().getSpawnLocation());
+            e.setCancelled(true);
+            return;
+        }
+        if(e.getEntity() instanceof LivingEntity && e.getCause() == EntityDamageEvent.DamageCause.VOID) {
+            DamageUtil.damage((LivingEntity) e.getEntity(), null, 1000, 0, true, EntityDamageEvent.DamageCause.VOID);
         }
     }
 
@@ -147,7 +129,7 @@ public class SSM extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onItemPickup(PlayerPickupItemEvent e) {
-        if(e.getPlayer().getGameMode() == GameMode.CREATIVE) {
+        if(e.getPlayer().getGameMode() == GameMode.CREATIVE && e.getPlayer().isOp()) {
             return;
         }
         e.setCancelled(true);
@@ -155,7 +137,7 @@ public class SSM extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent e) {
-        if(e.getPlayer().getGameMode() == GameMode.CREATIVE) {
+        if(e.getPlayer().getGameMode() == GameMode.CREATIVE && e.getPlayer().isOp()) {
             return;
         }
         e.setCancelled(true);

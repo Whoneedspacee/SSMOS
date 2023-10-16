@@ -4,6 +4,8 @@ import SSM.Abilities.WolfStrike;
 import SSM.Attributes.DoubleJumps.DirectDoubleJump;
 import SSM.Attributes.Ravage;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.Disguises.WolfDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -33,6 +35,7 @@ public class KitWolf extends Kit {
         addAttribute(new DirectDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Ravage(8, 1, 3));
 
+        DisguiseManager.addDisguise(owner, new WolfDisguise(owner));
     }
 
 }

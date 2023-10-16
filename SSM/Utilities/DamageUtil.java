@@ -1,9 +1,10 @@
 package SSM.Utilities;
 
-import SSM.GameManagers.Disguise.Disguise;
+import SSM.GameManagers.Disguises.Disguise;
 import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.GameManager;
 import SSM.GameManagers.KitManager;
-import SSM.SSM;
+import SSM.Kits.Kit;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
@@ -11,7 +12,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.util.Vector;
 
 public class DamageUtil {
@@ -92,36 +92,17 @@ public class DamageUtil {
                 playDamageSound(damagee, damagee.getType());
             }
         }
+        if(damager instanceof Player && cause == DamageCause.PROJECTILE) {
+            Player player = (Player) damager;
+            player.playSound(player.getLocation(), Sound.ORB_PICKUP, 0.5f, 0.5f);
+        }
         if(died && !(damagee instanceof Player)) {
             // Actually kill entities
             damagee.damage(100);
         }
         if(died && damagee instanceof Player) {
-            // Don't do anything before setting to full hp again
-            damagee.setHealth(damagee.getMaxHealth());
-            damagee.teleport(damagee.getWorld().getSpawnLocation());
-            if(disguise != null) {
-                PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus((Entity) disguise.getLiving(), (byte) 3);
-                Utils.sendPacketToAllBut(disguise.getOwner(), packet);
-                disguise.getLiving().dead = true;
-                // Hide player particles while they are dead
-                for(Player player : Bukkit.getOnlinePlayers()) {
-                    player.hidePlayer(disguise.getOwner());
-                }
-                Bukkit.getScheduler().runTaskLater(SSM.getInstance(), new Runnable() {
-                    @Override
-                    public void run() {
-                        // Unhide the player particles
-                        for(Player player : Bukkit.getOnlinePlayers()) {
-                            player.showPlayer(disguise.getOwner());
-                        }
-                        disguise.spawnLiving();
-                        for(Player player : Bukkit.getOnlinePlayers()) {
-                            DisguiseManager.showDisguise(player, disguise.getOwner());
-                        }
-                    }
-                }, 100L);
-            }
+            Player player = (Player) damagee;
+            GameManager.death(player);
         }
         if (damager instanceof Player)
         {
@@ -173,10 +154,17 @@ public class DamageUtil {
     }
 
     public static boolean canDamage(LivingEntity check, double damage) {
+        if(GameManager.getState() != GameManager.GameState.GAME_PLAYING) {
+            return false;
+        }
         EntityLiving entityDamagee = ((CraftLivingEntity)check).getHandle();
         if(check instanceof Player) {
             Player player = (Player) check;
             if(player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE) {
+                return false;
+            }
+            Kit kit = KitManager.getPlayerKit(player);
+            if(kit != null && kit.isInvincible()) {
                 return false;
             }
         }

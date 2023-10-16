@@ -5,9 +5,10 @@ import SSM.Abilities.InkShotgun;
 import SSM.Abilities.SuperSquid;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.Disguises.SquidDisguise;
+import SSM.GameManagers.DisguiseManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Fish;
 import org.bukkit.entity.Player;
 
 public class KitSquid extends Kit {
@@ -18,7 +19,7 @@ public class KitSquid extends Kit {
         this.armor = 5;
         this.regeneration = 0.25;
         this.knockback = 1.5;
-        this.name = "Sky_Squid";
+        this.name = "Sky Squid";
         this.menuItem = Material.INK_SACK;
     }
 
@@ -35,5 +36,7 @@ public class KitSquid extends Kit {
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
+
+        DisguiseManager.addDisguise(owner, new SquidDisguise(owner));
     }
 }

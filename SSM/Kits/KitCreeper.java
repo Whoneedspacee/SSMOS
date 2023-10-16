@@ -3,9 +3,10 @@ package SSM.Kits;
 import SSM.Abilities.Explode;
 import SSM.Abilities.SulphurBomb;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Attributes.Hunger;
 import SSM.Attributes.LightningShield;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.Disguises.CreeperDisguise;
+import SSM.GameManagers.DisguiseManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -36,5 +37,7 @@ public class KitCreeper extends Kit {
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         //addAttribute(new Hunger(10));
         addAttribute(new LightningShield());
+
+        DisguiseManager.addDisguise(owner, new CreeperDisguise(owner));
     }
 }

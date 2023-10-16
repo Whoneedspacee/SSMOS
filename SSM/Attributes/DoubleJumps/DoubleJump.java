@@ -84,10 +84,15 @@ public abstract class DoubleJump extends Attribute {
         }
     }
 
-    protected abstract void jump();
-
     public void activate() {
         jump();
+    }
+
+    protected abstract void jump();
+
+    @Override
+    public void setOwner(Player owner) {
+        super.setOwner(owner);
     }
 
 }

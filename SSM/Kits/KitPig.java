@@ -4,6 +4,8 @@ import SSM.Abilities.BouncyBacon;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.Disguises.PigDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -32,5 +34,7 @@ public class KitPig extends Kit {
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new ExpCharge(0.011F, 1, false));
+
+        DisguiseManager.addDisguise(owner, new PigDisguise(owner));
     }
 }

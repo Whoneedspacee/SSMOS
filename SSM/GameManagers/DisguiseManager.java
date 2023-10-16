@@ -1,42 +1,22 @@
 package SSM.GameManagers;
 
-import SSM.GameManagers.Disguise.Disguise;
-import SSM.GameManagers.Disguise.ZombieDisguise;
-import SSM.Kits.Kit;
+import SSM.GameManagers.Disguises.Disguise;
 import SSM.SSM;
-import SSM.Utilities.DamageUtil;
 import SSM.Utilities.Utils;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.ChannelPromise;
 import net.minecraft.server.v1_8_R3.*;
-import net.minecraft.server.v1_8_R3.Entity;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -55,6 +35,8 @@ public class DisguiseManager implements Listener, Runnable {
     // Player Respawning (when a player dies we need to reload all disguises for them)
     // Everything else should be handled by kits equipping disguises
     // We just need to make sure they show properly if they exist here
+    // This took like a day of constant bug fixing
+    // and google reading, 0/10 don't bother touching this - Whoneedspacee
     public DisguiseManager() {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
@@ -96,7 +78,7 @@ public class DisguiseManager implements Listener, Runnable {
     }
 
     public static void showDisguises(Player player) {
-        for(Player disguised : Bukkit.getOnlinePlayers()) {
+        for(Player disguised : player.getWorld().getPlayers()) {
             if(disguised.equals(player)) {
                 continue;
             }
@@ -107,7 +89,7 @@ public class DisguiseManager implements Listener, Runnable {
     public static void initializePlayer(Player player) {
         ChannelDuplexHandler channelDuplexHandler = new ChannelDuplexHandler() {
             @Override
-            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+            public void channelRead(ChannelHandlerContext channelHandlerContext, Object msg) throws Exception {
                 // Intercept player attack packet
                 // If it's the entity the player is disguised as then redirect to the player instead
                 if(msg instanceof PacketPlayInUseEntity) {
@@ -125,7 +107,16 @@ public class DisguiseManager implements Listener, Runnable {
                         }
                     }
                 }
-                super.channelRead(ctx, msg);
+                // Intercept player arm animation packet
+                // For some reason when within 3-4 blocks of attacking an entity the game sends no packets
+                // So we need to track this one to make abilities like roped arrow work
+                /*if(msg instanceof PacketPlayInArmAnimation) {
+                    Player player = Bukkit.getPlayer(channelHandlerContext.name());
+                    Block block = player.getTargetBlock((HashSet<Byte>) null, 5);
+                    new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR,
+                            player.getItemInHand(), block, null).callEvent();
+                }*/
+                super.channelRead(channelHandlerContext, msg);
             }
             @Override
             public void write(ChannelHandlerContext channelHandlerContext, Object msg, ChannelPromise channelPromise) throws Exception {
@@ -221,7 +212,6 @@ public class DisguiseManager implements Listener, Runnable {
         };
         ChannelPipeline pipeline = ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel.pipeline();
         if(pipeline.get(player.getName()) != null) {
-            Bukkit.broadcastMessage("Removed");
             pipeline.remove(player.getName());
         }
         pipeline.addBefore("packet_handler", player.getName(), channelDuplexHandler);
@@ -236,6 +226,11 @@ public class DisguiseManager implements Listener, Runnable {
     @EventHandler
     public void playerLeave(PlayerQuitEvent e) {
         removeDisguise(e.getPlayer());
+    }
+
+    @EventHandler
+    public void playerChangedWorld(PlayerChangedWorldEvent e) {
+        showDisguises(e.getPlayer());
     }
 
 }

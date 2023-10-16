@@ -25,18 +25,18 @@ public class Compass extends Attribute {
         Location finalLoc = null;
         Location loc = owner.getLocation();
         double finalDist = 101;
-        Collection<? extends Player> nearby = Bukkit.getOnlinePlayers();
-        nearby.remove(owner);
-        for (Entity ent : nearby) {
-            if (!(ent instanceof Player)) {
+        for (Player target : owner.getWorld().getPlayers()) {
+            if (target.equals(owner)) {
                 continue;
             }
-            Player target = (Player) ent;
             double dist = loc.distance(target.getLocation());
             if (dist < finalDist) {
                 finalDist = dist;
                 finalLoc = target.getLocation();
             }
+        }
+        if(finalLoc == null) {
+            return;
         }
         owner.setCompassTarget(finalLoc);
     }

@@ -161,6 +161,9 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
     {
         Entity target = e.getTarget();
         Entity slime = e.getEntity();
+        if(target == null || slime == null) {
+            return;
+        }
         if(!slime.hasMetadata("Slime Owner")) {
             return;
         }

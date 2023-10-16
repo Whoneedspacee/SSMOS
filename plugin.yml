@@ -1,5 +1,5 @@
 main: SSM.SSM
-name: Super_Smash_Mobs_2
+name: SSMOS
 version: 1
 author: Whoneedspacee, SirInHueman, Huxs
 description: 'An open source recreation of Super Smash Mobs'
@@ -8,6 +8,9 @@ commands:
   kit:
     description: 'Applies the kit of the name entered'
     usage: /kit
+  vote:
+    description: 'Opens the voting menu'
+    usage: /vote
   damage:
     description: 'Inflicts the damage proposed'
     usage: /damage number
@@ -20,3 +23,28 @@ commands:
   move:
     description: 'Does a move'
     usage: /move
+  start:
+    description: 'Starts the game.'
+    usage: /start
+  stop:
+    description: 'Stops the game.'
+    usage: /stop
+  getstate:
+    description: 'Gets the state of the game.'
+    usage: /getstate
+  tpworld:
+    description: 'Teleports you to the provided world name.'
+    usage: /tpworld world
+  getloadedworlds:
+    description: 'Prints a list of loaded worlds.'
+    usage: /getloadedworlds
+  loadworld:
+    description: 'Loads the world specified.'
+    usage: /loadworld world
+  unloadworld:
+    description: 'Unloads the world specified.'
+    usage: /unloadworld world
+  spectate:
+    description: 'Toggles whether the player is spectating or not'
+    usage: /spectate
+    aliases: [spec]

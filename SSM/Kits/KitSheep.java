@@ -2,6 +2,8 @@ package SSM.Kits;
 
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.Disguises.SheepDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -30,6 +32,8 @@ public class KitSheep extends Kit {
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(1, 1, 1, Sound.GHAST_FIREBALL));
+
+        DisguiseManager.addDisguise(owner, new SheepDisguise(owner));
     }
 
 }

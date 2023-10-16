@@ -4,6 +4,8 @@ import SSM.Abilities.FlameDash;
 import SSM.Abilities.MagmaBlast;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.Disguises.MagmaCubeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -32,5 +34,7 @@ public class KitMagmaCube extends Kit {
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
+
+        DisguiseManager.addDisguise(owner, new MagmaCubeDisguise(owner));
     }
 }

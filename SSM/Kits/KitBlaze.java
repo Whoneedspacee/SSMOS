@@ -5,6 +5,8 @@ import SSM.Abilities.MilkSpiral;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Potion;
 import SSM.Attributes.Regeneration;
+import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.Disguises.BlazeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -36,6 +38,8 @@ public class KitBlaze extends Kit {
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Potion(PotionEffectType.SPEED, 1));
+
+        DisguiseManager.addDisguise(owner, new BlazeDisguise(owner));
     }
 
 }
