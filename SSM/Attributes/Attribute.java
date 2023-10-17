@@ -84,6 +84,8 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
         return usage;
     }
 
-    public String getUseMessage() { return useMessage; }
+    public String getUseMessage() {
+        return useMessage;
+    }
 
 }

@@ -51,7 +51,7 @@ public class EntityProjectile extends BukkitRunnable {
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                 @Override
                 public void run() {
-                    if(!projectile.isDead()) {
+                    if (!projectile.isDead()) {
                         onHit(null);
                         projectile.remove();
                     }
@@ -76,7 +76,7 @@ public class EntityProjectile extends BukkitRunnable {
                 (learned the hard way)
             }
         }, 2L);*/
-        if(!(projectile instanceof LivingEntity)) {
+        if (!(projectile instanceof LivingEntity)) {
             projectile.setCustomName(name);
         }
         if (projectile instanceof Item) {
@@ -95,7 +95,7 @@ public class EntityProjectile extends BukkitRunnable {
         }
         double yaw = Math.atan2(direction.getZ(), direction.getX()) + EntityProjectile.getRandomSpread(spread);
         double xz = Math.sqrt(direction.getX() * direction.getX() + direction.getZ() * direction.getZ());
-        double pitch = Math.atan2(direction.getY(), xz)  + EntityProjectile.getRandomSpread(spread);
+        double pitch = Math.atan2(direction.getY(), xz) + EntityProjectile.getRandomSpread(spread);
         direction.setX(Math.cos(pitch) * Math.cos(yaw));
         direction.setZ(Math.cos(pitch) * Math.sin(yaw));
         direction.setY(Math.sin(pitch));
@@ -193,7 +193,9 @@ public class EntityProjectile extends BukkitRunnable {
         return firer;
     }
 
-    public void setFirer(Player firer) { this.firer = firer; }
+    public void setFirer(Player firer) {
+        this.firer = firer;
+    }
 
     public boolean getFireOpposite() {
         return fireOpposite;
@@ -295,6 +297,8 @@ public class EntityProjectile extends BukkitRunnable {
         return resetDamageTicks;
     }
 
-    public void setResetDamageTicks(boolean resetDamageTicks) { this.resetDamageTicks = resetDamageTicks; }
+    public void setResetDamageTicks(boolean resetDamageTicks) {
+        this.resetDamageTicks = resetDamageTicks;
+    }
 
 }

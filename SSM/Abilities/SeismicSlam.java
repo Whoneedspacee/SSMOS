@@ -45,10 +45,10 @@ public class SeismicSlam extends Ability implements OwnerRightClickEvent {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if(owner.isDead()) {
+                if (owner.isDead()) {
                     Bukkit.getScheduler().cancelTask(task);
                 }
-                if(Utils.entityIsOnGround(owner)) {
+                if (Utils.entityIsOnGround(owner)) {
                     Bukkit.getScheduler().cancelTask(task);
                     doSlam();
                 }
@@ -69,7 +69,7 @@ public class SeismicSlam extends Ability implements OwnerRightClickEvent {
         owner.getWorld().playSound(owner.getLocation(), Sound.ZOMBIE_WOOD, 2f, 0.2f);
         for (Block check : BlocksUtil.getBlocks(owner.getLocation(), 4)) {
             if (check.getType().isSolid() && !check.getRelative(BlockFace.UP).getType().isSolid()) {
-                if(Math.random() < 0.2) {
+                if (Math.random() < 0.2) {
                     check.getWorld().playEffect(check.getLocation(), Effect.STEP_SOUND, check.getTypeId());
                 }
             }

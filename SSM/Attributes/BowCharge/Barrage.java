@@ -46,17 +46,16 @@ public class Barrage extends BowCharge {
 
     @EventHandler
     public void arrowDamage(EntityDamageByEntityEvent e) {
-        if(e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-            if(e.getDamager() instanceof Arrow) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+            if (e.getDamager() instanceof Arrow) {
                 Arrow arrow = (Arrow) e.getDamager();
                 List<MetadataValue> data = arrow.getMetadata("Barrage Damage");
-                if(data.size() > 0) {
+                if (data.size() > 0) {
                     int damage = data.get(0).asInt();
                     e.setDamage(damage);
-                }
-                else if (arrow.getShooter() instanceof Player) {
+                } else if (arrow.getShooter() instanceof Player) {
                     Player player = (Player) arrow.getShooter();
-                    if(KitManager.getPlayerKit(player) instanceof KitSkeleton) {
+                    if (KitManager.getPlayerKit(player) instanceof KitSkeleton) {
                         e.setDamage(6.0);
                     }
                 }

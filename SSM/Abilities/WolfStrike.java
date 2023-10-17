@@ -1,10 +1,7 @@
 package SSM.Abilities;
 
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
-import SSM.Utilities.DamageUtil;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.util.Vector;
 
 public class WolfStrike extends Ability implements OwnerRightClickEvent {
 

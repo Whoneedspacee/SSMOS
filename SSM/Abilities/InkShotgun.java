@@ -6,7 +6,6 @@ import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;

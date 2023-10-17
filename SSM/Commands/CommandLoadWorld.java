@@ -10,7 +10,7 @@ public class CommandLoadWorld implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String commandLabel, String[] args) {
-        if(args.length < 1) {
+        if (args.length < 1) {
             commandSender.sendMessage("Must specify a world to load.");
             return true;
         }

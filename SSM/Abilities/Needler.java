@@ -3,7 +3,6 @@ package SSM.Abilities;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -37,7 +36,7 @@ public class Needler extends Ability implements OwnerRightClickEvent {
     public void activate() {
         taskID = Bukkit.getScheduler().runTaskTimer(plugin, () ->
         {
-            if(!owner.isBlocking() || fired >= 6) {
+            if (!owner.isBlocking() || fired >= 6) {
                 fired = 0;
                 Bukkit.getScheduler().cancelTask(taskID.getTaskId());
                 return;
@@ -54,11 +53,11 @@ public class Needler extends Ability implements OwnerRightClickEvent {
 
     @EventHandler
     public void arrowDamage(EntityDamageByEntityEvent e) {
-        if(e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-            if(e.getDamager() instanceof Arrow) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+            if (e.getDamager() instanceof Arrow) {
                 Arrow arrow = (Arrow) e.getDamager();
                 List<MetadataValue> data = arrow.getMetadata("Needler");
-                if(data.size() > 0) {
+                if (data.size() > 0) {
                     e.setCancelled(true);
                     DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) arrow.getShooter(), 1.1,
                             1.0, false, EntityDamageEvent.DamageCause.CUSTOM, null, true);

@@ -2,8 +2,8 @@ package SSM.Kits;
 
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
-import SSM.GameManagers.Disguises.ChickenDisguise;
 import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.Disguises.ChickenDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

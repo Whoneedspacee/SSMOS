@@ -4,7 +4,6 @@ import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.VelocityUtil;
 import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;

@@ -11,12 +11,12 @@ public class CommandStop implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String commandLabel, String[] args) {
-        if(!(commandSender instanceof Player)) {
+        if (!(commandSender instanceof Player)) {
             Bukkit.shutdown();
             return true;
         }
-        if(GameManager.getState() == GameManager.GameState.GAME_STARTING ||
-            GameManager.getState() == GameManager.GameState.GAME_PLAYING) {
+        if (GameManager.getState() == GameManager.GameState.GAME_STARTING ||
+                GameManager.getState() == GameManager.GameState.GAME_PLAYING) {
             GameManager.setState(GameManager.GameState.GAME_ENDING);
             GameManager.setTimeLeft(0);
             GameManager.ourInstance.run();

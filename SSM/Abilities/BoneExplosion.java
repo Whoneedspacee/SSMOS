@@ -1,6 +1,5 @@
 package SSM.Abilities;
 
-import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
@@ -13,8 +12,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -46,14 +43,14 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
         List<Entity> boneItems = new ArrayList<Entity>();
         for (int i = 0; i < entity_amount; i++) {
             Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.BONE, 1));
-            item.setVelocity(new Vector((Math.random() - 0.5)*0.8, Math.random()*0.8, (Math.random() - 0.5)*0.8));
+            item.setVelocity(new Vector((Math.random() - 0.5) * 0.8, Math.random() * 0.8, (Math.random() - 0.5) * 0.8));
             item.setPickupDelay(999999);
             boneItems.add(item);
         }
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
             public void run() {
-                for(Entity ent : boneItems) {
+                for (Entity ent : boneItems) {
                     ent.remove();
                 }
             }
@@ -63,7 +60,7 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
         canHit.remove(owner);
         for (Entity entity : canHit) {
             if ((entity instanceof LivingEntity)) {
-                if(!DamageUtil.canDamage((LivingEntity) entity, baseDamage)) {
+                if (!DamageUtil.canDamage((LivingEntity) entity, baseDamage)) {
                     continue;
                 }
                 double dist = loc.distance(entity.getLocation());

@@ -2,12 +2,13 @@ package SSM.Attributes.DoubleJumps;
 
 import SSM.Attributes.Attribute;
 import SSM.Utilities.Utils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 public abstract class DoubleJump extends Attribute {
@@ -55,7 +56,7 @@ public abstract class DoubleJump extends Attribute {
         player.setAllowFlight(false);
         player.setFallDistance(0);
 
-        if(remainingDoubleJumps <= 0) {
+        if (remainingDoubleJumps <= 0) {
             Bukkit.broadcastMessage("Remaining jumps were 0 even though you toggled flight... what?");
         }
 
@@ -77,7 +78,7 @@ public abstract class DoubleJump extends Attribute {
         owner.setAllowFlight(true);
     }
 
-    @EventHandler(priority= EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void entityDamageEvent(EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
             e.setCancelled(true);

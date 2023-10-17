@@ -4,9 +4,9 @@ import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
@@ -35,10 +35,10 @@ public class MilkSpiral extends Ability implements OwnerRightClickEvent {
         world.playSound(ownerLoc, Sound.VILLAGER_IDLE, 1.0F, 1.0F);
         double i = 0;
         double theta = 0;
-        while(i < range) {
+        while (i < range) {
             // Full rotation happens every 4 blocks, which means
             // when i += 4, theta += 2PI, so i += 1 means theta += PI/2
-            i += 1.0/20;
+            i += 1.0 / 20;
             theta += (Math.PI / 2) / 20;
             Vector cone_pos = v1.clone().multiply(Math.cos(theta)).add(v2.clone().multiply(Math.sin(theta))).normalize().multiply(Math.min(i, 2));
             Vector opposite_cone_pos = cone_pos.clone().multiply(-1);

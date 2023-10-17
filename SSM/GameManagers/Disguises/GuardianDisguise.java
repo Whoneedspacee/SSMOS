@@ -1,6 +1,5 @@
 package SSM.GameManagers.Disguises;
 
-import net.minecraft.server.v1_8_R3.EntityEnderman;
 import net.minecraft.server.v1_8_R3.EntityGuardian;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;

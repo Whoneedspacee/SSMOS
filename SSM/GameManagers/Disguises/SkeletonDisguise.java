@@ -23,7 +23,7 @@ public class SkeletonDisguise extends Disguise {
 
     @Override
     public void update() {
-        if(living == null) {
+        if (living == null) {
             return;
         }
         PacketPlayOutEntityEquipment weapon_packet = new PacketPlayOutEntityEquipment(living.getId(), 0, CraftItemStack.asNMSCopy(owner.getItemInHand()));

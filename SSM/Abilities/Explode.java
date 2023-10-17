@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
@@ -44,7 +43,7 @@ public class Explode extends Ability implements OwnerRightClickEvent {
                     Bukkit.getScheduler().cancelTask(task);
                     return;
                 }
-                float elapsed_time = (float) ((System.currentTimeMillis() - start_time)/1000.0);
+                float elapsed_time = (float) ((System.currentTimeMillis() - start_time) / 1000.0);
                 owner.getWorld().playSound(owner.getLocation(), Sound.CREEPER_HISS, 0.5f + elapsed_time, 0.5f + elapsed_time);
                 owner.setVelocity(new Vector(0, 0, 0));
                 // Disguise Stuff

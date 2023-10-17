@@ -6,7 +6,6 @@ import SSM.Kits.Kit;
 import SSM.SSM;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -43,7 +42,7 @@ public class CooldownManager extends BukkitRunnable {
 
             Ability using = KitManager.getCurrentAbility(currData.getAbilityUser());
 
-            if(using != null && using.equals(currData.getAttribute())) {
+            if (using != null && using.equals(currData.getAttribute())) {
                 displayCooldownTo(currData.getAbilityUser(), currData);
             }
 
@@ -92,7 +91,7 @@ public class CooldownManager extends BukkitRunnable {
     }
 
     /**
-     * @param attribute     used to reference cooldown (should be ability)
+     * @param attribute   used to reference cooldown (should be ability)
      * @param duration    time in milliseconds for cooldown duration
      * @param abilityUser player using the ability (cooldownData linked with this player)
      */
@@ -135,7 +134,7 @@ public class CooldownManager extends BukkitRunnable {
      */
     private class CooldownData {
         private Player abilityUser;
-        private Attribute attribute ;
+        private Attribute attribute;
         private long duration;
         private long startTime;
 
@@ -150,9 +149,13 @@ public class CooldownManager extends BukkitRunnable {
             return startTime + duration - System.currentTimeMillis();
         }
 
-        long getTimeElapsedMs() { return System.currentTimeMillis() - startTime; }
+        long getTimeElapsedMs() {
+            return System.currentTimeMillis() - startTime;
+        }
 
-        long getStartTime() { return startTime; }
+        long getStartTime() {
+            return startTime;
+        }
 
         Player getAbilityUser() {
             return abilityUser;

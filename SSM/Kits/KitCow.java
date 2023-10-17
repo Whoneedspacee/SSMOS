@@ -1,7 +1,6 @@
 package SSM.Kits;
 
 import SSM.Abilities.InkShotgun;
-import SSM.Abilities.MilkSpiral;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Attributes.Stampede;

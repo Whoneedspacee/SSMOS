@@ -1,12 +1,7 @@
 package SSM.Attributes;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import java.util.Collection;
-import java.util.List;
 
 public class Compass extends Attribute {
 
@@ -35,7 +30,7 @@ public class Compass extends Attribute {
                 finalLoc = target.getLocation();
             }
         }
-        if(finalLoc == null) {
+        if (finalLoc == null) {
             return;
         }
         owner.setCompassTarget(finalLoc);

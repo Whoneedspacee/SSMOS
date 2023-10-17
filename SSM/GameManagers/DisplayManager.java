@@ -7,9 +7,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.*;
-
-import java.util.HashMap;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 public class DisplayManager implements Listener {
 
@@ -24,13 +24,13 @@ public class DisplayManager implements Listener {
     }
 
     public static void buildScoreboard() {
-        if(GameManager.getState() == GameManager.GameState.LOBBY_WAITING) {
-            for(Player player : Bukkit.getOnlinePlayers()) {
+        if (GameManager.getState() == GameManager.GameState.LOBBY_WAITING) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
                 Objective obj = scoreboard.registerNewObjective("menu", "dummy");
                 Kit kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
-                if(kit != null) {
+                if (kit != null) {
                     kit_name = kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Waiting for players...");
@@ -51,13 +51,13 @@ public class DisplayManager implements Listener {
             }
             return;
         }
-        if(GameManager.getState() == GameManager.GameState.LOBBY_VOTING) {
-            for(Player player : Bukkit.getOnlinePlayers()) {
+        if (GameManager.getState() == GameManager.GameState.LOBBY_VOTING) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
                 Objective obj = scoreboard.registerNewObjective("menu", "dummy");
                 Kit kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
-                if(kit != null) {
+                if (kit != null) {
                     kit_name = kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Voting ends in " + GameManager.getTimeLeft() + " seconds");
@@ -78,13 +78,13 @@ public class DisplayManager implements Listener {
             }
             return;
         }
-        if(GameManager.getState() == GameManager.GameState.LOBBY_STARTING) {
-            for(Player player : Bukkit.getOnlinePlayers()) {
+        if (GameManager.getState() == GameManager.GameState.LOBBY_STARTING) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
                 Objective obj = scoreboard.registerNewObjective("menu", "dummy");
                 Kit kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
-                if(kit != null) {
+                if (kit != null) {
                     kit_name = kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Starting in " + GameManager.getTimeLeft() + " seconds");
@@ -105,13 +105,13 @@ public class DisplayManager implements Listener {
             }
             return;
         }
-        if(GameManager.getState() == GameManager.GameState.GAME_STARTING) {
-            for(Player player : Bukkit.getOnlinePlayers()) {
+        if (GameManager.getState() == GameManager.GameState.GAME_STARTING) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
                 Objective obj = scoreboard.registerNewObjective("menu", "dummy");
                 Kit kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
-                if(kit != null) {
+                if (kit != null) {
                     kit_name = kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "SSMOS");
@@ -124,20 +124,20 @@ public class DisplayManager implements Listener {
             }
             return;
         }
-        if(GameManager.getState() == GameManager.GameState.GAME_PLAYING) {
-            for(Player player : Bukkit.getOnlinePlayers()) {
+        if (GameManager.getState() == GameManager.GameState.GAME_PLAYING) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
                 Objective obj = scoreboard.registerNewObjective("menu", "dummy");
                 Kit kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
-                if(kit != null) {
+                if (kit != null) {
                     kit_name = kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "SSMOS");
                 obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 int score = 1;
                 obj.getScore("").setScore(score++);
-                for(Player add : GameManager.getAllLives().keySet()) {
+                for (Player add : GameManager.getAllLives().keySet()) {
                     obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
                 }
                 obj.getScore(ChatColor.RED + "").setScore(score++);
@@ -147,7 +147,7 @@ public class DisplayManager implements Listener {
             }
             return;
         }
-        if(GameManager.getState() == GameManager.GameState.GAME_ENDING) {
+        if (GameManager.getState() == GameManager.GameState.GAME_ENDING) {
             return;
         }
     }
@@ -157,13 +157,11 @@ public class DisplayManager implements Listener {
     }
 
     public static ChatColor getLivesColor(int lives) {
-        if(lives >= 4) {
+        if (lives >= 4) {
             return ChatColor.GREEN;
-        }
-        else if(lives == 3) {
+        } else if (lives == 3) {
             return ChatColor.YELLOW;
-        }
-        else if(lives == 2) {
+        } else if (lives == 2) {
             return ChatColor.GOLD;
         }
         return ChatColor.RED;

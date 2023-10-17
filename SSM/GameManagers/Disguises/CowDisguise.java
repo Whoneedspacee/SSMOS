@@ -1,7 +1,7 @@
 package SSM.GameManagers.Disguises;
 
-import SSM.Utilities.Utils;
-import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_8_R3.EntityCow;
+import net.minecraft.server.v1_8_R3.EntityLiving;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

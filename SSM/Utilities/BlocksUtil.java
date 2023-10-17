@@ -8,7 +8,7 @@ import java.util.List;
 
 public class BlocksUtil {
 
-    public static List<Block> getBlocks(Location start, int radius){
+    public static List<Block> getBlocks(Location start, int radius) {
         if (radius <= 0) {
             return new ArrayList<Block>(0);
         }

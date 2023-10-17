@@ -2,22 +2,11 @@ package SSM.Abilities;
 
 import SSM.GameManagers.KitManager;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
-import SSM.GameManagers.OwnerEvents.OwnerTakeDamageEvent;
 import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.scheduler.BukkitTask;
-
-import java.util.List;
 
 public class SuperSquid extends Ability implements OwnerRightClickEvent {
 
@@ -38,14 +27,15 @@ public class SuperSquid extends Ability implements OwnerRightClickEvent {
     public void activate() {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int ticks = 0;
+
             @Override
             public void run() {
                 ticks++;
-                if(KitManager.getPlayerKit(owner) == null) {
+                if (KitManager.getPlayerKit(owner) == null) {
                     Bukkit.getScheduler().cancelTask(task);
                     return;
                 }
-                if(!owner.isBlocking() || ticks >= 22) {
+                if (!owner.isBlocking() || ticks >= 22) {
                     Bukkit.getScheduler().cancelTask(task);
                     KitManager.getPlayerKit(owner).setInvincible(false);
                     return;

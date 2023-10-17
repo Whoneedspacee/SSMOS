@@ -4,7 +4,6 @@ import SSM.Abilities.Ability;
 import SSM.Attributes.Attribute;
 import SSM.GameManagers.DisguiseManager;
 import SSM.SSM;
-import net.minecraft.server.v1_8_R3.Packet;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -45,11 +44,11 @@ public abstract class Kit {
     }
 
     public void equipKit(Player player) {
-        if(created) {
+        if (created) {
             Bukkit.broadcastMessage(ChatColor.RED + "Tried to equip same kit instance twice.");
             return;
         }
-        if(player == null) {
+        if (player == null) {
             Bukkit.broadcastMessage(ChatColor.RED + "Tried to equip null player.");
             return;
         }
@@ -144,7 +143,9 @@ public abstract class Kit {
         invincible = set;
     }
 
-    public boolean isInvincible() { return invincible; }
+    public boolean isInvincible() {
+        return invincible;
+    }
 
     public void setMelee(double melee) {
         damage = melee;

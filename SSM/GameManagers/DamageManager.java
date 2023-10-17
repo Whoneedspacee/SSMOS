@@ -3,21 +3,15 @@ package SSM.GameManagers;
 import SSM.Kits.Kit;
 import SSM.SSM;
 import SSM.Utilities.DamageUtil;
-import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.List;
 
 public class DamageManager implements Listener {
 
@@ -33,7 +27,7 @@ public class DamageManager implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void customDamage(EntityDamageByEntityEvent e) {
         // Something else didn't want this to happen and we are going to listen
-        if(e.isCancelled()) {
+        if (e.isCancelled()) {
             return;
         }
         // Cancel the event since we're going to handle all the information
@@ -42,45 +36,41 @@ public class DamageManager implements Listener {
         if (entity instanceof Player) {
             Player player = (Player) entity;
             Kit playerKit = KitManager.getPlayerKit(player);
-            if(playerKit == null) {
+            if (playerKit == null) {
                 return;
             }
-            if(e.getEntity() instanceof LivingEntity && e.getDamager() instanceof LivingEntity) {
+            if (e.getEntity() instanceof LivingEntity && e.getDamager() instanceof LivingEntity) {
                 DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), playerKit.getMelee(),
                         1.0, false, DamageCause.ENTITY_ATTACK);
             }
-        }
-        else if(entity instanceof Projectile) {
+        } else if (entity instanceof Projectile) {
             // We are technically checking this twice but this is easier to avoid stuff like arrow dings
-            if(!DamageUtil.canDamage((LivingEntity) e.getEntity(), e.getDamage())) {
+            if (!DamageUtil.canDamage((LivingEntity) e.getEntity(), e.getDamage())) {
                 return;
             }
             Projectile projectile = (Projectile) entity;
             LivingEntity livingEntity = null;
-            if(projectile.getShooter() instanceof LivingEntity) {
+            if (projectile.getShooter() instanceof LivingEntity) {
                 livingEntity = (LivingEntity) projectile.getShooter();
             }
             DamageUtil.damage((LivingEntity) e.getEntity(), livingEntity, e.getDamage(),
                     1.0, false, DamageCause.PROJECTILE,
                     e.getEntity().getLocation().subtract(projectile.getVelocity()));
-        }
-        else if(e.getCause() == DamageCause.ENTITY_ATTACK) {
+        } else if (e.getCause() == DamageCause.ENTITY_ATTACK) {
             DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), e.getDamage(),
                     1.0, false, DamageCause.ENTITY_ATTACK);
-        }
-        else if(e.getCause() == DamageCause.ENTITY_EXPLOSION) {
+        } else if (e.getCause() == DamageCause.ENTITY_EXPLOSION) {
             DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), e.getDamage(),
                     1.0, false, DamageCause.ENTITY_EXPLOSION);
-        }
-        else {
+        } else {
             Bukkit.broadcastMessage("Unhandled Cause: " + e.getCause().toString());
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void clearArrow(ProjectileHitEvent e) {
-        if(e.getEntity() instanceof Arrow) {
-            if(e.getHitEntity() != null) {
+        if (e.getEntity() instanceof Arrow) {
+            if (e.getHitEntity() != null) {
                 e.getEntity().remove();
                 return;
             }

@@ -26,8 +26,8 @@ public class KitTemporarySpectator extends Kit implements Listener {
         owner.setFlying(true);
 
         // Hide player, prevents projectile and melee hitting
-        for(Player hidefrom : Bukkit.getOnlinePlayers()) {
-            if(player.equals(hidefrom)) {
+        for (Player hidefrom : Bukkit.getOnlinePlayers()) {
+            if (player.equals(hidefrom)) {
                 continue;
             }
             hidefrom.hidePlayer(player);
@@ -35,10 +35,10 @@ public class KitTemporarySpectator extends Kit implements Listener {
     }
 
     public void destroyKit() {
-        if(owner != null) {
+        if (owner != null) {
             // Unhide owner
-            for(Player hidefrom : Bukkit.getOnlinePlayers()) {
-                if(owner.equals(hidefrom)) {
+            for (Player hidefrom : Bukkit.getOnlinePlayers()) {
+                if (owner.equals(hidefrom)) {
                     continue;
                 }
                 hidefrom.showPlayer(owner);

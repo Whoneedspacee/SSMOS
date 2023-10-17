@@ -3,7 +3,6 @@ package SSM.GameManagers.Disguises;
 import SSM.Utilities.Utils;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.EntitySkeleton;
-import net.minecraft.server.v1_8_R3.EntityWitch;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityEquipment;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
@@ -26,7 +25,7 @@ public class WitherSkeletonDisguise extends Disguise {
 
     @Override
     public void update() {
-        if(living == null) {
+        if (living == null) {
             return;
         }
         PacketPlayOutEntityEquipment weapon_packet = new PacketPlayOutEntityEquipment(living.getId(), 0, CraftItemStack.asNMSCopy(owner.getItemInHand()));

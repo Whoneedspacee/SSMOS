@@ -1,8 +1,6 @@
 package SSM.GameManagers;
 
-import SSM.Commands.CommandLoadWorld;
 import SSM.Commands.CommandVote;
-import SSM.GameManagers.KitManager;
 import SSM.GameManagers.Maps.MapFile;
 import SSM.Kits.Kit;
 import SSM.Kits.KitTemporarySpectator;
@@ -19,19 +17,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.util.Vector;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,7 +35,7 @@ public class GameManager implements Listener, Runnable {
         public static final short GAME_ENDING = 5;
 
         public static String toString(short state) {
-            switch(state) {
+            switch (state) {
                 case LOBBY_WAITING -> {
                     return "Lobby Waiting";
                 }
@@ -85,28 +73,27 @@ public class GameManager implements Listener, Runnable {
     public GameManager() {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
-        for(Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             players.add(player);
         }
-        for(Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             player.teleport(lobby_world.getSpawnLocation());
         }
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 20L);
         File file = new File("ssm_maps");
-        if(!file.exists()) {
+        if (!file.exists()) {
             file.mkdir();
         }
-        for(File map : file.listFiles()) {
-            if(!map.isDirectory()) {
+        for (File map : file.listFiles()) {
+            if (!map.isDirectory()) {
                 continue;
             }
-            if(map.getName().contains("copy")) {
+            if (map.getName().contains("copy")) {
                 World world = Bukkit.getWorld(map.getPath());
                 Bukkit.unloadWorld(world, false);
                 try {
                     FileUtils.deleteDirectory(map);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Bukkit.broadcastMessage("Failed to delete map: " + map.getName());
                 }
                 continue;
@@ -119,37 +106,37 @@ public class GameManager implements Listener, Runnable {
     public void run() {
         //Bukkit.broadcastMessage(GameState.toString(state) + " Time Left: " + time_left);
         DisplayManager.buildScoreboard();
-        if(state == GameState.LOBBY_WAITING) {
+        if (state == GameState.LOBBY_WAITING) {
             players = lobby_world.getPlayers();
             doLobbyWaiting();
             return;
         }
-        if(state == GameState.LOBBY_VOTING) {
+        if (state == GameState.LOBBY_VOTING) {
             players = lobby_world.getPlayers();
             doLobbyVoting();
             return;
         }
-        if(state == GameState.LOBBY_STARTING) {
+        if (state == GameState.LOBBY_STARTING) {
             players = lobby_world.getPlayers();
             doLobbyStarting();
             return;
         }
-        if(state == GameState.GAME_STARTING) {
+        if (state == GameState.GAME_STARTING) {
             doGameStarting();
             return;
         }
-        if(state == GameState.GAME_PLAYING) {
+        if (state == GameState.GAME_PLAYING) {
             doGamePlaying();
             return;
         }
-        if(state == GameState.GAME_ENDING) {
+        if (state == GameState.GAME_ENDING) {
             doGameEnding();
             return;
         }
     }
 
     private void doLobbyWaiting() {
-        if(getTotalPlayers() >= 2) {
+        if (getTotalPlayers() >= 2) {
             setTimeLeft(16);
             setState(GameState.LOBBY_VOTING);
             run();
@@ -158,16 +145,15 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doLobbyVoting() {
-        if(getTotalPlayers() <= 1) {
+        if (getTotalPlayers() <= 1) {
             setState(GameState.LOBBY_WAITING);
             run();
             return;
         }
-        if(time_left <= 0) {
+        if (time_left <= 0) {
             chosen_map = getChosenMap();
             Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + chosen_map.getName() + ChatColor.WHITE + ChatColor.BOLD + " won the vote!");
-            for (Player player : lobby_world.getPlayers())
-            {
+            for (Player player : lobby_world.getPlayers()) {
                 player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
             }
             chosen_map.createWorld();
@@ -180,37 +166,36 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doLobbyStarting() {
-        if(getTotalPlayers() <= 1) {
+        if (getTotalPlayers() <= 1) {
             setState(GameState.LOBBY_WAITING);
             run();
             return;
         }
-        if(time_left <= 0) {
-            if(chosen_map == null) {
+        if (time_left <= 0) {
+            if (chosen_map == null) {
                 return;
             }
-            for(Player player : players) {
+            for (Player player : players) {
                 player.teleport(chosen_map.getRandomRespawnPoint());
-                if(isSpectator(player)) {
+                if (isSpectator(player)) {
                     continue;
                 }
                 lives.put(player, 4);
             }
-            for (Player player : chosen_map.getCopyWorld().getPlayers())
-            {
+            for (Player player : chosen_map.getCopyWorld().getPlayers()) {
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
             }
             // Wait until after teleporting to display disguises properly
-            for(Player player : chosen_map.getCopyWorld().getPlayers()) {
+            for (Player player : chosen_map.getCopyWorld().getPlayers()) {
                 // Refresh so people who already had kits equipped get shown
                 // Unfortunately packet mobs don't transfer when we teleport
                 DisguiseManager.showDisguises(player);
-                if(isSpectator(player)) {
+                if (isSpectator(player)) {
                     KitManager.equipPlayer(player, new KitTemporarySpectator());
                     continue;
                 }
                 Kit kit = KitManager.getPlayerKit(player);
-                if(kit == null) {
+                if (kit == null) {
                     KitManager.equipPlayer(player, KitManager.getAllKits().get(0));
                 }
             }
@@ -223,13 +208,13 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doGameStarting() {
-        if(getTotalPlayers() <= 1) {
+        if (getTotalPlayers() <= 1) {
             setTimeLeft(0);
             setState(GameState.GAME_ENDING);
             run();
             return;
         }
-        if(time_left <= 0) {
+        if (time_left <= 0) {
             setState(GameState.GAME_PLAYING);
             run();
             return;
@@ -238,12 +223,12 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doGamePlaying() {
-        if(getTotalPlayers() <= 1) {
+        if (getTotalPlayers() <= 1) {
             setState(GameState.GAME_ENDING);
             run();
             return;
         }
-        if(lives.size() <= 1) {
+        if (lives.size() <= 1) {
             Bukkit.broadcastMessage(lives.keySet().toArray(new Player[1])[0].getName() + " won the game!");
             lives.clear();
             setTimeLeft(11);
@@ -254,10 +239,10 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doGameEnding() {
-        if(time_left <= 0) {
+        if (time_left <= 0) {
             players.clear();
             lives.clear();
-            for(Player player : Bukkit.getOnlinePlayers()) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 player.teleport(lobby_world.getSpawnLocation());
                 players.add(player);
                 KitManager.unequipPlayer(player);
@@ -271,15 +256,15 @@ public class GameManager implements Listener, Runnable {
     }
 
     public static void death(Player player) {
-        if(lives.get(player) == null) {
+        if (lives.get(player) == null) {
             return;
         }
         // Don't do anything before setting to full hp again
         player.setHealth(player.getMaxHealth());
         // Blood Particles
         EffectUtil.createEffect(player.getEyeLocation(), 10, 0.5, Sound.HURT_FLESH,
-                1f, 1f, Material.INK_SACK, (byte)1, 10, true);
-        if(lives.get(player) <= 1) {
+                1f, 1f, Material.INK_SACK, (byte) 1, 10, true);
+        if (lives.get(player) <= 1) {
             lives.remove(player);
             KitManager.equipPlayer(player, new KitTemporarySpectator());
             DisplayManager.buildScoreboard();
@@ -292,11 +277,12 @@ public class GameManager implements Listener, Runnable {
         Bukkit.getScheduler().scheduleSyncDelayedTask(SSM.getInstance(), new Runnable() {
             @Override
             public void run() {
-                if(state == GameState.GAME_PLAYING && lives.get(player) > 0) {
+                if (state == GameState.GAME_PLAYING && lives.get(player) > 0) {
                     player.teleport(chosen_map.getRandomRespawnPoint());
-                    if(!kit.getName().equals("Temporary Spectator")) {
+                    if (!kit.getName().equals("Temporary Spectator")) {
                         KitManager.equipPlayer(player, kit);
                     }
+                    DisguiseManager.showDisguises(player);
                 }
             }
         }, 100L);
@@ -304,7 +290,7 @@ public class GameManager implements Listener, Runnable {
 
     // Not for temporary spectators, for people who want to spectate all games
     public static void toggleSpectator(Player player) {
-        if(spectators.contains(player)) {
+        if (spectators.contains(player)) {
             spectators.remove(player);
             return;
         }
@@ -337,7 +323,7 @@ public class GameManager implements Listener, Runnable {
     }
 
     public static int getLives(Player player) {
-        if(lives.get(player) == null) {
+        if (lives.get(player) == null) {
             return 0;
         }
         return lives.get(player);
@@ -352,9 +338,9 @@ public class GameManager implements Listener, Runnable {
     }
 
     public static MapFile getCurrentVotedMap(Player player) {
-        for(MapFile mapfile : all_maps) {
+        for (MapFile mapfile : all_maps) {
             List<Player> current = mapfile.getVoted();
-            if(current.contains(player)) {
+            if (current.contains(player)) {
                 return mapfile;
             }
         }
@@ -362,33 +348,33 @@ public class GameManager implements Listener, Runnable {
     }
 
     public static int getVotesFor(MapFile mapfile) {
-        if(mapfile == null) {
+        if (mapfile == null) {
             return 0;
         }
         return mapfile.getVoted().size();
     }
 
     public static MapFile getChosenMap() {
-        if(all_maps.size() == 0) {
+        if (all_maps.size() == 0) {
             Bukkit.broadcastMessage("SSM Maps Folder Empty, loading Default World");
             return new MapFile(Bukkit.getWorlds().get(0).getWorldFolder());
         }
         // Calculate max voted map
         int max = 0;
-        for(MapFile mapfile : all_maps) {
+        for (MapFile mapfile : all_maps) {
             List<Player> votes = mapfile.getVoted();
-            if(votes != null && votes.size() > max) {
+            if (votes != null && votes.size() > max) {
                 max = votes.size();
             }
         }
-        if(max == 0) {
+        if (max == 0) {
             return all_maps.get((int) (Math.random() * all_maps.size()));
         }
         // Get tied maps
         List<MapFile> tied = new ArrayList<MapFile>();
-        for(MapFile mapfile : all_maps) {
+        for (MapFile mapfile : all_maps) {
             List<Player> votes = mapfile.getVoted();
-            if(votes.size() >= max) {
+            if (votes.size() >= max) {
                 tied.add(mapfile);
             }
         }
@@ -397,8 +383,8 @@ public class GameManager implements Listener, Runnable {
     }
 
     @EventHandler
-    public void PlayerJoin(PlayerJoinEvent e){
-        if(state >= GameState.GAME_STARTING) {
+    public void PlayerJoin(PlayerJoinEvent e) {
+        if (state >= GameState.GAME_STARTING) {
             e.getPlayer().teleport(chosen_map.getCopyWorld().getSpawnLocation());
             KitManager.equipPlayer(e.getPlayer(), new KitTemporarySpectator());
             return;
@@ -423,15 +409,15 @@ public class GameManager implements Listener, Runnable {
         if (item == null) {
             return;
         }
-        if(!e.getView().getTitle().contains("Vote")) {
+        if (!e.getView().getTitle().contains("Vote")) {
             return;
         }
-        if(GameManager.getState() > GameManager.GameState.LOBBY_VOTING) {
+        if (GameManager.getState() > GameManager.GameState.LOBBY_VOTING) {
             player.closeInventory();
             return;
         }
         ItemMeta meta = item.getItemMeta();
-        if(meta == null || meta != null && meta.getLore() == null) {
+        if (meta == null || meta != null && meta.getLore() == null) {
             return;
         }
         String meta_name = meta.getLore().get(0);
@@ -439,14 +425,14 @@ public class GameManager implements Listener, Runnable {
             String name = mapfile.getName();
             if (name.equals(meta_name)) {
                 List<Player> current = mapfile.getVoted();
-                if(current == null) {
+                if (current == null) {
                     current = new ArrayList<Player>();
                 }
-                if(current.contains(player)) {
+                if (current.contains(player)) {
                     current.remove(player);
                     break;
                 }
-                for(MapFile remove : all_maps) {
+                for (MapFile remove : all_maps) {
                     remove.getVoted().remove(player);
                 }
                 current.add(player);

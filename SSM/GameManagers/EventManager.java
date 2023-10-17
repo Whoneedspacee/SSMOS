@@ -31,7 +31,7 @@ public class EventManager implements Listener {
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         Ability ability = KitManager.getCurrentAbility(player);
-        if(ability == null) {
+        if (ability == null) {
             return;
         }
         if (ability instanceof OwnerLeftClickEvent && (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK)) {
@@ -49,7 +49,7 @@ public class EventManager implements Listener {
         Entity entity = e.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if(KitManager.getPlayerKit(player) == null) {
+            if (KitManager.getPlayerKit(player) == null) {
                 return;
             }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
@@ -68,7 +68,7 @@ public class EventManager implements Listener {
         Entity damager = e.getDamager();
         if (damager instanceof Player) {
             Player player = (Player) damager;
-            if(KitManager.getPlayerKit(player) == null) {
+            if (KitManager.getPlayerKit(player) == null) {
                 return;
             }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
@@ -79,9 +79,9 @@ public class EventManager implements Listener {
                 }
             }
         }
-        if(damagee instanceof Player) {
+        if (damagee instanceof Player) {
             Player player = (Player) damagee;
-            if(KitManager.getPlayerKit(player) == null) {
+            if (KitManager.getPlayerKit(player) == null) {
                 return;
             }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();

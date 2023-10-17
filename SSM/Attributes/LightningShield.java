@@ -6,10 +6,8 @@ import SSM.Utilities.DamageUtil;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -25,7 +23,7 @@ public class LightningShield extends Attribute implements OwnerTakeDamageEvent, 
             @Override
             public void run() {
                 ticks_remaining--;
-                if(ticks_remaining <= 0 && active) {
+                if (ticks_remaining <= 0 && active) {
                     deactivate();
                 }
             }
@@ -49,11 +47,11 @@ public class LightningShield extends Attribute implements OwnerTakeDamageEvent, 
 
     @Override
     public void onOwnerTakeDamage(EntityDamageEvent e) {
-        if(e.isCancelled()) {
+        if (e.isCancelled()) {
             return;
         }
         // This happens after EntityDamageByEntityEvent so this is fine
-        if(e.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
+        if (e.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
                 e.getCause() != EntityDamageEvent.DamageCause.FIRE_TICK) {
             activate();
         }
@@ -61,8 +59,8 @@ public class LightningShield extends Attribute implements OwnerTakeDamageEvent, 
 
     @Override
     public void onEntityDamageOwner(EntityDamageByEntityEvent e) {
-        if(active && e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-            if(e.getDamager() instanceof LivingEntity) {
+        if (active && e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            if (e.getDamager() instanceof LivingEntity) {
                 LivingEntity target = (LivingEntity) e.getDamager();
                 doLightning(target);
                 e.setCancelled(true);

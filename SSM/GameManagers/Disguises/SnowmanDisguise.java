@@ -1,7 +1,6 @@
 package SSM.GameManagers.Disguises;
 
 import net.minecraft.server.v1_8_R3.EntityLiving;
-import net.minecraft.server.v1_8_R3.EntitySheep;
 import net.minecraft.server.v1_8_R3.EntitySnowman;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.EntityType;

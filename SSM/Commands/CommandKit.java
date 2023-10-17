@@ -4,7 +4,6 @@ import SSM.GameManagers.KitManager;
 import SSM.Kits.Kit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,7 +20,7 @@ public class CommandKit implements CommandExecutor {
             return true;
         }
         Player player = (Player) commandSender;
-        if(args.length >= 1) {
+        if (args.length >= 1) {
             StringBuilder builder = new StringBuilder();
             for (String value : args) {
                 builder.append(value);
@@ -30,7 +29,7 @@ public class CommandKit implements CommandExecutor {
             builder.deleteCharAt(builder.length() - 1);
             String kitname = builder.toString();
             for (Kit kit : KitManager.getAllKits()) {
-                if(kit.getName().equalsIgnoreCase(kitname)) {
+                if (kit.getName().equalsIgnoreCase(kitname)) {
                     KitManager.equipPlayer(player, kit);
                     return true;
                 }

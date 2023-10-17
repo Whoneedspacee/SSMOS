@@ -7,10 +7,12 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.ChannelPromise;
-import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_8_R3.DataWatcher;
+import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -41,7 +43,7 @@ public class DisguiseManager implements Listener, Runnable {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
         Bukkit.getScheduler().runTaskTimer(plugin, this, 0L, 0L);
-        for(Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             initializePlayer(player);
         }
     }
@@ -49,7 +51,7 @@ public class DisguiseManager implements Listener, Runnable {
     @Override
     public void run() {
         // This is inefficient obviously, but I can't bother with every corner case personally
-        for(Player player: disguises.keySet()) {
+        for (Player player : disguises.keySet()) {
             Disguise disguise = disguises.get(player);
             disguise.update();
         }
@@ -62,7 +64,7 @@ public class DisguiseManager implements Listener, Runnable {
 
     public static void removeDisguise(Player player) {
         Disguise disguise = disguises.get(player);
-        if(disguise == null) {
+        if (disguise == null) {
             return;
         }
         disguise.deleteLiving();
@@ -71,15 +73,15 @@ public class DisguiseManager implements Listener, Runnable {
 
     public static void showDisguise(Player player, Player disguised) {
         Disguise disguise = disguises.get(disguised);
-        if(disguise == null) {
+        if (disguise == null) {
             return;
         }
         disguise.showDisguise(player);
     }
 
     public static void showDisguises(Player player) {
-        for(Player disguised : player.getWorld().getPlayers()) {
-            if(disguised.equals(player)) {
+        for (Player disguised : player.getWorld().getPlayers()) {
+            if (disguised.equals(player)) {
                 continue;
             }
             showDisguise(player, disguised);
@@ -92,15 +94,15 @@ public class DisguiseManager implements Listener, Runnable {
             public void channelRead(ChannelHandlerContext channelHandlerContext, Object msg) throws Exception {
                 // Intercept player attack packet
                 // If it's the entity the player is disguised as then redirect to the player instead
-                if(msg instanceof PacketPlayInUseEntity) {
+                if (msg instanceof PacketPlayInUseEntity) {
                     PacketPlayInUseEntity packet = (PacketPlayInUseEntity) msg;
                     Field f = packet.getClass().getDeclaredField("a");
                     f.setAccessible(true);
                     int id = Integer.parseInt(f.get(packet).toString());
                     PacketPlayInUseEntity.EnumEntityUseAction action = packet.a();
-                    if(action.equals(PacketPlayInUseEntity.EnumEntityUseAction.ATTACK)) {
-                        for(Disguise disguise : DisguiseManager.disguises.values()) {
-                            if(disguise.getLiving().getId() == id ||
+                    if (action.equals(PacketPlayInUseEntity.EnumEntityUseAction.ATTACK)) {
+                        for (Disguise disguise : DisguiseManager.disguises.values()) {
+                            if (disguise.getLiving().getId() == id ||
                                     disguise.getSquid().getId() == id) {
                                 f.setInt(packet, disguise.getOwner().getEntityId());
                             }
@@ -118,9 +120,10 @@ public class DisguiseManager implements Listener, Runnable {
                 }*/
                 super.channelRead(channelHandlerContext, msg);
             }
+
             @Override
             public void write(ChannelHandlerContext channelHandlerContext, Object msg, ChannelPromise channelPromise) throws Exception {
-                if(msg instanceof PacketPlayOutEntityMetadata) {
+                if (msg instanceof PacketPlayOutEntityMetadata) {
                     try {
                         PacketPlayOutEntityMetadata packet = (PacketPlayOutEntityMetadata) msg;
                         Field f = packet.getClass().getDeclaredField("a");
@@ -137,18 +140,18 @@ public class DisguiseManager implements Listener, Runnable {
                                 f.setAccessible(true);
                                 List<DataWatcher.WatchableObject> objects = (List<DataWatcher.WatchableObject>) f.get(packet);
                                 DataWatcher.WatchableObject invisible_data = null;
-                                for(DataWatcher.WatchableObject check : objects) {
+                                for (DataWatcher.WatchableObject check : objects) {
                                     //Bukkit.broadcastMessage(check.c() + " " + check.a() + " " + check.b().toString());
                                     int index = check.a();
-                                    if(index == 0) {
+                                    if (index == 0) {
                                         invisible_data = check;
                                         break;
                                     }
                                 }
-                                if(invisible_data == null) {
+                                if (invisible_data == null) {
                                     break;
                                 }
-                                if((((byte) invisible_data.b()) & 0x20) > 0) {
+                                if ((((byte) invisible_data.b()) & 0x20) > 0) {
                                     // Must use new datawatcher since calling watch on the main one
                                     // Will make a new packet and cause a infinite chain
                                     DataWatcher dw = new DataWatcher(((CraftPlayer) player).getHandle());
@@ -170,14 +173,14 @@ public class DisguiseManager implements Listener, Runnable {
                                 // We're sending to the disguised player so cancel invisibility
                                 //Bukkit.broadcastMessage("Current Mask: " + mask.b());
                                 //if (player.getName().equals(channelHandlerContext.name())) {
-                                    //mask.a((byte) ((byte) mask.b() & (~0x20)));
-                                    //Bukkit.broadcastMessage("Cancelled Invisibility of " + id + " for: " + player.getName());
-                                    //return;
+                                //mask.a((byte) ((byte) mask.b() & (~0x20)));
+                                //Bukkit.broadcastMessage("Cancelled Invisibility of " + id + " for: " + player.getName());
+                                //return;
                                 //}
                                 // We're sending to another player so add invisibility
                                 //else {
-                                    //Bukkit.broadcastMessage("Added Invisibility of " + id + " for: " + channelHandlerContext.name());
-                                    //mask.a((byte) ((byte) mask.b() | 0x20));
+                                //Bukkit.broadcastMessage("Added Invisibility of " + id + " for: " + channelHandlerContext.name());
+                                //mask.a((byte) ((byte) mask.b() | 0x20));
                                 //}
                                 //Bukkit.broadcastMessage("After Mask: " + mask.b());
                                 //f.set(packet, objects);
@@ -188,8 +191,7 @@ public class DisguiseManager implements Listener, Runnable {
                                 //msg = invisiblity_packet;
                             }
                         }
-                    }
-                    catch(Exception e) {
+                    } catch (Exception e) {
                         Bukkit.broadcastMessage("Exception");
                     }
                 }
@@ -211,7 +213,7 @@ public class DisguiseManager implements Listener, Runnable {
             }
         };
         ChannelPipeline pipeline = ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel.pipeline();
-        if(pipeline.get(player.getName()) != null) {
+        if (pipeline.get(player.getName()) != null) {
             pipeline.remove(player.getName());
         }
         pipeline.addBefore("packet_handler", player.getName(), channelDuplexHandler);

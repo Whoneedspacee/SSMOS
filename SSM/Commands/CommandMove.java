@@ -11,13 +11,13 @@ public class CommandMove implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String commandLabel, String[] args) {
-        if(!(commandSender instanceof Player)) {
+        if (!(commandSender instanceof Player)) {
             return false;
         }
         Player player = (Player) commandSender;
         CraftPlayer craftplayer = (CraftPlayer) player;
         float power = 1;
-        if(args.length == 1) {
+        if (args.length == 1) {
             power = Float.parseFloat(args[0]);
         }
         craftplayer.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityVelocity(player.getEntityId(), power, 0, 0));

@@ -2,19 +2,16 @@ package SSM.GameManagers.Maps;
 
 import SSM.Commands.CommandLoadWorld;
 import SSM.GameManagers.GameManager;
-import SSM.GameManagers.KitManager;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Wool;
-import org.bukkit.util.Vector;
 
-import java.io.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class MapFile {
 
@@ -35,25 +32,24 @@ public class MapFile {
         try {
             File copy_directory = new File(map_directory.getPath() + "_copy");
             World world = Bukkit.getWorld(copy_directory.getPath());
-            if(world != null) {
+            if (world != null) {
                 Bukkit.unloadWorld(world, false);
             }
-            if(copy_directory.exists() && copy_directory.isDirectory()) {
+            if (copy_directory.exists() && copy_directory.isDirectory()) {
                 FileUtils.deleteDirectory(copy_directory);
             }
             FileUtils.copyDirectory(map_directory, copy_directory);
             ArrayList<String> ignore = new ArrayList<String>(Arrays.asList("uid.dat", "session.dat"));
             File uid = new File(copy_directory.getPath() + "/uid.dat");
             File session = new File(copy_directory.getPath() + "/session.dat");
-            if(uid.exists()) {
+            if (uid.exists()) {
                 uid.delete();
             }
-            if(session.exists()) {
+            if (session.exists()) {
                 session.delete();
             }
             copy_world = CommandLoadWorld.loadWorld(copy_directory.getPath());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Bukkit.broadcastMessage("Failed to load world.");
         }
         // Parse map for objects
@@ -62,17 +58,17 @@ public class MapFile {
             for (int y = -size; y <= size; y++) {
                 for (int z = -size; z <= size; z++) {
                     Block parsed = copy_world.getBlockAt(x, y, z);
-                    if(isRespawnPoint(parsed)) {
+                    if (isRespawnPoint(parsed)) {
                         respawn_points.add(parsed.getLocation());
                         parsed.getRelative(0, 1, 0).setType(Material.AIR);
                         parsed.setType(Material.AIR);
                     }
-                    if(isBoundaryPoint(parsed)) {
+                    if (isBoundaryPoint(parsed)) {
                         boundary_points.add(parsed.getLocation());
                         parsed.getRelative(0, 1, 0).setType(Material.AIR);
                         parsed.setType(Material.AIR);
                     }
-                    if(isCenterPoint(parsed)) {
+                    if (isCenterPoint(parsed)) {
                         copy_world.setSpawnLocation(parsed.getX(), parsed.getY(), parsed.getZ());
                         parsed.getRelative(0, 1, 0).setType(Material.AIR);
                         parsed.setType(Material.AIR);
@@ -94,7 +90,7 @@ public class MapFile {
     }
 
     public Location getRandomRespawnPoint() {
-        if(respawn_points.size() == 0) {
+        if (respawn_points.size() == 0) {
             return copy_world.getSpawnLocation();
         }
         return respawn_points.get((int) (Math.random() * respawn_points.size()));
@@ -109,8 +105,8 @@ public class MapFile {
     }
 
     public List<Player> getVoted() {
-        for(Player player : voted) {
-            if(!player.isOnline()) {
+        for (Player player : voted) {
+            if (!player.isOnline()) {
                 voted.remove(player);
             }
         }
@@ -118,11 +114,11 @@ public class MapFile {
     }
 
     public boolean isRespawnPoint(Block check) {
-        if(check.getType() != Material.WOOL) {
+        if (check.getType() != Material.WOOL) {
             return false;
         }
         Wool wool = (Wool) check.getState().getData();
-        if(wool.getColor() != DyeColor.GREEN) {
+        if (wool.getColor() != DyeColor.GREEN) {
             return false;
         }
         Block plate = check.getRelative(0, 1, 0);
@@ -130,11 +126,11 @@ public class MapFile {
     }
 
     public boolean isBoundaryPoint(Block check) {
-        if(check.getType() != Material.WOOL) {
+        if (check.getType() != Material.WOOL) {
             return false;
         }
         Wool wool = (Wool) check.getState().getData();
-        if(wool.getColor() != DyeColor.RED) {
+        if (wool.getColor() != DyeColor.RED) {
             return false;
         }
         Block plate = check.getRelative(0, 1, 0);
@@ -142,11 +138,11 @@ public class MapFile {
     }
 
     public boolean isCenterPoint(Block check) {
-        if(check.getType() != Material.WOOL) {
+        if (check.getType() != Material.WOOL) {
             return false;
         }
         Wool wool = (Wool) check.getState().getData();
-        if(wool.getColor() != DyeColor.WHITE) {
+        if (wool.getColor() != DyeColor.WHITE) {
             return false;
         }
         Block plate = check.getRelative(0, 1, 0);

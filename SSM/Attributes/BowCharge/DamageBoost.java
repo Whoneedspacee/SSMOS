@@ -30,11 +30,11 @@ public class DamageBoost extends BowCharge {
 
     @EventHandler
     public void arrowDamage(EntityDamageByEntityEvent e) {
-        if(e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-            if(e.getDamager() instanceof Arrow) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+            if (e.getDamager() instanceof Arrow) {
                 Arrow arrow = (Arrow) e.getDamager();
                 List<MetadataValue> data = arrow.getMetadata("Damage Boost");
-                if(data.size() > 0) {
+                if (data.size() > 0) {
                     int charge = data.get(0).asInt();
                     e.setDamage(e.getDamage() + charge);
                 }

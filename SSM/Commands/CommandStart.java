@@ -9,7 +9,7 @@ public class CommandStart implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String commandLabel, String[] args) {
-        if(GameManager.getState() <= GameManager.GameState.LOBBY_STARTING) {
+        if (GameManager.getState() <= GameManager.GameState.LOBBY_STARTING) {
             GameManager.setTimeLeft(0);
             GameManager.ourInstance.run();
         }

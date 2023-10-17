@@ -4,14 +4,12 @@ import SSM.EntityProjectile;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -57,7 +55,7 @@ public class SpinWeb extends Ability implements OwnerRightClickEvent {
         }
 
         public List<Entity> hitDetection() {
-            if(projectile.getLocation().getBlock().getType() == Material.WEB) {
+            if (projectile.getLocation().getBlock().getType() == Material.WEB) {
                 projectile.remove();
                 return new ArrayList<Entity>();
             }

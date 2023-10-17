@@ -20,7 +20,7 @@ public class ExpCharge extends Attribute {
 
     @Override
     public void run() {
-        if(groundCharge && !Utils.entityIsOnGround(owner)) {
+        if (groundCharge && !Utils.entityIsOnGround(owner)) {
             return;
         }
         checkAndActivate();
@@ -28,7 +28,7 @@ public class ExpCharge extends Attribute {
 
     @Override
     public void setOwner(Player owner) {
-        if(owner != null) {
+        if (owner != null) {
             owner.setExp(1.0f - expAdd);
         }
         super.setOwner(owner);

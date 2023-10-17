@@ -50,11 +50,11 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
         velocity.setY(velocity.getY() + 0.6 * mult);
 
         double y_max = 1.2 * mult;
-        if(velocity.getY() > y_max) {
+        if (velocity.getY() > y_max) {
             velocity.setY(y_max);
         }
 
-        if(!owner.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isTransparent()) {
+        if (!owner.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isTransparent()) {
             velocity.setY(velocity.getY() + 0.2);
         }
         owner.setVelocity(velocity);
@@ -65,10 +65,10 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
 
     @EventHandler
     public void arrowDamage(EntityDamageByEntityEvent e) {
-        if(e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-            if(e.getDamager() instanceof Arrow) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+            if (e.getDamager() instanceof Arrow) {
                 Arrow arrow = (Arrow) e.getDamager();
-                if(arrow.hasMetadata("Roped Arrow")) {
+                if (arrow.hasMetadata("Roped Arrow")) {
                     e.setDamage(6.0);
                 }
             }

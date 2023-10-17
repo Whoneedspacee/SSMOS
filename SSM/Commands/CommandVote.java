@@ -1,9 +1,7 @@
 package SSM.Commands;
 
 import SSM.GameManagers.GameManager;
-import SSM.GameManagers.KitManager;
 import SSM.GameManagers.Maps.MapFile;
-import SSM.Kits.Kit;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,9 +16,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
-import java.util.ArrayList;
-
 public class CommandVote implements CommandExecutor {
 
     @Override
@@ -34,14 +29,14 @@ public class CommandVote implements CommandExecutor {
     }
 
     public static void openVotingMenu(Player player) {
-        if(GameManager.getState() > GameManager.GameState.LOBBY_VOTING) {
+        if (GameManager.getState() > GameManager.GameState.LOBBY_VOTING) {
             player.sendMessage("You may not vote after the voting period has ended.");
             return;
         }
         Inventory selectMap = Bukkit.createInventory(player, 54, ChatColor.BLUE + "Vote for a Map");
         for (MapFile mapfile : GameManager.all_maps) {
             ItemStack item = new ItemStack(Material.PAPER, GameManager.getVotesFor(mapfile) + 1);
-            if(mapfile.equals(GameManager.getCurrentVotedMap(player))) {
+            if (mapfile.equals(GameManager.getCurrentVotedMap(player))) {
                 item.addUnsafeEnchantment(Enchantment.DURABILITY, 20);
             }
             ItemMeta itemMeta = item.getItemMeta();

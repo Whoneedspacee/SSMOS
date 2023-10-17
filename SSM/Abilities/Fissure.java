@@ -1,7 +1,6 @@
 package SSM.Abilities;
 
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
-import SSM.Utilities.BlocksUtil;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
@@ -15,7 +14,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -38,9 +36,9 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
         remove_task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                for(Block remove : blocks.keySet()) {
+                for (Block remove : blocks.keySet()) {
                     blocks.put(remove, blocks.get(remove) - 1);
-                    if(blocks.get(remove) <= 0) {
+                    if (blocks.get(remove) <= 0) {
                         remove.setType(Material.AIR);
                     }
                 }
@@ -50,7 +48,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
-        if(!Utils.entityIsOnGround(owner)) {
+        if (!Utils.entityIsOnGround(owner)) {
             owner.sendMessage("You cannot use Fissure while airborne.");
             return;
         }
@@ -92,7 +90,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
                 continue;
             }
             path.add(block);
-            if(path.size() > 3) {
+            if (path.size() > 3) {
                 path.add(block.getRelative(0, 1, 0));
             }
             checkloc.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getTypeId());
@@ -112,14 +110,14 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
 
             @Override
             public void run() {
-                if(!iterator.hasNext()) {
+                if (!iterator.hasNext()) {
                     stop();
                     return;
                 }
                 next_block = iterator.next().getRelative(0, 1, 0);
                 // New column, skip a tick
-                if(last_block != null) {
-                    if(last_block.getX() != next_block.getX() || last_block.getZ() != next_block.getZ()) {
+                if (last_block != null) {
+                    if (last_block.getX() != next_block.getX() || last_block.getZ() != next_block.getZ()) {
                         iterator.previous();
                         last_block = null;
                         return;
@@ -130,7 +128,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
                 blocks.put(next_block, 200);
                 next_block.getWorld().playEffect(next_block.getLocation(), Effect.STEP_SOUND, next_block.getTypeId());
                 // This is an upper block, don't do damage calcs
-                if(last_block != null && last_block.getX() == next_block.getX() && last_block.getZ() == next_block.getZ()) {
+                if (last_block != null && last_block.getX() == next_block.getX() && last_block.getZ() == next_block.getZ()) {
                     blocks.put(next_block, 180);
                     last_block = next_block;
                     return;
@@ -155,12 +153,12 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
     }
 
     private Location getBlockUnderneath(Location loc) {
-        if(loc.getBlock().getType().isSolid()) {
+        if (loc.getBlock().getType().isSolid()) {
             return loc.getBlock().getLocation();
         }
-        while(loc.getY() > 0) {
+        while (loc.getY() > 0) {
             loc = loc.getBlock().getRelative(BlockFace.DOWN).getLocation();
-            if(!loc.getBlock().getType().isSolid()) {
+            if (!loc.getBlock().getType().isSolid()) {
                 continue;
             }
             return loc;

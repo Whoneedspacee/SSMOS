@@ -1,10 +1,7 @@
 package SSM.Attributes.DoubleJumps;
 
 import SSM.Utilities.VelocityUtil;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityVelocity;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.util.Vector;
 
 public class DirectDoubleJump extends DoubleJump {
 

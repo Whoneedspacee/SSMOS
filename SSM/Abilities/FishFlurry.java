@@ -55,7 +55,7 @@ public class FishFlurry extends Ability implements OwnerRightClickEvent {
         }
 
         public List<Entity> hitDetection() {
-            if(projectile.getLocation().getBlock().getType() == Material.WEB) {
+            if (projectile.getLocation().getBlock().getType() == Material.WEB) {
                 projectile.remove();
                 return new ArrayList<Entity>();
             }

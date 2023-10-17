@@ -1,6 +1,5 @@
 package SSM.Commands;
 
-import SSM.Utilities.DamageUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,7 +9,7 @@ public class CommandSetSpeed implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String commandLabel, String[] args) {
-        if(!(commandSender instanceof Player)) {
+        if (!(commandSender instanceof Player)) {
             return false;
         }
         Player player = (Player) commandSender;

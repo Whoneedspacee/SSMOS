@@ -11,7 +11,7 @@ public class CommandGetLoadedWorlds implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String commandLabel, String[] args) {
         commandSender.sendMessage("World List:");
-        for(World world : Bukkit.getWorlds()) {
+        for (World world : Bukkit.getWorlds()) {
             commandSender.sendMessage(world.getName());
         }
         return true;

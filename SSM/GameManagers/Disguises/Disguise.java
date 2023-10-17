@@ -6,8 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.*;
-import org.bukkit.entity.*;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -49,7 +50,7 @@ public abstract class Disguise {
     }
 
     public void spawnLiving() {
-        if(living != null) {
+        if (living != null) {
             deleteLiving();
         }
         living = newLiving();
@@ -59,8 +60,8 @@ public abstract class Disguise {
         // Had no idea this existed, but seems like this is what other servers must be doing
         ((CraftArmorStand) armorstand.getBukkitEntity()).setMarker(true);
         squid = new EntitySquid(((CraftWorld) owner.getWorld()).getHandle());
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            if(player.equals(owner)) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.equals(owner)) {
                 continue;
             }
             showDisguise(player);
@@ -123,7 +124,7 @@ public abstract class Disguise {
         PacketPlayOutEntityDestroy disguise_destroy_packet = new PacketPlayOutEntityDestroy(living.getId());
         Utils.sendPacket(owner, disguise_destroy_packet);
         // Don't teleport to spectator player if the mob is dead
-        if(living.dead) {
+        if (living.dead) {
             return;
         }
         living.onGround = Utils.entityIsOnGround(owner);
@@ -131,7 +132,7 @@ public abstract class Disguise {
                 owner.getLocation().getYaw(), owner.getLocation().getPitch());
         PacketPlayOutEntityTeleport teleport_packet = new PacketPlayOutEntityTeleport(living);
         Utils.sendPacketToAllBut(owner, teleport_packet);
-        PacketPlayOutEntityHeadRotation head_packet= new PacketPlayOutEntityHeadRotation(living,
+        PacketPlayOutEntityHeadRotation head_packet = new PacketPlayOutEntityHeadRotation(living,
                 (byte) ((location.getYaw() * 256.0F) / 360.0F));
         Utils.sendPacketToAllBut(owner, head_packet);
         // From living.mount source code all the way to Entity.class mount
@@ -147,13 +148,13 @@ public abstract class Disguise {
     }
 
     public void deleteLiving() {
-        if(living == null) {
+        if (living == null) {
             return;
         }
         PacketPlayOutEntityDestroy destroy_living_packet = new PacketPlayOutEntityDestroy(living.getId());
         PacketPlayOutEntityDestroy destroy_armorstand_packet = new PacketPlayOutEntityDestroy(armorstand.getId());
         PacketPlayOutEntityDestroy destroy_squid_packet = new PacketPlayOutEntityDestroy(squid.getId());
-        for(Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             Utils.sendPacket(player, destroy_living_packet);
             Utils.sendPacket(player, destroy_armorstand_packet);
             Utils.sendPacket(player, destroy_squid_packet);
