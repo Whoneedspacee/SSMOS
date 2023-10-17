@@ -21,7 +21,7 @@ public class KitBlaze extends Kit {
         this.regeneration = 0.25;
         this.knockback = 1.50;
         this.name = "Blaze";
-        this.menuItem = Material.BLAZE_ROD;
+        this.menuItem = Material.BLAZE_POWDER; // changed from blaze rod to blaze powder
     }
 
     public void equipKit(Player player) {

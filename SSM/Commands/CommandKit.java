@@ -4,6 +4,8 @@ import SSM.GameManagers.KitManager;
 import SSM.Kits.Kit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,6 +21,7 @@ public class CommandKit implements CommandExecutor {
         if (!(commandSender instanceof Player)) {
             return true;
         }
+
         Player player = (Player) commandSender;
         if (args.length >= 1) {
             StringBuilder builder = new StringBuilder();
@@ -36,16 +39,28 @@ public class CommandKit implements CommandExecutor {
             }
             return false;
         }
-        Inventory selectKit = Bukkit.createInventory(player, 54, ChatColor.BLUE + "Select Your Kit");
+
+        /* added a thing to sort the items */
+        int slot = 10; // beginning slot
+        int count = 0;
+        Inventory selectKit = Bukkit.createInventory(player, 45, "Choose a Kit"); // changed from blue to gray and 54 -> 45
         for (Kit kit : KitManager.getAllKits()) {
             ItemStack item = kit.getMenuItemStack();
             ItemMeta itemMeta = item.getItemMeta();
             itemMeta.setDisplayName(ChatColor.RESET + kit.getName().replace("_", " "));
             item.setItemMeta(itemMeta);
-            selectKit.addItem(item);
+
+            selectKit.setItem(slot, item);
+            slot++;
+            count++;
+
+            if (count % 7 == 0) {
+                slot += 2;
+            }
         }
+//        player.getWorld().playSound(player.getLocation(), Sound.ORB_PICKUP, 1f, 1f);
         player.openInventory(selectKit);
+
         return true;
     }
-
 }

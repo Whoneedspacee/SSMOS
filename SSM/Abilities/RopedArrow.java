@@ -1,5 +1,6 @@
 package SSM.Abilities;
 
+import SSM.GameManagers.OwnerEvents.OwnerAnimationEvent;
 import SSM.GameManagers.OwnerEvents.OwnerLeftClickEvent;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
@@ -8,11 +9,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-public class RopedArrow extends Ability implements OwnerLeftClickEvent {
+public class RopedArrow extends Ability implements OwnerLeftClickEvent, OwnerAnimationEvent {
 
     private Arrow arrow;
 
@@ -25,6 +27,10 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
     }
 
     public void onOwnerLeftClick(PlayerInteractEvent e) {
+        checkAndActivate();
+    }
+
+    public void onOwnerAnimation(PlayerAnimationEvent e) {
         checkAndActivate();
     }
 
@@ -74,5 +80,4 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
             }
         }
     }
-
 }
