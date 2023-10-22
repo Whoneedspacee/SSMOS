@@ -137,7 +137,29 @@ public class DisplayManager implements Listener {
                 obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 int score = 1;
                 obj.getScore("").setScore(score++);
+                // This is terrible forgive my laziness
                 for (Player add : GameManager.getAllLives().keySet()) {
+                    if(GameManager.getLives(add) != 1) {
+                        continue;
+                    }
+                    obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
+                }
+                for (Player add : GameManager.getAllLives().keySet()) {
+                    if(GameManager.getLives(add) != 2) {
+                        continue;
+                    }
+                    obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
+                }
+                for (Player add : GameManager.getAllLives().keySet()) {
+                    if(GameManager.getLives(add) != 3) {
+                        continue;
+                    }
+                    obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
+                }
+                for (Player add : GameManager.getAllLives().keySet()) {
+                    if(GameManager.getLives(add) != 4) {
+                        continue;
+                    }
                     obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
                 }
                 obj.getScore(ChatColor.RED + "").setScore(score++);

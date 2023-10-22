@@ -104,11 +104,10 @@ public abstract class Disguise {
     public void update() {
         Location location = owner.getLocation();
         // Hide the disguised player from other players
-        owner.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10000000, 1, false, false));
-        // Remove invisibility effect from disguised player
-        PacketPlayOutRemoveEntityEffect remove_effect_packet = new PacketPlayOutRemoveEntityEffect(owner.getEntityId(), new MobEffect(
-                MobEffectList.INVISIBILITY.id, 0));
-        Utils.sendPacket(owner, remove_effect_packet);
+        // Don't use HidePlayer here, it stops the melees
+        // But also stops the server from recognizing projectile hits like arrows
+        PacketPlayOutEntityDestroy destroy_packet = new PacketPlayOutEntityDestroy(owner.getEntityId());
+        Utils.sendPacketToAllBut(owner, destroy_packet);
         // Hide the armor and weapon too
         PacketPlayOutEntityEquipment handPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 0, null);
         PacketPlayOutEntityEquipment helmetPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 1, null);
@@ -159,7 +158,9 @@ public abstract class Disguise {
             Utils.sendPacket(player, destroy_armorstand_packet);
             Utils.sendPacket(player, destroy_squid_packet);
         }
-        owner.removePotionEffect(PotionEffectType.INVISIBILITY);
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            player.showPlayer(owner);
+        }
         living = null;
         armorstand = null;
         squid = null;

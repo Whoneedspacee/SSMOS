@@ -14,6 +14,9 @@ public class CommandJump implements CommandExecutor {
         if (!(commandSender instanceof Player)) {
             return false;
         }
+        if(!commandSender.isOp()) {
+            return true;
+        }
         Player player = (Player) commandSender;
         CraftPlayer craftplayer = (CraftPlayer) player;
         float power = 1;

@@ -3,6 +3,7 @@ package SSM.Utilities;
 import SSM.Attributes.Attribute;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -35,6 +36,22 @@ public class Utils {
 
     public static void sendAttributeMessage(String primary_message, String secondary_message, Player player, ServerMessageType type) {
         sendServerMessageToPlayer("§7" + primary_message + " §a" + secondary_message + "§7.", player, type);
+    }
+
+    public static void sendTitleMessage(Player player, String title_string, String subtitle_string) {
+        sendTitleMessage(player, title_string, subtitle_string, 20, 60, 20);
+    }
+
+    public static void sendTitleMessage(Player player, String title_string, String subtitle_string,
+                                        int fade_in, int stay, int fade_out) {
+        PacketPlayOutTitle timing_packet = new PacketPlayOutTitle(fade_in, stay, fade_out);
+        Utils.sendPacket(player, timing_packet);
+        ChatMessage subtitle_message = new ChatMessage(subtitle_string);
+        PacketPlayOutTitle subtitle_packet = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, subtitle_message);
+        Utils.sendPacket(player, subtitle_packet);
+        ChatMessage title_message = new ChatMessage(title_string);
+        PacketPlayOutTitle title_packet = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, title_message);
+        Utils.sendPacket(player, title_packet);
     }
 
     public static boolean holdingItemWithName(Player player, String name) {

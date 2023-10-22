@@ -1,5 +1,6 @@
 package SSM.Utilities;
 
+import SSM.GameManagers.DamageManager;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.Disguise;
 import SSM.GameManagers.GameManager;
@@ -13,10 +14,25 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 
 public class DamageUtil {
+
+    public static void borderKill(Player player, boolean lightning) {
+        if(lightning && DamageUtil.canDamage(player, 1000)) {
+            player.getWorld().strikeLightningEffect(player.getLocation());
+        }
+        player.teleport(player.getWorld().getSpawnLocation());
+        if (DamageUtil.canDamage(player, 1000)) {
+            DamageUtil.damage(player, null, 1000,
+                    0, true, EntityDamageEvent.DamageCause.VOID, null, null,
+                    new DamageManager.DamageRecord(player.getName(), "Void", 1000, "World Border"));
+        }
+    }
 
     public static void damage(LivingEntity damagee, LivingEntity damager, double damage) {
         damage(damagee, damager, damage, 1.0, false, DamageCause.ENTITY_ATTACK, null);
@@ -34,6 +50,16 @@ public class DamageUtil {
 
     public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
                               double knockbackMultiplier, boolean ignoreArmor, DamageCause cause, Location origin) {
+        damage(damagee, damager, damage, knockbackMultiplier, ignoreArmor, cause, origin, "Undefined Name");
+    }
+
+    public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
+                              double knockbackMultiplier, boolean ignoreArmor, DamageCause cause, Location origin, String reason) {
+        damage(damagee, damager, damage, knockbackMultiplier, ignoreArmor, cause, origin, reason, null);
+    }
+
+    public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
+                              double knockbackMultiplier, boolean ignoreArmor, DamageCause cause, Location origin, String reason, DamageManager.DamageRecord record) {
         // Replace disguise being hit with owner
         if (damagee == null) {
             return;
@@ -73,6 +99,12 @@ public class DamageUtil {
             return;
         }
         damagee.setNoDamageTicks(damagee.getMaximumNoDamageTicks());
+        if(record == null && damagee instanceof Player) {
+            record = new DamageManager.DamageRecord(damagee.getName(), damager.getName(), damage, reason);
+        }
+        if(record != null) {
+            DamageManager.addDamageRecord(record);
+        }
         Disguise disguise = DisguiseManager.disguises.get(damagee);
         if (disguise != null) {
             PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus((Entity) disguise.getLiving(), (byte) 2);
@@ -100,7 +132,7 @@ public class DamageUtil {
         }
         if (died && damagee instanceof Player) {
             Player player = (Player) damagee;
-            GameManager.death(player);
+            GameManager.death(player, damager);
         }
         if (damager instanceof Player) {
             Player player = (Player) damager;

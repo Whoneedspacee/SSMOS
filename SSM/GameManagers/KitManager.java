@@ -77,16 +77,16 @@ public class KitManager implements Listener {
     }
 
     public static void unequipPlayer(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
+        player.setFlying(false);
+        player.setAllowFlight(false);
         Kit kit = playerKit.get(player);
         if (kit == null) {
             return;
         }
         kit.destroyKit();
         playerKit.remove(player);
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
-        player.setFlying(false);
-        player.setAllowFlight(false);
     }
 
     public static Ability getCurrentAbility(Player player) {

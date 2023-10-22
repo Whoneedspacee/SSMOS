@@ -12,6 +12,9 @@ public class CommandSetSpeed implements CommandExecutor {
         if (!(commandSender instanceof Player)) {
             return false;
         }
+        if(!commandSender.isOp()) {
+            return true;
+        }
         Player player = (Player) commandSender;
         if (args.length == 1) {
             try {

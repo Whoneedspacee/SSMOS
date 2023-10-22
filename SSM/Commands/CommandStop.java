@@ -15,6 +15,9 @@ public class CommandStop implements CommandExecutor {
             Bukkit.shutdown();
             return true;
         }
+        if(!commandSender.isOp()) {
+            return true;
+        }
         if (GameManager.getState() == GameManager.GameState.GAME_STARTING ||
                 GameManager.getState() == GameManager.GameState.GAME_PLAYING) {
             GameManager.setState(GameManager.GameState.GAME_ENDING);

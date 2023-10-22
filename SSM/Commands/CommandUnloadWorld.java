@@ -12,6 +12,9 @@ public class CommandUnloadWorld implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String commandLabel, String[] args) {
+        if(!commandSender.isOp()) {
+            return true;
+        }
         if (args.length < 1) {
             commandSender.sendMessage("Must specify a world to load.");
             return true;

@@ -33,7 +33,6 @@ public class SlimeDisguise extends Disguise {
             size = 2;
         }
         DataWatcher dw = living.getDataWatcher();
-        // A is the new index method so we'll use that for our fake datawatcher
         dw.watch(16, (byte) size);
         PacketPlayOutEntityMetadata size_packet = new PacketPlayOutEntityMetadata(living.getId(), dw, true);
         Utils.sendPacketToAll(size_packet);

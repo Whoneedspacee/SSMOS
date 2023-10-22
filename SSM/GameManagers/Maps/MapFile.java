@@ -11,6 +11,7 @@ import org.bukkit.material.Wool;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class MapFile {
@@ -92,6 +93,28 @@ public class MapFile {
     public Location getRandomRespawnPoint() {
         if (respawn_points.size() == 0) {
             return copy_world.getSpawnLocation();
+        }
+        // Calculate closest player to each respawn point, pick the one furthest from players
+        HashMap<Location, Double> closest_player_distance = new HashMap<>();
+        double maximum = 0;
+        for(Location respawn_point : respawn_points) {
+            double closest = 1000;
+            for(Player player : GameManager.getPlayers()) {
+                if(GameManager.isSpectator(player)) {
+                    continue;
+                }
+                if(!player.getWorld().equals(respawn_point.getWorld())) {
+                    continue;
+                }
+                closest = Math.min(closest, respawn_point.distance(player.getLocation()));
+            }
+            maximum = Math.max(maximum, closest);
+            closest_player_distance.put(respawn_point, closest);
+        }
+        for(Location respawn_point : closest_player_distance.keySet()) {
+            if(closest_player_distance.get(respawn_point) >= maximum) {
+                return respawn_point;
+            }
         }
         return respawn_points.get((int) (Math.random() * respawn_points.size()));
     }

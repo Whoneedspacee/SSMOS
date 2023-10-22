@@ -1,5 +1,6 @@
 package SSM.Attributes;
 
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class Potion extends Attribute {
@@ -21,7 +22,7 @@ public class Potion extends Attribute {
     }
 
     public void activate() {
-        owner.addPotionEffect(new org.bukkit.potion.PotionEffect(effect, 70, level - 1));
+        owner.addPotionEffect(new PotionEffect(effect, 70, level - 1, false, false));
     }
 
 }

@@ -94,6 +94,7 @@ public class DisguiseManager implements Listener, Runnable {
             public void channelRead(ChannelHandlerContext channelHandlerContext, Object msg) throws Exception {
                 // Intercept player attack packet
                 // If it's the entity the player is disguised as then redirect to the player instead
+                // If we're attacking the player directly, we shouldn't be able to so cancel it
                 if (msg instanceof PacketPlayInUseEntity) {
                     PacketPlayInUseEntity packet = (PacketPlayInUseEntity) msg;
                     Field f = packet.getClass().getDeclaredField("a");
@@ -102,6 +103,10 @@ public class DisguiseManager implements Listener, Runnable {
                     PacketPlayInUseEntity.EnumEntityUseAction action = packet.a();
                     if (action.equals(PacketPlayInUseEntity.EnumEntityUseAction.ATTACK)) {
                         for (Disguise disguise : DisguiseManager.disguises.values()) {
+                            // Ignore player melees in case they bounced the destroy entity packet
+                            if(disguise.getOwner().getEntityId() == id) {
+                                return;
+                            }
                             if (disguise.getLiving().getId() == id ||
                                     disguise.getSquid().getId() == id) {
                                 f.setInt(packet, disguise.getOwner().getEntityId());
@@ -232,7 +237,11 @@ public class DisguiseManager implements Listener, Runnable {
 
     @EventHandler
     public void playerChangedWorld(PlayerChangedWorldEvent e) {
+        // Reload their disguise, and show their own disguise to other players
         showDisguises(e.getPlayer());
+        for(Player player : e.getPlayer().getWorld().getPlayers()) {
+            showDisguise(player, e.getPlayer());
+        }
     }
 
 }

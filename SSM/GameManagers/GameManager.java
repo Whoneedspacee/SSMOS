@@ -6,8 +6,13 @@ import SSM.Kits.Kit;
 import SSM.Kits.KitTemporarySpectator;
 import SSM.SSM;
 import SSM.Utilities.EffectUtil;
+import SSM.Utilities.ServerMessageType;
+import SSM.Utilities.Utils;
+import net.minecraft.server.v1_8_R3.ChatMessage;
+import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -255,7 +260,7 @@ public class GameManager implements Listener, Runnable {
         time_left--;
     }
 
-    public static void death(Player player) {
+    public static void death(Player player, LivingEntity damager) {
         if (lives.get(player) == null) {
             return;
         }
@@ -264,28 +269,48 @@ public class GameManager implements Listener, Runnable {
         // Blood Particles
         EffectUtil.createEffect(player.getEyeLocation(), 10, 0.5, Sound.HURT_FLESH,
                 1f, 1f, Material.INK_SACK, (byte) 1, 10, true);
+        DamageManager.DamageRecord record = DamageManager.getLastDamageRecord(player);
+        Bukkit.broadcastMessage(ServerMessageType.DEATH + " " + ChatColor.YELLOW + player.getName() +
+                ChatColor.GRAY + " killed by " + ChatColor.YELLOW + record.getDamagerName() +
+                ChatColor.GRAY + " with " + ChatColor.GREEN + record.getDamageReason() + ChatColor.GRAY + ".");
+        DamageManager.deathReport(player);
+        // Out of the game check
         if (lives.get(player) <= 1) {
+            Utils.sendTitleMessage(player, ChatColor.BOLD + "" + ChatColor.RED + "You Died", "",
+                    10, 50, 10);
+            player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "You ran out of lives!");
+            player.playSound(player.getLocation(), Sound.EXPLODE, 2f, 1f);
             lives.remove(player);
             KitManager.equipPlayer(player, new KitTemporarySpectator());
             DisplayManager.buildScoreboard();
             return;
         }
+        // Normal Life Lost
         lives.put(player, lives.get(player) - 1);
+        Utils.sendTitleMessage(player, "", "Respawning in 4 seconds...", 10, 50, 10);
+        player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "You have died!");
+        player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "You have " + lives.get(player) +
+                " " + (lives.get(player) == 1 ? "life" : "lives") + " left!");
+        player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 2f, 0.5f);
         DisplayManager.buildScoreboard();
         Kit kit = KitManager.getPlayerKit(player);
         KitManager.equipPlayer(player, new KitTemporarySpectator());
+        // Respawn in 4 seconds
         Bukkit.getScheduler().scheduleSyncDelayedTask(SSM.getInstance(), new Runnable() {
             @Override
             public void run() {
                 if (state == GameState.GAME_PLAYING && lives.get(player) > 0) {
                     player.teleport(chosen_map.getRandomRespawnPoint());
+                    Utils.sendTitleMessage(player, "", DisplayManager.getLivesColor(player) +
+                                    "" + lives.get(player) + " " + (lives.get(player) == 1 ? "life" : "lives") + " left!",
+                            10, 50, 10);
                     if (!kit.getName().equals("Temporary Spectator")) {
                         KitManager.equipPlayer(player, kit);
                     }
                     DisguiseManager.showDisguises(player);
                 }
             }
-        }, 100L);
+        }, 80L);
     }
 
     // Not for temporary spectators, for people who want to spectate all games
@@ -306,7 +331,7 @@ public class GameManager implements Listener, Runnable {
         DisplayManager.buildScoreboard();
     }
 
-    public static int getState() {
+    public static short getState() {
         return state;
     }
 
@@ -390,6 +415,9 @@ public class GameManager implements Listener, Runnable {
             return;
         }
         e.getPlayer().teleport(lobby_world.getSpawnLocation());
+        KitManager.unequipPlayer(e.getPlayer());
+        e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
+        e.getPlayer().setGameMode(GameMode.ADVENTURE);
         players.add(e.getPlayer());
         DisplayManager.buildScoreboard();
     }

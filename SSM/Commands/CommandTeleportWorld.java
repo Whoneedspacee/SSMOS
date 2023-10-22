@@ -15,6 +15,9 @@ public class CommandTeleportWorld implements CommandExecutor {
             commandSender.sendMessage("Must be a player to teleport to worlds.");
             return true;
         }
+        if(!commandSender.isOp()) {
+            return true;
+        }
         Player player = (Player) commandSender;
         if (args.length < 1) {
             commandSender.sendMessage("Must specify a world to teleport to.");

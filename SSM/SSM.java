@@ -68,7 +68,7 @@ public class SSM extends JavaPlugin implements Listener {
         Block blockIn = e.getTo().getBlock();
         Block blockOn = e.getFrom().getBlock().getRelative(BlockFace.DOWN);
         if (blockIn.isLiquid() && DamageUtil.canDamage(player, 1000)) {
-            DamageUtil.damage(player, null, 1000, 0, true);
+            DamageUtil.borderKill(player, false);
         }
     }
 
@@ -97,12 +97,7 @@ public class SSM extends JavaPlugin implements Listener {
         }
         if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.VOID ||
                 e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.LAVA) {
-            Player player = (Player) e.getEntity();
-            player.teleport(player.getWorld().getSpawnLocation());
-            if (DamageUtil.canDamage(player, 1000)) {
-                player.getWorld().strikeLightningEffect(player.getLocation());
-                DamageUtil.damage((LivingEntity) e.getEntity(), null, 1000, 0, true, EntityDamageEvent.DamageCause.VOID);
-            }
+            DamageUtil.borderKill((Player) e.getEntity(), true);
             e.setCancelled(true);
             return;
         }
@@ -150,7 +145,9 @@ public class SSM extends JavaPlugin implements Listener {
 
     @EventHandler
     public void stopHealthRegen(EntityRegainHealthEvent e) {
-        e.setCancelled(true);
+        if(e.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED) {
+            e.setCancelled(true);
+        }
     }
 
     @EventHandler
