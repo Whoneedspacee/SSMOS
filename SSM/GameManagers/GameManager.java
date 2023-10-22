@@ -417,6 +417,7 @@ public class GameManager implements Listener, Runnable {
         e.getPlayer().teleport(lobby_world.getSpawnLocation());
         KitManager.unequipPlayer(e.getPlayer());
         e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
+        e.getPlayer().setFoodLevel(20);
         e.getPlayer().setGameMode(GameMode.ADVENTURE);
         players.add(e.getPlayer());
         DisplayManager.buildScoreboard();

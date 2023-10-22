@@ -142,10 +142,6 @@ public class SSM extends JavaPlugin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         String name = e.getPlayer().getName();
         e.setJoinMessage(ChatColor.DARK_GRAY + "Join> " + ChatColor.GRAY + name);
-        e.getPlayer().setFoodLevel(20);
-        e.getPlayer().getInventory().clear();
-        e.getPlayer().getInventory().setArmorContents(null);
-        e.getPlayer().setGameMode(GameMode.ADVENTURE);
     }
 
     @EventHandler
