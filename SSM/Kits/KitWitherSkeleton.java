@@ -18,7 +18,7 @@ public class KitWitherSkeleton extends Kit {
         this.regeneration = 0.3;
         this.knockback = 1.2;
         this.name = "Wither Skeleton";
-        this.menuItem = Material.IRON_SWORD; // switched from skull item to iron sword
+        this.menuItem = Material.IRON_SWORD;
     }
 
     public void equipKit(Player player) {

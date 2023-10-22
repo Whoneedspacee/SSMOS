@@ -20,7 +20,7 @@ public class KitCow extends Kit {
         this.regeneration = 0.25;
         this.knockback = 1.1;
         this.name = "Cow";
-        this.menuItem = Material.RAW_BEEF; // changed from milk bucket to raw beef
+        this.menuItem = Material.RAW_BEEF;
     }
 
     public void equipKit(Player player) {

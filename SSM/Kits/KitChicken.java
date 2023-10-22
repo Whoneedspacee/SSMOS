@@ -13,7 +13,7 @@ public class KitChicken extends Kit {
     public KitChicken() {
         super();
         this.damage = 4.5;
-        this.armor = 2.5;
+        this.armor = 2.5; // 2
         this.regeneration = 0.25;
         this.knockback = 2.0;
         this.name = "Chicken";

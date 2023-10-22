@@ -40,10 +40,9 @@ public class CommandKit implements CommandExecutor {
             return false;
         }
 
-        /* added a thing to sort the items */
         int slot = 10; // beginning slot
         int count = 0;
-        Inventory selectKit = Bukkit.createInventory(player, 45, "Choose a Kit"); // changed from blue to gray and 54 -> 45
+        Inventory selectKit = Bukkit.createInventory(player, 45, "Choose a Kit");
         for (Kit kit : KitManager.getAllKits()) {
             ItemStack item = kit.getMenuItemStack();
             ItemMeta itemMeta = item.getItemMeta();

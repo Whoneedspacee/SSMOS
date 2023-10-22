@@ -36,10 +36,7 @@ public class EventManager implements Listener {
         if (ability == null) {
             return;
         }
-        if (ability instanceof OwnerLeftClickEvent && (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK)) {
-            OwnerLeftClickEvent leftClick = (OwnerLeftClickEvent) ability;
-            leftClick.onOwnerLeftClick(e);
-        }
+
         if (ability instanceof OwnerRightClickEvent && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
             OwnerRightClickEvent rightClick = (OwnerRightClickEvent) ability;
             rightClick.onOwnerRightClick(e);
@@ -49,7 +46,7 @@ public class EventManager implements Listener {
     // left click in adventure mode for skeleton + zombie
     // the reason why it randomly doesn't work sometimes
     @EventHandler
-    public void onPlayerAnimation(PlayerAnimationEvent e) {
+    public void onPlayerLeftClick(PlayerAnimationEvent e) {
         Player player = e.getPlayer();
         Ability ability = KitManager.getCurrentAbility(player);
 
@@ -57,9 +54,9 @@ public class EventManager implements Listener {
             return;
         }
 
-        if (ability instanceof OwnerAnimationEvent && (e.getAnimationType() == PlayerAnimationType.ARM_SWING)) {
-            OwnerAnimationEvent leftClick = (OwnerAnimationEvent) ability;
-            leftClick.onOwnerAnimation(e);
+        if (ability instanceof OwnerLeftClickEvent && (e.getAnimationType() == PlayerAnimationType.ARM_SWING)) {
+            OwnerLeftClickEvent leftClick = (OwnerLeftClickEvent) ability;
+            leftClick.onOwnerLeftClick(e);
         }
     }
 

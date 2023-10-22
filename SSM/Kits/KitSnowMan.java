@@ -19,7 +19,7 @@ public class KitSnowMan extends Kit {
         this.regeneration = 0.3;
         this.knockback = 1.4;
         this.name = "Snowman";
-        this.menuItem = Material.SNOW_BALL; // changed from pumpkin to snow ball
+        this.menuItem = Material.SNOW_BALL;
     }
 
     public void equipKit(Player player) {

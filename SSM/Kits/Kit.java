@@ -6,6 +6,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.SSM;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
@@ -61,6 +62,8 @@ public abstract class Kit {
         player.getInventory().setBoots(null);
         player.setExp(0);
         hotbarAbilities = new Ability[9];
+
+        player.setGameMode(GameMode.ADVENTURE);
     }
 
     public void destroyKit() {
