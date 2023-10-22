@@ -33,20 +33,18 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        Location loc = owner.getLocation().add(0, 0.5, 0);
+        Location location = owner.getLocation().add(0, 0.5, 0);
         owner.getWorld().playSound(owner.getLocation(), Sound.SKELETON_HURT, 2f, 1.2f);
-        //Manager.GetBlood().Effects(null, player.getLocation().add(0, 0.5, 0), 48, 0.8, Sound.SKELETON_HURT, 2f, 1.2f, Material.BONE, (byte)0, 40, false);
-        //Effects(player, loc, particles, velMult, sound, soundVol, soundPitch, type, data, 10, bloodStep);
-        //BloodEvent event = new BloodEvent(player, loc, particles, velMult, sound, soundVol, soundPitch, type, data, ticks, bloodStep);
-        //UtilServer.getServer().getPluginManager().callEvent(event);
+
         int entity_amount = 48;
-        List<Entity> boneItems = new ArrayList<Entity>();
+        List<Entity> boneItems = new ArrayList<>();
         for (int i = 0; i < entity_amount; i++) {
-            Item item = loc.getWorld().dropItem(loc, new ItemStack(Material.BONE, 1));
+            Item item = location.getWorld().dropItem(location, new ItemStack(Material.BONE, 1));
             item.setVelocity(new Vector((Math.random() - 0.5) * 0.8, Math.random() * 0.8, (Math.random() - 0.5) * 0.8));
             item.setPickupDelay(999999);
             boneItems.add(item);
         }
+
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
             public void run() {
@@ -63,7 +61,7 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
                 if (!DamageUtil.canDamage((LivingEntity) entity, baseDamage)) {
                     continue;
                 }
-                double dist = loc.distance(entity.getLocation());
+//                double dist = location.distance(entity.getLocation());    what does this do?
                 DamageUtil.damage((LivingEntity) entity, owner, baseDamage,
                         2.5, false, DamageCause.CUSTOM, null);
                 Vector target = entity.getLocation().toVector();
@@ -73,7 +71,11 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
                 entity.setVelocity(new Vector(velocity.getX(), 0.4, velocity.getZ()));
             }
         }
-
     }
-
 }
+
+//  Mineplex code
+//  Manager.GetBlood().Effects(null, player.getLocation().add(0, 0.5, 0), 48, 0.8, Sound.SKELETON_HURT, 2f, 1.2f, Material.BONE, (byte)0, 40, false);
+//  Effects(player, loc, particles, velMult, sound, soundVol, soundPitch, type, data, 10, bloodStep);
+//  BloodEvent event = new BloodEvent(player, loc, particles, velMult, sound, soundVol, soundPitch, type, data, ticks, bloodStep);
+//  UtilServer.getServer().getPluginManager().callEvent(event);

@@ -2,22 +2,28 @@ package SSM.GameManagers;
 
 import SSM.Abilities.Ability;
 import SSM.Attributes.Attribute;
+import SSM.Kits.Kit;
 import SSM.Kits.*;
 import SSM.SSM;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class KitManager implements Listener {
 
@@ -60,13 +66,8 @@ public class KitManager implements Listener {
         }
         try {
             kit = check.getClass().getDeclaredConstructor().newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             e.printStackTrace();
         }
         if (kit != null) {
@@ -130,6 +131,7 @@ public class KitManager implements Listener {
             for (Kit kit : KitManager.getAllKits()) {
                 if (item.getType().equals(kit.getMenuItemType())) {
                     KitManager.equipPlayer(player, kit);
+                    player.getWorld().playSound(player.getLocation(), Sound.ORB_PICKUP, 1f, 1f);
                     player.closeInventory();
                     break;
                 }
@@ -137,5 +139,4 @@ public class KitManager implements Listener {
             e.setCancelled(true);
         }
     }
-
 }

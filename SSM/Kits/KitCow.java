@@ -1,6 +1,7 @@
 package SSM.Kits;
 
 import SSM.Abilities.InkShotgun;
+import SSM.Abilities.MilkSpiral;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Attributes.Stampede;
@@ -19,7 +20,7 @@ public class KitCow extends Kit {
         this.regeneration = 0.25;
         this.knockback = 1.1;
         this.name = "Cow";
-        this.menuItem = Material.MILK_BUCKET;
+        this.menuItem = Material.RAW_BEEF;
     }
 
     public void equipKit(Player player) {
