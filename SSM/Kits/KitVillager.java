@@ -17,7 +17,7 @@ public class KitVillager extends Kit {
         this.regeneration = 0.25;
         this.knockback = 1.45;
         this.name = "Villager";
-        this.menuItem = Material.EMERALD;
+        this.menuItem = Material.WHEAT;
     }
 
     public void equipKit(Player player) {

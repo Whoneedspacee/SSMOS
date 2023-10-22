@@ -17,7 +17,7 @@ public class KitSkeletonHorse extends Kit {
         this.regeneration = 0.3;
         this.knockback = 1.25;
         this.name = "Skeleton Horse";
-        this.menuItem = Material.SADDLE;
+        this.menuItem = Material.BONE;
     }
 
     public void equipKit(Player player) {

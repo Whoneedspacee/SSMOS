@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
@@ -24,7 +24,7 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
         this.useMessage = "You fired";
     }
 
-    public void onOwnerLeftClick(PlayerInteractEvent e) {
+    public void onOwnerLeftClick(PlayerAnimationEvent e) {
         checkAndActivate();
     }
 
@@ -74,5 +74,4 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
             }
         }
     }
-
 }

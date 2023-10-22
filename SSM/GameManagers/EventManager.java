@@ -12,6 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,13 +36,27 @@ public class EventManager implements Listener {
         if (ability == null) {
             return;
         }
-        if (ability instanceof OwnerLeftClickEvent && (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK)) {
-            OwnerLeftClickEvent leftClick = (OwnerLeftClickEvent) ability;
-            leftClick.onOwnerLeftClick(e);
-        }
+
         if (ability instanceof OwnerRightClickEvent && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
             OwnerRightClickEvent rightClick = (OwnerRightClickEvent) ability;
             rightClick.onOwnerRightClick(e);
+        }
+    }
+
+    // left click in adventure mode for skeleton + zombie
+    // the reason why it randomly doesn't work sometimes
+    @EventHandler
+    public void onPlayerLeftClick(PlayerAnimationEvent e) {
+        Player player = e.getPlayer();
+        Ability ability = KitManager.getCurrentAbility(player);
+
+        if (ability == null) {
+            return;
+        }
+
+        if (ability instanceof OwnerLeftClickEvent && (e.getAnimationType() == PlayerAnimationType.ARM_SWING)) {
+            OwnerLeftClickEvent leftClick = (OwnerLeftClickEvent) ability;
+            leftClick.onOwnerLeftClick(e);
         }
     }
 
@@ -49,7 +65,7 @@ public class EventManager implements Listener {
         Entity entity = e.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if (KitManager.getPlayerKit(player) == null) {
+            if(KitManager.getPlayerKit(player) == null) {
                 return;
             }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
@@ -68,7 +84,7 @@ public class EventManager implements Listener {
         Entity damager = e.getDamager();
         if (damager instanceof Player) {
             Player player = (Player) damager;
-            if (KitManager.getPlayerKit(player) == null) {
+            if(KitManager.getPlayerKit(player) == null) {
                 return;
             }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
@@ -79,9 +95,9 @@ public class EventManager implements Listener {
                 }
             }
         }
-        if (damagee instanceof Player) {
+        if(damagee instanceof Player) {
             Player player = (Player) damagee;
-            if (KitManager.getPlayerKit(player) == null) {
+            if(KitManager.getPlayerKit(player) == null) {
                 return;
             }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
