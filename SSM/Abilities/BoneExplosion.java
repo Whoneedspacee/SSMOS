@@ -2,10 +2,7 @@ package SSM.Abilities;
 
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -26,6 +23,9 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
         super();
         this.name = "Bone Explosion";
         this.cooldownTime = 10;
+        this.description = 	new String[] {
+                ChatColor.RESET + "Releases an explosion of bones from",
+                ChatColor.RESET + "your body, repelling all nearby enemies."};
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {

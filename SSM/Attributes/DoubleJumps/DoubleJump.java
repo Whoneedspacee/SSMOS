@@ -1,6 +1,7 @@
 package SSM.Attributes.DoubleJumps;
 
 import SSM.Attributes.Attribute;
+import SSM.GameManagers.GameManager;
 import SSM.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -74,6 +75,10 @@ public abstract class DoubleJump extends Attribute {
     }
 
     public void resetDoubleJumps() {
+        if(!GameManager.isPlaying()) {
+            owner.setAllowFlight(false);
+            return;
+        }
         remainingDoubleJumps = maxDoubleJumps;
         owner.setAllowFlight(true);
     }

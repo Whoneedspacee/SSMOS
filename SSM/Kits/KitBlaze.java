@@ -10,6 +10,7 @@ import SSM.GameManagers.Disguises.BlazeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 public class KitBlaze extends Kit {
@@ -24,22 +25,33 @@ public class KitBlaze extends Kit {
         this.menuItem = Material.BLAZE_POWDER;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
-
+    @Override
+    public void initializeKit() {
         setArmor(Material.CHAINMAIL_BOOTS, 0);
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmor(Material.CHAINMAIL_HELMET, 3);
 
-        setItem(Material.IRON_SWORD, 0, new MilkSpiral());
-        setItem(Material.IRON_AXE, 1, new Firefly());
+        setAbility(new MilkSpiral(), 0);
+        setAbility(new Firefly(), 1);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Potion(PotionEffectType.SPEED, 1));
 
         DisguiseManager.addDisguise(owner, new BlazeDisguise(owner));
+    }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
     }
 
 }

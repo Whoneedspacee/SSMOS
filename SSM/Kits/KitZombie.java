@@ -10,6 +10,7 @@ import SSM.GameManagers.Disguises.ZombieDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitZombie extends Kit {
 
@@ -23,16 +24,14 @@ public class KitZombie extends Kit {
         this.menuItem = Material.ROTTEN_FLESH;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
-
+    @Override
+    public void initializeKit() {
         setArmor(Material.CHAINMAIL_BOOTS, 0);
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
 
-        setItem(Material.IRON_AXE, 0, new BileBlaster());
-        setItem(Material.BOW, 1);
+        setAbility(new BileBlaster(), 0);
 
         addAttribute(new ItemGenerator(Material.ARROW, 1, 2, 3));
         addAttribute(new Regeneration(regeneration, 20));
@@ -41,4 +40,17 @@ public class KitZombie extends Kit {
 
         DisguiseManager.addDisguise(owner, new ZombieDisguise(owner));
     }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.BOW, 1), 1);
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.BOW, 1), 1);
+    }
+
 }

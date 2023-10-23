@@ -1,8 +1,10 @@
 package SSM.Attributes;
 
 import SSM.GameManagers.CooldownManager;
+import SSM.GameManagers.GameManager;
 import SSM.SSM;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -15,7 +17,8 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     public enum AbilityUsage {
         LEFT_CLICK("Left-Click"),
         RIGHT_CLICK("Right-Click"),
-        BLOCKING("Hold/Release Block");
+        BLOCKING("Hold/Release Block"),
+        CHARGE_BOW("Charge Bow");
 
         private String message;
 
@@ -28,7 +31,8 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
         }
     }
 
-    public String name = "Base";
+    public String name = "No Set Name.";
+    protected String[] description = new String[] { ChatColor.RESET + "No Set Description." };
     protected Plugin plugin;
     protected Player owner;
     protected BukkitTask task;
@@ -39,10 +43,12 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
 
     public Attribute() {
         this.plugin = SSM.getInstance();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public void checkAndActivate() {
+        if(!GameManager.isPlaying()) {
+            return;
+        }
         if (CooldownManager.getInstance().getRemainingTimeFor(this, owner) <= 0) {
             if (expUsed > 0) {
                 if (owner.getExp() < expUsed) {
@@ -86,6 +92,10 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
 
     public String getUseMessage() {
         return useMessage;
+    }
+
+    public String[] getDescription() {
+        return description;
     }
 
 }

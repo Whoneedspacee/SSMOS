@@ -10,6 +10,7 @@ import SSM.GameManagers.Disguises.CreeperDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitCreeper extends Kit {
 
@@ -23,21 +24,33 @@ public class KitCreeper extends Kit {
         this.menuItem = Material.SULPHUR;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
+    @Override
+    public void initializeKit() {
         setArmor(Material.IRON_BOOTS, 0);
         setArmor(Material.LEATHER_LEGGINGS, 1);
         setArmor(Material.LEATHER_CHESTPLATE, 2);
         setArmor(Material.LEATHER_HELMET, 3);
 
-        setItem(Material.IRON_AXE, 0, new SulphurBomb());
-        setItem(Material.IRON_SPADE, 1, new Explode());
+        setAbility(new SulphurBomb(), 0);
+        setAbility(new Explode(), 1);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        //addAttribute(new Hunger(10));
         addAttribute(new LightningShield());
 
         DisguiseManager.addDisguise(owner, new CreeperDisguise(owner));
     }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+    }
+
 }

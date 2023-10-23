@@ -7,6 +7,7 @@ import SSM.GameManagers.Disguises.SheepDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitSheep extends Kit {
 
@@ -20,20 +21,28 @@ public class KitSheep extends Kit {
         this.menuItem = Material.WOOL;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
-
+    @Override
+    public void initializeKit() {
         setArmor(Material.CHAINMAIL_BOOTS, 0);
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
-
-        setItem(Material.IRON_SWORD, 0, null);
-        setItem(Material.IRON_AXE, 1, null);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(1, 1, 1, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new SheepDisguise(owner));
+    }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
     }
 
 }

@@ -2,7 +2,9 @@ package SSM.Kits;
 
 import SSM.Abilities.Ability;
 import SSM.Attributes.Attribute;
+import SSM.Events.GameStateChangeEvent;
 import SSM.GameManagers.DisguiseManager;
+import SSM.GameManagers.GameManager;
 import SSM.SSM;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,19 +12,23 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public abstract class Kit {
+public abstract class Kit implements Listener {
 
     /*  You must add your new kits to the allkits list in the main SSM.java file! */
 
     // used for finding the kit to equip on command, ex: /kit name
-    protected String name = "";
+    protected String name = "None";
     protected double damage = 0;
     protected double armor = 0;
     protected double knockback = 0;
@@ -38,13 +44,17 @@ public abstract class Kit {
     protected JavaPlugin plugin;
     protected Player owner;
     private boolean created = false;
+    private boolean preview_hotbar_equipped = false;
+    private boolean game_hotbar_equipped = false;
 
     // Kits are singleton, do not create them a second time
     public Kit() {
         this.plugin = SSM.getInstance();
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    public void equipKit(Player player) {
+    // Don't call this directly, use KitManager equip
+    public void setOwner(Player player) {
         if (created) {
             Bukkit.broadcastMessage(ChatColor.RED + "Tried to equip same kit instance twice.");
             return;
@@ -62,9 +72,43 @@ public abstract class Kit {
         player.getInventory().setBoots(null);
         player.setExp(0);
         hotbarAbilities = new Ability[9];
-
         player.setGameMode(GameMode.ADVENTURE);
+        initializeKit();
+        updatePlaying(GameManager.getState());
     }
+
+    protected abstract void initializeKit();
+
+    private void updatePlaying(short new_state) {
+        boolean game_hotbar = GameManager.isStarting(new_state) || GameManager.isPlaying(new_state);
+        // Set hotbar and register or unregister events for attributes
+        if(game_hotbar && game_hotbar_equipped == false) {
+            owner.getInventory().clear();
+            setGameHotbar();
+            game_hotbar_equipped = true;
+            preview_hotbar_equipped = false;
+        }
+        if(!game_hotbar && preview_hotbar_equipped == false) {
+            owner.getInventory().clear();
+            setPreviewHotbar();
+            preview_hotbar_equipped = true;
+            game_hotbar_equipped = false;
+        }
+        if(GameManager.isPlaying(new_state)) {
+            for(Attribute attribute : attributes) {
+                Bukkit.getPluginManager().registerEvents(attribute, plugin);
+            }
+        }
+        else {
+            for(Attribute attribute : attributes) {
+                HandlerList.unregisterAll(attribute);
+            }
+        }
+    }
+
+    public abstract void setPreviewHotbar();
+
+    public abstract void setGameHotbar();
 
     public void destroyKit() {
         DisguiseManager.removeDisguise(owner);
@@ -94,19 +138,32 @@ public abstract class Kit {
         owner.getInventory().setArmorContents(armor);
     }
 
-    public void setItem(Material itemMaterial, int inventorySlot) {
-        setItem(itemMaterial, inventorySlot, null);
+    public void setAbility(Ability ability, int hotbarSlot) {
+        Ability old = hotbarAbilities[hotbarSlot];
+        if(old != null) {
+            attributes.remove(old);
+            old.remove();
+        }
+        addAttribute(ability);
+        hotbarAbilities[hotbarSlot] = ability;
+        ItemStack item = owner.getInventory().getItem(hotbarSlot);
+        if(item != null) {
+            setItem(item, hotbarSlot);
+        }
     }
 
-    public void setItem(Material itemMaterial, int inventorySlot, Ability ability) {
+    public void setItem(ItemStack item, int hotbarSlot) {
+        setItem(item, hotbarSlot, hotbarAbilities[hotbarSlot]);
+    }
+
+    public void setItem(ItemStack item, int hotbarSlot, Attribute attribute) {
         if (owner == null) {
             return;
         }
-        ItemStack item = new ItemStack(itemMaterial);
         ItemMeta meta = item.getItemMeta();
-        if (ability != null) {
-            addAttribute(ability);
-            meta.setDisplayName("§e§l" + ability.getUsage().toString() + "§f§l" + " - " + "§a§l" + ability.name);
+        if (attribute != null) {
+            meta.setDisplayName("§e§l" + attribute.getUsage().toString() + "§f§l" + " - " + "§a§l" + attribute.name);
+            meta.setLore(Arrays.asList(attribute.getDescription()));
         }
         if (meta instanceof Damageable) {
             Damageable damageable = (Damageable) meta;
@@ -114,8 +171,7 @@ public abstract class Kit {
         }
         meta.spigot().setUnbreakable(true);
         item.setItemMeta(meta);
-        owner.getInventory().setItem(inventorySlot, item);
-        hotbarAbilities[inventorySlot] = ability;
+        owner.getInventory().setItem(hotbarSlot, item);
     }
 
     public ItemStack getMenuItemStack() {
@@ -158,6 +214,15 @@ public abstract class Kit {
         return attributes;
     }
 
+    public Attribute getAttributeByName(String name) {
+        for(Attribute attribute : attributes) {
+            if(attribute.name.equals(name)) {
+                return attribute;
+            }
+        }
+        return null;
+    }
+
     public Ability getAbilityInSlot(int inventorySlot) {
         return hotbarAbilities[inventorySlot];
     }
@@ -165,4 +230,10 @@ public abstract class Kit {
     public boolean hasDirectDoubleJump() {
         return hasDirectDoubleJump;
     }
+
+    @EventHandler
+    public void onGameStateChange(GameStateChangeEvent e) {
+        updatePlaying(e.getNewState());
+    }
+
 }

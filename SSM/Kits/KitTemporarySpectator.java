@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 public class KitTemporarySpectator extends Kit implements Listener {
 
@@ -15,11 +16,8 @@ public class KitTemporarySpectator extends Kit implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
-
-        setItem(Material.COMPASS, 0, null);
-
+    @Override
+    public void initializeKit() {
         addAttribute(new Compass());
 
         owner.setAllowFlight(true);
@@ -27,10 +25,10 @@ public class KitTemporarySpectator extends Kit implements Listener {
 
         // Hide player, prevents projectile and melee hitting
         for (Player hidefrom : Bukkit.getOnlinePlayers()) {
-            if (player.equals(hidefrom)) {
+            if (owner.equals(hidefrom)) {
                 continue;
             }
-            hidefrom.hidePlayer(player);
+            hidefrom.hidePlayer(owner);
         }
     }
 
@@ -47,6 +45,16 @@ public class KitTemporarySpectator extends Kit implements Listener {
             owner.setAllowFlight(false);
         }
         super.destroyKit();
+    }
+
+    @Override
+    public void setPreviewHotbar() {
+        return;
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.COMPASS, 1), 0);
     }
 
 }

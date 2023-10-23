@@ -9,6 +9,7 @@ import SSM.GameManagers.Disguises.SnowmanDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitSnowMan extends Kit {
 
@@ -22,16 +23,14 @@ public class KitSnowMan extends Kit {
         this.menuItem = Material.SNOW_BALL;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
-
+    @Override
+    public void initializeKit() {
         setArmor(Material.CHAINMAIL_BOOTS, 0);
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmor(Material.CHAINMAIL_HELMET, 3);
 
-        setItem(Material.IRON_SWORD, 0, new Blizzard());
-        setItem(Material.IRON_AXE, 1);
+        setAbility(new Blizzard(), 0);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
@@ -39,4 +38,17 @@ public class KitSnowMan extends Kit {
 
         DisguiseManager.addDisguise(owner, new SnowmanDisguise(owner));
     }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+    }
+
 }

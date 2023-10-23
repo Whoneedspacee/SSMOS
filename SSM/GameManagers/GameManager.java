@@ -1,6 +1,7 @@
 package SSM.GameManagers;
 
 import SSM.Commands.CommandVote;
+import SSM.Events.GameStateChangeEvent;
 import SSM.GameManagers.Maps.MapFile;
 import SSM.Kits.Kit;
 import SSM.Kits.KitTemporarySpectator;
@@ -106,6 +107,7 @@ public class GameManager implements Listener, Runnable {
 
             all_maps.add(new MapFile(map));
         }
+        setState(GameState.LOBBY_WAITING);
     }
 
     public void run() {
@@ -327,12 +329,30 @@ public class GameManager implements Listener, Runnable {
     }
 
     public static void setState(short value) {
+        GameStateChangeEvent event = new GameStateChangeEvent(state, value);
+        Bukkit.getPluginManager().callEvent(event);
         state = value;
         DisplayManager.buildScoreboard();
     }
 
     public static short getState() {
         return state;
+    }
+
+    public static boolean isStarting() {
+        return isStarting(state);
+    }
+
+    public static boolean isStarting(short given_state) {
+        return given_state == GameState.GAME_STARTING;
+    }
+
+    public static boolean isPlaying() {
+        return isPlaying(state);
+    }
+
+    public static boolean isPlaying(short given_state) {
+        return given_state == GameState.GAME_PLAYING;
     }
 
     public static void setTimeLeft(int time) {

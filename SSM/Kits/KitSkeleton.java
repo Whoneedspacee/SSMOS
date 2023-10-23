@@ -9,9 +9,11 @@ import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SkeletonDisguise;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitSkeleton extends Kit {
 
@@ -25,17 +27,16 @@ public class KitSkeleton extends Kit {
         this.menuItem = Material.BOW;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
-
+    @Override
+    public void initializeKit() {
         setArmor(Material.CHAINMAIL_BOOTS, 0);
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmor(Material.CHAINMAIL_HELMET, 3);
 
-        setItem(Material.IRON_AXE, 0, new BoneExplosion());
-        setItem(Material.BOW, 1, new RopedArrow());
-        setItem(Material.COMPASS, 2, null);
+        setAbility(new BoneExplosion(), 0);
+        setAbility(new RopedArrow(), 1);
+        setAbility(new BoneExplosion(), 0);
 
         addAttribute(new ItemGenerator(Material.ARROW, 1, 3, 3));
         addAttribute(new Regeneration(regeneration, 20));
@@ -44,6 +45,20 @@ public class KitSkeleton extends Kit {
         addAttribute(new Compass());
 
         DisguiseManager.addDisguise(owner, new SkeletonDisguise(owner));
+    }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.BOW, 1), 1);
+        setItem(new ItemStack(Material.ARROW, 1), 2, getAttributeByName("Barrage"));
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.BOW, 1), 1);
+        setItem(new ItemStack(Material.COMPASS, 1), 2);
     }
 
 }

@@ -9,6 +9,7 @@ import SSM.GameManagers.Disguises.PigDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitPig extends Kit {
 
@@ -22,14 +23,13 @@ public class KitPig extends Kit {
         this.menuItem = Material.PORK;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
+    @Override
+    public void initializeKit() {
         setArmor(Material.CHAINMAIL_BOOTS, 0);
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
-        setItem(Material.IRON_AXE, 0, new BouncyBacon());
-        setItem(Material.IRON_SPADE, 1);
+        setAbility(new BouncyBacon(), 0);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
@@ -37,4 +37,17 @@ public class KitPig extends Kit {
 
         DisguiseManager.addDisguise(owner, new PigDisguise(owner));
     }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+    }
+
 }

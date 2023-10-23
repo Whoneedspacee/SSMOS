@@ -10,6 +10,7 @@ import SSM.GameManagers.Disguises.SlimeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitSlime extends Kit {
 
@@ -23,21 +24,32 @@ public class KitSlime extends Kit {
         this.menuItem = Material.SLIME_BALL;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
-
+    @Override
+    public void initializeKit() {
         setArmor(Material.CHAINMAIL_BOOTS, 0);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmor(Material.CHAINMAIL_HELMET, 3);
 
-        setItem(Material.IRON_SWORD, 0, new SlimeRocket());
-        setItem(Material.IRON_AXE, 1, new SlimeSlam());
+        setAbility(new SlimeRocket(), 0);
+        setAbility(new SlimeSlam(), 1);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new ExpCharge(0.005f, 1, false));
         addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new SlimeDisguise(owner));
+    }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
     }
 
 }

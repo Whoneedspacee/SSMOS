@@ -9,6 +9,7 @@ import SSM.GameManagers.Disguises.WolfDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitWolf extends Kit {
 
@@ -22,20 +23,30 @@ public class KitWolf extends Kit {
         this.menuItem = Material.BONE;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
-
+    @Override
+    public void initializeKit() {
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
 
-        setItem(Material.IRON_AXE, 0);
-        setItem(Material.IRON_SPADE, 1, new WolfStrike());
+        setAbility(new WolfStrike(), 1);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new DirectDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
         addAttribute(new Ravage(8, 1, 3));
 
         DisguiseManager.addDisguise(owner, new WolfDisguise(owner));
+    }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
     }
 
 }

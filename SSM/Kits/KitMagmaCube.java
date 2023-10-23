@@ -9,6 +9,7 @@ import SSM.GameManagers.Disguises.MagmaCubeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitMagmaCube extends Kit {
 
@@ -22,19 +23,31 @@ public class KitMagmaCube extends Kit {
         this.menuItem = Material.MAGMA_CREAM;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
-
+    @Override
+    public void initializeKit() {
         setArmor(Material.CHAINMAIL_BOOTS, 0);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmor(Material.CHAINMAIL_HELMET, 3);
 
-        setItem(Material.IRON_AXE, 0, new MagmaBlast());
-        setItem(Material.IRON_SPADE, 1, new FlameDash());
+        setAbility(new MagmaBlast(), 0);
+        setAbility(new FlameDash(), 1);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new MagmaCubeDisguise(owner));
     }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+    }
+
 }

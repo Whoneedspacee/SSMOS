@@ -2,6 +2,7 @@ package SSM.GameManagers;
 
 import SSM.Abilities.Ability;
 import SSM.Attributes.Attribute;
+import SSM.Events.GameStateChangeEvent;
 import SSM.Kits.Kit;
 import SSM.Kits.*;
 import SSM.SSM;
@@ -71,7 +72,7 @@ public class KitManager implements Listener {
             e.printStackTrace();
         }
         if (kit != null) {
-            kit.equipKit(player);
+            kit.setOwner(player);
         }
         playerKit.put(player, kit);
         DisplayManager.buildScoreboard();
@@ -93,10 +94,6 @@ public class KitManager implements Listener {
     public static Ability getCurrentAbility(Player player) {
         Kit kit = KitManager.getPlayerKit(player);
         if (kit == null) {
-            return null;
-        }
-        List<Attribute> attributes = kit.getAttributes();
-        if (player.getInventory().getItemInHand().getItemMeta() == null) {
             return null;
         }
         int currentSlot = player.getInventory().getHeldItemSlot();
@@ -139,4 +136,5 @@ public class KitManager implements Listener {
             e.setCancelled(true);
         }
     }
+
 }

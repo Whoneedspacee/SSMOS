@@ -69,6 +69,10 @@ public abstract class Disguise {
     }
 
     public void showDisguise(Player player) {
+        // Do not show disguise to self
+        if (player.equals(owner)) {
+            return;
+        }
         // Armor Stand Destroy (if player sees them already)
         PacketPlayOutEntityDestroy destroy_packet = new PacketPlayOutEntityDestroy(armorstand.getId());
         Utils.sendPacket(player, destroy_packet);

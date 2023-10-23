@@ -1,6 +1,7 @@
 package SSM.Abilities;
 
 import SSM.GameManagers.OwnerEvents.OwnerLeftClickEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
@@ -22,6 +23,10 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
         this.cooldownTime = 5;
         this.usage = AbilityUsage.LEFT_CLICK;
         this.useMessage = "You fired";
+        this.description = 	new String[] {
+                ChatColor.RESET + "Instantly fires an arrow. When it ",
+                ChatColor.RESET + "collides with something, you are pulled",
+                ChatColor.RESET + "towards it, with great power."};
     }
 
     public void onOwnerLeftClick(PlayerAnimationEvent e) {

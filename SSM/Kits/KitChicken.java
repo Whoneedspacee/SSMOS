@@ -7,6 +7,7 @@ import SSM.GameManagers.Disguises.ChickenDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class KitChicken extends Kit {
 
@@ -20,18 +21,26 @@ public class KitChicken extends Kit {
         this.menuItem = Material.EGG;
     }
 
-    public void equipKit(Player player) {
-        super.equipKit(player);
-
+    @Override
+    public void initializeKit() {
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
-
-        setItem(Material.IRON_SWORD, 0, null);
-        setItem(Material.IRON_AXE, 1, null);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new ChickenDisguise(owner));
+    }
+
+    @Override
+    public void setPreviewHotbar() {
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+    }
+
+    @Override
+    public void setGameHotbar() {
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
     }
 
 }

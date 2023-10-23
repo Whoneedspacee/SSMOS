@@ -57,7 +57,6 @@ public class CommandKit implements CommandExecutor {
                 slot += 2;
             }
         }
-//        player.getWorld().playSound(player.getLocation(), Sound.ORB_PICKUP, 1f, 1f);
         player.openInventory(selectKit);
 
         return true;

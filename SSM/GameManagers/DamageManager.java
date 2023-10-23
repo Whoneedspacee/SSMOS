@@ -38,7 +38,7 @@ public class DamageManager implements Listener {
 
         public double getTimeSince() {
             double time = (System.currentTimeMillis() - damage_time) / 1000.0;
-            time = Math.floor(time * 10) / 10;
+            time = Math.round(time * 10) / 10;
             return time;
         }
 
@@ -58,7 +58,7 @@ public class DamageManager implements Listener {
             if(damage_amount >= 1000) {
                 return "Infinite";
             }
-            return damage_amount + "";
+            return (Math.round(damage_amount * 10) / 10) + "";
         }
 
         public long getDamageTime() { return damage_time; }

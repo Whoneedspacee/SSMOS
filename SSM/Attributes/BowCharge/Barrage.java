@@ -3,6 +3,7 @@ package SSM.Attributes.BowCharge;
 import SSM.GameManagers.KitManager;
 import SSM.Kits.KitSkeleton;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -22,6 +23,11 @@ public class Barrage extends BowCharge {
     public Barrage(double delay, double rate, int maxCharge) {
         super(delay, rate, maxCharge);
         this.name = "Barrage";
+        this.usage = AbilityUsage.CHARGE_BOW;
+        this.description = 	new String[] {
+                        ChatColor.RESET + "Slowly load more arrows into your bow.",
+                        ChatColor.RESET + "When you release, you will quickly fire",
+                        ChatColor.RESET + "all the arrows in succession."};
     }
 
     public void firedBow(Arrow arrow) {
