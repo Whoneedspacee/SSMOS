@@ -529,7 +529,7 @@ public class GameManager implements Listener, Runnable {
         Player player = (Player) e.getWhoClicked();
         ItemStack item = e.getCurrentItem();
         if (item == null) return;
-        if (!e.getView().getTitle().contains("Choose")) return;
+        if (!e.getView().getTitle().contains("Map")) return;
         if (GameManager.getState() > GameManager.GameState.LOBBY_VOTING) {
             player.closeInventory();
             return;
