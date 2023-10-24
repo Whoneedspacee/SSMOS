@@ -43,8 +43,8 @@ public class Utils {
     }
 
     public static void sendTitleMessage(Player player, String title_string, String subtitle_string,
-                                        int fade_in, int stay, int fade_out) {
-        PacketPlayOutTitle timing_packet = new PacketPlayOutTitle(fade_in, stay, fade_out);
+                                        int fade_in_ticks, int stay_ticks, int fade_out_ticks) {
+        PacketPlayOutTitle timing_packet = new PacketPlayOutTitle(fade_in_ticks, stay_ticks, fade_out_ticks);
         Utils.sendPacket(player, timing_packet);
         ChatMessage subtitle_message = new ChatMessage(subtitle_string);
         PacketPlayOutTitle subtitle_packet = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, subtitle_message);

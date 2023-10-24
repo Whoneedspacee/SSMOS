@@ -80,6 +80,9 @@ public abstract class Kit implements Listener {
     protected abstract void initializeKit();
 
     private void updatePlaying(short new_state) {
+        if(owner == null) {
+            return;
+        }
         boolean game_hotbar = GameManager.isStarting(new_state) || GameManager.isPlaying(new_state);
         // Set hotbar and register or unregister events for attributes
         if(game_hotbar && game_hotbar_equipped == false) {

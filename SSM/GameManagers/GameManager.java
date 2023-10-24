@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -71,7 +72,7 @@ public class GameManager implements Listener, Runnable {
     private static List<Player> spectators = new ArrayList<Player>();
     private static HashMap<Player, Integer> lives = new HashMap<Player, Integer>();
     private static short state = GameState.LOBBY_WAITING;
-    public static int time_left = -1;
+    private static long time_remaining_ms = 0;
     public static World lobby_world = Bukkit.getWorlds().get(0);
     public static MapFile chosen_map = null;
     public static List<MapFile> all_maps = new ArrayList<MapFile>();
@@ -85,7 +86,7 @@ public class GameManager implements Listener, Runnable {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.teleport(lobby_world.getSpawnLocation());
         }
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 20L);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 0L);
         File file = new File("ssm_maps");
         if (!file.exists()) {
             file.mkdir();
@@ -111,7 +112,6 @@ public class GameManager implements Listener, Runnable {
     }
 
     public void run() {
-        //Bukkit.broadcastMessage(GameState.toString(state) + " Time Left: " + time_left);
         DisplayManager.buildScoreboard();
         if (state == GameState.LOBBY_WAITING) {
             players = lobby_world.getPlayers();
@@ -144,7 +144,7 @@ public class GameManager implements Listener, Runnable {
 
     private void doLobbyWaiting() {
         if (getTotalPlayers() >= 2) {
-            setTimeLeft(16);
+            setTimeLeft(15);
             setState(GameState.LOBBY_VOTING);
             run();
             return;
@@ -157,19 +157,19 @@ public class GameManager implements Listener, Runnable {
             run();
             return;
         }
-        if (time_left <= 0) {
+        if (time_remaining_ms <= 0) {
             chosen_map = getChosenMap();
             Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + chosen_map.getName() + ChatColor.WHITE + ChatColor.BOLD + " won the vote!");
             for (Player player : lobby_world.getPlayers()) {
                 player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
             }
             chosen_map.createWorld();
-            setTimeLeft(16);
+            setTimeLeft(15);
             setState(GameState.LOBBY_STARTING);
             run();
             return;
         }
-        time_left--;
+        time_remaining_ms -= 50;
     }
 
     private void doLobbyStarting() {
@@ -178,19 +178,35 @@ public class GameManager implements Listener, Runnable {
             run();
             return;
         }
-        if (time_left <= 0) {
+        if (time_remaining_ms <= 0) {
             if (chosen_map == null) {
                 return;
             }
             for (Player player : players) {
-                player.teleport(chosen_map.getRandomRespawnPoint());
                 if (isSpectator(player)) {
+                    player.teleport(chosen_map.getCopyWorld().getSpawnLocation());
                     continue;
                 }
+                Location starting_point = chosen_map.getRandomRespawnPoint(player);
+                player.teleport(starting_point);
                 lives.put(player, 4);
             }
             for (Player player : chosen_map.getCopyWorld().getPlayers()) {
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+                player.sendMessage("");
+                player.sendMessage("");
+                player.sendMessage("");
+                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs",
+                        "", 0, 45, 0);
+                player.sendMessage(ChatColor.DARK_GREEN + "" + ChatColor.STRIKETHROUGH + "=============================================");
+                player.sendMessage(ChatColor.GREEN + "Game - " + ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs");
+                player.sendMessage("");
+                player.sendMessage(ChatColor.WHITE + "  Each player has 3 respawns");
+                player.sendMessage(ChatColor.WHITE + "  Attack to restore hunger!");
+                player.sendMessage(ChatColor.WHITE + "  Last player alive wins!");
+                player.sendMessage("");
+                player.sendMessage(chosen_map.toString());
+                player.sendMessage(ChatColor.DARK_GREEN + "" + ChatColor.STRIKETHROUGH + "=============================================");
             }
             // Wait until after teleporting to display disguises properly
             for (Player player : chosen_map.getCopyWorld().getPlayers()) {
@@ -206,12 +222,17 @@ public class GameManager implements Listener, Runnable {
                     KitManager.equipPlayer(player, KitManager.getAllKits().get(0));
                 }
             }
-            setTimeLeft(11);
+            setTimeLeft(10);
             setState(GameState.GAME_STARTING);
             run();
             return;
         }
-        time_left--;
+        for(Player player : lobby_world.getPlayers()) {
+            if (time_remaining_ms % 1000 == 0 && time_remaining_ms <= 4000) {
+                player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 1f);
+            }
+        }
+        time_remaining_ms -= 50;
     }
 
     private void doGameStarting() {
@@ -221,12 +242,44 @@ public class GameManager implements Listener, Runnable {
             run();
             return;
         }
-        if (time_left <= 0) {
+        if (time_remaining_ms <= 0) {
+            for(Player player : chosen_map.copy_world.getPlayers()) {
+                player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 1f);
+            }
             setState(GameState.GAME_PLAYING);
             run();
             return;
         }
-        time_left--;
+        for(Player player : chosen_map.copy_world.getPlayers()) {
+            int barLength = 24;
+            int startRedBarInterval = barLength - (int) ((time_remaining_ms / (double) 10000) * barLength);
+            StringBuilder sb = new StringBuilder("      §fGame Start ");
+            for (int i = 0; i < barLength; i++) {
+                if (i < startRedBarInterval) {
+                    sb.append("§a▌");
+                } else {
+                    sb.append("§c▌");
+                }
+            }
+            sb.append(" §f" + Utils.msToSeconds(time_remaining_ms) + " Seconds");
+            Utils.sendActionBarMessage(sb.toString(), player);
+            if(time_remaining_ms == 8000) {
+                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs",
+                        "Each player has 3 respawns", 0, 45, 0);
+            }
+            if(time_remaining_ms == 6000) {
+                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs",
+                        "Attack to restore hunger!", 0, 45, 0);
+            }
+            if(time_remaining_ms == 4000) {
+                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs",
+                        "Last player alive wins!", 0, 45, 0);
+            }
+            if(time_remaining_ms % 1000 == 0) {
+                player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1f, 1f);
+            }
+        }
+        time_remaining_ms -= 50;
     }
 
     private void doGamePlaying() {
@@ -236,9 +289,18 @@ public class GameManager implements Listener, Runnable {
             return;
         }
         if (lives.size() <= 1) {
-            Bukkit.broadcastMessage(lives.keySet().toArray(new Player[1])[0].getName() + " won the game!");
+            for(Player player : chosen_map.copy_world.getPlayers()) {
+                player.sendMessage(ChatColor.DARK_GREEN + "" + ChatColor.STRIKETHROUGH + "=============================================");
+                player.sendMessage(ChatColor.GREEN + "Game - " + ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs");
+                player.sendMessage("");
+                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + " 1st Place " +
+                        ChatColor.RESET + lives.keySet().toArray(new Player[1])[0].getName());
+                player.sendMessage("");
+                player.sendMessage(chosen_map.toString());
+                player.sendMessage(ChatColor.DARK_GREEN + "" + ChatColor.STRIKETHROUGH + "=============================================");
+            }
             lives.clear();
-            setTimeLeft(11);
+            setTimeLeft(10);
             setState(GameState.GAME_ENDING);
             run();
             return;
@@ -246,7 +308,7 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doGameEnding() {
-        if (time_left <= 0) {
+        if (time_remaining_ms <= 0) {
             players.clear();
             lives.clear();
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -259,7 +321,7 @@ public class GameManager implements Listener, Runnable {
             run();
             return;
         }
-        time_left--;
+        time_remaining_ms -= 50;
     }
 
     public static void death(Player player, LivingEntity damager) {
@@ -278,9 +340,9 @@ public class GameManager implements Listener, Runnable {
         DamageManager.deathReport(player);
         // Out of the game check
         if (lives.get(player) <= 1) {
-            Utils.sendTitleMessage(player, ChatColor.BOLD + "" + ChatColor.RED + "You Died", "",
+            Utils.sendTitleMessage(player, ChatColor.RED + "You Died", "",
                     10, 50, 10);
-            player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "You ran out of lives!");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You ran out of lives!");
             player.playSound(player.getLocation(), Sound.EXPLODE, 2f, 1f);
             lives.remove(player);
             KitManager.equipPlayer(player, new KitTemporarySpectator());
@@ -290,8 +352,8 @@ public class GameManager implements Listener, Runnable {
         // Normal Life Lost
         lives.put(player, lives.get(player) - 1);
         Utils.sendTitleMessage(player, "", "Respawning in 4 seconds...", 10, 50, 10);
-        player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "You have died!");
-        player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "You have " + lives.get(player) +
+        player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You have died!");
+        player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You have " + lives.get(player) +
                 " " + (lives.get(player) == 1 ? "life" : "lives") + " left!");
         player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 2f, 0.5f);
         DisplayManager.buildScoreboard();
@@ -302,7 +364,7 @@ public class GameManager implements Listener, Runnable {
             @Override
             public void run() {
                 if (state == GameState.GAME_PLAYING && lives.get(player) > 0) {
-                    player.teleport(chosen_map.getRandomRespawnPoint());
+                    player.teleport(chosen_map.getRandomRespawnPoint(player));
                     Utils.sendTitleMessage(player, "", DisplayManager.getLivesColor(player) +
                                     "" + lives.get(player) + " " + (lives.get(player) == 1 ? "life" : "lives") + " left!",
                             10, 50, 10);
@@ -355,12 +417,12 @@ public class GameManager implements Listener, Runnable {
         return given_state == GameState.GAME_PLAYING;
     }
 
-    public static void setTimeLeft(int time) {
-        time_left = time;
+    public static void setTimeLeft(double time) {
+        time_remaining_ms = (long) (time * 1000.0);
     }
 
     public static int getTimeLeft() {
-        return time_left;
+        return (int) (time_remaining_ms / 1000.0);
     }
 
     public static int getTotalPlayers() {
@@ -425,6 +487,17 @@ public class GameManager implements Listener, Runnable {
         }
         // Choose random from tied list
         return tied.get((int) (Math.random() * tied.size()));
+    }
+
+    @EventHandler
+    public void PlayerMove(PlayerMoveEvent e) {
+        if(!isStarting()) {
+            return;
+        }
+        Location to = e.getFrom();
+        to.setPitch(e.getTo().getPitch());
+        to.setYaw(e.getTo().getYaw());
+        e.setTo(to);
     }
 
     @EventHandler

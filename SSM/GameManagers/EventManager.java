@@ -35,15 +35,14 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
-        if(!GameManager.isPlaying()) {
-            return;
-        }
         Player player = e.getPlayer();
         Ability ability = KitManager.getCurrentAbility(player);
         if (ability == null) {
             return;
         }
-
+        if(!GameManager.isPlaying()) {
+            return;
+        }
         if (ability instanceof OwnerRightClickEvent && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
             OwnerRightClickEvent rightClick = (OwnerRightClickEvent) ability;
             rightClick.onOwnerRightClick(e);

@@ -26,12 +26,12 @@ public class DamageUtil {
         if(lightning && DamageUtil.canDamage(player, 1000)) {
             player.getWorld().strikeLightningEffect(player.getLocation());
         }
-        player.teleport(player.getWorld().getSpawnLocation());
         if (DamageUtil.canDamage(player, 1000)) {
             DamageUtil.damage(player, null, 1000,
                     0, true, EntityDamageEvent.DamageCause.VOID, null, null,
                     new DamageManager.DamageRecord(player.getName(), "Void", 1000, "World Border"));
         }
+        player.teleport(player.getWorld().getSpawnLocation());
     }
 
     public static void damage(LivingEntity damagee, LivingEntity damager, double damage) {

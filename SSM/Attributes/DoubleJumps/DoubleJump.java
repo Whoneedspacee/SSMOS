@@ -42,9 +42,14 @@ public abstract class DoubleJump extends Attribute {
      */
     @EventHandler
     public void playerFlightEvent(PlayerToggleFlightEvent e) {
-
         Player player = e.getPlayer();
         if (!player.equals(owner)) {
+            return;
+        }
+
+        if(!GameManager.isPlaying()) {
+            owner.setAllowFlight(false);
+            owner.setFlying(false);
             return;
         }
 
@@ -77,6 +82,7 @@ public abstract class DoubleJump extends Attribute {
     public void resetDoubleJumps() {
         if(!GameManager.isPlaying()) {
             owner.setAllowFlight(false);
+            owner.setFlying(false);
             return;
         }
         remainingDoubleJumps = maxDoubleJumps;

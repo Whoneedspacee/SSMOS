@@ -38,8 +38,11 @@ public class DamageManager implements Listener {
 
         public double getTimeSince() {
             double time = (System.currentTimeMillis() - damage_time) / 1000.0;
-            time = Math.round(time * 10) / 10;
             return time;
+        }
+
+        public String getTimeSinceString() {
+            return String.format("%.1f", getTimeSince());
         }
 
         public String getDamagerName() {
@@ -58,7 +61,7 @@ public class DamageManager implements Listener {
             if(damage_amount >= 1000) {
                 return "Infinite";
             }
-            return (Math.round(damage_amount * 10) / 10) + "";
+            return String.format("%.1f", damage_amount);
         }
 
         public long getDamageTime() { return damage_time; }
@@ -95,7 +98,7 @@ public class DamageManager implements Listener {
                     ChatColor.YELLOW + record.getDamagerName() + " " +
                     ChatColor.GRAY + "[" + ChatColor.YELLOW + record.getDamageAmount() + ChatColor.GRAY + "] [" +
                     ChatColor.GREEN + record.getDamageReason() + ChatColor.GRAY + "] [" +
-                    ChatColor.GREEN + record.getTimeSince() + " Seconds Prior" + ChatColor.GRAY + "]");
+                    ChatColor.GREEN + record.getTimeSinceString() + " Seconds Prior" + ChatColor.GRAY + "]");
             count++;
             damage_record.remove(i);
         }
