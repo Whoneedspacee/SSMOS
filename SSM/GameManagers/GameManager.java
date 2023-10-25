@@ -315,6 +315,7 @@ public class GameManager implements Listener, Runnable {
                 player.teleport(lobby_world.getSpawnLocation());
                 players.add(player);
                 KitManager.unequipPlayer(player);
+                Utils.fullHeal(player);
             }
             chosen_map.deleteWorld();
             setState(GameState.LOBBY_WAITING);
@@ -329,7 +330,7 @@ public class GameManager implements Listener, Runnable {
             return;
         }
         // Don't do anything before setting to full hp again
-        player.setHealth(player.getMaxHealth());
+        Utils.fullHeal(player);
         // Blood Particles
         EffectUtil.createEffect(player.getEyeLocation(), 10, 0.5, Sound.HURT_FLESH,
                 1f, 1f, Material.INK_SACK, (byte) 1, 10, true);
@@ -494,6 +495,9 @@ public class GameManager implements Listener, Runnable {
         if(!isStarting()) {
             return;
         }
+        if(!lives.containsKey(e.getPlayer())) {
+            return;
+        }
         Location to = e.getFrom();
         to.setPitch(e.getTo().getPitch());
         to.setYaw(e.getTo().getYaw());
@@ -521,6 +525,9 @@ public class GameManager implements Listener, Runnable {
         players.remove(e.getPlayer());
         lives.remove(e.getPlayer());
         spectators.remove(e.getPlayer());
+        for (MapFile map : all_maps) {
+            map.getVoted().remove(e.getPlayer());
+        }
         DisplayManager.buildScoreboard();
     }
 

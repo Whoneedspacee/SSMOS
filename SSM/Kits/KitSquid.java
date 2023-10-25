@@ -42,15 +42,15 @@ public class KitSquid extends Kit {
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 1);
         setItem(new ItemStack(Material.IRON_SPADE, 1), 2);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
+        setItem(new ItemStack(Material.IRON_SWORD, 1), 1);
         setItem(new ItemStack(Material.IRON_SPADE, 1), 2);
     }
 

@@ -3,6 +3,7 @@ package SSM.GameManagers;
 import SSM.Abilities.Ability;
 import SSM.Attributes.Attribute;
 import SSM.GameManagers.OwnerEvents.*;
+import SSM.Kits.Kit;
 import SSM.SSM;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
@@ -36,11 +37,9 @@ public class EventManager implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
+        Kit kit = KitManager.getPlayerKit(player);
         Ability ability = KitManager.getCurrentAbility(player);
         if (ability == null) {
-            return;
-        }
-        if(!GameManager.isPlaying()) {
             return;
         }
         if (ability instanceof OwnerRightClickEvent && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
@@ -53,16 +52,12 @@ public class EventManager implements Listener {
     // the reason why it randomly doesn't work sometimes
     @EventHandler
     public void onPlayerLeftClick(PlayerAnimationEvent e) {
-        if(!GameManager.isPlaying()) {
-            return;
-        }
         Player player = e.getPlayer();
+        Kit kit = KitManager.getPlayerKit(player);
         Ability ability = KitManager.getCurrentAbility(player);
-
         if (ability == null) {
             return;
         }
-
         if (ability instanceof OwnerLeftClickEvent && (e.getAnimationType() == PlayerAnimationType.ARM_SWING)) {
             OwnerLeftClickEvent leftClick = (OwnerLeftClickEvent) ability;
             leftClick.onOwnerLeftClick(e);
@@ -71,9 +66,6 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent e) {
-        if(!GameManager.isPlaying()) {
-            return;
-        }
         Entity entity = e.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
@@ -92,9 +84,6 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent e) {
-        if(!GameManager.isPlaying()) {
-            return;
-        }
         Entity damagee = e.getEntity();
         Entity damager = e.getDamager();
         if (damager instanceof Player) {
@@ -127,7 +116,12 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void checkFiredBow(EntityShootBowEvent e) {
-        if(e.getEntity() instanceof Player && !GameManager.isPlaying()) {
+        if(e.getEntity() instanceof Player) {
+            Player player = (Player) e.getEntity();
+            Kit kit = KitManager.getPlayerKit(player);
+            if(kit.getGameHotbarEquipped()) {
+                return;
+            }
             e.setCancelled(true);
         }
     }

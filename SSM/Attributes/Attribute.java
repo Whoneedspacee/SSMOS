@@ -2,6 +2,8 @@ package SSM.Attributes;
 
 import SSM.GameManagers.CooldownManager;
 import SSM.GameManagers.GameManager;
+import SSM.GameManagers.KitManager;
+import SSM.Kits.Kit;
 import SSM.SSM;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -46,7 +48,8 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     }
 
     public void checkAndActivate() {
-        if(!GameManager.isPlaying()) {
+        Kit kit = KitManager.getPlayerKit(owner);
+        if(kit != null && !kit.getGameHotbarEquipped()) {
             return;
         }
         if (CooldownManager.getInstance().getRemainingTimeFor(this, owner) <= 0) {

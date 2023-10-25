@@ -32,6 +32,7 @@ public class DamageUtil {
                     new DamageManager.DamageRecord(player.getName(), "Void", 1000, "World Border"));
         }
         player.teleport(player.getWorld().getSpawnLocation());
+        player.setFlying(true);
     }
 
     public static void damage(LivingEntity damagee, LivingEntity damager, double damage) {
@@ -60,8 +61,7 @@ public class DamageUtil {
 
     public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
                               double knockbackMultiplier, boolean ignoreArmor, DamageCause cause, Location origin, String reason, DamageManager.DamageRecord record) {
-        // Replace disguise being hit with owner
-        if (damagee == null) {
+        if (damagee == null || damage < 0) {
             return;
         }
         if (!canDamage(damagee, damage)) {
@@ -202,6 +202,18 @@ public class DamageUtil {
             }
         }
         return true;
+    }
+
+    public static boolean isIntangible(LivingEntity check) {
+        if(!(check instanceof Player)) {
+            return false;
+        }
+        Player player = (Player) check;
+        Kit kit = KitManager.getPlayerKit(player);
+        if(kit == null) {
+            return false;
+        }
+        return kit.isIntangible();
     }
 
     public static void playDamageSound(LivingEntity damagee, EntityType type) {

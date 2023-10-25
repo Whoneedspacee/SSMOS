@@ -54,6 +54,7 @@ public class SSM extends JavaPlugin implements Listener {
         this.getCommand("vote").setExecutor(new CommandVote());
         this.getCommand("spectate").setExecutor(new CommandSpectate());
         this.getCommand("unloadworld").setExecutor(new CommandUnloadWorld());
+        this.getCommand("setplaying").setExecutor(new CommandSetPlaying());
         // Do not do anything before manager creation please
     }
 

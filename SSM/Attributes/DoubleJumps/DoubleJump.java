@@ -2,6 +2,8 @@ package SSM.Attributes.DoubleJumps;
 
 import SSM.Attributes.Attribute;
 import SSM.GameManagers.GameManager;
+import SSM.GameManagers.KitManager;
+import SSM.Kits.Kit;
 import SSM.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -30,6 +32,12 @@ public abstract class DoubleJump extends Attribute {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
+                Kit kit = KitManager.getPlayerKit(owner);
+                if(kit == null || !kit.getGameHotbarEquipped()) {
+                    owner.setAllowFlight(false);
+                    owner.setFlying(false);
+                    return;
+                }
                 if (Utils.entityIsOnGround(owner)) {
                     resetDoubleJumps();
                 }
@@ -44,12 +52,6 @@ public abstract class DoubleJump extends Attribute {
     public void playerFlightEvent(PlayerToggleFlightEvent e) {
         Player player = e.getPlayer();
         if (!player.equals(owner)) {
-            return;
-        }
-
-        if(!GameManager.isPlaying()) {
-            owner.setAllowFlight(false);
-            owner.setFlying(false);
             return;
         }
 
@@ -80,11 +82,6 @@ public abstract class DoubleJump extends Attribute {
     }
 
     public void resetDoubleJumps() {
-        if(!GameManager.isPlaying()) {
-            owner.setAllowFlight(false);
-            owner.setFlying(false);
-            return;
-        }
         remainingDoubleJumps = maxDoubleJumps;
         owner.setAllowFlight(true);
     }

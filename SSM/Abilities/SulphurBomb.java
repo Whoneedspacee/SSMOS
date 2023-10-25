@@ -27,32 +27,7 @@ public class SulphurBomb extends Ability implements OwnerRightClickEvent {
 
     public void activate() {
         owner.getWorld().playSound(owner.getLocation(), Sound.CREEPER_DEATH, 2f, 1.5f);
-        ItemStack sulphur = new ItemStack(Material.COAL, 1);
-        Item firing = owner.getWorld().dropItem(owner.getEyeLocation(), sulphur);
-        BombProjectile projectile = new BombProjectile(plugin, name, firing);
-        projectile.setFirer(owner);
-        projectile.launchProjectile();
+        return;
     }
 
-    class BombProjectile extends EntityProjectile {
-
-        public BombProjectile(Plugin plugin, String name, Entity projectile) {
-            super(plugin, name, projectile);
-            this.setDamage(6.0);
-            this.setHitboxSize(0.5);
-            this.setKnockback(2.5);
-        }
-
-        @Override
-        public void doVelocity() {
-            VelocityUtil.setVelocity(projectile, owner.getLocation().getDirection(),
-                    1, false, 0, 0.2, 10, false);
-        }
-
-        @Override
-        public boolean onHit(LivingEntity target) {
-            owner.getWorld().playEffect(projectile.getLocation(), Effect.EXPLOSION_LARGE, 1);
-            return super.onHit(target);
-        }
-    }
 }

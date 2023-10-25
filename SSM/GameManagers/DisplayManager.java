@@ -4,6 +4,7 @@ import SSM.Kits.Kit;
 import SSM.SSM;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,17 +25,20 @@ public class DisplayManager implements Listener {
     }
 
     public static void buildScoreboard() {
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        Objective obj = scoreboard.getObjective("menu");
+        if(obj != null) {
+            obj.unregister();
+        }
+        scoreboard.registerNewObjective("menu", "dummy");
         if (GameManager.getState() == GameManager.GameState.LOBBY_WAITING) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-                Objective obj = scoreboard.registerNewObjective("menu", "dummy");
                 Kit kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
                 if (kit != null) {
                     kit_name = kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Waiting for players...");
-                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 obj.getScore("").setScore(12);
                 obj.getScore(ChatColor.YELLOW + "" + ChatColor.BOLD + "Players").setScore(11);
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
@@ -47,21 +51,19 @@ public class DisplayManager implements Listener {
                 obj.getScore(ChatColor.YELLOW + "").setScore(3);
                 obj.getScore(ChatColor.AQUA + "" + ChatColor.BOLD + "Server").setScore(2);
                 obj.getScore("SSM-1").setScore(1);
+                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 player.setScoreboard(scoreboard);
             }
             return;
         }
         if (GameManager.getState() == GameManager.GameState.LOBBY_VOTING) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-                Objective obj = scoreboard.registerNewObjective("menu", "dummy");
                 Kit kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
                 if (kit != null) {
                     kit_name = kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Voting ends in " + GameManager.getTimeLeft() + " seconds");
-                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 obj.getScore("").setScore(12);
                 obj.getScore(ChatColor.YELLOW + "" + ChatColor.BOLD + "Players").setScore(11);
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
@@ -74,21 +76,19 @@ public class DisplayManager implements Listener {
                 obj.getScore(ChatColor.YELLOW + "").setScore(3);
                 obj.getScore(ChatColor.AQUA + "" + ChatColor.BOLD + "Server").setScore(2);
                 obj.getScore("SSM-1").setScore(1);
+                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 player.setScoreboard(scoreboard);
             }
             return;
         }
         if (GameManager.getState() == GameManager.GameState.LOBBY_STARTING) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-                Objective obj = scoreboard.registerNewObjective("menu", "dummy");
                 Kit kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
                 if (kit != null) {
                     kit_name = kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Starting in " + GameManager.getTimeLeft() + " seconds");
-                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 obj.getScore("").setScore(12);
                 obj.getScore(ChatColor.YELLOW + "" + ChatColor.BOLD + "Players").setScore(11);
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
@@ -101,40 +101,36 @@ public class DisplayManager implements Listener {
                 obj.getScore(ChatColor.YELLOW + "").setScore(3);
                 obj.getScore(ChatColor.AQUA + "" + ChatColor.BOLD + "Server").setScore(2);
                 obj.getScore("SSM-1").setScore(1);
+                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 player.setScoreboard(scoreboard);
             }
             return;
         }
         if (GameManager.getState() == GameManager.GameState.GAME_STARTING) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-                Objective obj = scoreboard.registerNewObjective("menu", "dummy");
                 Kit kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
                 if (kit != null) {
                     kit_name = kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "SSMOS");
-                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 obj.getScore("").setScore(4);
                 obj.getScore(ChatColor.YELLOW + "" + ChatColor.BOLD + "Players").setScore(3);
                 obj.getScore(GameManager.getTotalPlayers() + " Players").setScore(2);
                 obj.getScore(ChatColor.RED + "").setScore(1);
+                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 player.setScoreboard(scoreboard);
             }
             return;
         }
         if (GameManager.getState() == GameManager.GameState.GAME_PLAYING) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-                Objective obj = scoreboard.registerNewObjective("menu", "dummy");
                 Kit kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
                 if (kit != null) {
                     kit_name = kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "SSMOS");
-                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 int score = 1;
                 obj.getScore("").setScore(score++);
                 // This is terrible forgive my laziness
@@ -165,6 +161,7 @@ public class DisplayManager implements Listener {
                 obj.getScore(ChatColor.RED + "").setScore(score++);
                 obj.getScore(ChatColor.YELLOW + "" + ChatColor.BOLD + "Players").setScore(score++);
                 obj.getScore(ChatColor.GREEN + "").setScore(score++);
+                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 player.setScoreboard(scoreboard);
             }
             return;

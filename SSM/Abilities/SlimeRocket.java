@@ -86,9 +86,9 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
         slime.setMetadata("Slime Owner", new FixedMetadataValue(plugin, owner.getUniqueId().toString()));
         //slime.leaveVehicle();
         //owner.eject();
-        SlimeProjectile projectile = new SlimeProjectile(plugin, name, slime, charge);
-        projectile.setFirer(owner);
-        projectile.launchProjectile();
+        //SlimeProjectile projectile = new SlimeProjectile(plugin, name, slime, charge);
+        //projectile.setFirer(owner);
+        //projectile.launchProjectile();
         task_clear_slime = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
@@ -121,75 +121,6 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
                 }
             }
         }, 0, 20L);
-    }
-
-    class SlimeProjectile extends EntityProjectile {
-
-        double charge = 0;
-        private List<Entity> already_hit = new ArrayList<Entity>();
-
-        public SlimeProjectile(Plugin plugin, String name, Entity projectile, double charge) {
-            super(plugin, name, projectile);
-            this.setHitboxSize(1.0);
-            this.setKnockback(3);
-            this.setLastsOnGround(true);
-            this.setClearOnFinish(false);
-            this.setResetDamageTicks(true);
-            this.charge = charge;
-        }
-
-        @Override
-        public void doVelocity() {
-            VelocityUtil.setVelocity(projectile, owner.getLocation().getDirection(),
-                    1 + charge / 2d, false, 0, 0.2, 10, true);
-        }
-
-        @Override
-        public boolean onHit(LivingEntity target) {
-            if (already_hit.contains(target)) {
-                return false;
-            }
-            already_hit.add(target);
-            Slime slime = (Slime) projectile;
-            this.setDamage(3 + slime.getSize() * 3);
-            return super.onHit(target);
-        }
-
-    }
-
-    @EventHandler
-    public void SlimeTarget(EntityTargetEvent e) {
-        Entity target = e.getTarget();
-        Entity slime = e.getEntity();
-        if (target == null || slime == null) {
-            return;
-        }
-        if (!slime.hasMetadata("Slime Owner")) {
-            return;
-        }
-        List<MetadataValue> values = slime.getMetadata("Slime Owner");
-        MetadataValue owner = values.get(0);
-        if (owner.asString().equals(target.getUniqueId().toString())) {
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void SlimeDamage(EntityDamageByEntityEvent e) {
-        Entity target = e.getEntity();
-        Entity attacker = e.getDamager();
-        if (!attacker.hasMetadata("Slime Owner")) {
-            return;
-        }
-        e.setCancelled(true);
-        Slime slime = (Slime) attacker;
-        List<MetadataValue> values = slime.getMetadata("Slime Owner");
-        MetadataValue owner = values.get(0);
-        if (!owner.asString().equals(target.getUniqueId().toString())) {
-            // Handle slime damage ourselves
-            DamageUtil.damage((LivingEntity) target, slime, slime.getSize() * 2,
-                    2, false, EntityDamageEvent.DamageCause.CUSTOM, null, false);
-        }
     }
 
 }

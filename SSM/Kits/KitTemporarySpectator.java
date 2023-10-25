@@ -13,6 +13,7 @@ public class KitTemporarySpectator extends Kit implements Listener {
         super();
         this.name = "Temporary Spectator";
         invincible = true;
+        intangible = true;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 

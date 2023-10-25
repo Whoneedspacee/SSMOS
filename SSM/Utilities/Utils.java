@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -93,6 +94,11 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static void fullHeal(LivingEntity livingEntity) {
+        livingEntity.setHealth(livingEntity.getMaxHealth());
+        livingEntity.setFireTicks(0);
     }
 
     public static double getXZDistance(Location first, Location second) {

@@ -34,6 +34,7 @@ public abstract class Kit implements Listener {
     protected double knockback = 0;
     protected double regeneration = 0;
     protected boolean invincible = false;
+    protected boolean intangible = false;
     protected Material menuItem;
 
     protected boolean hasDirectDoubleJump = false;
@@ -79,7 +80,7 @@ public abstract class Kit implements Listener {
 
     protected abstract void initializeKit();
 
-    private void updatePlaying(short new_state) {
+    public void updatePlaying(short new_state) {
         if(owner == null) {
             return;
         }
@@ -209,6 +210,14 @@ public abstract class Kit implements Listener {
         return invincible;
     }
 
+    public void setIntangible(boolean set) {
+        intangible = set;
+    }
+
+    public boolean isIntangible() {
+        return intangible;
+    }
+
     public void setMelee(double melee) {
         damage = melee;
     }
@@ -232,6 +241,10 @@ public abstract class Kit implements Listener {
 
     public boolean hasDirectDoubleJump() {
         return hasDirectDoubleJump;
+    }
+
+    public boolean getGameHotbarEquipped() {
+        return game_hotbar_equipped;
     }
 
     @EventHandler

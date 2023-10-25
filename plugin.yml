@@ -45,6 +45,9 @@ commands:
     description: 'Unloads the world specified.'
     usage: /unloadworld world
   spectate:
-    description: 'Toggles whether the player is spectating or not'
+    description: 'Toggles whether the player is spectating or not.'
     usage: /spectate
     aliases: [spec]
+  setplaying:
+    description: 'Forces a kits abilities to be active.'
+    usage: /setplaying
