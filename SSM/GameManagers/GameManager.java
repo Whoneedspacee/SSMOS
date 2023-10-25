@@ -535,18 +535,16 @@ public class GameManager implements Listener, Runnable {
     public void clickEvent(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         ItemStack item = e.getCurrentItem();
-        if (item == null) {
-            return;
-        }
-        if (!e.getView().getTitle().contains("Vote")) {
-            return;
-        }
+        if (item == null) return;
+        if (!e.getView().getTitle().contains("Map")) return;
         if (GameManager.getState() > GameManager.GameState.LOBBY_VOTING) {
             player.closeInventory();
             return;
         }
         ItemMeta meta = item.getItemMeta();
-        if (meta == null || meta != null && meta.getLore() == null) {
+        if (meta == null || meta.getLore() == null) return;
+        if (item.getType() == Material.BED) {
+            player.closeInventory();
             return;
         }
         String meta_name = meta.getLore().get(0);
@@ -568,8 +566,8 @@ public class GameManager implements Listener, Runnable {
                 break;
             }
         }
+        player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1.0f, 1.0f);
         CommandVote.openVotingMenu(player);
         e.setCancelled(true);
     }
-
 }

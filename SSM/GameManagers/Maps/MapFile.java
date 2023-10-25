@@ -213,5 +213,4 @@ public class MapFile {
         return ChatColor.GREEN + "Map - " + ChatColor.RESET + ChatColor.BOLD + getName() +
                 ChatColor.GRAY + " created by " + ChatColor.RESET + ChatColor.BOLD + getCreatedBy();
     }
-
 }
