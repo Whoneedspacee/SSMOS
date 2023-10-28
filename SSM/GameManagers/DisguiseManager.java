@@ -11,6 +11,7 @@ import net.minecraft.server.v1_8_R3.DataWatcher;
 import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -197,7 +198,7 @@ public class DisguiseManager implements Listener, Runnable {
                             }
                         }
                     } catch (Exception e) {
-                        Bukkit.broadcastMessage("Exception");
+                        Bukkit.broadcastMessage(ChatColor.RED + "Entity Metadata Packet Exception");
                     }
                 }
                 /*if(msg instanceof PacketPlayOutEntityEffect) {

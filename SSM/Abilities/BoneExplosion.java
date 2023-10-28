@@ -61,9 +61,8 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
                 if (!DamageUtil.canDamage((LivingEntity) entity, baseDamage)) {
                     continue;
                 }
-//                double dist = location.distance(entity.getLocation());    what does this do?
                 DamageUtil.damage((LivingEntity) entity, owner, baseDamage,
-                        2.5, false, DamageCause.CUSTOM, null);
+                        2.5, false, DamageCause.CUSTOM, null, name);
                 Vector target = entity.getLocation().toVector();
                 Vector player = owner.getLocation().toVector();
                 Vector pre = target.subtract(player);
@@ -73,9 +72,3 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
         }
     }
 }
-
-//  Mineplex code
-//  Manager.GetBlood().Effects(null, player.getLocation().add(0, 0.5, 0), 48, 0.8, Sound.SKELETON_HURT, 2f, 1.2f, Material.BONE, (byte)0, 40, false);
-//  Effects(player, loc, particles, velMult, sound, soundVol, soundPitch, type, data, 10, bloodStep);
-//  BloodEvent event = new BloodEvent(player, loc, particles, velMult, sound, soundVol, soundPitch, type, data, ticks, bloodStep);
-//  UtilServer.getServer().getPluginManager().callEvent(event);

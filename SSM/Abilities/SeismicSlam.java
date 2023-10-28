@@ -63,7 +63,7 @@ public class SeismicSlam extends Ability implements OwnerRightClickEvent {
             if ((entity instanceof LivingEntity)) {
                 double dist = owner.getLocation().distance(entity.getLocation());
                 DamageUtil.damage((LivingEntity) entity, owner, baseDamage * (1 - dist / range) + 0.5,
-                        2.4, false, EntityDamageEvent.DamageCause.CUSTOM, null);
+                        2.4, false, EntityDamageEvent.DamageCause.CUSTOM, null, name);
             }
         }
         owner.getWorld().playSound(owner.getLocation(), Sound.ZOMBIE_WOOD, 2f, 0.2f);

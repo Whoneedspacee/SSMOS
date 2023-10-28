@@ -15,7 +15,7 @@ public class Climb extends Attribute {
     public Climb(double power) {
         super();
         this.name = "Spider Climb";
-        this.expUsed = 1.0f / 80.0f;
+        this.expUsed = 0.005f;
         this.power = power;
         this.chargedDoubleJump = false;
         task = this.runTaskTimer(plugin, 0L, 1L);

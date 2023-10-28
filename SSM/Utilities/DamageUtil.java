@@ -1,5 +1,6 @@
 package SSM.Utilities;
 
+import SSM.Attributes.Hunger;
 import SSM.GameManagers.DamageManager;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.Disguise;
@@ -14,6 +15,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.potion.Potion;
@@ -32,35 +34,27 @@ public class DamageUtil {
                     new DamageManager.DamageRecord(player.getName(), "Void", 1000, "World Border"));
         }
         player.teleport(player.getWorld().getSpawnLocation());
-        player.setFlying(true);
-    }
-
-    public static void damage(LivingEntity damagee, LivingEntity damager, double damage) {
-        damage(damagee, damager, damage, 1.0, false, DamageCause.ENTITY_ATTACK, null);
-    }
-
-    public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
-                              double knockbackMultiplier, boolean ignoreArmor) {
-        damage(damagee, damager, damage, knockbackMultiplier, ignoreArmor, DamageCause.CUSTOM, null);
+        if(player.getAllowFlight()) {
+            player.setFlying(true);
+        }
     }
 
     public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
-                              double knockbackMultiplier, boolean ignoreArmor, DamageCause cause) {
-        damage(damagee, damager, damage, knockbackMultiplier, ignoreArmor, cause, null);
-    }
-
-    public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
-                              double knockbackMultiplier, boolean ignoreArmor, DamageCause cause, Location origin) {
-        damage(damagee, damager, damage, knockbackMultiplier, ignoreArmor, cause, origin, "Undefined Name");
-    }
-
-    public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
-                              double knockbackMultiplier, boolean ignoreArmor, DamageCause cause, Location origin, String reason) {
+                              double knockbackMultiplier, boolean ignoreArmor, DamageCause cause,
+                              Location origin, String reason) {
         damage(damagee, damager, damage, knockbackMultiplier, ignoreArmor, cause, origin, reason, null);
     }
 
     public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
-                              double knockbackMultiplier, boolean ignoreArmor, DamageCause cause, Location origin, String reason, DamageManager.DamageRecord record) {
+                              double knockbackMultiplier, boolean ignoreArmor, DamageCause cause,
+                              Location origin, String reason, DamageManager.DamageRecord record) {
+        damage(damagee, damager, damage, knockbackMultiplier, ignoreArmor, cause, origin, reason, record, null);
+    }
+
+
+    public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
+                              double knockbackMultiplier, boolean ignoreArmor, DamageCause cause,
+                              Location origin, String reason, DamageManager.DamageRecord record, Projectile projectile) {
         if (damagee == null || damage < 0) {
             return;
         }
@@ -83,7 +77,7 @@ public class DamageUtil {
         boolean died = false;
         double new_health = 20;
         if ((float) damagee.getNoDamageTicks() > (float) damagee.getMaximumNoDamageTicks() / 2.0F) {
-            new_health = Math.max(damagee.getHealth() - (damage - entityDamagee.lastDamage) * damageMultiplier, 0);
+            new_health = Math.max(damagee.getHealth() - Math.max(damage - entityDamagee.lastDamage, 0) * damageMultiplier, 0);
         } else {
             new_health = Math.max(damagee.getHealth() - damage * damageMultiplier, 0);
         }
@@ -94,12 +88,8 @@ public class DamageUtil {
             damagee.setHealth(new_health);
         }
         entityDamagee.lastDamage = (float) damage;
-        // Opponent is invincible?
-        if (damagee.getHealth() == previousHealth && !died) {
-            return;
-        }
         damagee.setNoDamageTicks(damagee.getMaximumNoDamageTicks());
-        if(record == null && damagee instanceof Player) {
+        if(record == null && damager != null && damagee instanceof Player) {
             record = new DamageManager.DamageRecord(damagee.getName(), damager.getName(), damage, reason);
         }
         if(record != null) {
@@ -157,28 +147,38 @@ public class DamageUtil {
             //Bukkit.broadcastMessage("Damage: " + damage);
             //Bukkit.broadcastMessage("Final KB: " + knockback);
 
-            if (origin == null) {
+            if(origin == null && damager != null) {
                 origin = damager.getLocation();
             }
 
-            Vector trajectory = damagee.getLocation().toVector().subtract(origin.toVector()).setY(0).normalize();
-            trajectory.multiply(0.6 * knockback);
-            trajectory.setY(Math.abs(trajectory.getY()));
+            Vector trajectory = null;
+            if(origin != null) {
+                trajectory = damagee.getLocation().toVector().subtract(origin.toVector()).setY(0).normalize();
+                trajectory.multiply(0.6 * knockback);
+                trajectory.setY(Math.abs(trajectory.getY()));
+            }
+            if(origin == null && projectile != null) {
+                trajectory = projectile.getVelocity();
+                trajectory.setY(0);
+                trajectory.multiply(0.37 * knockback / trajectory.length());
+                trajectory.setY(0.06);
+            }
 
             double vel = 0.2 + trajectory.length() * 0.8;
 
             VelocityUtil.setVelocity(damagee, trajectory, vel, false,
                     0, Math.abs(0.2 * knockback), 0.4 + (0.04 * knockback), true);
         }
-
-    }
-
-    public static void damage(LivingEntity damagee, LivingEntity damager, double damage,
-                              double knockbackMultiplier, boolean ignoreArmor, DamageCause cause, Location origin, boolean resetDamageTicks) {
-        if (resetDamageTicks) {
-            damagee.setNoDamageTicks(0);
+        if (damagee != damager && damager instanceof Player && damagee instanceof Player) {
+            Player player = (Player) damager;
+            Kit kit = KitManager.getPlayerKit(player);
+            if (kit != null) {
+                Hunger hunger = (Hunger) kit.getAttributeByName("Hunger");
+                if(hunger != null) {
+                    hunger.hungerRestore(damage);
+                }
+            }
         }
-        damage(damagee, damager, damage, knockbackMultiplier, ignoreArmor, cause, origin);
     }
 
     public static boolean canDamage(LivingEntity check, double damage) {

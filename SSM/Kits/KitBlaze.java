@@ -1,7 +1,5 @@
 package SSM.Kits;
 
-import SSM.Abilities.Firefly;
-import SSM.Abilities.MilkSpiral;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Potion;
 import SSM.Attributes.Regeneration;
@@ -9,7 +7,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.BlazeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
@@ -31,9 +28,6 @@ public class KitBlaze extends Kit {
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmor(Material.CHAINMAIL_HELMET, 3);
-
-        setAbility(new MilkSpiral(), 0);
-        setAbility(new Firefly(), 1);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));

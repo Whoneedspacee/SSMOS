@@ -10,6 +10,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -53,6 +54,21 @@ public class Needler extends Ability implements OwnerRightClickEvent {
     }
 
     @EventHandler
+    public void arrowHit(ProjectileHitEvent e) {
+        if (e.getEntity() instanceof Arrow && e.getHitEntity() instanceof LivingEntity) {
+            Arrow arrow = (Arrow) e.getEntity();
+            LivingEntity livingEntity = (LivingEntity) e.getHitEntity();
+            List<MetadataValue> data = arrow.getMetadata("Needler");
+            if (data.size() > 0) {
+                livingEntity.setNoDamageTicks(0);
+                DamageUtil.damage(livingEntity, (LivingEntity) arrow.getShooter(), 1.1,
+                        1.0, false, EntityDamageEvent.DamageCause.CUSTOM, null,
+                        "Needler");
+            }
+        }
+    }
+
+    @EventHandler
     public void arrowDamage(EntityDamageByEntityEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
             if (e.getDamager() instanceof Arrow) {
@@ -60,8 +76,6 @@ public class Needler extends Ability implements OwnerRightClickEvent {
                 List<MetadataValue> data = arrow.getMetadata("Needler");
                 if (data.size() > 0) {
                     e.setCancelled(true);
-                    DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) arrow.getShooter(), 1.1,
-                            1.0, false, EntityDamageEvent.DamageCause.CUSTOM, null, true);
                 }
             }
         }

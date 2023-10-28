@@ -49,15 +49,12 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
 
     public void checkAndActivate() {
         Kit kit = KitManager.getPlayerKit(owner);
-        if(kit != null && !kit.getGameHotbarEquipped()) {
+        if(kit != null && !kit.isActive()) {
             return;
         }
         if (CooldownManager.getInstance().getRemainingTimeFor(this, owner) <= 0) {
             if (expUsed > 0) {
-                if (owner.getExp() < expUsed) {
-                    return;
-                }
-                owner.setExp(owner.getExp() - expUsed);
+                owner.setExp(Math.max(owner.getExp() - expUsed, 0));
             }
             CooldownManager.getInstance().addCooldown(this, (long) (cooldownTime * 1000), owner);
             activate();
@@ -82,11 +79,15 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
 
     @Override
     public void run() {
-        this.cancel();
+        cancelTask();
     }
 
     public void setOwner(Player owner) {
         this.owner = owner;
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 
     public AbilityUsage getUsage() {

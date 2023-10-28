@@ -1,7 +1,6 @@
 package SSM.Kits;
 
 import SSM.Abilities.InkShotgun;
-import SSM.Abilities.MilkSpiral;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.Attributes.Stampede;
@@ -9,7 +8,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.CowDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class KitCow extends Kit {

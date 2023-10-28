@@ -57,10 +57,10 @@ public class SlimeSlam extends Ability implements OwnerRightClickEvent {
     }
 
     public void doSlam(LivingEntity target) {
-        DamageUtil.damage(owner, target, damage / 4,
-                2, false, EntityDamageEvent.DamageCause.CUSTOM, null);
-        DamageUtil.damage(target, owner, damage,
-                2, false, EntityDamageEvent.DamageCause.CUSTOM, null);
+        DamageUtil.damage(owner, target, damage / 4, 2, false,
+                EntityDamageEvent.DamageCause.CUSTOM, null, name + " recoil");
+        DamageUtil.damage(target, owner, damage, 2, false,
+                EntityDamageEvent.DamageCause.CUSTOM, null, name);
     }
 
 }

@@ -71,7 +71,8 @@ public class LightningShield extends Attribute implements OwnerTakeDamageEvent, 
 
     public void doLightning(LivingEntity target) {
         owner.getWorld().strikeLightningEffect(owner.getLocation());
-        DamageUtil.damage(target, owner, 4, 2.5, false, EntityDamageEvent.DamageCause.CUSTOM, null, true);
+        DamageUtil.damage(target, owner, 4, 2.5, false,
+                EntityDamageEvent.DamageCause.CUSTOM, null, "Lightning Shield");
         deactivate();
         Utils.sendAttributeMessage("You hit §e" + target.getName() + " §7with",
                 name, owner, ServerMessageType.SKILL);

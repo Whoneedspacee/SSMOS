@@ -4,7 +4,9 @@ import SSM.Commands.*;
 import SSM.Commands.CommandStop;
 import SSM.GameManagers.*;
 import SSM.GameManagers.Disguises.Disguise;
+import SSM.Kits.Kit;
 import SSM.Utilities.DamageUtil;
+import SSM.Utilities.Utils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -56,6 +58,9 @@ public class SSM extends JavaPlugin implements Listener {
         this.getCommand("unloadworld").setExecutor(new CommandUnloadWorld());
         this.getCommand("setplaying").setExecutor(new CommandSetPlaying());
         // Do not do anything before manager creation please
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            Utils.fullHeal(player);
+        }
     }
 
     @Override
@@ -77,7 +82,14 @@ public class SSM extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
+        if(e.getCause() == EntityDamageEvent.DamageCause.STARVATION) {
+            e.setCancelled(true);
+            return;
+        }
         if(e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
+            if(!(e.getEntity() instanceof LivingEntity)) {
+                return;
+            }
             if(e.getEntity() instanceof Player) {
                 Player player = (Player) e.getEntity();
                 if(KitManager.getPlayerKit(player) != null) {
@@ -87,7 +99,9 @@ public class SSM extends JavaPlugin implements Listener {
                     }
                 }
             }
-            DamageUtil.damage((LivingEntity) e.getEntity(), null, e.getDamage(), 0, true, EntityDamageEvent.DamageCause.FIRE);
+            DamageUtil.damage((LivingEntity) e.getEntity(), null, e.getDamage(), 0, true,
+                    EntityDamageEvent.DamageCause.FIRE, null, null,
+                    new DamageManager.DamageRecord(e.getEntity().getName(), "Fire", e.getDamage(), "Fire"));
             e.setDamage(0);
             e.setCancelled(false);
         }
@@ -105,7 +119,8 @@ public class SSM extends JavaPlugin implements Listener {
             return;
         }
         if(e.getEntity() instanceof LivingEntity && e.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            DamageUtil.damage((LivingEntity) e.getEntity(), null, 1000, 0, true, EntityDamageEvent.DamageCause.VOID);
+            DamageUtil.damage((LivingEntity) e.getEntity(), null, 1000, 0,
+                    true, EntityDamageEvent.DamageCause.VOID, null, "Void");
         }
     }
 
@@ -162,11 +177,22 @@ public class SSM extends JavaPlugin implements Listener {
 
     @EventHandler
     public void stopHungerLoss(FoodLevelChangeEvent e) {
+        if(!(e.getEntity() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) e.getEntity();
+        Kit kit = KitManager.getPlayerKit(player);
+        if(kit != null && kit.isActive() && kit.getAttributeByName("Hunger") != null) {
+            return;
+        }
         e.setCancelled(true);
     }
 
     @EventHandler
     public void clickEvent(InventoryClickEvent e) {
+        if(e.getWhoClicked().getGameMode() == GameMode.CREATIVE && e.getWhoClicked().isOp()) {
+            return;
+        }
         e.setCancelled(true);
     }
 

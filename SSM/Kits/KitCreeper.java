@@ -1,7 +1,5 @@
 package SSM.Kits;
 
-import SSM.Abilities.Explode;
-import SSM.Abilities.SulphurBomb;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.LightningShield;
 import SSM.Attributes.Regeneration;
@@ -9,7 +7,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.CreeperDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class KitCreeper extends Kit {
@@ -30,9 +27,6 @@ public class KitCreeper extends Kit {
         setArmor(Material.LEATHER_LEGGINGS, 1);
         setArmor(Material.LEATHER_CHESTPLATE, 2);
         setArmor(Material.LEATHER_HELMET, 3);
-
-        setAbility(new SulphurBomb(), 0);
-        setAbility(new Explode(), 1);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));

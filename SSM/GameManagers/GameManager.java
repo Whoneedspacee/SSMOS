@@ -2,6 +2,9 @@ package SSM.GameManagers;
 
 import SSM.Commands.CommandVote;
 import SSM.Events.GameStateChangeEvent;
+import SSM.GameManagers.Gamemodes.SmashGamemode;
+import SSM.GameManagers.Gamemodes.SoloGamemode;
+import SSM.GameManagers.Gamemodes.TeamsGamemode;
 import SSM.GameManagers.Maps.MapFile;
 import SSM.Kits.Kit;
 import SSM.Kits.KitTemporarySpectator;
@@ -32,50 +35,17 @@ import java.util.List;
 
 public class GameManager implements Listener, Runnable {
 
-    public class GameState {
-
-        public static final short LOBBY_WAITING = 0;
-        public static final short LOBBY_VOTING = 1;
-        public static final short LOBBY_STARTING = 2;
-        public static final short GAME_STARTING = 3;
-        public static final short GAME_PLAYING = 4;
-        public static final short GAME_ENDING = 5;
-
-        public static String toString(short state) {
-            switch (state) {
-                case LOBBY_WAITING -> {
-                    return "Lobby Waiting";
-                }
-                case LOBBY_VOTING -> {
-                    return "Lobby Voting";
-                }
-                case LOBBY_STARTING -> {
-                    return "Lobby Starting";
-                }
-                case GAME_STARTING -> {
-                    return "Game Starting";
-                }
-                case GAME_PLAYING -> {
-                    return "Game Playing";
-                }
-                case GAME_ENDING -> {
-                    return "Game Ending";
-                }
-            }
-            return "";
-        }
-    }
-
     public static GameManager ourInstance;
     private static JavaPlugin plugin = SSM.getInstance();
     private static List<Player> players = new ArrayList<Player>();
     private static List<Player> spectators = new ArrayList<Player>();
+    private static Player[] deaths = new Player[2];
     private static HashMap<Player, Integer> lives = new HashMap<Player, Integer>();
     private static short state = GameState.LOBBY_WAITING;
     private static long time_remaining_ms = 0;
     public static World lobby_world = Bukkit.getWorlds().get(0);
-    public static MapFile chosen_map = null;
-    public static List<MapFile> all_maps = new ArrayList<MapFile>();
+    public static SmashGamemode selected_gamemode = new SoloGamemode();
+    public static MapFile selected_map = null;
 
     public GameManager() {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -87,27 +57,6 @@ public class GameManager implements Listener, Runnable {
             player.teleport(lobby_world.getSpawnLocation());
         }
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 0L);
-        File file = new File("ssm_maps");
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        for (File map : file.listFiles()) {
-            if (!map.isDirectory()) {
-                continue;
-            }
-            if (map.getName().contains("copy")) {
-                World world = Bukkit.getWorld(map.getPath());
-                Bukkit.unloadWorld(world, false);
-                try {
-                    FileUtils.deleteDirectory(map);
-                } catch (Exception e) {
-                    Bukkit.broadcastMessage("Failed to delete map: " + map.getName());
-                }
-                continue;
-            }
-
-            all_maps.add(new MapFile(map));
-        }
         setState(GameState.LOBBY_WAITING);
     }
 
@@ -158,12 +107,12 @@ public class GameManager implements Listener, Runnable {
             return;
         }
         if (time_remaining_ms <= 0) {
-            chosen_map = getChosenMap();
-            Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + chosen_map.getName() + ChatColor.WHITE + ChatColor.BOLD + " won the vote!");
+            selected_map = getChosenMap();
+            Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + selected_map.getName() + ChatColor.WHITE + ChatColor.BOLD + " won the vote!");
             for (Player player : lobby_world.getPlayers()) {
                 player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
             }
-            chosen_map.createWorld();
+            selected_map.createWorld();
             setTimeLeft(15);
             setState(GameState.LOBBY_STARTING);
             run();
@@ -179,37 +128,37 @@ public class GameManager implements Listener, Runnable {
             return;
         }
         if (time_remaining_ms <= 0) {
-            if (chosen_map == null) {
+            if (selected_map == null) {
                 return;
             }
             for (Player player : players) {
                 if (isSpectator(player)) {
-                    player.teleport(chosen_map.getCopyWorld().getSpawnLocation());
+                    player.teleport(selected_map.getCopyWorld().getSpawnLocation());
                     continue;
                 }
-                Location starting_point = chosen_map.getRandomRespawnPoint(player);
+                Location starting_point = selected_gamemode.getRandomRespawnPoint(selected_map, player);
                 player.teleport(starting_point);
-                lives.put(player, 4);
+                selected_gamemode.setPlayerLives(lives);
             }
-            for (Player player : chosen_map.getCopyWorld().getPlayers()) {
+            for (Player player : selected_map.getCopyWorld().getPlayers()) {
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
-                player.sendMessage("");
-                player.sendMessage("");
-                player.sendMessage("");
-                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs",
+                for(int i = 0; i < 6 - selected_gamemode.getDescription().length; i++) {
+                    player.sendMessage("");
+                }
+                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + selected_gamemode.getName(),
                         "", 0, 45, 0);
                 player.sendMessage(ChatColor.DARK_GREEN + "" + ChatColor.STRIKETHROUGH + "=============================================");
-                player.sendMessage(ChatColor.GREEN + "Game - " + ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs");
+                player.sendMessage(ChatColor.GREEN + "Game - " + ChatColor.YELLOW + "" + ChatColor.BOLD + selected_gamemode.getName());
                 player.sendMessage("");
-                player.sendMessage(ChatColor.WHITE + "  Each player has 3 respawns");
-                player.sendMessage(ChatColor.WHITE + "  Attack to restore hunger!");
-                player.sendMessage(ChatColor.WHITE + "  Last player alive wins!");
+                for(String description : selected_gamemode.getDescription()) {
+                    player.sendMessage(ChatColor.WHITE + "  " + description);
+                }
                 player.sendMessage("");
-                player.sendMessage(chosen_map.toString());
+                player.sendMessage(selected_map.toString());
                 player.sendMessage(ChatColor.DARK_GREEN + "" + ChatColor.STRIKETHROUGH + "=============================================");
             }
             // Wait until after teleporting to display disguises properly
-            for (Player player : chosen_map.getCopyWorld().getPlayers()) {
+            for (Player player : selected_map.getCopyWorld().getPlayers()) {
                 // Refresh so people who already had kits equipped get shown
                 // Unfortunately packet mobs don't transfer when we teleport
                 DisguiseManager.showDisguises(player);
@@ -217,10 +166,7 @@ public class GameManager implements Listener, Runnable {
                     KitManager.equipPlayer(player, new KitTemporarySpectator());
                     continue;
                 }
-                Kit kit = KitManager.getPlayerKit(player);
-                if (kit == null) {
-                    KitManager.equipPlayer(player, KitManager.getAllKits().get(0));
-                }
+                selected_gamemode.setPlayerKit(player);
             }
             setTimeLeft(10);
             setState(GameState.GAME_STARTING);
@@ -243,14 +189,14 @@ public class GameManager implements Listener, Runnable {
             return;
         }
         if (time_remaining_ms <= 0) {
-            for(Player player : chosen_map.copy_world.getPlayers()) {
+            for(Player player : selected_map.copy_world.getPlayers()) {
                 player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 1f);
             }
             setState(GameState.GAME_PLAYING);
             run();
             return;
         }
-        for(Player player : chosen_map.copy_world.getPlayers()) {
+        for(Player player : selected_map.copy_world.getPlayers()) {
             int barLength = 24;
             int startRedBarInterval = barLength - (int) ((time_remaining_ms / (double) 10000) * barLength);
             StringBuilder sb = new StringBuilder("      §fGame Start ");
@@ -264,16 +210,16 @@ public class GameManager implements Listener, Runnable {
             sb.append(" §f" + Utils.msToSeconds(time_remaining_ms) + " Seconds");
             Utils.sendActionBarMessage(sb.toString(), player);
             if(time_remaining_ms == 8000) {
-                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs",
-                        "Each player has 3 respawns", 0, 45, 0);
+                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + selected_gamemode.getName(),
+                        selected_gamemode.getDescription()[0], 0, 45, 0);
             }
             if(time_remaining_ms == 6000) {
-                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs",
-                        "Attack to restore hunger!", 0, 45, 0);
+                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + selected_gamemode.getName(),
+                        selected_gamemode.getDescription()[1], 0, 45, 0);
             }
             if(time_remaining_ms == 4000) {
-                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs",
-                        "Last player alive wins!", 0, 45, 0);
+                Utils.sendTitleMessage(player, ChatColor.YELLOW + "" + ChatColor.BOLD + selected_gamemode.getName(),
+                        selected_gamemode.getDescription()[2], 0, 45, 0);
             }
             if(time_remaining_ms % 1000 == 0) {
                 player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1f, 1f);
@@ -288,18 +234,30 @@ public class GameManager implements Listener, Runnable {
             run();
             return;
         }
-        if (lives.size() <= 1) {
-            for(Player player : chosen_map.copy_world.getPlayers()) {
+        if (selected_gamemode.isGameEnded(lives)) {
+            for(Player player : selected_map.copy_world.getPlayers()) {
                 player.sendMessage(ChatColor.DARK_GREEN + "" + ChatColor.STRIKETHROUGH + "=============================================");
-                player.sendMessage(ChatColor.GREEN + "Game - " + ChatColor.YELLOW + "" + ChatColor.BOLD + "Super Smash Mobs");
+                player.sendMessage(ChatColor.GREEN + "Game - " + ChatColor.YELLOW + "" + ChatColor.BOLD + selected_gamemode.getName());
                 player.sendMessage("");
-                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + " 1st Place " +
-                        ChatColor.RESET + lives.keySet().toArray(new Player[1])[0].getName());
+                if(lives.keySet().size() >= 1) {
+                    player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + " 1st Place " +
+                            ChatColor.RESET + lives.keySet().toArray(new Player[1])[0].getName());
+                }
+                if(deaths[0] != null) {
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + " 2nd Place " +
+                            ChatColor.RESET + deaths[0].getName());
+                }
+                if(deaths[1] != null) {
+                    player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + " 3rd Place " +
+                            ChatColor.RESET + deaths[1].getName());
+                }
                 player.sendMessage("");
-                player.sendMessage(chosen_map.toString());
+                player.sendMessage(selected_map.toString());
                 player.sendMessage(ChatColor.DARK_GREEN + "" + ChatColor.STRIKETHROUGH + "=============================================");
+                Utils.fullHeal(player);
             }
             lives.clear();
+            deaths = new Player[2];
             setTimeLeft(10);
             setState(GameState.GAME_ENDING);
             run();
@@ -317,7 +275,7 @@ public class GameManager implements Listener, Runnable {
                 KitManager.unequipPlayer(player);
                 Utils.fullHeal(player);
             }
-            chosen_map.deleteWorld();
+            selected_map.deleteWorld();
             setState(GameState.LOBBY_WAITING);
             run();
             return;
@@ -346,6 +304,8 @@ public class GameManager implements Listener, Runnable {
             player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You ran out of lives!");
             player.playSound(player.getLocation(), Sound.EXPLODE, 2f, 1f);
             lives.remove(player);
+            deaths[1] = deaths[0];
+            deaths[0] = player;
             KitManager.equipPlayer(player, new KitTemporarySpectator());
             DisplayManager.buildScoreboard();
             return;
@@ -365,12 +325,13 @@ public class GameManager implements Listener, Runnable {
             @Override
             public void run() {
                 if (state == GameState.GAME_PLAYING && lives.get(player) > 0) {
-                    player.teleport(chosen_map.getRandomRespawnPoint(player));
+                    player.teleport(selected_gamemode.getRandomRespawnPoint(selected_map, player));
                     Utils.sendTitleMessage(player, "", DisplayManager.getLivesColor(player) +
                                     "" + lives.get(player) + " " + (lives.get(player) == 1 ? "life" : "lives") + " left!",
                             10, 50, 10);
                     if (!kit.getName().equals("Temporary Spectator")) {
                         KitManager.equipPlayer(player, kit);
+                        Utils.fullHeal(player);
                     }
                     DisguiseManager.showDisguises(player);
                 }
@@ -446,7 +407,7 @@ public class GameManager implements Listener, Runnable {
     }
 
     public static MapFile getCurrentVotedMap(Player player) {
-        for (MapFile mapfile : all_maps) {
+        for (MapFile mapfile : selected_gamemode.getAllowedMaps()) {
             List<Player> current = mapfile.getVoted();
             if (current.contains(player)) {
                 return mapfile;
@@ -463,24 +424,24 @@ public class GameManager implements Listener, Runnable {
     }
 
     public static MapFile getChosenMap() {
-        if (all_maps.size() == 0) {
+        if (selected_gamemode.getAllowedMaps().size() == 0) {
             Bukkit.broadcastMessage("SSM Maps Folder Empty, loading Default World");
             return new MapFile(Bukkit.getWorlds().get(0).getWorldFolder());
         }
         // Calculate max voted map
         int max = 0;
-        for (MapFile mapfile : all_maps) {
+        for (MapFile mapfile : selected_gamemode.getAllowedMaps()) {
             List<Player> votes = mapfile.getVoted();
             if (votes != null && votes.size() > max) {
                 max = votes.size();
             }
         }
         if (max == 0) {
-            return all_maps.get((int) (Math.random() * all_maps.size()));
+            return selected_gamemode.getAllowedMaps().get((int) (Math.random() * selected_gamemode.getAllowedMaps().size()));
         }
         // Get tied maps
         List<MapFile> tied = new ArrayList<MapFile>();
-        for (MapFile mapfile : all_maps) {
+        for (MapFile mapfile : selected_gamemode.getAllowedMaps()) {
             List<Player> votes = mapfile.getVoted();
             if (votes.size() >= max) {
                 tied.add(mapfile);
@@ -507,7 +468,7 @@ public class GameManager implements Listener, Runnable {
     @EventHandler
     public void PlayerJoin(PlayerJoinEvent e) {
         if (state >= GameState.GAME_STARTING) {
-            e.getPlayer().teleport(chosen_map.getCopyWorld().getSpawnLocation());
+            e.getPlayer().teleport(selected_map.getCopyWorld().getSpawnLocation());
             KitManager.equipPlayer(e.getPlayer(), new KitTemporarySpectator());
             return;
         }
@@ -525,7 +486,7 @@ public class GameManager implements Listener, Runnable {
         players.remove(e.getPlayer());
         lives.remove(e.getPlayer());
         spectators.remove(e.getPlayer());
-        for (MapFile map : all_maps) {
+        for (MapFile map : selected_gamemode.getAllowedMaps()) {
             map.getVoted().remove(e.getPlayer());
         }
         DisplayManager.buildScoreboard();
@@ -548,7 +509,7 @@ public class GameManager implements Listener, Runnable {
             return;
         }
         String meta_name = meta.getLore().get(0);
-        for (MapFile mapfile : all_maps) {
+        for (MapFile mapfile : selected_gamemode.getAllowedMaps()) {
             String name = mapfile.getName();
             if (name.equals(meta_name)) {
                 List<Player> current = mapfile.getVoted();
@@ -559,7 +520,7 @@ public class GameManager implements Listener, Runnable {
                     current.remove(player);
                     break;
                 }
-                for (MapFile remove : all_maps) {
+                for (MapFile remove : selected_gamemode.getAllowedMaps()) {
                     remove.getVoted().remove(player);
                 }
                 current.add(player);
@@ -570,4 +531,39 @@ public class GameManager implements Listener, Runnable {
         CommandVote.openVotingMenu(player);
         e.setCancelled(true);
     }
+
+    public class GameState {
+
+        public static final short LOBBY_WAITING = 0;
+        public static final short LOBBY_VOTING = 1;
+        public static final short LOBBY_STARTING = 2;
+        public static final short GAME_STARTING = 3;
+        public static final short GAME_PLAYING = 4;
+        public static final short GAME_ENDING = 5;
+
+        public static String toString(short state) {
+            switch (state) {
+                case LOBBY_WAITING -> {
+                    return "Lobby Waiting";
+                }
+                case LOBBY_VOTING -> {
+                    return "Lobby Voting";
+                }
+                case LOBBY_STARTING -> {
+                    return "Lobby Starting";
+                }
+                case GAME_STARTING -> {
+                    return "Game Starting";
+                }
+                case GAME_PLAYING -> {
+                    return "Game Playing";
+                }
+                case GAME_ENDING -> {
+                    return "Game Ending";
+                }
+            }
+            return "";
+        }
+    }
+
 }

@@ -141,7 +141,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
                     }
                     LivingEntity living = (LivingEntity) hit;
                     int distance = (int) hit.getLocation().distance(path.get(0).getLocation());
-                    DamageUtil.damage(living, owner, 4 + distance);
+                    //DamageUtil.damage(living, owner, 4 + distance);
                     Vector direction = living.getLocation().toVector().subtract(next_block.getLocation().toVector()).setY(0).normalize();
                     VelocityUtil.setVelocity(living, direction,
                             1 + 0.1 * distance, true, 0.6 + 0.05 * distance, 0, 10, true);

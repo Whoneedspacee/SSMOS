@@ -16,7 +16,6 @@ public class DisplayManager implements Listener {
 
     private static DisplayManager ourInstance;
     private static JavaPlugin plugin = SSM.getInstance();
-    //private static HashMap<Player, Scoreboard> scoreboards = new HashMap<Player, Scoreboard>();
 
     public DisplayManager() {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -30,7 +29,7 @@ public class DisplayManager implements Listener {
         if(obj != null) {
             obj.unregister();
         }
-        scoreboard.registerNewObjective("menu", "dummy");
+        obj = scoreboard.registerNewObjective("menu", "dummy");
         if (GameManager.getState() == GameManager.GameState.LOBBY_WAITING) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 Kit kit = KitManager.getPlayerKit(player);
@@ -44,7 +43,7 @@ public class DisplayManager implements Listener {
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
-                obj.getScore("Super Smash Mobs").setScore(7);
+                obj.getScore(GameManager.selected_gamemode.getName()).setScore(7);
                 obj.getScore(ChatColor.GREEN + "").setScore(6);
                 obj.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "Kit").setScore(5);
                 obj.getScore(kit_name).setScore(4);
@@ -69,7 +68,7 @@ public class DisplayManager implements Listener {
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
-                obj.getScore("Super Smash Mobs").setScore(7);
+                obj.getScore(GameManager.selected_gamemode.getName()).setScore(7);
                 obj.getScore(ChatColor.GREEN + "").setScore(6);
                 obj.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "Kit").setScore(5);
                 obj.getScore(kit_name).setScore(4);
@@ -94,7 +93,7 @@ public class DisplayManager implements Listener {
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
-                obj.getScore("Super Smash Mobs").setScore(7);
+                obj.getScore(GameManager.selected_gamemode.getName()).setScore(7);
                 obj.getScore(ChatColor.GREEN + "").setScore(6);
                 obj.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "Kit").setScore(5);
                 obj.getScore(kit_name).setScore(4);
@@ -135,6 +134,12 @@ public class DisplayManager implements Listener {
                 obj.getScore("").setScore(score++);
                 // This is terrible forgive my laziness
                 for (Player add : GameManager.getAllLives().keySet()) {
+                    if(GameManager.getLives(add) != 0) {
+                        continue;
+                    }
+                    obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
+                }
+                for (Player add : GameManager.getAllLives().keySet()) {
                     if(GameManager.getLives(add) != 1) {
                         continue;
                     }
@@ -171,19 +176,22 @@ public class DisplayManager implements Listener {
         }
     }
 
-    public static ChatColor getLivesColor(Player player) {
+    public static String getLivesColor(Player player) {
         return getLivesColor(GameManager.getLives(player));
     }
 
-    public static ChatColor getLivesColor(int lives) {
+    public static String getLivesColor(int lives) {
         if (lives >= 4) {
-            return ChatColor.GREEN;
+            return ChatColor.GREEN + "";
         } else if (lives == 3) {
-            return ChatColor.YELLOW;
+            return ChatColor.YELLOW + "";
         } else if (lives == 2) {
-            return ChatColor.GOLD;
+            return ChatColor.GOLD + "";
+        } else if (lives == 1) {
+            return ChatColor.RED + "";
+        } else {
+            return ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH;
         }
-        return ChatColor.RED;
     }
 
 }

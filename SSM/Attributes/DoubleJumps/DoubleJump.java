@@ -21,7 +21,6 @@ public abstract class DoubleJump extends Attribute {
     private int maxDoubleJumps;
     private int remainingDoubleJumps = 0;
     private Sound doubleJumpSound;
-    private int task = -1;
 
     public DoubleJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound) {
         super();
@@ -29,7 +28,7 @@ public abstract class DoubleJump extends Attribute {
         this.height = height;
         this.maxDoubleJumps = maxDoubleJumps;
         this.doubleJumpSound = doubleJumpSound;
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+        task = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
             @Override
             public void run() {
                 Kit kit = KitManager.getPlayerKit(owner);

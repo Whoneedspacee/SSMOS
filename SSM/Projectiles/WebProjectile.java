@@ -1,6 +1,5 @@
 package SSM.Projectiles;
 
-import SSM.Abilities.SpinWeb;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
@@ -8,34 +7,19 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-public class WebProjectile extends Projectile {
+public class WebProjectile extends SmashProjectile {
 
     public WebProjectile(Player firer, String name) {
         super(firer, name);
-    }
-
-    public void createWeb(Location location, long ticks_stay) {
-        if(projectile.getTicksLived() > 3) {
-            Block replace = location.getBlock();
-            Material replacedType = replace.getType();
-            if (replacedType == Material.WEB) {
-                return;
-            }
-            replace.setType(Material.WEB);
-            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    replace.setType(replacedType);
-                }
-            }, ticks_stay);
-        }
+        this.damage = 6;
+        this.hitbox_mult = 0.5;
+        this.knockback_mult = 0;
     }
 
     @Override
@@ -61,44 +45,47 @@ public class WebProjectile extends Projectile {
 
     @Override
     protected boolean onExpire() {
-        createWeb(projectile.getLocation(), 40);
+        createWeb(projectile.getLocation(), 40, 3);
         return true;
     }
 
     @Override
     protected boolean onHitLivingEntity(LivingEntity hit) {
-        createWeb(hit.getLocation(), 60);
-        DamageUtil.damage(hit, firer, getDamage(), getKnockbackMultiplier(),
-                false, EntityDamageEvent.DamageCause.CUSTOM, projectile.getLocation(), false);
+        createWeb(hit.getLocation(), 60, 0);
+        DamageUtil.damage(hit, firer, damage, knockback_mult,
+                false, EntityDamageEvent.DamageCause.CUSTOM,
+                projectile.getLocation(), name);
         VelocityUtil.setVelocity(hit, new Vector(0, 0, 0));
         return true;
     }
 
     @Override
     protected boolean onHitBlock(Block hit) {
-        createWeb(projectile.getLocation(), 40);
+        createWeb(projectile.getLocation(), 40, 3);
         return true;
     }
 
     @Override
     protected boolean onIdle() {
-        createWeb(projectile.getLocation(), 40);
+        createWeb(projectile.getLocation(), 40, 3);
         return true;
     }
 
-    @Override
-    public double getDamage() {
-        return 6;
-    }
-
-    @Override
-    public double getHitboxMultiplier() {
-        return 0.5;
-    }
-
-    @Override
-    public double getKnockbackMultiplier() {
-        return 0;
+    public void createWeb(Location location, long ticks_stay, long need_ticks_lived) {
+        if(projectile.getTicksLived() > need_ticks_lived) {
+            Block replace = location.getBlock();
+            Material replacedType = replace.getType();
+            if (replacedType == Material.WEB) {
+                return;
+            }
+            replace.setType(Material.WEB);
+            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    replace.setType(replacedType);
+                }
+            }, ticks_stay);
+        }
     }
 
 }

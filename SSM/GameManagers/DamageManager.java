@@ -172,13 +172,15 @@ public class DamageManager implements Listener {
             }
             DamageUtil.damage((LivingEntity) e.getEntity(), livingEntity, e.getDamage(),
                     1.0, false, DamageCause.PROJECTILE,
-                    e.getEntity().getLocation().subtract(projectile.getVelocity()), reason);
+                    e.getEntity().getLocation().subtract(projectile.getVelocity()), reason,
+                    null, projectile);
         } else if (e.getCause() == DamageCause.ENTITY_ATTACK) {
             DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), e.getDamage(),
                     1.0, false, DamageCause.ENTITY_ATTACK, null, "Attack");
         } else if (e.getCause() == DamageCause.ENTITY_EXPLOSION) {
-            DamageUtil.damage((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), e.getDamage(),
-                    1.0, false, DamageCause.ENTITY_EXPLOSION);
+            DamageUtil.damage((LivingEntity) e.getEntity(), null, e.getDamage(),
+                    1.0, false, DamageCause.ENTITY_EXPLOSION,
+                    e.getDamager().getLocation(), "Explosion");
         } else {
             Bukkit.broadcastMessage("Unhandled Cause: " + e.getCause().toString());
         }

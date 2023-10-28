@@ -47,6 +47,7 @@ public abstract class Kit implements Listener {
     private boolean created = false;
     private boolean preview_hotbar_equipped = false;
     private boolean game_hotbar_equipped = false;
+    private boolean playing = false;
 
     // Kits are singleton, do not create them a second time
     public Kit() {
@@ -99,11 +100,13 @@ public abstract class Kit implements Listener {
             game_hotbar_equipped = false;
         }
         if(GameManager.isPlaying(new_state)) {
+            playing = true;
             for(Attribute attribute : attributes) {
                 Bukkit.getPluginManager().registerEvents(attribute, plugin);
             }
         }
         else {
+            playing = false;
             for(Attribute attribute : attributes) {
                 HandlerList.unregisterAll(attribute);
             }
@@ -245,6 +248,10 @@ public abstract class Kit implements Listener {
 
     public boolean getGameHotbarEquipped() {
         return game_hotbar_equipped;
+    }
+
+    public boolean isActive() {
+        return playing;
     }
 
     @EventHandler

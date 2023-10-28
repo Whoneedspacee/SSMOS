@@ -37,7 +37,6 @@ public class EventManager implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        Kit kit = KitManager.getPlayerKit(player);
         Ability ability = KitManager.getCurrentAbility(player);
         if (ability == null) {
             return;
@@ -53,7 +52,6 @@ public class EventManager implements Listener {
     @EventHandler
     public void onPlayerLeftClick(PlayerAnimationEvent e) {
         Player player = e.getPlayer();
-        Kit kit = KitManager.getPlayerKit(player);
         Ability ability = KitManager.getCurrentAbility(player);
         if (ability == null) {
             return;
@@ -119,7 +117,7 @@ public class EventManager implements Listener {
         if(e.getEntity() instanceof Player) {
             Player player = (Player) e.getEntity();
             Kit kit = KitManager.getPlayerKit(player);
-            if(kit.getGameHotbarEquipped()) {
+            if(kit.isActive()) {
                 return;
             }
             e.setCancelled(true);

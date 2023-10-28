@@ -5,6 +5,7 @@ import SSM.Abilities.RopedArrow;
 import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.Compass;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
+import SSM.Attributes.Hunger;
 import SSM.Attributes.ItemGenerator;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
@@ -38,11 +39,12 @@ public class KitSkeleton extends Kit {
         setAbility(new RopedArrow(), 1);
         setAbility(new BoneExplosion(), 0);
 
-        addAttribute(new ItemGenerator(Material.ARROW, 1, 3, 3));
-        addAttribute(new Regeneration(regeneration, 20));
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new Barrage(1.1, 0.25, 5));
         addAttribute(new Compass());
+        addAttribute(new ItemGenerator(Material.ARROW, 1, 3, 3));
+        addAttribute(new Barrage(1.1, 0.25, 5));
 
         DisguiseManager.addDisguise(owner, new SkeletonDisguise(owner));
     }

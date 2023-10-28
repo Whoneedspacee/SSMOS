@@ -40,7 +40,7 @@ public class CommandVote implements CommandExecutor {
         }
         Inventory selectMap = Bukkit.createInventory(player, 54, "Choose a Map");
 
-        List<MapFile> sortedMaps = new ArrayList<>(GameManager.all_maps);
+        List<MapFile> sortedMaps = new ArrayList<>(GameManager.selected_gamemode.getAllowedMaps());
         sortedMaps.sort(Comparator.comparing(MapFile::getName));
 
         int slot = 0;

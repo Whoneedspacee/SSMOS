@@ -1,6 +1,5 @@
 package SSM.Kits;
 
-import SSM.Abilities.Blizzard;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ExpCharge;
 import SSM.Attributes.Regeneration;
@@ -8,7 +7,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SnowmanDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSnowMan extends Kit {
@@ -29,8 +27,6 @@ public class KitSnowMan extends Kit {
         setArmor(Material.CHAINMAIL_LEGGINGS, 1);
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmor(Material.CHAINMAIL_HELMET, 3);
-
-        setAbility(new Blizzard(), 0);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));

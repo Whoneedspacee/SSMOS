@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 public class CommandDamage implements CommandExecutor {
 
@@ -20,7 +21,8 @@ public class CommandDamage implements CommandExecutor {
         if (args.length == 1) {
             try {
                 int number = Integer.parseInt(args[0]);
-                DamageUtil.damage(player, null, number, 0, true);
+                DamageUtil.damage(player, null, number, 0, true,
+                        EntityDamageEvent.DamageCause.CUSTOM, null, "Command");
                 player.sendMessage("You were dealt " + number + " damage");
                 return true;
             } catch (NumberFormatException e) {

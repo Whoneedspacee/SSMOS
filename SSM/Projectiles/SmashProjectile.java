@@ -2,10 +2,8 @@ package SSM.Projectiles;
 
 import SSM.SSM;
 import SSM.Utilities.DamageUtil;
-import SSM.Utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -15,25 +13,23 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public abstract class Projectile extends BukkitRunnable {
+public abstract class SmashProjectile extends BukkitRunnable {
 
     protected static JavaPlugin plugin = SSM.getInstance();
     protected Player firer;
     protected String name;
     protected Entity projectile;
+    protected double damage;
+    protected double hitbox_mult;
+    protected double knockback_mult;
+    protected long expiration_ticks = 300;
 
-    public Projectile(Player firer, String name) {
+    public SmashProjectile(Player firer, String name) {
         this.firer = firer;
         this.name = name;
         this.projectile = getProjectileEntity();
@@ -41,6 +37,9 @@ public abstract class Projectile extends BukkitRunnable {
             Item item = (Item) projectile;
             item.setPickupDelay(1000000);
         }
+    }
+
+    public void launchProjectile() {
         this.doVelocity();
         this.runTaskTimer(plugin, 0L, 0L);
     }
@@ -53,7 +52,6 @@ public abstract class Projectile extends BukkitRunnable {
                 return;
             }
         }
-        doEffect();
         // Check if we hit an entity first
         LivingEntity target = checkClosestTarget();
         if(target != null) {
@@ -78,6 +76,7 @@ public abstract class Projectile extends BukkitRunnable {
                 return;
             }
         }
+        doEffect();
     }
 
     public void destroy() {
@@ -86,13 +85,14 @@ public abstract class Projectile extends BukkitRunnable {
     }
 
     protected LivingEntity checkClosestTarget() {
-        double hitbox_mult = getHitboxMultiplier();
         net.minecraft.server.v1_8_R3.World world = ((CraftWorld) projectile.getWorld()).getHandle();
         net.minecraft.server.v1_8_R3.Entity entity = ((CraftEntity) projectile).getHandle();
         // Do a raytrace to see what our real position is going to be
         Vec3D vec_old = new Vec3D(entity.locX, entity.locY, entity.locZ);
         Vec3D vec_new = new Vec3D(entity.locX + entity.motX, entity.locY + entity.motY, entity.locZ + entity.motZ);
         MovingObjectPosition final_position = entity.world.rayTrace(vec_old, vec_new, false, true, false);
+        vec_old = new Vec3D(entity.locX, entity.locY, entity.locZ);
+        vec_new = new Vec3D(entity.locX + entity.motX, entity.locY + entity.motY, entity.locZ + entity.motZ);
         if(final_position != null) {
             vec_new = new Vec3D(final_position.pos.a, final_position.pos.b, final_position.pos.c);
         }
@@ -112,6 +112,7 @@ public abstract class Projectile extends BukkitRunnable {
             if(DamageUtil.isIntangible(living)) {
                 continue;
             }
+            // I have a feeling this is buggy somehow?
             AxisAlignedBB axisAlignedBB = entity.getBoundingBox().grow(1F, 1F, 1F);
             MovingObjectPosition collisionPosition = axisAlignedBB.a(vec_old, vec_new);
             if(collisionPosition == null) {
@@ -184,18 +185,8 @@ public abstract class Projectile extends BukkitRunnable {
     // Returns true if we want to destroy the projectile after
     protected abstract boolean onIdle();
 
-    public abstract double getDamage();
-
     public long getExpirationTicks() {
         return 300;
-    }
-
-    public double getHitboxMultiplier() {
-        return 1;
-    }
-
-    public double getKnockbackMultiplier() {
-        return 1;
     }
 
     public String getName() {

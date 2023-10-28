@@ -46,6 +46,12 @@ public class CooldownManager extends BukkitRunnable {
                 displayCooldownTo(currData.getAbilityUser(), currData);
             }
 
+            // The kit has probably been unequipped if the owner is null
+            if(currData.getAttribute() == null || currData.getAttribute().getOwner() == null) {
+                cdDataIterator.remove();
+                return;
+            }
+
             if (currData.getRemainingTimeMs() <= 0) {
                 cdDataIterator.remove();
 

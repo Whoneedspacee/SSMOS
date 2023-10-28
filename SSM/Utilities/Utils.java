@@ -99,6 +99,10 @@ public class Utils {
     public static void fullHeal(LivingEntity livingEntity) {
         livingEntity.setHealth(livingEntity.getMaxHealth());
         livingEntity.setFireTicks(0);
+        if(livingEntity instanceof Player) {
+            Player player = (Player) livingEntity;
+            player.setFoodLevel(20);
+        }
     }
 
     public static double getXZDistance(Location first, Location second) {
