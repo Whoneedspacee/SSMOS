@@ -10,6 +10,7 @@ import SSM.Utilities.Utils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.command.Command;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -57,6 +58,9 @@ public class SSM extends JavaPlugin implements Listener {
         this.getCommand("spectate").setExecutor(new CommandSpectate());
         this.getCommand("unloadworld").setExecutor(new CommandUnloadWorld());
         this.getCommand("setplaying").setExecutor(new CommandSetPlaying());
+        CommandSetGamemode setgamemode = new CommandSetGamemode();
+        this.getCommand("setgamemode").setExecutor(setgamemode);
+        this.getCommand("setgamemode").setTabCompleter(setgamemode);
         // Do not do anything before manager creation please
         for(Player player : Bukkit.getOnlinePlayers()) {
             Utils.fullHeal(player);

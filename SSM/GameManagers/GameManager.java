@@ -5,6 +5,7 @@ import SSM.Events.GameStateChangeEvent;
 import SSM.GameManagers.Gamemodes.SmashGamemode;
 import SSM.GameManagers.Gamemodes.SoloGamemode;
 import SSM.GameManagers.Gamemodes.TeamsGamemode;
+import SSM.GameManagers.Gamemodes.TestingGamemode;
 import SSM.GameManagers.Maps.MapFile;
 import SSM.Kits.Kit;
 import SSM.Kits.KitTemporarySpectator;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,11 +46,19 @@ public class GameManager implements Listener, Runnable {
     private static short state = GameState.LOBBY_WAITING;
     private static long time_remaining_ms = 0;
     public static World lobby_world = Bukkit.getWorlds().get(0);
-    public static SmashGamemode selected_gamemode = new SoloGamemode();
+    public static List<SmashGamemode> all_gamemodes = new ArrayList<SmashGamemode>();
+    public static SmashGamemode selected_gamemode = null;
     public static MapFile selected_map = null;
 
     public GameManager() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        all_gamemodes.add(new SoloGamemode());
+        all_gamemodes.add(new TeamsGamemode());
+        all_gamemodes.add(new TestingGamemode());
+        for(SmashGamemode gamemode : all_gamemodes) {
+            gamemode.updateAllowedMaps();
+        }
+        selected_gamemode = all_gamemodes.get(0);
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
         for (Player player : Bukkit.getOnlinePlayers()) {
             players.add(player);
@@ -61,7 +71,9 @@ public class GameManager implements Listener, Runnable {
     }
 
     public void run() {
-        DisplayManager.buildScoreboard();
+        if(time_remaining_ms % 1000 == 0 && state != GameState.LOBBY_WAITING) {
+            DisplayManager.buildScoreboard();
+        }
         if (state == GameState.LOBBY_WAITING) {
             players = lobby_world.getPlayers();
             doLobbyWaiting();

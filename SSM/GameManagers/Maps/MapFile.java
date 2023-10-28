@@ -61,7 +61,7 @@ public class MapFile {
         boundary_points.clear();
         respawn_points.clear();
         try {
-            File copy_directory = new File(map_directory.getPath() + "_copy");
+            File copy_directory = new File("maps/_Copies/" + map_directory.getName());
             World world = Bukkit.getWorld(copy_directory.getPath());
             if (world != null) {
                 Bukkit.unloadWorld(world, false);

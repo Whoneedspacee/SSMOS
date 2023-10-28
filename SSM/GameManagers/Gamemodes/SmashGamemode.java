@@ -27,25 +27,22 @@ public abstract class SmashGamemode implements Listener {
 
     public SmashGamemode() {
         Bukkit.getPluginManager().registerEvents(this, SSM.getInstance());
-        File file = new File("ssm_maps");
-        if (!file.exists()) {
-            file.mkdir();
+    }
+
+    public void updateAllowedMaps() {
+        allowed_maps.clear();
+        File maps_folder = new File("maps");
+        if(!maps_folder.exists()) {
+            maps_folder.mkdir();
         }
-        for (File map : file.listFiles()) {
+        File gamemode_maps_folder = new File("maps/" + name);
+        if (!gamemode_maps_folder.exists()) {
+            gamemode_maps_folder.mkdir();
+        }
+        for (File map : gamemode_maps_folder.listFiles()) {
             if (!map.isDirectory()) {
                 continue;
             }
-            if (map.getName().contains("copy")) {
-                World world = Bukkit.getWorld(map.getPath());
-                Bukkit.unloadWorld(world, false);
-                try {
-                    FileUtils.deleteDirectory(map);
-                } catch (Exception e) {
-                    Bukkit.broadcastMessage("Failed to delete map: " + map.getName());
-                }
-                continue;
-            }
-
             allowed_maps.add(new MapFile(map));
         }
     }

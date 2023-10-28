@@ -1,7 +1,7 @@
 main: SSM.SSM
 name: SSMOS
 version: 1
-author: Whoneedspacee, SirInHueman, Huxs
+author: Whoneedspacee, Deidara, YaBoiTim
 description: 'An open source recreation of Super Smash Mobs'
 api-version: 1.16
 commands:
@@ -51,3 +51,6 @@ commands:
   setplaying:
     description: 'Forces a kits abilities to be active.'
     usage: /setplaying
+  setgamemode:
+    description: 'Sets the current gamemode.'
+    usage: /setgamemode
