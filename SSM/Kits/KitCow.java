@@ -3,7 +3,6 @@ package SSM.Kits;
 import SSM.Abilities.InkShotgun;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
-import SSM.Attributes.Stampede;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.CowDisguise;
 import org.bukkit.Material;
@@ -34,7 +33,6 @@ public class KitCow extends Kit {
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new Stampede(3, 3));
 
         DisguiseManager.addDisguise(owner, new CowDisguise(owner));
     }

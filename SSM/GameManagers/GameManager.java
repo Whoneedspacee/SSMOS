@@ -2,6 +2,7 @@ package SSM.GameManagers;
 
 import SSM.Commands.CommandVote;
 import SSM.Events.GameStateChangeEvent;
+import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.Gamemodes.SmashGamemode;
 import SSM.GameManagers.Gamemodes.SoloGamemode;
 import SSM.GameManagers.Gamemodes.TeamsGamemode;
@@ -45,6 +46,7 @@ public class GameManager implements Listener, Runnable {
     private static HashMap<Player, Integer> lives = new HashMap<Player, Integer>();
     private static short state = GameState.LOBBY_WAITING;
     private static long time_remaining_ms = 0;
+    private static long last_time_update_ms = 0;
     public static World lobby_world = Bukkit.getWorlds().get(0);
     public static List<SmashGamemode> all_gamemodes = new ArrayList<SmashGamemode>();
     public static SmashGamemode selected_gamemode = null;
@@ -56,8 +58,9 @@ public class GameManager implements Listener, Runnable {
         all_gamemodes.add(new TestingGamemode());
         for(SmashGamemode gamemode : all_gamemodes) {
             gamemode.updateAllowedMaps();
+            gamemode.updateAllowedKits();
         }
-        selected_gamemode = all_gamemodes.get(0);
+        selected_gamemode = all_gamemodes.get(2);
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -71,8 +74,9 @@ public class GameManager implements Listener, Runnable {
     }
 
     public void run() {
-        if(time_remaining_ms % 1000 == 0 && state != GameState.LOBBY_WAITING) {
+        if(time_remaining_ms % 1000 == 0 && time_remaining_ms != last_time_update_ms) {
             DisplayManager.buildScoreboard();
+            last_time_update_ms = time_remaining_ms;
         }
         if (state == GameState.LOBBY_WAITING) {
             players = lobby_world.getPlayers();
@@ -107,7 +111,6 @@ public class GameManager implements Listener, Runnable {
         if (getTotalPlayers() >= 2) {
             setTimeLeft(15);
             setState(GameState.LOBBY_VOTING);
-            run();
             return;
         }
     }
@@ -115,7 +118,6 @@ public class GameManager implements Listener, Runnable {
     private void doLobbyVoting() {
         if (getTotalPlayers() <= 1) {
             setState(GameState.LOBBY_WAITING);
-            run();
             return;
         }
         if (time_remaining_ms <= 0) {
@@ -127,7 +129,6 @@ public class GameManager implements Listener, Runnable {
             selected_map.createWorld();
             setTimeLeft(15);
             setState(GameState.LOBBY_STARTING);
-            run();
             return;
         }
         time_remaining_ms -= 50;
@@ -136,7 +137,6 @@ public class GameManager implements Listener, Runnable {
     private void doLobbyStarting() {
         if (getTotalPlayers() <= 1) {
             setState(GameState.LOBBY_WAITING);
-            run();
             return;
         }
         if (time_remaining_ms <= 0) {
@@ -182,7 +182,6 @@ public class GameManager implements Listener, Runnable {
             }
             setTimeLeft(10);
             setState(GameState.GAME_STARTING);
-            run();
             return;
         }
         for(Player player : lobby_world.getPlayers()) {
@@ -197,7 +196,6 @@ public class GameManager implements Listener, Runnable {
         if (getTotalPlayers() <= 1) {
             setTimeLeft(0);
             setState(GameState.GAME_ENDING);
-            run();
             return;
         }
         if (time_remaining_ms <= 0) {
@@ -205,7 +203,6 @@ public class GameManager implements Listener, Runnable {
                 player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 1f);
             }
             setState(GameState.GAME_PLAYING);
-            run();
             return;
         }
         for(Player player : selected_map.copy_world.getPlayers()) {
@@ -243,7 +240,6 @@ public class GameManager implements Listener, Runnable {
     private void doGamePlaying() {
         if (getTotalPlayers() <= 1) {
             setState(GameState.GAME_ENDING);
-            run();
             return;
         }
         if (selected_gamemode.isGameEnded(lives)) {
@@ -272,7 +268,6 @@ public class GameManager implements Listener, Runnable {
             deaths = new Player[2];
             setTimeLeft(10);
             setState(GameState.GAME_ENDING);
-            run();
             return;
         }
     }
@@ -289,7 +284,6 @@ public class GameManager implements Listener, Runnable {
             }
             selected_map.deleteWorld();
             setState(GameState.LOBBY_WAITING);
-            run();
             return;
         }
         time_remaining_ms -= 50;
@@ -304,10 +298,10 @@ public class GameManager implements Listener, Runnable {
         // Blood Particles
         EffectUtil.createEffect(player.getEyeLocation(), 10, 0.5, Sound.HURT_FLESH,
                 1f, 1f, Material.INK_SACK, (byte) 1, 10, true);
-        DamageManager.DamageRecord record = DamageManager.getLastDamageRecord(player);
+        SmashDamageEvent record = DamageManager.getLastDamageEvent(player);
         Bukkit.broadcastMessage(ServerMessageType.DEATH + " " + ChatColor.YELLOW + player.getName() +
                 ChatColor.GRAY + " killed by " + ChatColor.YELLOW + record.getDamagerName() +
-                ChatColor.GRAY + " with " + ChatColor.GREEN + record.getDamageReason() + ChatColor.GRAY + ".");
+                ChatColor.GRAY + " with " + ChatColor.GREEN + record.getReason() + ChatColor.GRAY + ".");
         DamageManager.deathReport(player);
         // Out of the game check
         if (lives.get(player) <= 1) {
@@ -367,7 +361,11 @@ public class GameManager implements Listener, Runnable {
     public static void setState(short value) {
         GameStateChangeEvent event = new GameStateChangeEvent(state, value);
         Bukkit.getPluginManager().callEvent(event);
+        boolean changed = (state != value);
         state = value;
+        if(changed) {
+            ourInstance.run();
+        }
         DisplayManager.buildScoreboard();
     }
 

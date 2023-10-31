@@ -1,5 +1,6 @@
 package SSM.Abilities;
 
+import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.*;
@@ -58,11 +59,13 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
         canHit.remove(owner);
         for (Entity entity : canHit) {
             if ((entity instanceof LivingEntity)) {
-                if (!DamageUtil.canDamage((LivingEntity) entity, baseDamage)) {
+                if (!DamageUtil.canDamage((LivingEntity) entity, owner, baseDamage)) {
                     continue;
                 }
-                DamageUtil.damage((LivingEntity) entity, owner, baseDamage,
-                        2.5, false, DamageCause.CUSTOM, null, name);
+                SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) entity, owner, baseDamage);
+                smashDamageEvent.multiplyKnockback(2.5);
+                smashDamageEvent.setReason(name);
+                smashDamageEvent.callEvent();
                 Vector target = entity.getLocation().toVector();
                 Vector player = owner.getLocation().toVector();
                 Vector pre = target.subtract(player);

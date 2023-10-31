@@ -2,6 +2,7 @@ package SSM.GameManagers;
 
 import SSM.Abilities.Ability;
 import SSM.Attributes.Attribute;
+import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.OwnerEvents.*;
 import SSM.Kits.Kit;
 import SSM.SSM;
@@ -63,26 +64,8 @@ public class EventManager implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamage(EntityDamageEvent e) {
-        Entity entity = e.getEntity();
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
-            if(KitManager.getPlayerKit(player) == null) {
-                return;
-            }
-            List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
-            for (Attribute attribute : attributes) {
-                if (attribute instanceof OwnerTakeDamageEvent) {
-                    OwnerTakeDamageEvent takeDamage = (OwnerTakeDamageEvent) attribute;
-                    takeDamage.onOwnerTakeDamage(e);
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onEntityDamage(EntityDamageByEntityEvent e) {
-        Entity damagee = e.getEntity();
+    public void onSmashDamage(SmashDamageEvent e) {
+        Entity damagee = e.getDamagee();
         Entity damager = e.getDamager();
         if (damager instanceof Player) {
             Player player = (Player) damager;
@@ -91,9 +74,9 @@ public class EventManager implements Listener {
             }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
             for (Attribute attribute : attributes) {
-                if (attribute instanceof OwnerDamageEntityEvent) {
-                    OwnerDamageEntityEvent damageEntityEvent = (OwnerDamageEntityEvent) attribute;
-                    damageEntityEvent.onOwnerDamageEntity(e);
+                if (attribute instanceof OwnerDealSmashDamageEvent) {
+                    OwnerDealSmashDamageEvent damageEntityEvent = (OwnerDealSmashDamageEvent) attribute;
+                    damageEntityEvent.onOwnerDealSmashDamageEvent(e);
                 }
             }
         }
@@ -104,9 +87,9 @@ public class EventManager implements Listener {
             }
             List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
             for (Attribute attribute : attributes) {
-                if (attribute instanceof EntityDamageOwnerEvent) {
-                    EntityDamageOwnerEvent damageOwnerEvent = (EntityDamageOwnerEvent) attribute;
-                    damageOwnerEvent.onEntityDamageOwner(e);
+                if (attribute instanceof OwnerTakeSmashDamageEvent) {
+                    OwnerTakeSmashDamageEvent damageOwnerEvent = (OwnerTakeSmashDamageEvent) attribute;
+                    damageOwnerEvent.onOwnerTakeSmashDamageEvent(e);
                 }
             }
         }

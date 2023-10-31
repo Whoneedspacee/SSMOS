@@ -1,7 +1,6 @@
 package SSM.Kits;
 
 import SSM.Attributes.DoubleJumps.DirectDoubleJump;
-import SSM.Attributes.Ravage;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.WolfDisguise;
@@ -28,7 +27,6 @@ public class KitWolf extends Kit {
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new DirectDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new Ravage(8, 1, 3));
 
         DisguiseManager.addDisguise(owner, new WolfDisguise(owner));
     }

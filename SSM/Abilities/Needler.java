@@ -1,5 +1,6 @@
 package SSM.Abilities;
 
+import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.Bukkit;
@@ -61,9 +62,9 @@ public class Needler extends Ability implements OwnerRightClickEvent {
             List<MetadataValue> data = arrow.getMetadata("Needler");
             if (data.size() > 0) {
                 livingEntity.setNoDamageTicks(0);
-                DamageUtil.damage(livingEntity, (LivingEntity) arrow.getShooter(), 1.1,
-                        1.0, false, EntityDamageEvent.DamageCause.CUSTOM, null,
-                        "Needler");
+                SmashDamageEvent smashDamageEvent = new SmashDamageEvent(livingEntity, (LivingEntity) arrow.getShooter(), 1.1);
+                smashDamageEvent.setReason(name);
+                smashDamageEvent.callEvent();
             }
         }
     }

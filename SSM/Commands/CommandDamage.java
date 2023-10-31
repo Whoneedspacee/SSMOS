@@ -1,5 +1,6 @@
 package SSM.Commands;
 
+import SSM.Events.SmashDamageEvent;
 import SSM.Utilities.DamageUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,8 +22,13 @@ public class CommandDamage implements CommandExecutor {
         if (args.length == 1) {
             try {
                 int number = Integer.parseInt(args[0]);
-                DamageUtil.damage(player, null, number, 0, true,
-                        EntityDamageEvent.DamageCause.CUSTOM, null, "Command");
+                SmashDamageEvent smashDamageEvent = new SmashDamageEvent(player, null, number);
+                smashDamageEvent.multiplyKnockback(0);
+                smashDamageEvent.setIgnoreArmor(true);
+                smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.STARVATION);
+                smashDamageEvent.setDamagerName("Command");
+                smashDamageEvent.setReason("Command");
+                smashDamageEvent.callEvent();
                 player.sendMessage("You were dealt " + number + " damage");
                 return true;
             } catch (NumberFormatException e) {

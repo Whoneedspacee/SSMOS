@@ -1,5 +1,6 @@
 package SSM.Projectiles;
 
+import SSM.Events.SmashDamageEvent;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
@@ -57,9 +58,10 @@ public class IronHookProjectile extends SmashProjectile {
     @Override
     protected boolean onHitLivingEntity(LivingEntity hit) {
         hit.setNoDamageTicks(0);
-        DamageUtil.damage(hit, firer, damage * projectile.getVelocity().length(), knockback_mult,
-                false, EntityDamageEvent.DamageCause.CUSTOM,
-                projectile.getLocation(), name);
+        SmashDamageEvent smashDamageEvent = new SmashDamageEvent(hit, firer, damage * projectile.getVelocity().length());
+        smashDamageEvent.multiplyKnockback(knockback_mult);
+        smashDamageEvent.setReason(name);
+        smashDamageEvent.callEvent();
         // To - From
         Vector pull = firer.getLocation().toVector().subtract(hit.getLocation().toVector()).normalize();
         VelocityUtil.setVelocity(hit, pull, 2, false, 0, 0.8, 1.5, true);

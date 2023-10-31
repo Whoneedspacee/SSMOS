@@ -2,6 +2,7 @@ package SSM;
 
 import SSM.Commands.*;
 import SSM.Commands.CommandStop;
+import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.*;
 import SSM.GameManagers.Disguises.Disguise;
 import SSM.Kits.Kit;
@@ -79,52 +80,8 @@ public class SSM extends JavaPlugin implements Listener {
         Player player = e.getPlayer();
         Block blockIn = e.getTo().getBlock();
         Block blockOn = e.getFrom().getBlock().getRelative(BlockFace.DOWN);
-        if (blockIn.isLiquid() && DamageUtil.canDamage(player, 1000)) {
+        if (blockIn.isLiquid() && DamageUtil.canDamage(player, null,1000)) {
             DamageUtil.borderKill(player, false);
-        }
-    }
-
-    @EventHandler
-    public void onDamage(EntityDamageEvent e) {
-        if(e.getCause() == EntityDamageEvent.DamageCause.STARVATION) {
-            e.setCancelled(true);
-            return;
-        }
-        if(e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
-            if(!(e.getEntity() instanceof LivingEntity)) {
-                return;
-            }
-            if(e.getEntity() instanceof Player) {
-                Player player = (Player) e.getEntity();
-                if(KitManager.getPlayerKit(player) != null) {
-                    if(KitManager.getPlayerKit(player).isInvincible()) {
-                        e.setCancelled(true);
-                        return;
-                    }
-                }
-            }
-            DamageUtil.damage((LivingEntity) e.getEntity(), null, e.getDamage(), 0, true,
-                    EntityDamageEvent.DamageCause.FIRE, null, null,
-                    new DamageManager.DamageRecord(e.getEntity().getName(), "Fire", e.getDamage(), "Fire"));
-            e.setDamage(0);
-            e.setCancelled(false);
-        }
-        if(e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
-            e.setCancelled(true);
-        }
-        if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            e.setCancelled(true);
-            return;
-        }
-        if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.VOID ||
-                e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.LAVA) {
-            DamageUtil.borderKill((Player) e.getEntity(), true);
-            e.setCancelled(true);
-            return;
-        }
-        if(e.getEntity() instanceof LivingEntity && e.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            DamageUtil.damage((LivingEntity) e.getEntity(), null, 1000, 0,
-                    true, EntityDamageEvent.DamageCause.VOID, null, "Void");
         }
     }
 
@@ -186,6 +143,7 @@ public class SSM extends JavaPlugin implements Listener {
         }
         Player player = (Player) e.getEntity();
         Kit kit = KitManager.getPlayerKit(player);
+        // Only cancel if we don't have a hunger attribute
         if(kit != null && kit.isActive() && kit.getAttributeByName("Hunger") != null) {
             return;
         }

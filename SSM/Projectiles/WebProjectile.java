@@ -1,5 +1,6 @@
 package SSM.Projectiles;
 
+import SSM.Events.SmashDamageEvent;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
@@ -51,10 +52,11 @@ public class WebProjectile extends SmashProjectile {
 
     @Override
     protected boolean onHitLivingEntity(LivingEntity hit) {
-        createWeb(hit.getLocation(), 60, 0);
-        DamageUtil.damage(hit, firer, damage, knockback_mult,
-                false, EntityDamageEvent.DamageCause.CUSTOM,
-                projectile.getLocation(), name);
+        createWeb(hit.getLocation(), 60, -1);
+        SmashDamageEvent smashDamageEvent = new SmashDamageEvent(hit, firer, damage);
+        smashDamageEvent.multiplyKnockback(knockback_mult);
+        smashDamageEvent.setReason(name);
+        smashDamageEvent.callEvent();
         VelocityUtil.setVelocity(hit, new Vector(0, 0, 0));
         return true;
     }

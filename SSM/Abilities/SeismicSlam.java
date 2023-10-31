@@ -1,5 +1,6 @@
 package SSM.Abilities;
 
+import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.BlocksUtil;
 import SSM.Utilities.DamageUtil;
@@ -61,9 +62,12 @@ public class SeismicSlam extends Ability implements OwnerRightClickEvent {
         canHit.remove(owner);
         for (Entity entity : canHit) {
             if ((entity instanceof LivingEntity)) {
+                LivingEntity livingEntity = (LivingEntity) entity;
                 double dist = owner.getLocation().distance(entity.getLocation());
-                DamageUtil.damage((LivingEntity) entity, owner, baseDamage * (1 - dist / range) + 0.5,
-                        2.4, false, EntityDamageEvent.DamageCause.CUSTOM, null, name);
+                SmashDamageEvent smashDamageEvent = new SmashDamageEvent(livingEntity, owner, baseDamage * (1 - dist / range) + 0.5);
+                smashDamageEvent.multiplyKnockback(2.4);
+                smashDamageEvent.setReason(name);
+                smashDamageEvent.callEvent();
             }
         }
         owner.getWorld().playSound(owner.getLocation(), Sound.ZOMBIE_WOOD, 2f, 0.2f);

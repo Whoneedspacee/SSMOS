@@ -18,13 +18,16 @@ public class CommandStop implements CommandExecutor {
         if(!commandSender.isOp()) {
             return true;
         }
+        stopGame();
+        return true;
+    }
+
+    public static void stopGame() {
         if (GameManager.getState() == GameManager.GameState.GAME_STARTING ||
                 GameManager.getState() == GameManager.GameState.GAME_PLAYING) {
-            GameManager.setState(GameManager.GameState.GAME_ENDING);
             GameManager.setTimeLeft(0);
-            GameManager.ourInstance.run();
+            GameManager.setState(GameManager.GameState.GAME_ENDING);
         }
-        return true;
     }
 
 }

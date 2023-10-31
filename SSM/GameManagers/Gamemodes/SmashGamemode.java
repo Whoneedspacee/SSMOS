@@ -4,7 +4,7 @@ import SSM.Events.GameStateChangeEvent;
 import SSM.GameManagers.GameManager;
 import SSM.GameManagers.KitManager;
 import SSM.GameManagers.Maps.MapFile;
-import SSM.Kits.Kit;
+import SSM.Kits.*;
 import SSM.SSM;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -16,6 +16,7 @@ import org.bukkit.event.Listener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public abstract class SmashGamemode implements Listener {
     protected String name = "N/A";
     protected String[] description = new String[] {"N/A"};
     protected List<MapFile> allowed_maps = new ArrayList<MapFile>();
+    protected List<Kit> allowed_kits = new ArrayList<Kit>();
 
     public SmashGamemode() {
         Bukkit.getPluginManager().registerEvents(this, SSM.getInstance());
@@ -45,6 +47,30 @@ public abstract class SmashGamemode implements Listener {
             }
             allowed_maps.add(new MapFile(map));
         }
+    }
+
+    public void updateAllowedKits() {
+        allowed_kits.add(new KitSkeleton());
+        allowed_kits.add(new KitIronGolem());
+        allowed_kits.add(new KitSpider());
+        allowed_kits.add(new KitSlime());
+        allowed_kits.add(new KitSquid());
+        allowed_kits.add(new KitCreeper());
+        allowed_kits.add(new KitEnderman());
+        allowed_kits.add(new KitSnowMan());
+        allowed_kits.add(new KitWolf());
+        allowed_kits.add(new KitMagmaCube());
+        allowed_kits.add(new KitWitch());
+        allowed_kits.add(new KitWitherSkeleton());
+        allowed_kits.add(new KitZombie());
+        allowed_kits.add(new KitCow());
+        allowed_kits.add(new KitSkeletonHorse());
+        allowed_kits.add(new KitPig());
+        allowed_kits.add(new KitBlaze());
+        allowed_kits.add(new KitChicken());
+        allowed_kits.add(new KitGuardian());
+        allowed_kits.add(new KitSheep());
+        allowed_kits.add(new KitVillager());
     }
 
     public void setPlayerLives(HashMap<Player, Integer> lives) {
@@ -112,9 +138,8 @@ public abstract class SmashGamemode implements Listener {
         return allowed_maps;
     }
 
-    @EventHandler
-    public void onGameStateChanged(GameStateChangeEvent e) {
-
+    public List<Kit> getAllowedKits() {
+        return allowed_kits;
     }
 
 }

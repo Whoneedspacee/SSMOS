@@ -1,5 +1,7 @@
 package SSM.Attributes;
 
+import SSM.Events.SmashDamageEvent;
+import SSM.GameManagers.GameManager;
 import SSM.GameManagers.KitManager;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.ServerMessageType;
@@ -43,10 +45,18 @@ public class Hunger extends Attribute {
         owner.setSaturation(3f);
         owner.setExhaustion(0f);
         if(owner.getFoodLevel() <= 0) {
-            DamageUtil.damage(owner, null, 1, 0, false,
-                    EntityDamageEvent.DamageCause.STARVATION, null, "Starvation");
+            SmashDamageEvent smashDamageEvent = new SmashDamageEvent(owner, null, 1);
+            smashDamageEvent.multiplyKnockback(0);
+            smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.STARVATION);
+            smashDamageEvent.setDamagerName("Starvation");
+            smashDamageEvent.setReason("Starvation");
+            smashDamageEvent.callEvent();
             Utils.sendServerMessageToPlayer("Attack other players to restore hunger!", owner,
                     ServerMessageType.GAME);
+        }
+        // Lazy hack for lobby testing shenanigans
+        if(!GameManager.isPlaying()) {
+            return;
         }
         if(hunger_ticks == 0) {
             owner.setFoodLevel(Math.max(0, owner.getFoodLevel() - 1));

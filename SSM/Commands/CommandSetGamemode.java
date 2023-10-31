@@ -26,10 +26,6 @@ public class CommandSetGamemode implements TabExecutor {
             commandSender.sendMessage("Must specify a gamemode.");
             return true;
         }
-        if(GameManager.getState() >= GameManager.GameState.LOBBY_VOTING) {
-            commandSender.sendMessage("Cannot select gamemode after voting is over.");
-            return true;
-        }
         StringBuilder name_builder = new StringBuilder();
         for(int i = 0; i < args.length; i++) {
             name_builder.append(args[i]);
@@ -49,12 +45,14 @@ public class CommandSetGamemode implements TabExecutor {
         }
         GameManager.selected_gamemode = selected_gamemode;
         DisplayManager.buildScoreboard();
-        for(Player player : GameManager.lobby_world.getPlayers()) {
+        for(Player player : Bukkit.getOnlinePlayers()) {
             Utils.sendServerMessageToPlayer("Set " +
                     ChatColor.YELLOW + selected_gamemode.getName() + ChatColor.GRAY +
                     " as the next gamemode.", player, ServerMessageType.GAME);
             player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
         }
+        CommandStop.stopGame();
+        GameManager.setState(GameManager.GameState.LOBBY_WAITING);
         return true;
     }
 

@@ -1,5 +1,6 @@
 package SSM.Abilities;
 
+import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.CooldownManager;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
@@ -40,7 +41,7 @@ public class SlimeSlam extends Ability implements OwnerRightClickEvent {
                         return;
                     }
                     LivingEntity living = (LivingEntity) entity;
-                    if (!DamageUtil.canDamage(living, damage)) {
+                    if (!DamageUtil.canDamage(living, owner, damage)) {
                         continue;
                     }
                     doSlam(living);
@@ -57,10 +58,14 @@ public class SlimeSlam extends Ability implements OwnerRightClickEvent {
     }
 
     public void doSlam(LivingEntity target) {
-        DamageUtil.damage(owner, target, damage / 4, 2, false,
-                EntityDamageEvent.DamageCause.CUSTOM, null, name + " recoil");
-        DamageUtil.damage(target, owner, damage, 2, false,
-                EntityDamageEvent.DamageCause.CUSTOM, null, name);
+        SmashDamageEvent recoilEvent = new SmashDamageEvent(owner, target, damage / 4);
+        recoilEvent.multiplyKnockback(2);
+        recoilEvent.setReason(name + " recoil");
+        recoilEvent.callEvent();
+        SmashDamageEvent smashDamageEvent = new SmashDamageEvent(target, owner, damage);
+        smashDamageEvent.multiplyKnockback(2);
+        smashDamageEvent.setReason(name);
+        smashDamageEvent.callEvent();
     }
 
 }

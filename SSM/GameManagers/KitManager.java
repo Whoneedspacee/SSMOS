@@ -30,32 +30,9 @@ public class KitManager implements Listener {
 
     private static KitManager ourInstance;
     private static HashMap<Player, Kit> playerKit = new HashMap<Player, Kit>();
-    private List<Kit> allKits = new ArrayList<Kit>();
     private JavaPlugin plugin = SSM.getInstance();
 
     public KitManager() {
-        allKits.add(new KitSkeleton());
-        allKits.add(new KitIronGolem());
-        allKits.add(new KitSpider());
-        allKits.add(new KitSlime());
-        allKits.add(new KitSquid());
-        allKits.add(new KitCreeper());
-        allKits.add(new KitEnderman());
-        allKits.add(new KitSnowMan());
-        allKits.add(new KitWolf());
-        allKits.add(new KitMagmaCube());
-        allKits.add(new KitWitch());
-        allKits.add(new KitWitherSkeleton());
-        allKits.add(new KitZombie());
-        allKits.add(new KitCow());
-        allKits.add(new KitSkeletonHorse());
-        allKits.add(new KitPig());
-        allKits.add(new KitBlaze());
-        allKits.add(new KitChicken());
-        allKits.add(new KitGuardian());
-        allKits.add(new KitSheep());
-        allKits.add(new KitVillager());
-        allKits = Collections.unmodifiableList(allKits);
         Bukkit.getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
     }
@@ -105,7 +82,7 @@ public class KitManager implements Listener {
     }
 
     public static List<Kit> getAllKits() {
-        return KitManager.getInstance().allKits;
+        return GameManager.selected_gamemode.getAllowedKits();
     }
 
     public static KitManager getInstance() {

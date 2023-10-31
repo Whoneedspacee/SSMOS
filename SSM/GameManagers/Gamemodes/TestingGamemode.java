@@ -1,7 +1,13 @@
 package SSM.GameManagers.Gamemodes;
 
+import SSM.Events.GameStateChangeEvent;
 import SSM.GameManagers.GameManager;
 import SSM.GameManagers.Maps.MapFile;
+import SSM.Kits.KitIronGolem;
+import SSM.Kits.KitSkeleton;
+import SSM.Kits.KitSpider;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntity;
+import org.bukkit.event.EventHandler;
 
 import java.io.File;
 
@@ -21,6 +27,21 @@ public class TestingGamemode extends SmashGamemode {
     @Override
     public void updateAllowedMaps() {
         allowed_maps = GameManager.all_gamemodes.get(0).getAllowedMaps();
+    }
+
+    @Override
+    public void updateAllowedKits() {
+        allowed_kits.add(new KitSkeleton());
+        allowed_kits.add(new KitIronGolem());
+        allowed_kits.add(new KitSpider());
+    }
+
+    @EventHandler
+    public void onGameStateChanged(GameStateChangeEvent e) {
+        if(!isCurrentGamemode()) {
+            return;
+        }
+        GameManager.setTimeLeft(0);
     }
 
 }

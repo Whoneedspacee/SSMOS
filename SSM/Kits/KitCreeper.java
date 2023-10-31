@@ -1,7 +1,6 @@
 package SSM.Kits;
 
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Attributes.LightningShield;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.CreeperDisguise;
@@ -30,7 +29,6 @@ public class KitCreeper extends Kit {
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new LightningShield());
 
         DisguiseManager.addDisguise(owner, new CreeperDisguise(owner));
     }
