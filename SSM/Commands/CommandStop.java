@@ -23,10 +23,12 @@ public class CommandStop implements CommandExecutor {
     }
 
     public static void stopGame() {
-        if (GameManager.getState() == GameManager.GameState.GAME_STARTING ||
-                GameManager.getState() == GameManager.GameState.GAME_PLAYING) {
+        if (GameManager.getState() >= GameManager.GameState.GAME_STARTING) {
             GameManager.setTimeLeft(0);
             GameManager.setState(GameManager.GameState.GAME_ENDING);
+        }
+        else {
+            GameManager.setState(GameManager.GameState.LOBBY_WAITING);
         }
     }
 

@@ -22,7 +22,7 @@ public class Potion extends Attribute {
     }
 
     public void activate() {
-        owner.addPotionEffect(new PotionEffect(effect, 70, level - 1, false, false));
+        owner.addPotionEffect(new PotionEffect(effect, 80, level, false, false));
     }
 
 }

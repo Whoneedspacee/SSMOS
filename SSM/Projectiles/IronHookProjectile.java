@@ -57,9 +57,9 @@ public class IronHookProjectile extends SmashProjectile {
 
     @Override
     protected boolean onHitLivingEntity(LivingEntity hit) {
-        hit.setNoDamageTicks(0);
         SmashDamageEvent smashDamageEvent = new SmashDamageEvent(hit, firer, damage * projectile.getVelocity().length());
         smashDamageEvent.multiplyKnockback(knockback_mult);
+        smashDamageEvent.setIgnoreDamageDelay(true);
         smashDamageEvent.setReason(name);
         smashDamageEvent.callEvent();
         // To - From

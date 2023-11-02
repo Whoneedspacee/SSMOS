@@ -45,14 +45,15 @@ public class Hunger extends Attribute {
         owner.setSaturation(3f);
         owner.setExhaustion(0f);
         if(owner.getFoodLevel() <= 0) {
+            Utils.sendServerMessageToPlayer("Attack other players to restore hunger!", owner,
+                    ServerMessageType.GAME);
             SmashDamageEvent smashDamageEvent = new SmashDamageEvent(owner, null, 1);
             smashDamageEvent.multiplyKnockback(0);
             smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.STARVATION);
             smashDamageEvent.setDamagerName("Starvation");
             smashDamageEvent.setReason("Starvation");
             smashDamageEvent.callEvent();
-            Utils.sendServerMessageToPlayer("Attack other players to restore hunger!", owner,
-                    ServerMessageType.GAME);
+            return;
         }
         // Lazy hack for lobby testing shenanigans
         if(!GameManager.isPlaying()) {

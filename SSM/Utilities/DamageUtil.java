@@ -8,6 +8,7 @@ import SSM.GameManagers.Disguises.Disguise;
 import SSM.GameManagers.GameManager;
 import SSM.GameManagers.KitManager;
 import SSM.Kits.Kit;
+import net.minecraft.server.v1_8_R3.CombatTracker;
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityStatus;
@@ -23,7 +24,13 @@ import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class DamageUtil {
+
+    private static HashMap<LivingEntity, DamageRateTracker> damageRateTrackers = new HashMap<LivingEntity, DamageRateTracker>();
 
     public static void borderKill(Player player, boolean lightning) {
         if(lightning && DamageUtil.canDamage(player, null,1000)) {
@@ -113,6 +120,62 @@ public class DamageUtil {
         else if (type == EntityType.ZOMBIE) sound = Sound.ZOMBIE_HURT;
 
         damagee.getWorld().playSound(damagee.getLocation(), sound, 1.5f + (float) (0.5f * Math.random()), 0.8f + (float) (0.4f * Math.random()));
+    }
+
+    public static DamageRateTracker getDamageRateTracker(LivingEntity living) {
+        DamageRateTracker tracker = damageRateTrackers.get(living);
+        if(tracker == null) {
+            tracker = new DamageRateTracker(living);
+            damageRateTrackers.put(living, tracker);
+        }
+        return tracker;
+    }
+
+    public static class DamageRateTracker {
+
+        private LivingEntity living;
+        private HashMap<LivingEntity, Long> lastHurt = new HashMap<>();
+        private HashMap<LivingEntity, Long> lastHurtBy = new HashMap<>();
+        private long lastHurtByWorld = 0;
+
+        public DamageRateTracker(LivingEntity living) {
+            this.living = living;
+        }
+
+        public boolean canBeHurtBy(LivingEntity damager) {
+            if (damager == null) {
+                if (System.currentTimeMillis() - lastHurtByWorld > 250) {
+                    lastHurtByWorld = System.currentTimeMillis();
+                    return true;
+                }
+                return false;
+            }
+            if (!lastHurtBy.containsKey(damager)) {
+                lastHurtBy.put(damager, System.currentTimeMillis());
+                return true;
+            }
+            if (System.currentTimeMillis() - lastHurtBy.get(damager) > 400) {
+                lastHurtBy.put(damager, System.currentTimeMillis());
+                return true;
+            }
+            return false;
+        }
+
+        public boolean canHurt(LivingEntity damagee) {
+            if (damagee == null) {
+                return true;
+            }
+            if (!lastHurt.containsKey(damagee)) {
+                lastHurt.put(damagee, System.currentTimeMillis());
+                return true;
+            }
+            if (System.currentTimeMillis() - lastHurt.get(damagee) > 400) {
+                lastHurt.put(damagee, System.currentTimeMillis());
+                return true;
+            }
+            return false;
+        }
+
     }
 
 }

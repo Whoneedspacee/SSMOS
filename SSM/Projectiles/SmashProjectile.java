@@ -113,12 +113,13 @@ public abstract class SmashProjectile extends BukkitRunnable {
                 continue;
             }
             // I have a feeling this is buggy somehow?
-            AxisAlignedBB axisAlignedBB = entity.getBoundingBox().grow(1F, 1F, 1F);
+            /*AxisAlignedBB axisAlignedBB = entity.getBoundingBox().grow(1F, 1F, 1F);
             MovingObjectPosition collisionPosition = axisAlignedBB.a(vec_old, vec_new);
             if(collisionPosition == null) {
                 continue;
             }
-            double distance = vec_old.distanceSquared(collisionPosition.pos);
+            double distance = vec_old.distanceSquared(collisionPosition.pos);*/
+            double distance = living.getLocation().distance(projectile.getLocation());
             if(distance < closest_distance) {
                 closest_distance = distance;
                 target = living;

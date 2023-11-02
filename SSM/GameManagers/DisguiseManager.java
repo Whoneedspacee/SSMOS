@@ -7,9 +7,7 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.ChannelPromise;
-import net.minecraft.server.v1_8_R3.DataWatcher;
-import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -105,6 +103,7 @@ public class DisguiseManager implements Listener, Runnable {
                     if (action.equals(PacketPlayInUseEntity.EnumEntityUseAction.ATTACK)) {
                         for (Disguise disguise : DisguiseManager.disguises.values()) {
                             // Ignore player melees in case they bounced the destroy entity packet
+                            // This matters for disguises where the player is larger than the disguise
                             if(disguise.getOwner().getEntityId() == id) {
                                 return;
                             }
@@ -124,6 +123,20 @@ public class DisguiseManager implements Listener, Runnable {
                     new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR,
                             player.getItemInHand(), block, null).callEvent();
                 }*/
+                if (msg instanceof PacketPlayInArmAnimation) {
+                    PacketPlayInArmAnimation packet = (PacketPlayInArmAnimation) msg;
+                    // Make their disguise show the arm animation as well
+                    for(Disguise disguise : DisguiseManager.disguises.values()) {
+                        if(!disguise.getOwner().getName().equals(channelHandlerContext.name())) {
+                            continue;
+                        }
+                        if (disguise.getShowAttackAnimation()) {
+                            PacketPlayOutAnimation arm_swing_packet = new PacketPlayOutAnimation(
+                                    disguise.getLiving(), (byte) 0);
+                            Utils.sendPacketToAll(arm_swing_packet);
+                        }
+                    }
+                }
                 super.channelRead(channelHandlerContext, msg);
             }
 

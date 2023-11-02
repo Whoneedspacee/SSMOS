@@ -21,6 +21,7 @@ public class SmashDamageEvent extends Event implements Cancellable {
     private double damage;
     private double knockbackMultiplier;
     private boolean ignoreArmor;
+    private boolean ignoreDamageDelay;
     private DamageCause damageCause;
     private Location origin;
     private String reason;
@@ -39,6 +40,7 @@ public class SmashDamageEvent extends Event implements Cancellable {
         this.damage = damage;
         this.knockbackMultiplier = 1;
         this.ignoreArmor = false;
+        this.ignoreDamageDelay = false;
         this.damageCause = DamageCause.CUSTOM;
         this.origin = null;
         this.reason = "N/A";
@@ -85,6 +87,14 @@ public class SmashDamageEvent extends Event implements Cancellable {
 
     public boolean getIgnoreArmor() {
         return ignoreArmor;
+    }
+
+    public void setIgnoreDamageDelay(boolean ignoreDamageDelay) {
+        this.ignoreDamageDelay = ignoreDamageDelay;
+    }
+
+    public boolean getIgnoreDamageDelay() {
+        return ignoreDamageDelay;
     }
 
     public void setDamageCause(DamageCause damageCause) {

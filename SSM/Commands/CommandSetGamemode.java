@@ -52,7 +52,6 @@ public class CommandSetGamemode implements TabExecutor {
             player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
         }
         CommandStop.stopGame();
-        GameManager.setState(GameManager.GameState.LOBBY_WAITING);
         return true;
     }
 

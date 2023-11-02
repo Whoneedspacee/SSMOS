@@ -47,9 +47,25 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
         this.plugin = SSM.getInstance();
     }
 
-    public void checkAndActivate() {
+    public boolean check() {
+        if(owner == null) {
+            return false;
+        }
         Kit kit = KitManager.getPlayerKit(owner);
         if(kit != null && !kit.isActive()) {
+            return false;
+        }
+        if (CooldownManager.getInstance().getRemainingTimeFor(this, owner) > 0) {
+            return false;
+        }
+        if (expUsed > 0 && owner.getExp() < expUsed) {
+            return false;
+        }
+        return true;
+    }
+
+    public void checkAndActivate() {
+        if(!check()) {
             return;
         }
         if (CooldownManager.getInstance().getRemainingTimeFor(this, owner) <= 0) {

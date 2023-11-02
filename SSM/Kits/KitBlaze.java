@@ -31,7 +31,7 @@ public class KitBlaze extends Kit {
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new Potion(PotionEffectType.SPEED, 1));
+        addAttribute(new Potion(PotionEffectType.SPEED, 0));
 
         DisguiseManager.addDisguise(owner, new BlazeDisguise(owner));
     }

@@ -1,13 +1,13 @@
 package SSM.Abilities;
 
+import SSM.Events.SmashDamageEvent;
+import SSM.GameManagers.CooldownManager;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
+import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -22,10 +22,8 @@ import java.util.*;
 
 public class Fissure extends Ability implements OwnerRightClickEvent {
 
-    private int fissureLength = 14;
     private int task = -1;
     private int remove_task = -1;
-    private Material type;
     private HashMap<Block, Integer> blocks = new HashMap<Block, Integer>();
     private List<Entity> already_hit = new ArrayList<Entity>();
 
@@ -33,6 +31,11 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
         super();
         this.name = "Fissure";
         this.cooldownTime = 8;
+        this.description = new String[] {
+                ChatColor.RESET + "Smash the ground, creating a fissure",
+                ChatColor.RESET + "which slowly rises in a line, dealing",
+                ChatColor.RESET + "damage and knockback to anyone it hits!",
+        };
         remove_task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
@@ -48,8 +51,12 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
+        if (!check()) {
+            return;
+        }
         if (!Utils.entityIsOnGround(owner)) {
-            owner.sendMessage("You cannot use Fissure while airborne.");
+            Utils.sendAttributeMessage("You cannot use",
+                    name + ChatColor.GRAY + " while airborne", owner, ServerMessageType.GAME);
             return;
         }
         checkAndActivate();
@@ -141,7 +148,10 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
                     }
                     LivingEntity living = (LivingEntity) hit;
                     int distance = (int) hit.getLocation().distance(path.get(0).getLocation());
-                    //DamageUtil.damage(living, owner, 4 + distance);
+                    SmashDamageEvent smashDamageEvent = new SmashDamageEvent(living, owner, 4 + distance);
+                    smashDamageEvent.multiplyKnockback(0);
+                    smashDamageEvent.setReason(name);
+                    smashDamageEvent.callEvent();
                     Vector direction = living.getLocation().toVector().subtract(next_block.getLocation().toVector()).setY(0).normalize();
                     VelocityUtil.setVelocity(living, direction,
                             1 + 0.1 * distance, true, 0.6 + 0.05 * distance, 0, 10, true);
@@ -150,20 +160,6 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
                 last_block = next_block;
             }
         }, 0L, 0L);
-    }
-
-    private Location getBlockUnderneath(Location loc) {
-        if (loc.getBlock().getType().isSolid()) {
-            return loc.getBlock().getLocation();
-        }
-        while (loc.getY() > 0) {
-            loc = loc.getBlock().getRelative(BlockFace.DOWN).getLocation();
-            if (!loc.getBlock().getType().isSolid()) {
-                continue;
-            }
-            return loc;
-        }
-        return loc;
     }
 
     private void stop() {

@@ -20,6 +20,7 @@ public abstract class Disguise {
     protected EntityLiving living;
     protected EntityArmorStand armorstand;
     protected EntitySquid squid;
+    protected boolean showAttackAnimation = true;
 
     public Disguise(Player owner) {
         this.owner = owner;
@@ -171,5 +172,9 @@ public abstract class Disguise {
     }
 
     protected abstract EntityLiving newLiving();
+
+    public boolean getShowAttackAnimation() {
+        return showAttackAnimation;
+    }
 
 }

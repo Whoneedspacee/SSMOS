@@ -3,9 +3,9 @@ package SSM.Kits;
 import SSM.Abilities.Fissure;
 import SSM.Abilities.IronHook;
 import SSM.Abilities.SeismicSlam;
+import SSM.Attributes.*;
+import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Attributes.Potion;
-import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.IronGolemDisguise;
 import org.bukkit.Material;
@@ -37,25 +37,29 @@ public class KitIronGolem extends Kit {
         setAbility(new IronHook(), 1);
         setAbility(new SeismicSlam(), 2);
 
-        addAttribute(new Regeneration(regeneration, 20));
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new Potion(PotionEffectType.SLOW, 1));
+        addAttribute(new Potion(PotionEffectType.SLOW, 0));
 
         DisguiseManager.addDisguise(owner, new IronGolemDisguise(owner));
     }
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
-        setItem(new ItemStack(Material.IRON_PICKAXE, 1), 1);
-        setItem(new ItemStack(Material.IRON_SPADE, 1), 2);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.IRON_PICKAXE), 1);
+        setItem(new ItemStack(Material.IRON_SPADE), 2);
+        setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
-        setItem(new ItemStack(Material.IRON_PICKAXE, 1), 1);
-        setItem(new ItemStack(Material.IRON_SPADE, 1), 2);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.IRON_PICKAXE), 1);
+        setItem(new ItemStack(Material.IRON_SPADE), 2);
+        setItem(new ItemStack(Material.COMPASS), 3);
     }
 
 }

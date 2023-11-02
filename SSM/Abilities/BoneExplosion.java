@@ -3,10 +3,14 @@ package SSM.Abilities;
 import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
+import SSM.Utilities.ServerMessageType;
+import SSM.Utilities.Utils;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +28,7 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
         super();
         this.name = "Bone Explosion";
         this.cooldownTime = 10;
-        this.description = 	new String[] {
+        this.description = new String[] {
                 ChatColor.RESET + "Releases an explosion of bones from",
                 ChatColor.RESET + "your body, repelling all nearby enemies."};
     }
@@ -58,19 +62,20 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
         List<Entity> canHit = owner.getNearbyEntities(range, range, range);
         canHit.remove(owner);
         for (Entity entity : canHit) {
-            if ((entity instanceof LivingEntity)) {
-                if (!DamageUtil.canDamage((LivingEntity) entity, owner, baseDamage)) {
+            if ((entity instanceof Player)) {
+                Player hit = (Player) entity;
+                if (!DamageUtil.canDamage(hit, owner, baseDamage)) {
                     continue;
                 }
-                SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) entity, owner, baseDamage);
+                double distance = owner.getLocation().distance(hit.getLocation());
+                double damage = baseDamage * ((range - distance) / range);
+                SmashDamageEvent smashDamageEvent = new SmashDamageEvent(hit, owner, damage);
                 smashDamageEvent.multiplyKnockback(2.5);
+                smashDamageEvent.setIgnoreDamageDelay(true);
                 smashDamageEvent.setReason(name);
                 smashDamageEvent.callEvent();
-                Vector target = entity.getLocation().toVector();
-                Vector player = owner.getLocation().toVector();
-                Vector pre = target.subtract(player);
-                Vector velocity = pre.normalize().multiply(1.35);
-                entity.setVelocity(new Vector(velocity.getX(), 0.4, velocity.getZ()));
+                Utils.sendAttributeMessage(ChatColor.YELLOW + owner.getName() +
+                        ChatColor.GRAY + " used", name, hit, ServerMessageType.GAME);
             }
         }
     }

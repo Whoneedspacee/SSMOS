@@ -6,10 +6,7 @@ import SSM.Utilities.BlocksUtil;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -30,6 +27,11 @@ public class SeismicSlam extends Ability implements OwnerRightClickEvent {
         super();
         this.name = "Seismic Slam";
         this.cooldownTime = 10;
+        this.description = new String[] {
+                ChatColor.RESET + "Begin an earthquake that will give damage",
+                ChatColor.RESET + "and knockback to any player who is touching",
+                ChatColor.RESET + "the ground, anywhere on the map!",
+        };
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {

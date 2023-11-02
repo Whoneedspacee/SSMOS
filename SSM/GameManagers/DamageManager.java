@@ -143,6 +143,47 @@ public class DamageManager implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.LOW)
+    public void cancelSmashDamage(SmashDamageEvent e) {
+        if (e.getDamagee().getHealth() <= 0) {
+            e.setCancelled(true);
+            return;
+        }
+        if (e.getDamagee() != null && e.getDamagee() instanceof Player) {
+            Player damagee = (Player) e.getDamagee();
+            if (damagee.getGameMode() != GameMode.SURVIVAL && damagee.getGameMode() != GameMode.ADVENTURE) {
+                e.setCancelled(true);
+                return;
+            }
+            if (GameManager.isSpectator(damagee)) {
+                e.setCancelled(true);
+                return;
+            }
+            // Check if the damagee can be hit by the damager again
+            if (!e.getIgnoreDamageDelay()) {
+                if (!DamageUtil.getDamageRateTracker(damagee).canBeHurtBy(e.getDamager())) {
+                    e.setCancelled(true);
+                    return;
+                }
+            }
+        }
+
+        if (e.getDamager() != null && e.getDamager() instanceof Player)
+        {
+            Player damager = (Player) e.getDamager();
+            if (damager.getGameMode() != GameMode.SURVIVAL && damager.getGameMode() != GameMode.ADVENTURE) {
+                e.setCancelled(true);
+                return;
+            }
+            // Check if the damager can hit the damagee again
+            if (!e.getIgnoreDamageDelay())
+                if (!DamageUtil.getDamageRateTracker(damager).canHurt(e.getDamagee())) {
+                    e.setCancelled(true);
+                    return;
+                }
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSmashDamage(SmashDamageEvent e) {
         if(e.isCancelled()) {
@@ -157,7 +198,7 @@ public class DamageManager implements Listener {
         Location origin = e.getKnockbackOrigin();
         String reason = e.getReason();
         Projectile projectile = e.getProjectile();
-        if (damagee == null || damage < 0) {
+        if (damagee == null || damage <= 0) {
             e.setCancelled(true);
             return;
         }
@@ -178,22 +219,22 @@ public class DamageManager implements Listener {
         }
         double previousHealth = damagee.getHealth();
         EntityLiving entityDamagee = ((CraftLivingEntity) damagee).getHandle();
-        entityDamagee.aC = 1.5F;
         boolean died = false;
         double new_health = 20;
+        double dealt = 0;
         if ((float) damagee.getNoDamageTicks() > (float) damagee.getMaximumNoDamageTicks() / 2.0F) {
-            new_health = Math.max(damagee.getHealth() - Math.max(damage - entityDamagee.lastDamage, 0) * damageMultiplier, 0);
+            dealt = Math.max(damage - entityDamagee.lastDamage, 0) * damageMultiplier;
         } else {
-            new_health = Math.max(damagee.getHealth() - damage * damageMultiplier, 0);
+            dealt = damage * damageMultiplier;
         }
+        new_health = Math.max(damagee.getHealth() - dealt, 0);
+        entityDamagee.lastDamage = (float) damage;
         // Avoid really killing the player
         if (new_health <= 0) {
             died = true;
         } else {
             damagee.setHealth(new_health);
         }
-        entityDamagee.lastDamage = (float) damage;
-        damagee.setNoDamageTicks(damagee.getMaximumNoDamageTicks());
         storeDamageEvent(e);
         Disguise disguise = DisguiseManager.disguises.get(damagee);
         if (disguise != null) {

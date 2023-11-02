@@ -1,6 +1,7 @@
 package SSM.Abilities;
 
 import SSM.GameManagers.OwnerEvents.OwnerLeftClickEvent;
+import SSM.Utilities.VelocityUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
@@ -16,6 +17,7 @@ import org.bukkit.util.Vector;
 public class RopedArrow extends Ability implements OwnerLeftClickEvent {
 
     private Arrow arrow;
+    private int power = 1;
 
     public RopedArrow() {
         super();
@@ -23,7 +25,7 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
         this.cooldownTime = 5;
         this.usage = AbilityUsage.LEFT_CLICK;
         this.useMessage = "You fired";
-        this.description = 	new String[] {
+        this.description = new String[] {
                 ChatColor.RESET + "Instantly fires an arrow. When it ",
                 ChatColor.RESET + "collides with something, you are pulled",
                 ChatColor.RESET + "towards it, with great power."};
@@ -37,7 +39,7 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
         arrow = owner.launchProjectile(Arrow.class);
         arrow.setCustomName("Roped Arrow");
         arrow.setMetadata("Roped Arrow", new FixedMetadataValue(plugin, 1));
-        arrow.setVelocity(owner.getLocation().getDirection().multiply(2.4));
+        arrow.setVelocity(owner.getLocation().getDirection().multiply(2.4 * power));
     }
 
     @EventHandler
@@ -48,21 +50,11 @@ public class RopedArrow extends Ability implements OwnerLeftClickEvent {
         Vector p = owner.getLocation().toVector();
         Vector a = arrow.getLocation().toVector();
         Vector pre = a.subtract(p);
-        Vector velocity = pre.normalize();
+        Vector trajectory = pre.normalize();
         double mult = (arrow.getVelocity().length() / 3d);
 
-        velocity = velocity.multiply(0.4 + mult);
-        velocity.setY(velocity.getY() + 0.6 * mult);
-
-        double y_max = 1.2 * mult;
-        if (velocity.getY() > y_max) {
-            velocity.setY(y_max);
-        }
-
-        if (!owner.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isTransparent()) {
-            velocity.setY(velocity.getY() + 0.2);
-        }
-        owner.setVelocity(velocity);
+        VelocityUtil.setVelocity(owner, trajectory, 0.4 + mult * power, false,
+                0, 0.6 * mult * power, 1.2 * mult * power, true);
 
         arrow.getWorld().playSound(arrow.getLocation(), Sound.ARROW_HIT, 2.5f, 0.5f);
         arrow = null;

@@ -52,17 +52,17 @@ public class KitSkeleton extends Kit {
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
-        setItem(new ItemStack(Material.BOW, 1), 1);
-        setItem(new ItemStack(Material.ARROW, 1), 2, getAttributeByName("Barrage"));
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.BOW), 1);
+        setItem(new ItemStack(Material.ARROW), 2, getAttributeByName("Barrage"));
         setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
-        setItem(new ItemStack(Material.BOW, 1), 1);
-        setItem(new ItemStack(Material.COMPASS, 1), 2);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.BOW), 1);
+        setItem(new ItemStack(Material.COMPASS), 2);
     }
 
 }
