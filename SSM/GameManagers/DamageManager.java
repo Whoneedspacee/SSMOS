@@ -20,11 +20,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class DamageManager implements Listener {
@@ -67,7 +67,7 @@ public class DamageManager implements Listener {
                 livingEntity = (LivingEntity) projectile.getShooter();
             }
             String reason = projectile.getCustomName();
-            if(reason == null) {
+            if (reason == null) {
                 reason = "Arrow";
             }
             SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), livingEntity, e.getDamage());
@@ -81,9 +81,14 @@ public class DamageManager implements Listener {
             smashDamageEvent.setReason("Attack");
             smashDamageEvent.callEvent();
         } else if (e.getCause() == DamageCause.ENTITY_EXPLOSION) {
-            SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), null, e.getDamage());
+            LivingEntity livingEntity = null;
+            if(e.getEntity() instanceof LivingEntity) {
+                livingEntity = (LivingEntity) e.getEntity();
+            }
+            SmashDamageEvent smashDamageEvent = new SmashDamageEvent(livingEntity, null, e.getDamage());
             smashDamageEvent.setDamageCause(DamageCause.ENTITY_EXPLOSION);
             smashDamageEvent.setKnockbackOrigin(e.getDamager().getLocation());
+            smashDamageEvent.setDamagerName("Explosion");
             smashDamageEvent.setReason("Explosion");
             smashDamageEvent.callEvent();
         } else {
@@ -93,53 +98,77 @@ public class DamageManager implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent e) {
-        if(e.getCause() == EntityDamageEvent.DamageCause.STARVATION) {
-            e.setCancelled(true);
+        // Something else didn't want this to happen and we are going to listen
+        if (e.isCancelled()) {
             return;
         }
-        if(e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
-            if(!(e.getEntity() instanceof LivingEntity)) {
-                return;
-            }
-            if(e.getEntity() instanceof Player) {
-                Player player = (Player) e.getEntity();
-                if(KitManager.getPlayerKit(player) != null) {
-                    if(KitManager.getPlayerKit(player).isInvincible()) {
-                        e.setCancelled(true);
-                        return;
-                    }
-                }
-            }
+        // Cancel the event since we're going to handle all the information
+        Entity entity = e.getEntity();
+        e.setCancelled(true);
+        if (!(entity instanceof LivingEntity)) {
+            return;
+        }
+        LivingEntity livingEntity = (LivingEntity) entity;
+        if (!DamageUtil.canDamage(livingEntity, null, 0)) {
+            return;
+        }
+        // Let Hunger Attribute Handle
+        if (e.getCause() == EntityDamageEvent.DamageCause.STARVATION) {
+            return;
+        } else if (e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
             SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), null, e.getDamage());
             smashDamageEvent.multiplyKnockback(0);
             smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.FIRE_TICK);
             smashDamageEvent.setDamagerName("Fire");
             smashDamageEvent.setReason("Fire");
             smashDamageEvent.callEvent();
-            e.setDamage(0);
-            e.setCancelled(false);
-        }
-        if(e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
-            e.setCancelled(true);
-        }
-        if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            e.setCancelled(true);
+        } else if (e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
             return;
-        }
-        if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.VOID ||
+        } else if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            return;
+        } else if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.VOID ||
                 e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.LAVA) {
             DamageUtil.borderKill((Player) e.getEntity(), true);
-            e.setCancelled(true);
             return;
-        }
-        if(e.getEntity() instanceof LivingEntity && e.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            LivingEntity livingEntity = (LivingEntity) e.getEntity();
+        } else if (e.getEntity() instanceof LivingEntity && e.getCause() == EntityDamageEvent.DamageCause.VOID) {
             SmashDamageEvent smashDamageEvent = new SmashDamageEvent(livingEntity, null, 1000);
             smashDamageEvent.multiplyKnockback(0);
             smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.VOID);
             smashDamageEvent.setDamagerName("Void");
             smashDamageEvent.setReason("World Border");
             smashDamageEvent.callEvent();
+        } else if (e.getCause() == DamageCause.SUFFOCATION) {
+            SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), null, e.getDamage());
+            smashDamageEvent.multiplyKnockback(0);
+            smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.SUFFOCATION);
+            smashDamageEvent.setDamagerName("Suffocation");
+            smashDamageEvent.setReason("Suffocation");
+            smashDamageEvent.callEvent();
+        } else if (e.getCause() == DamageCause.POISON) {
+            Player damager = null;
+            if (e.getEntity().hasMetadata("Poison Damager")) {
+                List<MetadataValue> values = e.getEntity().getMetadata("Poison Damager");
+                if(values.size() > 0) {
+                    damager = (Player) values.get(0).value();
+                }
+            }
+            SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), damager, e.getDamage());
+            smashDamageEvent.setIgnoreArmor(true);
+            smashDamageEvent.multiplyKnockback(0);
+            smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.POISON);
+            smashDamageEvent.setDamagerName("Poison");
+            smashDamageEvent.setReason("Poison");
+            smashDamageEvent.callEvent();
+        } else if (e.getCause() == DamageCause.LAVA) {
+            SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), null, e.getDamage());
+            smashDamageEvent.setIgnoreArmor(true);
+            smashDamageEvent.multiplyKnockback(0);
+            smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.LAVA);
+            smashDamageEvent.setDamagerName("Lava");
+            smashDamageEvent.setReason("Lava");
+            smashDamageEvent.callEvent();
+        } else {
+            Bukkit.broadcastMessage("Unhandled Cause: " + e.getCause().toString());
         }
     }
 
@@ -168,8 +197,7 @@ public class DamageManager implements Listener {
             }
         }
 
-        if (e.getDamager() != null && e.getDamager() instanceof Player)
-        {
+        if (e.getDamager() != null && e.getDamager() instanceof Player) {
             Player damager = (Player) e.getDamager();
             if (damager.getGameMode() != GameMode.SURVIVAL && damager.getGameMode() != GameMode.ADVENTURE) {
                 e.setCancelled(true);
@@ -186,7 +214,7 @@ public class DamageManager implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSmashDamage(SmashDamageEvent e) {
-        if(e.isCancelled()) {
+        if (e.isCancelled()) {
             return;
         }
         LivingEntity damagee = e.getDamagee();
@@ -288,17 +316,17 @@ public class DamageManager implements Listener {
             //Bukkit.broadcastMessage("Damage: " + damage);
             //Bukkit.broadcastMessage("Final KB: " + knockback);
 
-            if(origin == null && damager != null) {
+            if (origin == null && damager != null) {
                 origin = damager.getLocation();
             }
 
             Vector trajectory = null;
-            if(origin != null) {
+            if (origin != null) {
                 trajectory = damagee.getLocation().toVector().subtract(origin.toVector()).setY(0).normalize();
                 trajectory.multiply(0.6 * knockback);
                 trajectory.setY(Math.abs(trajectory.getY()));
             }
-            if(projectile != null) {
+            if (projectile != null) {
                 trajectory = projectile.getVelocity();
                 trajectory.setY(0);
                 trajectory.multiply(0.37 * knockback / trajectory.length());
@@ -315,7 +343,7 @@ public class DamageManager implements Listener {
             Kit kit = KitManager.getPlayerKit(player);
             if (kit != null) {
                 Hunger hunger = (Hunger) kit.getAttributeByName("Hunger");
-                if(hunger != null) {
+                if (hunger != null) {
                     hunger.hungerRestore(damage);
                 }
             }
@@ -341,12 +369,12 @@ public class DamageManager implements Listener {
 
     public static void storeDamageEvent(SmashDamageEvent e) {
         // Condense Damage Records with same variable values except damage and time
-        for(int i = 0; i < damage_record.size(); i++) {
+        for (int i = 0; i < damage_record.size(); i++) {
             SmashDamageEvent check = damage_record.get(i);
-            if(check == null) {
+            if (check == null) {
                 continue;
             }
-            if(e.equals(check)) {
+            if (e.equals(check)) {
                 e.setDamage(e.getDamage() + check.getDamage());
                 damage_record.remove(i);
             }
@@ -356,18 +384,19 @@ public class DamageManager implements Listener {
 
     public static void deathReport(Player player) {
         int count = 1;
-        for(int i = damage_record.size() - 1; i >= 0; i--) {
+        List<SmashDamageEvent> to_remove = new ArrayList<SmashDamageEvent>();
+        for (int i = damage_record.size() - 1; i >= 0; i--) {
             SmashDamageEvent e = damage_record.get(i);
             // Expunge old records
-            if((System.currentTimeMillis() - e.getDamageTimeMs()) > 15000) {
+            if ((System.currentTimeMillis() - e.getDamageTimeMs()) > 15000) {
                 continue;
             }
-            if(!e.getDamageeName().equals(player.getName())) {
+            if (!e.getDamageeName().equals(player.getName())) {
                 continue;
             }
             String time_since = String.format("%.1f", (System.currentTimeMillis() - e.getDamageTimeMs()) / 1000.0);
             String damage_amount = "Infinite";
-            if(e.getDamage() < 1000) {
+            if (e.getDamage() < 1000) {
                 damage_amount = String.format("%.1f", e.getDamage());
             }
             player.sendMessage(ChatColor.DARK_GREEN + "#" + count + ": " +
@@ -376,19 +405,20 @@ public class DamageManager implements Listener {
                     ChatColor.GREEN + e.getReason() + ChatColor.GRAY + "] [" +
                     ChatColor.GREEN + time_since + " Seconds Prior" + ChatColor.GRAY + "]");
             count++;
-            damage_record.remove(i);
+            to_remove.add(e);
         }
+        damage_record.removeAll(to_remove);
     }
 
     public static SmashDamageEvent getLastDamageEvent(Player player) {
         long last_time = 0;
         SmashDamageEvent record = null;
-        for(int i = 0; i < damage_record.size(); i++) {
+        for (int i = 0; i < damage_record.size(); i++) {
             SmashDamageEvent check = damage_record.get(i);
-            if(!check.getDamageeName().equals(player.getName())) {
+            if (!check.getDamageeName().equals(player.getName())) {
                 continue;
             }
-            if(check.getDamageTimeMs() <= last_time) {
+            if (check.getDamageTimeMs() <= last_time) {
                 continue;
             }
             last_time = check.getDamageTimeMs();

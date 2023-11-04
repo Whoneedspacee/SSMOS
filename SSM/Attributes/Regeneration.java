@@ -31,7 +31,7 @@ public class Regeneration extends Attribute {
     }
 
     public void activate() {
-        if (!owner.isDead()) {
+        if (!owner.isDead() && owner.getFoodLevel() > 0) {
             // Use packets here to make the visual effect on the healthbar appear
             owner.setHealth(Math.min(owner.getHealth() + regen_amount, 20));
             PacketPlayOutUpdateHealth packet = new PacketPlayOutUpdateHealth((float) owner.getHealth(), owner.getFoodLevel(), owner.getSaturation());

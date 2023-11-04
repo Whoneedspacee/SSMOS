@@ -44,6 +44,7 @@ public class SSM extends JavaPlugin implements Listener {
         new DisguiseManager();
         new GameManager();
         new DisplayManager();
+        new BlockRestoreManager();
         this.getCommand("start").setExecutor(new CommandStart());
         this.getCommand("stop").setExecutor(new CommandStop());
         this.getCommand("getstate").setExecutor(new CommandGetState());
@@ -62,6 +63,7 @@ public class SSM extends JavaPlugin implements Listener {
         CommandSetGamemode setgamemode = new CommandSetGamemode();
         this.getCommand("setgamemode").setExecutor(setgamemode);
         this.getCommand("setgamemode").setTabCompleter(setgamemode);
+        this.getCommand("randomkit").setExecutor(new CommandRandomKit());
         // Do not do anything before manager creation please
         for(Player player : Bukkit.getOnlinePlayers()) {
             Utils.fullHeal(player);

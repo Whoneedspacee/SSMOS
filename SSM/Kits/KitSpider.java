@@ -2,10 +2,9 @@ package SSM.Kits;
 
 import SSM.Abilities.Needler;
 import SSM.Abilities.SpinWeb;
-import SSM.Attributes.Climb;
+import SSM.Attributes.*;
+import SSM.Attributes.DoubleJumps.Custom.SpiderJump;
 import SSM.Attributes.DoubleJumps.DirectDoubleJump;
-import SSM.Attributes.ExpCharge;
-import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SpiderDisguise;
 import org.bukkit.Material;
@@ -22,7 +21,6 @@ public class KitSpider extends Kit {
         this.regeneration = 0.25;
         this.knockback = 1.5;
         this.name = "Spider";
-        this.hasDirectDoubleJump = true;
         this.menuItem = Material.SPIDER_EYE;
     }
 
@@ -35,24 +33,30 @@ public class KitSpider extends Kit {
         setAbility(new Needler(), 0);
         setAbility(new SpinWeb(), 1);
 
-        addAttribute(new Regeneration(regeneration, 20));
-        addAttribute(new ExpCharge(0.005f, 1, true));
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
+        addAttribute(new ExpCharge(0.005f, 1, false, false));
         addAttribute(new Climb(0.2));
-        addAttribute(new DirectDoubleJump(1.0, 1.0, 1, Sound.SPIDER_IDLE));
+        addAttribute(new SpiderJump(1.0, 1.0, 1, Sound.SPIDER_IDLE));
 
         DisguiseManager.addDisguise(owner, new SpiderDisguise(owner));
     }
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(new ItemStack(Material.SPIDER_EYE), 2, getAttributeByName("Spider Leap"));
+        setItem(new ItemStack(Material.FERMENTED_SPIDER_EYE), 3, getAttributeByName("Wall Climb"));
+        setItem(new ItemStack(Material.NETHER_STAR), 4);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(Compass.COMPASS_ITEM, 2);
     }
 
 }

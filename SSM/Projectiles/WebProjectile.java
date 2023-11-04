@@ -1,6 +1,7 @@
 package SSM.Projectiles;
 
 import SSM.Events.SmashDamageEvent;
+import SSM.GameManagers.BlockRestoreManager;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
@@ -24,7 +25,7 @@ public class WebProjectile extends SmashProjectile {
     }
 
     @Override
-    protected Entity getProjectileEntity() {
+    protected Entity createProjectileEntity() {
         ItemStack cobweb = new ItemStack(Material.WEB, 1);
         return firer.getWorld().dropItem(firer.getLocation().add(0, 0.5, 0), cobweb);
     }
@@ -75,18 +76,7 @@ public class WebProjectile extends SmashProjectile {
 
     public void createWeb(Location location, long ticks_stay, long need_ticks_lived) {
         if(projectile.getTicksLived() > need_ticks_lived) {
-            Block replace = location.getBlock();
-            Material replacedType = replace.getType();
-            if (replacedType == Material.WEB) {
-                return;
-            }
-            replace.setType(Material.WEB);
-            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    replace.setType(replacedType);
-                }
-            }, ticks_stay);
+            BlockRestoreManager.ourInstance.add(location.getBlock(), 30, (byte) 0, ticks_stay * 50);
         }
     }
 

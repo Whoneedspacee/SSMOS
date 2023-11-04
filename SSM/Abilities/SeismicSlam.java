@@ -2,24 +2,22 @@ package SSM.Abilities;
 
 import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
-import SSM.Utilities.BlocksUtil;
-import SSM.Utilities.DamageUtil;
-import SSM.Utilities.Utils;
-import SSM.Utilities.VelocityUtil;
+import SSM.Utilities.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class SeismicSlam extends Ability implements OwnerRightClickEvent {
 
-    private double baseDamage = 11;
+    private double baseDamage = 10;
     private double range = 8;
     private int task = -1;
 
@@ -48,7 +46,7 @@ public class SeismicSlam extends Ability implements OwnerRightClickEvent {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if (owner.isDead()) {
+                if (owner == null || owner.isDead()) {
                     Bukkit.getScheduler().cancelTask(task);
                 }
                 if (Utils.entityIsOnGround(owner)) {
@@ -60,24 +58,30 @@ public class SeismicSlam extends Ability implements OwnerRightClickEvent {
     }
 
     public void doSlam() {
-        List<Entity> canHit = owner.getNearbyEntities(range, range, range);
+        HashMap<LivingEntity, Double> canHit = Utils.getInRadius(owner.getLocation(), range);
         canHit.remove(owner);
-        for (Entity entity : canHit) {
-            if ((entity instanceof LivingEntity)) {
-                LivingEntity livingEntity = (LivingEntity) entity;
-                double dist = owner.getLocation().distance(entity.getLocation());
-                SmashDamageEvent smashDamageEvent = new SmashDamageEvent(livingEntity, owner, baseDamage * (1 - dist / range) + 0.5);
-                smashDamageEvent.multiplyKnockback(2.4);
-                smashDamageEvent.setReason(name);
-                smashDamageEvent.callEvent();
+        for (LivingEntity other : canHit.keySet()) {
+            double damage = baseDamage * canHit.get(other) + 0.5;
+            if ((other instanceof Player)) {
+                Player hit = (Player) other;
+                if (!DamageUtil.canDamage(hit, owner, damage)) {
+                    continue;
+                }
+                Utils.sendAttributeMessage(ChatColor.YELLOW + owner.getName() +
+                        ChatColor.GRAY + " hit you with", name, hit, ServerMessageType.GAME);
             }
+            SmashDamageEvent smashDamageEvent = new SmashDamageEvent(other, owner, damage);
+            smashDamageEvent.multiplyKnockback(2.4);
+            smashDamageEvent.setReason(name);
+            smashDamageEvent.callEvent();
         }
         owner.getWorld().playSound(owner.getLocation(), Sound.ZOMBIE_WOOD, 2f, 0.2f);
         for (Block check : BlocksUtil.getBlocks(owner.getLocation(), 4)) {
             if (check.getType().isSolid() && !check.getRelative(BlockFace.UP).getType().isSolid()) {
-                if (Math.random() < 0.2) {
-                    check.getWorld().playEffect(check.getLocation(), Effect.STEP_SOUND, check.getTypeId());
+                if(Math.random() < 0.9) {
+                    continue;
                 }
+                check.getWorld().playEffect(check.getLocation(), Effect.STEP_SOUND, check.getType());
             }
         }
     }

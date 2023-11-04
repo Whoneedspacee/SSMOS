@@ -13,12 +13,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public abstract class SmashProjectile extends BukkitRunnable {
+public abstract class SmashProjectile extends BukkitRunnable implements Listener {
 
     protected static JavaPlugin plugin = SSM.getInstance();
     protected Player firer;
@@ -32,20 +33,21 @@ public abstract class SmashProjectile extends BukkitRunnable {
     public SmashProjectile(Player firer, String name) {
         this.firer = firer;
         this.name = name;
-        this.projectile = getProjectileEntity();
-        if (projectile instanceof Item) {
-            Item item = (Item) projectile;
-            item.setPickupDelay(1000000);
-        }
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public void launchProjectile() {
+        setProjectileEntity(createProjectileEntity());
         this.doVelocity();
         this.runTaskTimer(plugin, 0L, 0L);
     }
 
     @Override
     public void run() {
+        if(projectile == null) {
+            destroy();
+            return;
+        }
         if(projectile.getTicksLived() > getExpirationTicks()) {
             if(onExpire()) {
                 destroy();
@@ -106,7 +108,7 @@ public abstract class SmashProjectile extends BukkitRunnable {
                 continue;
             }
             LivingEntity living = (LivingEntity) ((EntityLiving) check).getBukkitEntity();
-            if (living.equals(firer)) {
+            if (living.equals(firer) || living.equals(projectile)) {
                 continue;
             }
             if(DamageUtil.isIntangible(living)) {
@@ -166,7 +168,15 @@ public abstract class SmashProjectile extends BukkitRunnable {
         return false;
     }
 
-    protected abstract Entity getProjectileEntity();
+    public void setProjectileEntity(Entity projectile) {
+        this.projectile = projectile;
+        if (projectile instanceof Item) {
+            Item item = (Item) projectile;
+            item.setPickupDelay(1000000);
+        }
+    }
+
+    protected abstract Entity createProjectileEntity();
 
     // Called once when the projectile is fired
     protected abstract void doVelocity();
@@ -174,16 +184,16 @@ public abstract class SmashProjectile extends BukkitRunnable {
     // Visual effects that apply every tick
     protected abstract void doEffect();
 
-    // Returns true if we want to destroy the projectile after
+    // Returns true to call destroy after
     protected abstract boolean onExpire();
 
-    // Returns true if we want to destroy the projectile after
+    // Returns true to call destroy after
     protected abstract boolean onHitLivingEntity(LivingEntity hit);
 
-    // Returns true if we want to destroy the projectile after
+    // Returns true to call destroy after
     protected abstract boolean onHitBlock(Block hit);
 
-    // Returns true if we want to destroy the projectile after
+    // Returns true to call destroy after
     protected abstract boolean onIdle();
 
     public long getExpirationTicks() {

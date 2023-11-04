@@ -108,7 +108,7 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doLobbyWaiting() {
-        if (getTotalPlayers() >= 2) {
+        if (getTotalPlayers() >= selected_gamemode.getPlayersToStart()) {
             setTimeLeft(15);
             setState(GameState.LOBBY_VOTING);
             return;
@@ -116,7 +116,7 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doLobbyVoting() {
-        if (getTotalPlayers() <= 1) {
+        if (getTotalPlayers() < selected_gamemode.getPlayersToStart()) {
             setState(GameState.LOBBY_WAITING);
             return;
         }
@@ -135,7 +135,7 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doLobbyStarting() {
-        if (getTotalPlayers() <= 1) {
+        if (getTotalPlayers() < selected_gamemode.getPlayersToStart()) {
             setState(GameState.LOBBY_WAITING);
             return;
         }
@@ -193,7 +193,7 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doGameStarting() {
-        if (getTotalPlayers() <= 1) {
+        if (getTotalPlayers() <= 0) {
             setTimeLeft(0);
             setState(GameState.GAME_ENDING);
             return;
@@ -238,7 +238,8 @@ public class GameManager implements Listener, Runnable {
     }
 
     private void doGamePlaying() {
-        if (getTotalPlayers() <= 1) {
+        if (getTotalPlayers() <= 0) {
+            setTimeLeft(0);
             setState(GameState.GAME_ENDING);
             return;
         }
@@ -276,6 +277,11 @@ public class GameManager implements Listener, Runnable {
         if (time_remaining_ms <= 0) {
             players.clear();
             lives.clear();
+            for(SmashGamemode gamemode : all_gamemodes) {
+                for(MapFile mapFile : gamemode.getAllowedMaps()) {
+                    mapFile.clearVoted();
+                }
+            }
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.teleport(lobby_world.getSpawnLocation());
                 players.add(player);
@@ -337,7 +343,6 @@ public class GameManager implements Listener, Runnable {
                             10, 50, 10);
                     if (!kit.getName().equals("Temporary Spectator")) {
                         KitManager.equipPlayer(player, kit);
-                        Utils.fullHeal(player);
                     }
                     DisguiseManager.showDisguises(player);
                 }

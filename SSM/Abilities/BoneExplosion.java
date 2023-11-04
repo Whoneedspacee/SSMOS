@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class BoneExplosion extends Ability implements OwnerRightClickEvent {
@@ -59,16 +60,15 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
             }
         }, 40L);
 
-        List<Entity> canHit = owner.getNearbyEntities(range, range, range);
+        HashMap<LivingEntity, Double> canHit = Utils.getInRadius(owner.getLocation(), range);
         canHit.remove(owner);
-        for (Entity entity : canHit) {
-            if ((entity instanceof Player)) {
-                Player hit = (Player) entity;
-                if (!DamageUtil.canDamage(hit, owner, baseDamage)) {
+        for (LivingEntity other : canHit.keySet()) {
+            if ((other instanceof Player)) {
+                Player hit = (Player) other;
+                double damage = baseDamage * canHit.get(hit);
+                if (!DamageUtil.canDamage(hit, owner, damage)) {
                     continue;
                 }
-                double distance = owner.getLocation().distance(hit.getLocation());
-                double damage = baseDamage * ((range - distance) / range);
                 SmashDamageEvent smashDamageEvent = new SmashDamageEvent(hit, owner, damage);
                 smashDamageEvent.multiplyKnockback(2.5);
                 smashDamageEvent.setIgnoreDamageDelay(true);

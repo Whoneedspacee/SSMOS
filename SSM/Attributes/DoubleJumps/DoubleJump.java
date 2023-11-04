@@ -20,7 +20,7 @@ public abstract class DoubleJump extends Attribute {
     protected double power;
     private int maxDoubleJumps;
     private int remainingDoubleJumps = 0;
-    private Sound doubleJumpSound;
+    protected Sound doubleJumpSound;
 
     public DoubleJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound) {
         super();
@@ -70,7 +70,7 @@ public abstract class DoubleJump extends Attribute {
         if (remainingDoubleJumps > 0) {
             remainingDoubleJumps--;
 
-            player.getWorld().playSound(player.getLocation(), doubleJumpSound, 1f, 1f);
+            playDoubleJumpSound();
 
             jump();
 
@@ -78,6 +78,10 @@ public abstract class DoubleJump extends Attribute {
                 player.setAllowFlight(false);
             }
         }
+    }
+
+    public void playDoubleJumpSound() {
+        owner.getWorld().playSound(owner.getLocation(), doubleJumpSound, 1f, 1f);
     }
 
     public void resetDoubleJumps() {

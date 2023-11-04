@@ -40,6 +40,7 @@ public class DamageUtil {
             SmashDamageEvent smashDamageEvent = new SmashDamageEvent(player, null, 1000);
             smashDamageEvent.multiplyKnockback(0);
             smashDamageEvent.setIgnoreArmor(true);
+            smashDamageEvent.setIgnoreDamageDelay(true);
             smashDamageEvent.setDamageCause(DamageCause.VOID);
             smashDamageEvent.setDamagerName("Void");
             smashDamageEvent.setReason("World Border");

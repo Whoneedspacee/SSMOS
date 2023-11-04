@@ -59,7 +59,7 @@ public class KitIronGolem extends Kit {
         setItem(new ItemStack(Material.IRON_AXE), 0);
         setItem(new ItemStack(Material.IRON_PICKAXE), 1);
         setItem(new ItemStack(Material.IRON_SPADE), 2);
-        setItem(new ItemStack(Material.COMPASS), 3);
+        setItem(Compass.COMPASS_ITEM, 3);
     }
 
 }

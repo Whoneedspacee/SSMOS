@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 public class Utils {
 
@@ -96,12 +97,39 @@ public class Utils {
         return false;
     }
 
+    public static HashMap<LivingEntity, Double> getInRadius(Location location, double radius) {
+        HashMap<LivingEntity, Double> ents = new HashMap<>();
+        for (Entity cur : location.getWorld().getEntities()) {
+            if (!(cur instanceof LivingEntity)) {
+                continue;
+            }
+            LivingEntity ent = (LivingEntity)cur;
+            if(!DamageUtil.canDamage(ent, null, 0)) {
+                continue;
+            }
+            //Feet
+            double offset = location.distance(ent.getLocation());
+            if (offset < radius) {
+                ents.put(ent, 1 - (offset / radius));
+                continue;
+            }
+            //Eyes
+            offset = location.distance(ent.getEyeLocation());
+            if (offset < radius) {
+                ents.put(ent, 1 - (offset / radius));
+            }
+        }
+        return ents;
+    }
+
     public static void fullHeal(LivingEntity livingEntity) {
         livingEntity.setHealth(livingEntity.getMaxHealth());
         livingEntity.setFireTicks(0);
         if(livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
             player.setFoodLevel(20);
+            player.setLevel(0);
+            player.setExp(0);
         }
     }
 
@@ -115,7 +143,7 @@ public class Utils {
                 (float) location.getX(), (float) location.getY(), (float) location.getZ(),
                 offsetX, offsetY, offsetZ, speed, count, dist);
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : players) {
             if (player.getLocation().distance(location) > dist)
                 continue;
 

@@ -2,8 +2,10 @@ package SSM.Kits;
 
 import SSM.Abilities.SlimeRocket;
 import SSM.Abilities.SlimeSlam;
+import SSM.Attributes.Compass;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ExpCharge;
+import SSM.Attributes.Hunger;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SlimeDisguise;
@@ -33,8 +35,10 @@ public class KitSlime extends Kit {
         setAbility(new SlimeRocket(), 0);
         setAbility(new SlimeSlam(), 1);
 
-        addAttribute(new Regeneration(regeneration, 20));
-        addAttribute(new ExpCharge(0.005f, 1, false));
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
+        addAttribute(new ExpCharge(0.00321f, 1, true, true));
         addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new SlimeDisguise(owner));
@@ -42,14 +46,16 @@ public class KitSlime extends Kit {
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(new ItemStack(Material.NETHER_STAR), 2);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(Compass.COMPASS_ITEM, 2);
     }
 
 }

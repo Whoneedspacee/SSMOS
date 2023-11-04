@@ -6,6 +6,7 @@ import SSM.Events.GameStateChangeEvent;
 import SSM.Kits.Kit;
 import SSM.Kits.*;
 import SSM.SSM;
+import SSM.Utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -38,10 +39,9 @@ public class KitManager implements Listener {
     }
 
     public static void equipPlayer(Player player, Kit check) {
+        Utils.fullHeal(player);
+        unequipPlayer(player);
         Kit kit = playerKit.get(player);
-        if (kit != null) {
-            unequipPlayer(player);
-        }
         try {
             kit = check.getClass().getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |

@@ -15,8 +15,8 @@ public class SmashDamageEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
     private boolean isCancelled = false;
-    private final LivingEntity damagee;
-    private final LivingEntity damager;
+    private LivingEntity damagee;
+    private LivingEntity damager;
     private final long damage_time_ms;
     private double damage;
     private double knockbackMultiplier;
@@ -53,8 +53,16 @@ public class SmashDamageEvent extends Event implements Cancellable {
         }
     }
 
+    public void setDamagee(LivingEntity damagee) {
+        this.damagee = damagee;
+    }
+
     public LivingEntity getDamagee() {
         return damagee;
+    }
+
+    public void setDamager(LivingEntity damager) {
+        this.damager = damager;
     }
 
     public LivingEntity getDamager() {
@@ -170,9 +178,26 @@ public class SmashDamageEvent extends Event implements Cancellable {
             return false;
         }
         SmashDamageEvent check = (SmashDamageEvent) o;
-        return check.getDamagerName().equals(getDamagerName()) &&
-                check.getDamageeName().equals(getDamageeName()) &&
-                check.getReason().equals(getReason());
+        boolean to_return = true;
+        if(check.getDamagerName() == null) {
+            to_return = to_return && getDamagerName() == null;
+        }
+        else {
+            to_return = to_return && check.getDamagerName().equals(getDamagerName());
+        }
+        if(check.getDamageeName() == null) {
+            to_return = to_return && getDamageeName() == null;
+        }
+        else {
+            to_return = to_return && check.getDamageeName().equals(getDamageeName());
+        }
+        if(check.getReason() == null) {
+            to_return = to_return && getReason() == null;
+        }
+        else {
+            to_return = to_return && check.getReason().equals(getReason());
+        }
+        return to_return;
     }
 
 }

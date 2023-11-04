@@ -12,7 +12,9 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class DisplayManager implements Listener {
 
@@ -121,35 +123,28 @@ public class DisplayManager implements Listener {
                 obj.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "SSMOS");
                 int score = 1;
                 obj.getScore("").setScore(score++);
-                // This is terrible forgive my laziness
-                for (Player add : GameManager.getAllLives().keySet()) {
-                    if (GameManager.getLives(add) != 0) {
-                        continue;
+                // This is less terrible but still forgive my laziness
+                List<Player> least_to_greatest = new ArrayList<Player>();
+                HashMap<Player, Integer> lives_copy = new HashMap<Player, Integer>();
+                lives_copy.putAll(GameManager.getAllLives());
+                while(!lives_copy.isEmpty()) {
+                    int min_value = 0;
+                    Player min_player = null;
+                    for (Player check : lives_copy.keySet()) {
+                        if(min_player == null) {
+                            min_player = check;
+                            min_value = lives_copy.get(check);
+                            continue;
+                        }
+                        if(lives_copy.get(check) < min_value) {
+                            min_player = check;
+                            min_value = lives_copy.get(check);
+                        }
                     }
-                    obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
+                    least_to_greatest.add(min_player);
+                    lives_copy.remove(min_player);
                 }
-                for (Player add : GameManager.getAllLives().keySet()) {
-                    if (GameManager.getLives(add) != 1) {
-                        continue;
-                    }
-                    obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
-                }
-                for (Player add : GameManager.getAllLives().keySet()) {
-                    if (GameManager.getLives(add) != 2) {
-                        continue;
-                    }
-                    obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
-                }
-                for (Player add : GameManager.getAllLives().keySet()) {
-                    if (GameManager.getLives(add) != 3) {
-                        continue;
-                    }
-                    obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
-                }
-                for (Player add : GameManager.getAllLives().keySet()) {
-                    if (GameManager.getLives(add) != 4) {
-                        continue;
-                    }
+                for(Player add : least_to_greatest) {
                     obj.getScore(GameManager.getLives(add) + " " + getLivesColor(add) + add.getName()).setScore(score++);
                 }
                 obj.getScore(ChatColor.RED + "").setScore(score++);
@@ -167,7 +162,9 @@ public class DisplayManager implements Listener {
     }
 
     public static String getLivesColor(int lives) {
-        if (lives >= 4) {
+        if (lives > 4) {
+            return ChatColor.AQUA + "";
+        } else if (lives == 4) {
             return ChatColor.GREEN + "";
         } else if (lives == 3) {
             return ChatColor.YELLOW + "";

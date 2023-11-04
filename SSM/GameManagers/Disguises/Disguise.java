@@ -77,9 +77,13 @@ public abstract class Disguise {
         // Armor Stand Destroy (if player sees them already)
         PacketPlayOutEntityDestroy destroy_packet = new PacketPlayOutEntityDestroy(armorstand.getId());
         Utils.sendPacket(player, destroy_packet);
-        // Squid Stand Destroy (if player sees them already)
+        // Squid Destroy (if player sees them already)
         destroy_packet = new PacketPlayOutEntityDestroy(squid.getId());
         Utils.sendPacket(player, destroy_packet);
+        // Living Destroy (if player sees them already)
+        destroy_packet = new PacketPlayOutEntityDestroy(living.getId());
+        Utils.sendPacket(player, destroy_packet);
+        // Living Spawn
         living.setPositionRotation(owner.getLocation().getX(), owner.getLocation().getY(), owner.getLocation().getZ(),
                 owner.getLocation().getYaw(), owner.getLocation().getPitch());
         PacketPlayOutSpawnEntityLiving living_packet = new PacketPlayOutSpawnEntityLiving(living);
@@ -104,6 +108,7 @@ public abstract class Disguise {
         dw.watch(0, (byte) 0x20);
         invisiblity_packet = new PacketPlayOutEntityMetadata(squid.getId(), dw, true);
         Utils.sendPacket(player, invisiblity_packet);
+        update();
     }
 
     public void update() {

@@ -3,6 +3,7 @@ package SSM.Attributes;
 import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.OwnerEvents.OwnerDealSmashDamageEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
 
@@ -14,6 +15,9 @@ public class MultiplyArrowKnockback extends Attribute implements OwnerDealSmashD
     public MultiplyArrowKnockback(double multiplied_knockback) {
         this.name = "Multiply Arrow Knockback";
         this.multiplied_knockback = multiplied_knockback;
+        this.description = new String[] {
+                ChatColor.RESET + "Arrows deal " + String.format("%.1f", multiplied_knockback) + "% knockback.",
+        };
     }
 
     @Override

@@ -37,8 +37,6 @@ public abstract class Kit implements Listener {
     protected boolean intangible = false;
     protected Material menuItem;
 
-    protected boolean hasDirectDoubleJump = false;
-
     protected List<Attribute> attributes = new ArrayList<Attribute>();
     protected Ability[] hotbarAbilities = new Ability[9];
 
@@ -240,10 +238,6 @@ public abstract class Kit implements Listener {
 
     public Ability getAbilityInSlot(int inventorySlot) {
         return hotbarAbilities[inventorySlot];
-    }
-
-    public boolean hasDirectDoubleJump() {
-        return hasDirectDoubleJump;
     }
 
     public boolean getGameHotbarEquipped() {

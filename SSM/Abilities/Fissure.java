@@ -1,7 +1,7 @@
 package SSM.Abilities;
 
 import SSM.Events.SmashDamageEvent;
-import SSM.GameManagers.CooldownManager;
+import SSM.GameManagers.BlockRestoreManager;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.ServerMessageType;
@@ -11,19 +11,20 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 public class Fissure extends Ability implements OwnerRightClickEvent {
 
     private int task = -1;
-    private int remove_task = -1;
     private HashMap<Block, Integer> blocks = new HashMap<Block, Integer>();
     private List<Entity> already_hit = new ArrayList<Entity>();
 
@@ -31,23 +32,11 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
         super();
         this.name = "Fissure";
         this.cooldownTime = 8;
-        this.description = new String[] {
+        this.description = new String[]{
                 ChatColor.RESET + "Smash the ground, creating a fissure",
                 ChatColor.RESET + "which slowly rises in a line, dealing",
                 ChatColor.RESET + "damage and knockback to anyone it hits!",
         };
-        remove_task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                for (Block remove : blocks.keySet()) {
-                    blocks.put(remove, blocks.get(remove) - 1);
-                    if (blocks.get(remove) <= 0) {
-                        remove.setType(Material.AIR);
-                    }
-                }
-                blocks.entrySet().removeIf(entry -> (entry.getValue() <= 0));
-            }
-        }, 0L, 1L);
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
@@ -63,107 +52,204 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        already_hit.clear();
-        Location startloc = owner.getLocation().subtract(0, 0.4, 0);
-        Vector dir = startloc.getDirection().setY(0).normalize().multiply(0.1);
-        Location checkloc = startloc.clone();
-        List<Block> path = new ArrayList<Block>();
-        while (Utils.getXZDistance(startloc, checkloc) < 14) {
-            checkloc.add(dir);
-
-            Block block = checkloc.getBlock();
-
-            if (block.equals(startloc.getBlock())) {
-                continue;
-            }
-            if (path.contains(block)) {
-                continue;
-            }
-            if ((block.getRelative(BlockFace.UP).getType().isSolid())) {
-                checkloc.add(0, 1, 0);
-                block = checkloc.getBlock();
-                if (block.getRelative(BlockFace.UP).getType().isSolid()) {
-                    break;
-                }
-            } else if (!block.getType().isSolid()) {
-                checkloc.add(0, -1, 0);
-                block = checkloc.getBlock();
-
-                if (!block.getType().isSolid()) {
-                    return;
-                }
-            }
-            if (block.getLocation().add(0.5, 0.5, 0.5).distance(checkloc) > 0.5) {
-                continue;
-            }
-            path.add(block);
-            if (path.size() > 3) {
-                path.add(block.getRelative(0, 1, 0));
-            }
-            checkloc.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getTypeId());
-            for (Player player : block.getWorld().getPlayers()) {
-                if (!player.equals(owner)) {
-                    if (block.getLocation().add(0.5, 0.5, 0.5).distance(player.getLocation()) < 1.5) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 1));
-                    }
-                }
-            }
-        }
-
+        Location location = owner.getLocation();
+        FissureData data = new FissureData(this, owner,
+                location.getDirection(), location.add(location.getDirection()).add(0, -0.4, 0));
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            ListIterator<Block> iterator = path.listIterator();
-            Block next_block = null;
-            Block last_block = null;
-
             @Override
             public void run() {
-                if (!iterator.hasNext()) {
-                    stop();
-                    return;
+                if (data.update()) {
+                    data.clear();
+                    Bukkit.getScheduler().cancelTask(task);
                 }
-                next_block = iterator.next().getRelative(0, 1, 0);
-                // New column, skip a tick
-                if (last_block != null) {
-                    if (last_block.getX() != next_block.getX() || last_block.getZ() != next_block.getZ()) {
-                        iterator.previous();
-                        last_block = null;
-                        return;
-                    }
-                }
-                next_block.setType(next_block.getRelative(BlockFace.DOWN).getType());
-                next_block.setData(next_block.getRelative(BlockFace.DOWN).getData());
-                blocks.put(next_block, 200);
-                next_block.getWorld().playEffect(next_block.getLocation(), Effect.STEP_SOUND, next_block.getTypeId());
-                // This is an upper block, don't do damage calcs
-                if (last_block != null && last_block.getX() == next_block.getX() && last_block.getZ() == next_block.getZ()) {
-                    blocks.put(next_block, 180);
-                    last_block = next_block;
-                    return;
-                }
-                // Hit Detection & Bottom Block Handling
-                Collection<Entity> hit_entites = next_block.getWorld().getNearbyEntities(next_block.getLocation().add(0.5, 0.5, 0.5), 1.5, 1.5, 1.5);
-                for (Entity hit : hit_entites) {
-                    if (!(hit instanceof LivingEntity) || hit.equals(owner) || already_hit.contains(hit)) {
-                        continue;
-                    }
-                    LivingEntity living = (LivingEntity) hit;
-                    int distance = (int) hit.getLocation().distance(path.get(0).getLocation());
-                    SmashDamageEvent smashDamageEvent = new SmashDamageEvent(living, owner, 4 + distance);
-                    smashDamageEvent.multiplyKnockback(0);
-                    smashDamageEvent.setReason(name);
-                    smashDamageEvent.callEvent();
-                    Vector direction = living.getLocation().toVector().subtract(next_block.getLocation().toVector()).setY(0).normalize();
-                    VelocityUtil.setVelocity(living, direction,
-                            1 + 0.1 * distance, true, 0.6 + 0.05 * distance, 0, 10, true);
-                    already_hit.add(hit);
-                }
-                last_block = next_block;
             }
         }, 0L, 0L);
     }
 
-    private void stop() {
-        Bukkit.getScheduler().cancelTask(task);
+    public class FissureData {
+        private Fissure host;
+
+        private Player player;
+
+        private Vector vec;
+        private Location loc;
+        private Location startLoc;
+
+        private int height = 0;
+        private int handled = 0;
+
+        private HashSet<Player> hit = new HashSet<Player>();
+
+        private ArrayList<Block> path = new ArrayList<Block>();
+
+        public FissureData(Fissure host, Player player, Vector vec, Location loc) {
+            this.host = host;
+
+            vec.setY(0);
+            vec.normalize();
+            vec.multiply(0.1);
+
+            this.player = player;
+            this.vec = vec;
+            this.loc = loc;
+            this.startLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
+
+            MakePath();
+        }
+
+        private void MakePath() {
+            while (Utils.getXZDistance(loc, startLoc) < 14) {
+                loc.add(vec);
+
+                Block block = loc.getBlock();
+
+                if (block.equals(startLoc.getBlock()))
+                    continue;
+
+                if (path.contains(block))
+                    continue;
+
+                //Move up 1, cant go 2 up
+                if (isSolid(block.getRelative(BlockFace.UP))) {
+                    loc.add(0, 1, 0);
+                    block = loc.getBlock();
+
+                    if (isSolid(block.getRelative(BlockFace.UP))) {
+                        return;
+                    }
+
+                }
+
+                //Move down 1, cant go 2 down
+                else if (!isSolid(block)) {
+                    loc.add(0, -1, 0);
+                    block = loc.getBlock();
+
+                    if (!isSolid(block)) {
+                        return;
+                    }
+                }
+
+                if ((block.getLocation().add(0.5, 0.5, 0.5).distance(loc)) > 0.5)
+                    continue;
+
+                path.add(block);
+
+                //Effect
+                loc.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getTypeId());
+
+                //Slow
+                for (Player cur : block.getWorld().getPlayers())
+                    if (!cur.equals(player))
+                        if ((block.getLocation().add(0.5, 0.5, 0.5).distance(cur.getLocation())) < 1.5) {
+                            //Condition
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 1));
+                        }
+            }
+        }
+
+        public boolean update() {
+            if (handled >= path.size())
+                return true;
+
+            Block block = path.get(handled);
+
+            //Cannot raise
+            if (block.getTypeId() == 46)
+                return false;
+
+            Block up = block.getRelative(0, height + 1, 0);
+
+            //Done Column
+            if (up.getType().isSolid()) {
+                loc.getWorld().playEffect(up.getLocation(), Effect.STEP_SOUND, up.getTypeId());
+                height = 0;
+                handled++;
+                return false;
+            }
+
+            //Boost Column
+            if (block.getTypeId() == 1) BlockRestoreManager.ourInstance.add(block, 4, block.getData(), 14000);
+            if (block.getTypeId() == 2) BlockRestoreManager.ourInstance.add(block, 3, block.getData(), 14000);
+            if (block.getTypeId() == 98) BlockRestoreManager.ourInstance.add(block, 98, (byte) 2, 14000);
+
+            if (block.getType() == Material.SNOW) {
+                BlockRestoreManager.ourInstance.add(block, Material.SNOW_BLOCK.getId(), (byte) 0, 10000 - (1000 * height));
+                BlockRestoreManager.ourInstance.add(up, Material.SNOW_BLOCK.getId(), (byte) 0, 10000 - (1000 * height));
+            } else {
+                BlockRestoreManager.ourInstance.add(up, block.getTypeId(), block.getData(), 10000 - (1000 * height));
+            }
+            height++;
+
+            //Effect
+            up.getWorld().playEffect(up.getLocation(), Effect.STEP_SOUND, block.getTypeId());
+
+            //Damage
+            for (Player cur : up.getWorld().getPlayers())
+                if (!cur.equals(player)) {
+                    //Teleport
+                    if (cur.getLocation().getBlock().equals(block)) {
+                        cur.teleport(cur.getLocation().add(0, 1, 0));
+
+
+                    }
+
+                    int damage = 4 + handled;
+
+                    if(!DamageUtil.canDamage(cur, player, damage)) {
+                        continue;
+                    }
+
+                    //Damage
+                    if (!hit.contains(cur))
+                        if ((up.getLocation().add(0.5, 0.5, 0.5).distance(cur.getLocation())) < 1.5) {
+                            hit.add(cur);
+
+                            SmashDamageEvent smashDamageEvent = new SmashDamageEvent(cur, owner, damage);
+                            smashDamageEvent.multiplyKnockback(0);
+                            smashDamageEvent.setReason(name);
+                            smashDamageEvent.callEvent();
+                            Utils.sendAttributeMessage(ChatColor.YELLOW + owner.getName() +
+                                    ChatColor.GRAY + " hit you with", name, cur, ServerMessageType.GAME);
+
+                            final Player fPlayer = cur;
+                            final Location fLoc = up.getLocation().add(0.5, 0.5, 0.5);
+
+                            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                                public void run() {
+                                    // From + X = To
+                                    // X = To - From
+                                    Vector trajectory = fPlayer.getLocation().toVector().subtract(fLoc.toVector().clone());
+                                    trajectory.setY(0);
+                                    VelocityUtil.setVelocity(fPlayer, trajectory.normalize(),
+                                            1 + 0.1 * handled, true, 0.6 + 0.05 * handled, 0, 10, true);
+                                }
+                            }, 4);
+                        }
+                }
+
+            //Next Column
+            if (height >= Math.min(2, handled / 3 + 1)) {
+                height = 0;
+                handled++;
+            }
+
+            return (handled >= path.size());
+        }
+
+        public void clear() {
+            hit.clear();
+            path.clear();
+            host = null;
+            player = null;
+            loc = null;
+            startLoc = null;
+        }
+
+        private boolean isSolid(Block block) {
+            return block.getType().isSolid() || block.getType() == Material.SNOW;
+        }
+
     }
 
 }

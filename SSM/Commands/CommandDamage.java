@@ -19,17 +19,22 @@ public class CommandDamage implements CommandExecutor {
             return true;
         }
         Player player = (Player) commandSender;
-        if (args.length == 1) {
+        if (args.length >= 1) {
             try {
-                int number = Integer.parseInt(args[0]);
-                SmashDamageEvent smashDamageEvent = new SmashDamageEvent(player, null, number);
+                int damage_number = Integer.parseInt(args[0]);
+                SmashDamageEvent smashDamageEvent = new SmashDamageEvent(player, null, damage_number);
                 smashDamageEvent.multiplyKnockback(0);
-                smashDamageEvent.setIgnoreArmor(true);
+                //smashDamageEvent.setIgnoreArmor(true);
                 smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.STARVATION);
                 smashDamageEvent.setDamagerName("Command");
                 smashDamageEvent.setReason("Command");
                 smashDamageEvent.callEvent();
-                player.sendMessage("You were dealt " + number + " damage");
+                player.sendMessage("You were dealt " + damage_number + " damage");
+                if(args.length >= 2) {
+                    int hunger_number = Integer.parseInt(args[1]);
+                    player.setFoodLevel(hunger_number);
+                    player.sendMessage("Your hunger was set to " + hunger_number);
+                }
                 return true;
             } catch (NumberFormatException e) {
                 player.sendMessage("You need to input a number!");

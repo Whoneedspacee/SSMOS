@@ -2,9 +2,11 @@ package SSM.Projectiles;
 
 import SSM.Events.SmashDamageEvent;
 import SSM.Utilities.DamageUtil;
+import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.EnumParticle;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -31,9 +33,9 @@ public class IronHookProjectile extends SmashProjectile {
     }
 
     @Override
-    protected Entity getProjectileEntity() {
-        ItemStack cobweb = new ItemStack(Material.TRIPWIRE_HOOK, 1);
-        return firer.getWorld().dropItem(firer.getEyeLocation().add(firer.getLocation().getDirection()), cobweb);
+    protected Entity createProjectileEntity() {
+        ItemStack hook = new ItemStack(Material.TRIPWIRE_HOOK);
+        return firer.getWorld().dropItem(firer.getEyeLocation().add(firer.getLocation().getDirection()), hook);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class IronHookProjectile extends SmashProjectile {
         firer.getWorld().playSound(projectile.getLocation(), Sound.FIRE_IGNITE, 1.4f, 0.8f);
         Utils.playParticle(EnumParticle.CRIT, projectile.getLocation(),
                 0.0f, 0.0f, 0.0f, 0.0f, 1, 96,
-                null);
+                projectile.getWorld().getPlayers());
     }
 
     @Override
@@ -62,9 +64,15 @@ public class IronHookProjectile extends SmashProjectile {
         smashDamageEvent.setIgnoreDamageDelay(true);
         smashDamageEvent.setReason(name);
         smashDamageEvent.callEvent();
-        // To - From
+        // From + X = To
+        // X = To - From
         Vector pull = firer.getLocation().toVector().subtract(hit.getLocation().toVector()).normalize();
         VelocityUtil.setVelocity(hit, pull, 2, false, 0, 0.8, 1.5, true);
+        if(hit instanceof Player) {
+            Player player = (Player) hit;
+            Utils.sendAttributeMessage(ChatColor.YELLOW + firer.getName() +
+                    ChatColor.GRAY + " hit you with", name, player, ServerMessageType.SKILL);
+        }
         return true;
     }
 

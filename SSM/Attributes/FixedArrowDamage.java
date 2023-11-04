@@ -6,6 +6,7 @@ import SSM.GameManagers.OwnerEvents.OwnerDealSmashDamageEvent;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,9 @@ public class FixedArrowDamage extends Attribute implements OwnerDealSmashDamageE
     public FixedArrowDamage(double fixed_damage) {
         this.name = "Fixed Arrow Damage";
         this.fixed_damage = fixed_damage;
+        this.description = new String[] {
+                ChatColor.RESET + "Arrows deal " + String.format("%.1f", fixed_damage) + " damage.",
+        };
     }
 
     @Override

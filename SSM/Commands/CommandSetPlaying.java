@@ -31,6 +31,8 @@ public class CommandSetPlaying implements CommandExecutor {
         Player player = (Player) commandSender;
         Kit kit = KitManager.getPlayerKit(player);
         if(kit != null) {
+            // Need first part to unhandle existing stuff
+            kit.updatePlaying(GameManager.GameState.LOBBY_WAITING);
             kit.updatePlaying(GameManager.GameState.GAME_PLAYING);
             player.sendMessage(ChatColor.YELLOW + "Forced Kit State to Playing");
         }

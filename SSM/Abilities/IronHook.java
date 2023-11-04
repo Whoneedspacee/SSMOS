@@ -23,7 +23,7 @@ public class IronHook extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        IronHookProjectile projectile = new IronHookProjectile(owner, "Iron Hook");
+        IronHookProjectile projectile = new IronHookProjectile(owner, name);
         projectile.launchProjectile();
     }
 

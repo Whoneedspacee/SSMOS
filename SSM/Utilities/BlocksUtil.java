@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class BlocksUtil {
@@ -23,6 +24,27 @@ public class BlocksUtil {
             }
         }
         return blocks;
+    }
+
+    public static HashMap<Block, Double> getInRadius(Location location, double dR, double maxHeight) {
+        HashMap<Block, Double> blockList = new HashMap<Block, Double>();
+        int iR = (int) dR + 1;
+        for (int x = -iR; x <= iR; x++) {
+            for (int z = -iR; z <= iR; z++) {
+                for (int y = -iR; y <= iR; y++) {
+                    if (Math.abs(y) > maxHeight) {
+                        continue;
+                    }
+                    Block curBlock = location.getWorld().getBlockAt(
+                            (int) (location.getX() + x), (int) (location.getY() + y), (int) (location.getZ() + z));
+                    double offset = location.distance(curBlock.getLocation().add(0.5, 0.5, 0.5));
+                    if (offset <= dR) {
+                        blockList.put(curBlock, 1 - (offset / dR));
+                    }
+                }
+            }
+        }
+        return blockList;
     }
 
 }

@@ -14,9 +14,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
@@ -237,6 +235,32 @@ public class DisguiseManager implements Listener, Runnable {
         }
         pipeline.addBefore("packet_handler", player.getName(), channelDuplexHandler);
         showDisguises(player);
+    }
+
+    @EventHandler
+    public void playerMove(PlayerMoveEvent e) {
+        // This might be laggy and there's probably a better way to do it, hack fix
+        Player player = e.getPlayer();
+        for(Player other : player.getWorld().getPlayers()) {
+            if(player.equals(other)) {
+                continue;
+            }
+            double from_distance = other.getLocation().distance(e.getFrom());
+            double to_distance = other.getLocation().distance(e.getTo());
+            double despawn_distance = 90;
+            if(from_distance > despawn_distance && to_distance <= despawn_distance) {
+                showDisguise(player, other);
+                showDisguise(other, player);
+            }
+        }
+    }
+
+    @EventHandler
+    public void playerTeleport(PlayerTeleportEvent e) {
+        showDisguises(e.getPlayer());
+        for(Player player : e.getPlayer().getWorld().getPlayers()) {
+            showDisguise(player, e.getPlayer());
+        }
     }
 
     @EventHandler

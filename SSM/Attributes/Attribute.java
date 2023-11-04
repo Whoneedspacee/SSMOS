@@ -20,7 +20,11 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
         LEFT_CLICK("Left-Click"),
         RIGHT_CLICK("Right-Click"),
         BLOCKING("Hold/Release Block"),
-        CHARGE_BOW("Charge Bow");
+        CHARGE_BOW("Charge Bow"),
+        CROUCH("Crouch"),
+        DOUBLE_JUMP("Double Jump"),
+        SMASH_CRYSTAL("Smash Crystal");
+
 
         private String message;
 

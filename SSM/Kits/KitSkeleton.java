@@ -62,7 +62,7 @@ public class KitSkeleton extends Kit {
     public void setGameHotbar() {
         setItem(new ItemStack(Material.IRON_AXE), 0);
         setItem(new ItemStack(Material.BOW), 1);
-        setItem(new ItemStack(Material.COMPASS), 2);
+        setItem(Compass.COMPASS_ITEM, 2);
     }
 
 }

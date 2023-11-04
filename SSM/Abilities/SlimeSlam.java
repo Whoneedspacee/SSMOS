@@ -2,11 +2,14 @@ package SSM.Abilities;
 
 import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.CooldownManager;
+import SSM.GameManagers.GameManager;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
 import SSM.Utilities.DamageUtil;
+import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -17,13 +20,22 @@ import java.util.List;
 
 public class SlimeSlam extends Ability implements OwnerRightClickEvent {
 
-    double damage = 8.0;
-    double recoilDamage = 0.5;
-    int task = -1;
+    private int task = -1;
+    private double damage = 7;
+    private double hitbox = 2;
 
     public SlimeSlam() {
         this.name = "Slime Slam";
         this.cooldownTime = 6;
+        this.usage = AbilityUsage.RIGHT_CLICK;
+        this.description = new String[] {
+                ChatColor.RESET + "Throw your slimey body forwards. If you hit",
+                ChatColor.RESET + "another player before you land, you deal",
+                ChatColor.RESET + "large damage and knockback to them.",
+                ChatColor.RESET + "",
+                ChatColor.RESET + "However, you take 25% of the damage and",
+                ChatColor.RESET + "knockback in the opposite direction.",
+        };
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
@@ -35,24 +47,31 @@ public class SlimeSlam extends Ability implements OwnerRightClickEvent {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                List<Entity> possible_hit = owner.getNearbyEntities(2, 2, 2);
-                for (Entity entity : possible_hit) {
-                    if (!(entity instanceof Player)) {
-                        return;
-                    }
-                    LivingEntity living = (LivingEntity) entity;
-                    if (!DamageUtil.canDamage(living, owner, damage)) {
+                if(owner == null) {
+                    Bukkit.getScheduler().cancelTask(task);
+                    return;
+                }
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (player.equals(owner)) {
                         continue;
                     }
-                    doSlam(living);
+                    if (!DamageUtil.canDamage(player, owner, damage)) {
+                        continue;
+                    }
+                    if(owner.getLocation().distance(player.getLocation()) >= hitbox) {
+                        continue;
+                    }
+                    doSlam(player);
                     Bukkit.getScheduler().cancelTask(task);
                     return;
                 }
-                if (Utils.entityIsOnGround(owner) &&
-                        CooldownManager.getInstance().getRemainingTimeFor(SlimeSlam.this, owner) < 5000) {
-                    Bukkit.getScheduler().cancelTask(task);
+                if(!Utils.entityIsOnGround(owner)) {
                     return;
                 }
+                if(CooldownManager.getInstance().getTimeElapsedFor(SlimeSlam.this, owner) < 1000) {
+                    return;
+                }
+                Bukkit.getScheduler().cancelTask(task);
             }
         }, 0L, 0L);
     }
@@ -60,12 +79,21 @@ public class SlimeSlam extends Ability implements OwnerRightClickEvent {
     public void doSlam(LivingEntity target) {
         SmashDamageEvent recoilEvent = new SmashDamageEvent(owner, target, damage / 4);
         recoilEvent.multiplyKnockback(2);
-        recoilEvent.setReason(name + " recoil");
+        recoilEvent.setIgnoreDamageDelay(true);
+        recoilEvent.setReason(name + " Recoil");
         recoilEvent.callEvent();
         SmashDamageEvent smashDamageEvent = new SmashDamageEvent(target, owner, damage);
         smashDamageEvent.multiplyKnockback(2);
+        smashDamageEvent.setIgnoreDamageDelay(true);
         smashDamageEvent.setReason(name);
         smashDamageEvent.callEvent();
+        Utils.sendAttributeMessage("You hit " + ChatColor.YELLOW + target.getName()
+                + ChatColor.GRAY + " with", name, owner, ServerMessageType.GAME);
+        if(target instanceof Player) {
+            Player player = (Player) target;
+            Utils.sendAttributeMessage(ChatColor.YELLOW + owner.getName() +
+                    ChatColor.GRAY + " hit you with", name, player, ServerMessageType.GAME);
+        }
     }
 
 }

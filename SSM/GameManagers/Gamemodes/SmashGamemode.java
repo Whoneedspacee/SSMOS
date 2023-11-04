@@ -26,6 +26,7 @@ public abstract class SmashGamemode implements Listener {
     protected String[] description = new String[] {"N/A"};
     protected List<MapFile> allowed_maps = new ArrayList<MapFile>();
     protected List<Kit> allowed_kits = new ArrayList<Kit>();
+    protected int players_to_start = 2;
 
     public SmashGamemode() {
         Bukkit.getPluginManager().registerEvents(this, SSM.getInstance());
@@ -118,12 +119,12 @@ public abstract class SmashGamemode implements Listener {
         return selected_map.getRespawnPoints().get((int) (Math.random() * selected_map.getRespawnPoints().size()));
     }
 
-    public boolean isCurrentGamemode() {
-        return (GameManager.selected_gamemode.equals(this));
-    }
-
     public boolean isGameEnded(HashMap<Player, Integer> lives) {
         return (lives.size() <= 1);
+    }
+
+    public boolean isCurrentGamemode() {
+        return (GameManager.selected_gamemode.equals(this));
     }
 
     public String getName() {
@@ -140,6 +141,10 @@ public abstract class SmashGamemode implements Listener {
 
     public List<Kit> getAllowedKits() {
         return allowed_kits;
+    }
+
+    public int getPlayersToStart() {
+        return players_to_start;
     }
 
 }

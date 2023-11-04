@@ -7,9 +7,12 @@ import SSM.Kits.KitIronGolem;
 import SSM.Kits.KitSkeleton;
 import SSM.Kits.KitSpider;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 
 public class TestingGamemode extends SmashGamemode {
 
@@ -21,6 +24,7 @@ public class TestingGamemode extends SmashGamemode {
                 "Attack to restore hunger!",
                 "Last player alive wins!"
         };
+        this.players_to_start = 1;
     }
 
     // Don't create a folder for the testing gamemodes maps
@@ -29,11 +33,23 @@ public class TestingGamemode extends SmashGamemode {
         allowed_maps = GameManager.all_gamemodes.get(0).getAllowedMaps();
     }
 
-    @Override
+    /*@Override
     public void updateAllowedKits() {
         allowed_kits.add(new KitSkeleton());
         allowed_kits.add(new KitIronGolem());
         allowed_kits.add(new KitSpider());
+    }*/
+
+    @Override
+    public void setPlayerLives(HashMap<Player, Integer> lives) {
+        for(Player player : GameManager.getPlayers()) {
+            lives.put(player, 999);
+        }
+    }
+
+    @Override
+    public boolean isGameEnded(HashMap<Player, Integer> lives) {
+        return (lives.size() <= 0);
     }
 
     @EventHandler

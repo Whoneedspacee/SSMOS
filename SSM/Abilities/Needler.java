@@ -32,6 +32,11 @@ public class Needler extends Ability implements OwnerRightClickEvent {
         this.name = "Needler";
         this.cooldownTime = 2.5;
         this.usage = AbilityUsage.BLOCKING;
+        this.description = new String[] {
+                ChatColor.RESET + "Quickly spray up to 5 needles from ",
+                ChatColor.RESET + "your mouth, dealing damage and small",
+                ChatColor.RESET + "knockback to opponents.",
+        };
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
@@ -71,8 +76,13 @@ public class Needler extends Ability implements OwnerRightClickEvent {
                 smashDamageEvent.setReason(name);
                 smashDamageEvent.callEvent();
                 arrow.remove();
-                PotionEffect poison = new PotionEffect(PotionEffectType.POISON, 40, 0);
-                livingEntity.addPotionEffect(poison);
+                if(DamageUtil.canDamage(livingEntity, (LivingEntity) arrow.getShooter(), 1.1)) {
+                    // Remove the poison so we can re-apply
+                    livingEntity.removePotionEffect(PotionEffectType.POISON);
+                    PotionEffect poison = new PotionEffect(PotionEffectType.POISON, 40, 0, false, false);
+                    livingEntity.addPotionEffect(poison);
+                    livingEntity.setMetadata("Poison Damager", new FixedMetadataValue(plugin, owner));
+                }
             }
         }
     }
@@ -89,4 +99,5 @@ public class Needler extends Ability implements OwnerRightClickEvent {
             }
         }
     }
+
 }

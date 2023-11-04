@@ -141,6 +141,10 @@ public class MapFile {
         return voted;
     }
 
+    public void clearVoted() {
+        voted.clear();
+    }
+
     public boolean isRespawnPoint(Block check) {
         if (check.getType() != Material.WOOL) {
             return false;

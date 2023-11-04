@@ -30,7 +30,7 @@ public class KitSnowMan extends Kit {
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new ExpCharge(0.01F, 1, false));
+        addAttribute(new ExpCharge(0.01F, 1, true, true));
 
         DisguiseManager.addDisguise(owner, new SnowmanDisguise(owner));
     }

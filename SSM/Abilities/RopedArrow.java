@@ -2,9 +2,12 @@ package SSM.Abilities;
 
 import SSM.GameManagers.OwnerEvents.OwnerLeftClickEvent;
 import SSM.Utilities.VelocityUtil;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;

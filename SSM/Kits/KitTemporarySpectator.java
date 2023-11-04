@@ -55,7 +55,7 @@ public class KitTemporarySpectator extends Kit implements Listener {
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.COMPASS, 1), 0);
+        setItem(Compass.COMPASS_ITEM, 0);
     }
 
 }

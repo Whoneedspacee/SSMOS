@@ -7,20 +7,26 @@ public class ExpCharge extends Attribute {
 
     protected float expAdd;
     protected double delay;
-    protected boolean groundCharge;
+    protected boolean chargeWhenInAir;
+    protected boolean chargeWhenSneaking;
+    public boolean enabled = true;
 
-    public ExpCharge(float expAdd, double delay, boolean groundCharge) {
+    public ExpCharge(float expAdd, double delay, boolean chargeWhenInAir, boolean chargeWhenSneaking) {
         super();
-        this.name = "ExpCharge";
+        this.name = "Exp Charge";
         this.expAdd = expAdd;
         this.delay = delay;
-        this.groundCharge = groundCharge;
+        this.chargeWhenInAir = chargeWhenInAir;
+        this.chargeWhenSneaking = chargeWhenSneaking;
         task = this.runTaskTimer(plugin, 0, (long) delay);
     }
 
     @Override
     public void run() {
-        if (groundCharge && !Utils.entityIsOnGround(owner)) {
+        if (!chargeWhenInAir && !Utils.entityIsOnGround(owner)) {
+            return;
+        }
+        if(!chargeWhenSneaking && owner.isSneaking()) {
             return;
         }
         checkAndActivate();
@@ -35,7 +41,7 @@ public class ExpCharge extends Attribute {
     }
 
     public void activate() {
-        if (!owner.isDead()) {
+        if (enabled && !owner.isDead()) {
             float xp = owner.getExp();
             owner.setExp(Math.min(xp + expAdd, 1.0f));
         }

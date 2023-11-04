@@ -54,3 +54,6 @@ commands:
   setgamemode:
     description: 'Sets the current gamemode.'
     usage: /setgamemode
+  randomkit:
+    description: 'Sets your kit randomly.'
+    usage: /randomkit
