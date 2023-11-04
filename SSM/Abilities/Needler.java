@@ -88,10 +88,10 @@ public class Needler extends Ability implements OwnerRightClickEvent {
     }
 
     @EventHandler
-    public void arrowDamage(EntityDamageByEntityEvent e) {
-        if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-            if (e.getDamager() instanceof Arrow) {
-                Arrow arrow = (Arrow) e.getDamager();
+    public void arrowDamage(SmashDamageEvent e) {
+        if (e.getDamageCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+            if (e.getProjectile() instanceof Arrow) {
+                Arrow arrow = (Arrow) e.getProjectile();
                 List<MetadataValue> data = arrow.getMetadata("Needler");
                 if (data.size() > 0) {
                     e.setCancelled(true);

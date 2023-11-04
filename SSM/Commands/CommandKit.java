@@ -22,7 +22,7 @@ public class CommandKit implements CommandExecutor {
         if (!(commandSender instanceof Player)) {
             return true;
         }
-        if(!GameManager.selected_gamemode.getName().equals("Testing")) {
+        if(!GameManager.getGamemode().getName().equals("Testing")) {
             if(GameManager.getState() >= GameManager.GameState.GAME_PLAYING && !commandSender.isOp()) {
                 commandSender.sendMessage("You may not use this command while a game is in progress.");
                 return true;

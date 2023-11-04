@@ -34,13 +34,13 @@ public class CommandVote implements CommandExecutor {
     }
 
     public static void openVotingMenu(Player player) {
-        if (GameManager.getState() > GameManager.GameState.LOBBY_VOTING) {
+        if (!canVote()) {
             player.sendMessage("You may not vote after the voting period has ended.");
             return;
         }
         Inventory selectMap = Bukkit.createInventory(player, 54, "Choose a Map");
 
-        List<MapFile> sortedMaps = new ArrayList<>(GameManager.selected_gamemode.getAllowedMaps());
+        List<MapFile> sortedMaps = new ArrayList<>(GameManager.getGamemode().getAllowedMaps());
         sortedMaps.sort(Comparator.comparing(MapFile::getName));
 
         int slot = 0;
@@ -70,4 +70,13 @@ public class CommandVote implements CommandExecutor {
         }
         player.openInventory(selectMap);
     }
+
+    public static boolean canVote() {
+        if (GameManager.getState() >= GameManager.GameState.LOBBY_STARTING &&
+                GameManager.getState() <= GameManager.GameState.GAME_STARTING) {
+            return false;
+        }
+        return true;
+    }
+
 }

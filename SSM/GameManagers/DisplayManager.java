@@ -54,7 +54,7 @@ public class DisplayManager implements Listener {
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
-                obj.getScore(GameManager.selected_gamemode.getName()).setScore(7);
+                obj.getScore(GameManager.getGamemode().getName()).setScore(7);
                 obj.getScore(ChatColor.GREEN + "").setScore(6);
                 obj.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "Kit").setScore(5);
                 obj.getScore(kit_name).setScore(4);
@@ -74,7 +74,7 @@ public class DisplayManager implements Listener {
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
-                obj.getScore(GameManager.selected_gamemode.getName()).setScore(7);
+                obj.getScore(GameManager.getGamemode().getName()).setScore(7);
                 obj.getScore(ChatColor.GREEN + "").setScore(6);
                 obj.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "Kit").setScore(5);
                 obj.getScore(kit_name).setScore(4);
@@ -94,7 +94,7 @@ public class DisplayManager implements Listener {
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
-                obj.getScore(GameManager.selected_gamemode.getName()).setScore(7);
+                obj.getScore(GameManager.getGamemode().getName()).setScore(7);
                 obj.getScore(ChatColor.GREEN + "").setScore(6);
                 obj.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "Kit").setScore(5);
                 obj.getScore(kit_name).setScore(4);

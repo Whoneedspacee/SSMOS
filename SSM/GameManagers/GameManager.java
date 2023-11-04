@@ -49,7 +49,7 @@ public class GameManager implements Listener, Runnable {
     private static long last_time_update_ms = 0;
     public static World lobby_world = Bukkit.getWorlds().get(0);
     public static List<SmashGamemode> all_gamemodes = new ArrayList<SmashGamemode>();
-    public static SmashGamemode selected_gamemode = null;
+    private static SmashGamemode selected_gamemode = null;
     public static MapFile selected_map = null;
 
     public GameManager() {
@@ -142,6 +142,9 @@ public class GameManager implements Listener, Runnable {
         if (time_remaining_ms <= 0) {
             if (selected_map == null) {
                 return;
+            }
+            for(MapFile mapFile : selected_gamemode.getAllowedMaps()) {
+                mapFile.clearVoted();
             }
             for (Player player : players) {
                 if (isSpectator(player)) {
@@ -277,11 +280,6 @@ public class GameManager implements Listener, Runnable {
         if (time_remaining_ms <= 0) {
             players.clear();
             lives.clear();
-            for(SmashGamemode gamemode : all_gamemodes) {
-                for(MapFile mapFile : gamemode.getAllowedMaps()) {
-                    mapFile.clearVoted();
-                }
-            }
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.teleport(lobby_world.getSpawnLocation());
                 players.add(player);
@@ -361,6 +359,19 @@ public class GameManager implements Listener, Runnable {
 
     public static boolean isSpectator(Player player) {
         return spectators.contains(player);
+    }
+
+    public static void setGamemode(SmashGamemode gamemode) {
+        selected_gamemode = gamemode;
+        for(SmashGamemode check : all_gamemodes) {
+            for(MapFile mapFile : check.getAllowedMaps()) {
+                mapFile.clearVoted();
+            }
+        }
+    }
+
+    public static SmashGamemode getGamemode() {
+        return selected_gamemode;
     }
 
     public static void setState(short value) {
@@ -513,7 +524,7 @@ public class GameManager implements Listener, Runnable {
         ItemStack item = e.getCurrentItem();
         if (item == null) return;
         if (!e.getView().getTitle().contains("Map")) return;
-        if (GameManager.getState() > GameManager.GameState.LOBBY_VOTING) {
+        if (!CommandVote.canVote()) {
             player.closeInventory();
             return;
         }

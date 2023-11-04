@@ -43,7 +43,7 @@ public class CommandSetGamemode implements TabExecutor {
             commandSender.sendMessage("Unable to find specified gamemode.");
             return true;
         }
-        GameManager.selected_gamemode = selected_gamemode;
+        GameManager.setGamemode(selected_gamemode);
         DisplayManager.buildScoreboard();
         for(Player player : Bukkit.getOnlinePlayers()) {
             Utils.sendServerMessageToPlayer("Set " +

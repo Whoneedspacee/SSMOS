@@ -82,7 +82,7 @@ public class KitManager implements Listener {
     }
 
     public static List<Kit> getAllKits() {
-        return GameManager.selected_gamemode.getAllowedKits();
+        return GameManager.getGamemode().getAllowedKits();
     }
 
     public static KitManager getInstance() {

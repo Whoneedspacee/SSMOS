@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
@@ -83,7 +84,11 @@ public class SSM extends JavaPlugin implements Listener {
         Block blockIn = e.getTo().getBlock();
         Block blockOn = e.getFrom().getBlock().getRelative(BlockFace.DOWN);
         if (blockIn.isLiquid() && DamageUtil.canDamage(player, null,1000)) {
-            DamageUtil.borderKill(player, false);
+            boolean lighting = false;
+            if(blockIn.getType() == Material.LAVA || blockIn.getType() == Material.STATIONARY_LAVA) {
+                lighting = true;
+            }
+            DamageUtil.borderKill(player, lighting);
         }
     }
 
@@ -155,6 +160,21 @@ public class SSM extends JavaPlugin implements Listener {
     @EventHandler
     public void clickEvent(InventoryClickEvent e) {
         if(e.getWhoClicked().getGameMode() == GameMode.CREATIVE && e.getWhoClicked().isOp()) {
+            return;
+        }
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onMobTarget(EntityTargetEvent e) {
+        if(e.getEntity() == null || e.getTarget() == null) {
+            return;
+        }
+        if(!(e.getTarget() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) e.getTarget();
+        if(DamageUtil.canDamage(player, null, 0)) {
             return;
         }
         e.setCancelled(true);

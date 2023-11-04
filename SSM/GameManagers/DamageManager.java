@@ -51,6 +51,7 @@ public class DamageManager implements Listener {
         LivingEntity damagee = (LivingEntity) e.getEntity();
         LivingEntity damager = null;
         Projectile projectile = null;
+        double knockback = 1;
         if (e instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent damageBy = (EntityDamageByEntityEvent) e;
             if (damageBy.getDamager() instanceof Projectile) {
@@ -67,15 +68,24 @@ public class DamageManager implements Listener {
                 List<MetadataValue> values = e.getEntity().getMetadata("Poison Damager");
                 if (values.size() > 0) {
                     damager = (Player) values.get(0).value();
+                    knockback = 0;
                 }
             }
         }
         double damage = e.getDamage();
-        //Consistent Arrow Damage
+        // Consistent Arrow Damage
         if (projectile != null && projectile instanceof Arrow) {
             damage = projectile.getVelocity().length() * 3;
         }
+        // Consistent Melee Damage
+        if(damager instanceof Player) {
+            Kit kit = KitManager.getPlayerKit((Player) damager);
+            if(kit != null) {
+                damage = kit.getMelee();
+            }
+        }
         SmashDamageEvent smashDamageEvent = new SmashDamageEvent(damagee, damager, damage);
+        smashDamageEvent.multiplyKnockback(knockback);
         smashDamageEvent.setDamageCause(e.getCause());
         smashDamageEvent.setProjectile(projectile);
         smashDamageEvent.callEvent();
@@ -144,7 +154,7 @@ public class DamageManager implements Listener {
 
     @EventHandler
     public void borderKill(SmashDamageEvent e) {
-        if(e.getDamageCause() != DamageCause.LAVA && e.getDamageCause() != DamageCause.VOID) {
+        if(e.getDamageCause() != DamageCause.VOID) {
             return;
         }
         if(e.getIgnoreDamageDelay() != false) {
@@ -242,7 +252,7 @@ public class DamageManager implements Listener {
             Player player = (Player) damager;
             player.setLevel((int) damage);
         }
-        if (knockbackMultiplier > 0) {
+        if (knockbackMultiplier > 0 && (origin != null || damager != null || projectile != null)) {
             // Don't stack knockback
             VelocityUtil.setVelocity(damagee, new Vector(0, 0, 0));
             double knockback = Math.max(damage, 2);

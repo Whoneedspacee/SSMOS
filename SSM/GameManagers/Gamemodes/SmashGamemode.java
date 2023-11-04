@@ -124,7 +124,7 @@ public abstract class SmashGamemode implements Listener {
     }
 
     public boolean isCurrentGamemode() {
-        return (GameManager.selected_gamemode.equals(this));
+        return (GameManager.getGamemode().equals(this));
     }
 
     public String getName() {
