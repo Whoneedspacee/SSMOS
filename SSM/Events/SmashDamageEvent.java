@@ -8,7 +8,6 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class SmashDamageEvent extends Event implements Cancellable {
@@ -31,7 +30,7 @@ public class SmashDamageEvent extends Event implements Cancellable {
 
 
     public SmashDamageEvent(LivingEntity damagee, LivingEntity damager, double damage) {
-        if(damagee == null) {
+        if (damagee == null) {
             Bukkit.broadcastMessage(ChatColor.RED + "Warning: Damagee was null in SmashDamageEvent!");
         }
         this.damagee = damagee;
@@ -43,12 +42,12 @@ public class SmashDamageEvent extends Event implements Cancellable {
         this.ignoreDamageDelay = false;
         this.damageCause = DamageCause.CUSTOM;
         this.origin = null;
-        this.reason = "N/A";
+        this.reason = null;
         this.projectile = null;
-        if(damagee != null) {
+        if (damagee != null) {
             this.damagee_name = damagee.getName();
         }
-        if(damager != null) {
+        if (damager != null) {
             this.damager_name = damager.getName();
         }
     }
@@ -107,6 +106,60 @@ public class SmashDamageEvent extends Event implements Cancellable {
 
     public void setDamageCause(DamageCause damageCause) {
         this.damageCause = damageCause;
+        if (reason != null) {
+            return;
+        }
+        String got_reason = "N/A";
+        if (damageCause == DamageCause.PROJECTILE) {
+            got_reason = "Arrow";
+        } else if (damageCause == DamageCause.ENTITY_ATTACK) {
+            got_reason = "Attack";
+        } else if (damageCause == DamageCause.VOID) {
+            got_reason = "Void";
+        } else if (damageCause == DamageCause.CUSTOM) {
+            got_reason = "Custom";
+        } else if (damageCause == DamageCause.LAVA) {
+            got_reason = "Lava";
+        } else if (damageCause == DamageCause.STARVATION) {
+            got_reason = "Starvation";
+        } else if (damageCause == DamageCause.ENTITY_EXPLOSION) {
+            got_reason = "Explosion";
+        } else if (damageCause == DamageCause.FALL) {
+            got_reason = "Falling";
+        } else if (damageCause == DamageCause.FIRE_TICK) {
+            got_reason = "Fire";
+        } else if (damageCause == DamageCause.FIRE) {
+            got_reason = "Fire";
+        } else if (damageCause == DamageCause.POISON) {
+            got_reason = "Poison";
+        } else if (damageCause == DamageCause.SUFFOCATION) {
+            got_reason = "Suffocation";
+        } else if (damageCause == DamageCause.DROWNING) {
+            got_reason = "Drowning";
+        } else if (damageCause == DamageCause.BLOCK_EXPLOSION) {
+            got_reason = "Explosion";
+        } else if (damageCause == DamageCause.CONTACT) {
+            got_reason = "Contact";
+        } else if (damageCause == DamageCause.FALLING_BLOCK) {
+            got_reason = "Falling Block";
+        } else if (damageCause == DamageCause.WITHER) {
+            got_reason = "Wither";
+        } else if (damageCause == DamageCause.THORNS) {
+            got_reason = "Thorns";
+        } else if (damageCause == DamageCause.LIGHTNING) {
+            got_reason = "Lightning";
+        } else if (damageCause == DamageCause.MAGIC) {
+            got_reason = "Magic";
+        } else if (damageCause == DamageCause.MELTING) {
+            got_reason = "Melting";
+        } else if (damageCause == DamageCause.SUICIDE) {
+            got_reason = "Suicide";
+        }
+        setReason(got_reason);
+        if (damager_name != null) {
+            return;
+        }
+        setDamagerName(got_reason);
     }
 
     public DamageCause getDamageCause() {
@@ -174,27 +227,24 @@ public class SmashDamageEvent extends Event implements Cancellable {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof SmashDamageEvent)) {
+        if (!(o instanceof SmashDamageEvent)) {
             return false;
         }
         SmashDamageEvent check = (SmashDamageEvent) o;
         boolean to_return = true;
-        if(check.getDamagerName() == null) {
+        if (check.getDamagerName() == null) {
             to_return = to_return && getDamagerName() == null;
-        }
-        else {
+        } else {
             to_return = to_return && check.getDamagerName().equals(getDamagerName());
         }
-        if(check.getDamageeName() == null) {
+        if (check.getDamageeName() == null) {
             to_return = to_return && getDamageeName() == null;
-        }
-        else {
+        } else {
             to_return = to_return && check.getDamageeName().equals(getDamageeName());
         }
-        if(check.getReason() == null) {
+        if (check.getReason() == null) {
             to_return = to_return && getReason() == null;
-        }
-        else {
+        } else {
             to_return = to_return && check.getReason().equals(getReason());
         }
         return to_return;

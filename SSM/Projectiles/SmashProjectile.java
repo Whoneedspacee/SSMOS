@@ -169,6 +169,9 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     }
 
     public void setProjectileEntity(Entity projectile) {
+        if(projectile == null) {
+            return;
+        }
         this.projectile = projectile;
         if (projectile instanceof Item) {
             Item item = (Item) projectile;

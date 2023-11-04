@@ -38,138 +38,68 @@ public class DamageManager implements Listener {
         ourInstance = this;
     }
 
-    // High priority to handle all damage events after all additions
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
-        // Something else didn't want this to happen and we are going to listen
-        if (e.isCancelled()) {
-            return;
-        }
-        // Cancel the event since we're going to handle all the information
-        Entity entity = e.getDamager();
-        e.setCancelled(true);
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
-            Kit kit = KitManager.getPlayerKit(player);
-            if (kit == null) {
-                return;
-            }
-            if (e.getEntity() instanceof LivingEntity && e.getDamager() instanceof LivingEntity) {
-                SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), kit.getMelee());
-                smashDamageEvent.setDamageCause(DamageCause.ENTITY_ATTACK);
-                smashDamageEvent.setReason("Attack");
-                smashDamageEvent.callEvent();
-            }
-        } else if (entity instanceof Projectile) {
-            Projectile projectile = (Projectile) entity;
-            LivingEntity livingEntity = null;
-            if (projectile.getShooter() instanceof LivingEntity) {
-                livingEntity = (LivingEntity) projectile.getShooter();
-            }
-            String reason = projectile.getCustomName();
-            if (reason == null) {
-                reason = "Arrow";
-            }
-            SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), livingEntity, e.getDamage());
-            smashDamageEvent.setDamageCause(DamageCause.PROJECTILE);
-            smashDamageEvent.setReason(reason);
-            smashDamageEvent.setProjectile(projectile);
-            smashDamageEvent.callEvent();
-        } else if (e.getCause() == DamageCause.ENTITY_ATTACK) {
-            SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), (LivingEntity) e.getDamager(), e.getDamage());
-            smashDamageEvent.setDamageCause(DamageCause.ENTITY_ATTACK);
-            smashDamageEvent.setReason("Attack");
-            smashDamageEvent.callEvent();
-        } else if (e.getCause() == DamageCause.ENTITY_EXPLOSION) {
-            LivingEntity livingEntity = null;
-            if(e.getEntity() instanceof LivingEntity) {
-                livingEntity = (LivingEntity) e.getEntity();
-            }
-            SmashDamageEvent smashDamageEvent = new SmashDamageEvent(livingEntity, null, e.getDamage());
-            smashDamageEvent.setDamageCause(DamageCause.ENTITY_EXPLOSION);
-            smashDamageEvent.setKnockbackOrigin(e.getDamager().getLocation());
-            smashDamageEvent.setDamagerName("Explosion");
-            smashDamageEvent.setReason("Explosion");
-            smashDamageEvent.callEvent();
-        } else {
-            Bukkit.broadcastMessage("Unhandled Cause: " + e.getCause().toString());
-        }
-    }
-
+    // Highest priority to get after all changes
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent e) {
-        // Something else didn't want this to happen and we are going to listen
         if (e.isCancelled()) {
+            Bukkit.broadcastMessage(ChatColor.RED + "Error: Cancelled EntityDamageEvent, please use SmashDamageEvent");
             return;
         }
-        // Cancel the event since we're going to handle all the information
-        Entity entity = e.getEntity();
-        e.setCancelled(true);
-        if (!(entity instanceof LivingEntity)) {
+        if (!(e.getEntity() instanceof LivingEntity)) {
             return;
         }
-        LivingEntity livingEntity = (LivingEntity) entity;
-        if (!DamageUtil.canDamage(livingEntity, null, 0)) {
-            return;
+        LivingEntity damagee = (LivingEntity) e.getEntity();
+        LivingEntity damager = null;
+        Projectile projectile = null;
+        if (e instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent damageBy = (EntityDamageByEntityEvent) e;
+            if (damageBy.getDamager() instanceof Projectile) {
+                projectile = (Projectile) damageBy.getDamager();
+                if (projectile.getShooter() instanceof LivingEntity) {
+                    damager = (LivingEntity) projectile.getShooter();
+                }
+            } else if (damageBy.getDamager() instanceof LivingEntity) {
+                damager = (LivingEntity) damageBy.getDamager();
+            }
         }
-        // Let Hunger Attribute Handle
-        if (e.getCause() == EntityDamageEvent.DamageCause.STARVATION) {
-            return;
-        } else if (e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
-            SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), null, e.getDamage());
-            smashDamageEvent.multiplyKnockback(0);
-            smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.FIRE_TICK);
-            smashDamageEvent.setDamagerName("Fire");
-            smashDamageEvent.setReason("Fire");
-            smashDamageEvent.callEvent();
-        } else if (e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
-            return;
-        } else if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            return;
-        } else if (e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.VOID ||
-                e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.LAVA) {
-            DamageUtil.borderKill((Player) e.getEntity(), true);
-            return;
-        } else if (e.getEntity() instanceof LivingEntity && e.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            SmashDamageEvent smashDamageEvent = new SmashDamageEvent(livingEntity, null, 1000);
-            smashDamageEvent.multiplyKnockback(0);
-            smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.VOID);
-            smashDamageEvent.setDamagerName("Void");
-            smashDamageEvent.setReason("World Border");
-            smashDamageEvent.callEvent();
-        } else if (e.getCause() == DamageCause.SUFFOCATION) {
-            SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), null, e.getDamage());
-            smashDamageEvent.multiplyKnockback(0);
-            smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.SUFFOCATION);
-            smashDamageEvent.setDamagerName("Suffocation");
-            smashDamageEvent.setReason("Suffocation");
-            smashDamageEvent.callEvent();
-        } else if (e.getCause() == DamageCause.POISON) {
-            Player damager = null;
+        if (e.getCause() == DamageCause.POISON) {
             if (e.getEntity().hasMetadata("Poison Damager")) {
                 List<MetadataValue> values = e.getEntity().getMetadata("Poison Damager");
-                if(values.size() > 0) {
+                if (values.size() > 0) {
                     damager = (Player) values.get(0).value();
                 }
             }
-            SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), damager, e.getDamage());
-            smashDamageEvent.setIgnoreArmor(true);
-            smashDamageEvent.multiplyKnockback(0);
-            smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.POISON);
-            smashDamageEvent.setDamagerName("Poison");
-            smashDamageEvent.setReason("Poison");
-            smashDamageEvent.callEvent();
-        } else if (e.getCause() == DamageCause.LAVA) {
-            SmashDamageEvent smashDamageEvent = new SmashDamageEvent((LivingEntity) e.getEntity(), null, e.getDamage());
-            smashDamageEvent.setIgnoreArmor(true);
-            smashDamageEvent.multiplyKnockback(0);
-            smashDamageEvent.setDamageCause(EntityDamageEvent.DamageCause.LAVA);
-            smashDamageEvent.setDamagerName("Lava");
-            smashDamageEvent.setReason("Lava");
-            smashDamageEvent.callEvent();
-        } else {
-            Bukkit.broadcastMessage("Unhandled Cause: " + e.getCause().toString());
         }
+        double damage = e.getDamage();
+        //Consistent Arrow Damage
+        if (projectile != null && projectile instanceof Arrow) {
+            damage = projectile.getVelocity().length() * 3;
+        }
+        SmashDamageEvent smashDamageEvent = new SmashDamageEvent(damagee, damager, damage);
+        smashDamageEvent.setDamageCause(e.getCause());
+        smashDamageEvent.setProjectile(projectile);
+        smashDamageEvent.callEvent();
+        e.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void removeArrows(EntityDamageEvent e) {
+        if(!(e.getEntity() instanceof Arrow)) {
+            return;
+        }
+        Arrow arrow = (Arrow) e.getEntity();
+        arrow.teleport(new Location(arrow.getWorld(), 0, 0, 0));
+        arrow.remove();
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void removeArrows(SmashDamageEvent e) {
+        if(!(e.getProjectile() instanceof Arrow)) {
+            return;
+        }
+        Arrow arrow = (Arrow) e.getProjectile();
+        arrow.teleport(new Location(arrow.getWorld(), 0, 0, 0));
+        arrow.remove();
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -210,6 +140,21 @@ public class DamageManager implements Listener {
                     return;
                 }
         }
+    }
+
+    @EventHandler
+    public void borderKill(SmashDamageEvent e) {
+        if(e.getDamageCause() != DamageCause.LAVA && e.getDamageCause() != DamageCause.VOID) {
+            return;
+        }
+        if(e.getIgnoreDamageDelay() != false) {
+            return;
+        }
+        if(!(e.getDamagee() instanceof Player)) {
+            return;
+        }
+        DamageUtil.borderKill((Player) e.getDamagee(), true);
+        e.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

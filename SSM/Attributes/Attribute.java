@@ -23,6 +23,7 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
         CHARGE_BOW("Charge Bow"),
         CROUCH("Crouch"),
         DOUBLE_JUMP("Double Jump"),
+        PASSIVE("Passive"),
         SMASH_CRYSTAL("Smash Crystal");
 
 

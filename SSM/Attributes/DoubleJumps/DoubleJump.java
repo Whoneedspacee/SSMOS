@@ -1,6 +1,7 @@
 package SSM.Attributes.DoubleJumps;
 
 import SSM.Attributes.Attribute;
+import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.GameManager;
 import SSM.GameManagers.KitManager;
 import SSM.Kits.Kit;
@@ -90,8 +91,8 @@ public abstract class DoubleJump extends Attribute {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void entityDamageEvent(EntityDamageEvent e) {
-        if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
+    public void smashDamageEvent(SmashDamageEvent e) {
+        if (e.getDamageCause() == EntityDamageEvent.DamageCause.FALL) {
             e.setCancelled(true);
         }
     }
