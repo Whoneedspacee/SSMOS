@@ -9,15 +9,19 @@ import SSM.Utilities.DamageUtil;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
-import net.minecraft.server.v1_8_R3.EntityFallingBlock;
-import net.minecraft.server.v1_8_R3.EntityLiving;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityStatus;
+import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.Statistic;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftFallingSand;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.event.CraftEventFactory;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -25,6 +29,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -41,6 +46,77 @@ public class DamageManager implements Listener {
     public DamageManager() {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
+    }
+
+    // We will handle fast blocking in this way, the method
+    // Other servers have used seems to be jar patches
+    // Modify Entity Patch, EntityFallingBlock damageEntity
+    // Other parts from EntityHuman.class attack code
+    @EventHandler
+    public void preAttack(PrePlayerAttackEntityEvent e) {
+        if(!(e.getAttacked() instanceof FallingBlock)) {
+            return;
+        }
+        EntityPlayer player = ((CraftPlayer) e.getPlayer()).getHandle();
+        EntityFallingBlock entityFallingBlock = (EntityFallingBlock) ((CraftFallingSand) (e.getAttacked())).getHandle();
+        // EntityHuman.class attack code starts here
+        float f = (float)player.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).getValue();
+        byte b0 = 0;
+        float f1 = 0.0F;
+        f1 = EnchantmentManager.a(player.bA(), EnumMonsterType.UNDEFINED);
+        int i = b0 + EnchantmentManager.a(player);
+        if(player.isSprinting()) {
+            ++i;
+        }
+        if (f > 0.0F || f1 > 0.0F) {
+            boolean flag = false;
+            if (flag && f > 0.0F) {
+                f *= 1.5F;
+            }
+
+            f += f1;
+            boolean flag1 = false;
+            int j = EnchantmentManager.getFireAspectEnchantmentLevel(player);
+
+            double d0 = entityFallingBlock.motX;
+            double d1 = entityFallingBlock.motY;
+            double d2 = entityFallingBlock.motZ;
+            // Copy this in to replace what the patch did instead of calling the normal damage
+            CraftEventFactory.handleNonLivingEntityDamageEvent(entityFallingBlock, DamageSource.playerAttack(player), f);
+            // This is the return from the patch
+            boolean flag2 = true;
+            if (flag2) {
+                if (i > 0) {
+                    entityFallingBlock.g((double)(-MathHelper.sin(player.yaw * 3.1415927F / 180.0F) * (float)i * 0.5F), 0.1, (double)(MathHelper.cos(player.yaw * 3.1415927F / 180.0F) * (float)i * 0.5F));
+                    player.motX *= 0.6;
+                    player.motZ *= 0.6;
+                    player.setSprinting(false);
+                }
+
+                if (flag) {
+                    player.b(entityFallingBlock);
+                }
+
+                if (f1 > 0.0F) {
+                    player.c(entityFallingBlock);
+                }
+
+                if (f >= 18.0F) {
+                    player.b((Statistic)AchievementList.F);
+                }
+
+                player.p(entityFallingBlock);
+
+                EnchantmentManager.b(player, entityFallingBlock);
+                ItemStack itemstack = player.bZ();
+                Object object = entityFallingBlock;
+
+                player.applyExhaustion(player.world.spigotConfig.combatExhaustion);
+            } else if (flag1) {
+                player.extinguish();
+            }
+        }
+        //Bukkit.broadcastMessage("Velocity: " + String.format("%.2f, %.2f, %.2f", entityFallingBlock.motX, entityFallingBlock.motY, entityFallingBlock.motZ));
     }
 
     // Highest priority to get after all changes
@@ -178,6 +254,7 @@ public class DamageManager implements Listener {
         if (e.isCancelled()) {
             return;
         }
+        //Bukkit.broadcastMessage("Damaged: " + e.getReason());
         LivingEntity damagee = e.getDamagee();
         LivingEntity damager = e.getDamager();
         double damage = e.getDamage();

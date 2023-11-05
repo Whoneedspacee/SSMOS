@@ -202,7 +202,7 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     protected abstract boolean onIdle();
 
     public long getExpirationTicks() {
-        return 300;
+        return expiration_ticks;
     }
 
     public String getName() {

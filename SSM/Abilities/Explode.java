@@ -23,26 +23,6 @@ import org.bukkit.util.Vector;
 
 public class Explode extends Ability implements OwnerRightClickEvent, OwnerToggleSneakEvent, OwnerTakeSmashDamageEvent {
 
-    /*
-     - - Explode
-      - - Radius Normal
-        - '8'
-      - - Radius Smash
-        - '24'
-      - - Damage Normal
-        - '20'
-      - - Damage Smash
-        - '30'
-      - - Spawn Removal Radius
-        - '14'
-      - - Knockback Magnitude
-        - '2.5'
-      - - Block Destroy Radius
-        - '12'
-      - - Block Regeneration Time
-        - '20'
-     */
-
     private int explode_task = -1;
     private long start_time_ms = 0;
 

@@ -53,11 +53,6 @@ public class BlockToss extends Ability implements OwnerRightClickEvent {
         if(BlocksUtil.isUsable(block) || material == Material.REDSTONE_WIRE || material == Material.SKULL) {
             return;
         }
-        if (block.getRelative(BlockFace.UP).getType().isSolid() || BlockRestoreManager.ourInstance.contains(block.getRelative(BlockFace.UP))) {
-            Utils.sendServerMessageToPlayer("You can only pick up blocks with Air above them.",
-                    owner, ServerMessageType.GAME);
-            return;
-        }
         setDisguiseBlock(block.getTypeId(), block.getData());
         holding_id = block.getTypeId();
         holding_data = block.getData();

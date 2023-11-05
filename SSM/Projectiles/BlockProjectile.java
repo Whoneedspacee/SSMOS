@@ -92,6 +92,9 @@ public class BlockProjectile extends SmashProjectile {
     // As an effect after a livingentity is hit
     @EventHandler
     public void blockForm(EntityChangeBlockEvent e) {
+        if(e.getEntity().equals(projectile)) {
+            cancel();
+        }
         if(e.isCancelled()) {
             return;
         }
