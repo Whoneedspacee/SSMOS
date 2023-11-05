@@ -26,6 +26,7 @@ public class BlockProjectile extends SmashProjectile {
     protected double mult;
     protected int block_id;
     protected byte block_data;
+    protected FallingBlock hit_block_effect;
 
     public BlockProjectile(Player firer, String name, long charge, double mult, int block_id, byte block_data) {
         super(firer, name);
@@ -72,7 +73,7 @@ public class BlockProjectile extends SmashProjectile {
         smashDamageEvent.callEvent();
         if (projectile instanceof FallingBlock) {
             FallingBlock thrown = (FallingBlock) projectile;
-            projectile.getWorld().spawnFallingBlock(projectile.getLocation(), thrown.getMaterial(), (byte) thrown.getBlockData());
+            hit_block_effect = projectile.getWorld().spawnFallingBlock(projectile.getLocation(), thrown.getMaterial(), (byte) thrown.getBlockData());
         }
         return true;
     }
@@ -92,18 +93,18 @@ public class BlockProjectile extends SmashProjectile {
     // As an effect after a livingentity is hit
     @EventHandler
     public void blockForm(EntityChangeBlockEvent e) {
-        if(e.getEntity().equals(projectile)) {
-            cancel();
-        }
-        if(e.isCancelled()) {
-            return;
-        }
         if (!(e.getEntity() instanceof FallingBlock)) {
             return;
         }
         FallingBlock falling = (FallingBlock) e.getEntity();
-        falling.getWorld().playEffect(e.getBlock().getLocation(), Effect.STEP_SOUND, falling.getBlockId());
-        falling.remove();
+        if(e.getEntity().equals(projectile)) {
+            falling.getWorld().playEffect(e.getBlock().getLocation(), Effect.STEP_SOUND, falling.getBlockId());
+            cancel();
+        }
+        if(e.getEntity().equals(hit_block_effect)) {
+            falling.getWorld().playEffect(e.getBlock().getLocation(), Effect.STEP_SOUND, falling.getBlockId());
+            falling.remove();
+        }
         e.setCancelled(true);
     }
 

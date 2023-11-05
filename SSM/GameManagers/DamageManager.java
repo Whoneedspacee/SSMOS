@@ -57,9 +57,13 @@ public class DamageManager implements Listener {
         if(!(e.getAttacked() instanceof FallingBlock)) {
             return;
         }
+        e.setCancelled(true);
         EntityPlayer player = ((CraftPlayer) e.getPlayer()).getHandle();
-        EntityFallingBlock entityFallingBlock = (EntityFallingBlock) ((CraftFallingSand) (e.getAttacked())).getHandle();
-        // EntityHuman.class attack code starts here
+        EntityFallingBlock entityFallingBlock = ((CraftFallingSand) (e.getAttacked())).getHandle();
+        // EntityHuman.class attack code starts here, code is edited to ignore bits that would not call
+        if(!(entityFallingBlock.aD() && !entityFallingBlock.l(player))) {
+            return;
+        }
         float f = (float)player.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).getValue();
         byte b0 = 0;
         float f1 = 0.0F;
@@ -90,7 +94,11 @@ public class DamageManager implements Listener {
                     entityFallingBlock.g((double)(-MathHelper.sin(player.yaw * 3.1415927F / 180.0F) * (float)i * 0.5F), 0.1, (double)(MathHelper.cos(player.yaw * 3.1415927F / 180.0F) * (float)i * 0.5F));
                     player.motX *= 0.6;
                     player.motZ *= 0.6;
-                    player.setSprinting(false);
+                    // This sets it on the server only, so just don't do that
+                    // This means this is probably wrong since I do remember it toggling the players sprinting
+                    // Unfortunately I have no idea what to do here
+                    // According to some clicking block toss didn't toggle sprint though so maybe it is fine
+                    //player.setSprinting(false);
                 }
 
                 if (flag) {

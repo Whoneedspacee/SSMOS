@@ -55,7 +55,7 @@ public class LineParticle {
 
         lastLocation = newTarget;
 
-        if (!ignoreAllBlocks && newTarget.getBlock().getType().isSolid() && newTarget.getBlock().getRelative(BlockFace.UP).getType().isSolid()) {
+        if (!ignoreAllBlocks && newTarget.getBlock().getType().isSolid()) {
             done = true;
         }
 
