@@ -60,7 +60,7 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
         if(kit != null && !kit.isActive()) {
             return false;
         }
-        if (CooldownManager.getInstance().getRemainingTimeFor(this, owner) > 0) {
+        if (hasCooldown()) {
             return false;
         }
         if (expUsed > 0 && owner.getExp() < expUsed) {
@@ -73,16 +73,28 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
         if(!check()) {
             return;
         }
-        if (CooldownManager.getInstance().getRemainingTimeFor(this, owner) <= 0) {
+        if (!hasCooldown()) {
             if (expUsed > 0) {
                 owner.setExp(Math.max(owner.getExp() - expUsed, 0));
             }
-            CooldownManager.getInstance().addCooldown(this, (long) (cooldownTime * 1000), owner);
+            applyCooldown();
             activate();
         }
     }
 
     public abstract void activate();
+
+    public boolean hasCooldown() {
+        return (CooldownManager.getInstance().getRemainingTimeFor(this, owner) > 0);
+    }
+
+    public void applyCooldown() {
+        applyCooldown(cooldownTime);
+    }
+
+    public void applyCooldown(double cooldownTime) {
+        CooldownManager.getInstance().addCooldown(this, (long) (cooldownTime * 1000), owner);
+    }
 
     public void remove() {
         this.setOwner(null);

@@ -56,7 +56,7 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
     public void activate() {
         Kit kit = KitManager.getPlayerKit(owner);
         if(kit != null) {
-            ExpCharge charge = (ExpCharge) kit.getAttributeByName("Exp Charge");
+            ExpCharge charge = (ExpCharge) kit.getAttributeByClass(ExpCharge.class);
             charge.enabled = false;
         }
         long activation_ms = System.currentTimeMillis();
@@ -93,7 +93,7 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
     public void fireRocket() {
         Kit kit = KitManager.getPlayerKit(owner);
         if(kit != null) {
-            ExpCharge charge = (ExpCharge) kit.getAttributeByName("Exp Charge");
+            ExpCharge charge = (ExpCharge) kit.getAttributeByClass(ExpCharge.class);
             charge.enabled = true;
         }
         Utils.sendServerMessageToPlayer("§7You released §a" + name + "§7.",

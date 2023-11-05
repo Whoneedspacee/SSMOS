@@ -49,7 +49,7 @@ public class KitCreeper extends Kit {
     public void setPreviewHotbar() {
         setItem(new ItemStack(Material.IRON_AXE), 0);
         setItem(new ItemStack(Material.IRON_SPADE), 1);
-        setItem(new ItemStack(Material.COAL), 2, getAttributeByName("Lightning Shield"));
+        setItem(new ItemStack(Material.COAL), 2, getAttributeByClass(LightningShield.class));
         setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 

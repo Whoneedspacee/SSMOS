@@ -9,6 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -46,7 +47,7 @@ public class Needler extends Ability implements OwnerRightClickEvent {
     public void activate() {
         taskID = Bukkit.getScheduler().runTaskTimer(plugin, () ->
         {
-            if (!owner.isBlocking() || fired >= 6) {
+            if (owner == null || !owner.isBlocking() || fired >= 6) {
                 fired = 0;
                 Bukkit.getScheduler().cancelTask(taskID.getTaskId());
                 return;

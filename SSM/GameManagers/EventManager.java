@@ -16,10 +16,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.player.PlayerAnimationEvent;
-import org.bukkit.event.player.PlayerAnimationType;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -60,6 +57,21 @@ public class EventManager implements Listener {
         if (ability instanceof OwnerLeftClickEvent && (e.getAnimationType() == PlayerAnimationType.ARM_SWING)) {
             OwnerLeftClickEvent leftClick = (OwnerLeftClickEvent) ability;
             leftClick.onOwnerLeftClick(e);
+        }
+    }
+
+    @EventHandler
+    public void onToggleSneak(PlayerToggleSneakEvent e) {
+        Player player = e.getPlayer();
+        if(KitManager.getPlayerKit(player) == null) {
+            return;
+        }
+        List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
+        for (Attribute attribute : attributes) {
+            if (attribute instanceof OwnerToggleSneakEvent) {
+                OwnerToggleSneakEvent sneakEvent = (OwnerToggleSneakEvent) attribute;
+                sneakEvent.onOwnerToggleSneak(e);
+            }
         }
     }
 

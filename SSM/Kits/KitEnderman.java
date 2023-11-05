@@ -1,11 +1,17 @@
 package SSM.Kits;
 
+import SSM.Abilities.Blink;
+import SSM.Abilities.BlockToss;
+import SSM.Attributes.Compass;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
+import SSM.Attributes.Hunger;
 import SSM.Attributes.Regeneration;
+import SSM.Attributes.Teleport;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.EndermanDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,22 +34,31 @@ public class KitEnderman extends Kit {
         setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmor(Material.CHAINMAIL_HELMET, 3);
 
-        addAttribute(new Regeneration(regeneration, 20));
+        setAbility(new BlockToss(), 0);
+        setAbility(new Blink(), 1);
+
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new Teleport());
 
         DisguiseManager.addDisguise(owner, new EndermanDisguise(owner));
     }
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(new ItemStack(Material.EYE_OF_ENDER), 2, getAttributeByClass(Teleport.class));
+        setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 
     @Override
     public void setGameHotbar() {
         setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
         setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(Compass.COMPASS_ITEM, 2);
     }
 
 }

@@ -1,5 +1,6 @@
 package SSM;
 
+import SSM.Attributes.Hunger;
 import SSM.Commands.*;
 import SSM.Commands.CommandStop;
 import SSM.Events.SmashDamageEvent;
@@ -151,7 +152,7 @@ public class SSM extends JavaPlugin implements Listener {
         Player player = (Player) e.getEntity();
         Kit kit = KitManager.getPlayerKit(player);
         // Only cancel if we don't have a hunger attribute
-        if(kit != null && kit.isActive() && kit.getAttributeByName("Hunger") != null) {
+        if(kit != null && kit.isActive() && kit.getAttributeByClass(Hunger.class) != null) {
             return;
         }
         e.setCancelled(true);

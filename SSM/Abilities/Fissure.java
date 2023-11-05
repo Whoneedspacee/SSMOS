@@ -143,6 +143,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
                     if (!cur.equals(player))
                         if ((block.getLocation().add(0.5, 0.5, 0.5).distance(cur.getLocation())) < 1.5) {
                             //Condition
+                            player.removePotionEffect(PotionEffectType.SLOW);
                             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 1));
                         }
             }

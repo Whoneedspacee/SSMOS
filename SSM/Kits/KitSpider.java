@@ -47,8 +47,8 @@ public class KitSpider extends Kit {
     public void setPreviewHotbar() {
         setItem(new ItemStack(Material.IRON_SWORD), 0);
         setItem(new ItemStack(Material.IRON_AXE), 1);
-        setItem(new ItemStack(Material.SPIDER_EYE), 2, getAttributeByName("Spider Leap"));
-        setItem(new ItemStack(Material.FERMENTED_SPIDER_EYE), 3, getAttributeByName("Wall Climb"));
+        setItem(new ItemStack(Material.SPIDER_EYE), 2, getAttributeByClass(SpiderJump.class));
+        setItem(new ItemStack(Material.FERMENTED_SPIDER_EYE), 3, getAttributeByClass(Climb.class));
         setItem(new ItemStack(Material.NETHER_STAR), 4);
     }
 

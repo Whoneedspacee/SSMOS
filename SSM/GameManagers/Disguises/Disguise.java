@@ -154,6 +154,16 @@ public abstract class Disguise {
                 owner.getLocation().getYaw(), owner.getLocation().getPitch());
         teleport_packet = new PacketPlayOutEntityTeleport(armorstand);
         Utils.sendPacketToAllBut(owner, teleport_packet);
+        // Show crouching
+        DataWatcher dw = living.getDataWatcher();
+        if(owner.isSneaking()) {
+            dw.watch(0, (byte) 0x02);
+        }
+        else {
+            dw.watch(0, (byte) 0);
+        }
+        PacketPlayOutEntityMetadata data_packet = new PacketPlayOutEntityMetadata(living.getId(), dw, true);
+        Utils.sendPacketToAll(data_packet);
     }
 
     public void deleteLiving() {

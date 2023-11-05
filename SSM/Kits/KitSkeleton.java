@@ -54,7 +54,7 @@ public class KitSkeleton extends Kit {
     public void setPreviewHotbar() {
         setItem(new ItemStack(Material.IRON_AXE), 0);
         setItem(new ItemStack(Material.BOW), 1);
-        setItem(new ItemStack(Material.ARROW), 2, getAttributeByName("Barrage"));
+        setItem(new ItemStack(Material.ARROW), 2, getAttributeByClass(Barrage.class));
         setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 

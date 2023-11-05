@@ -257,6 +257,28 @@ public class DisguiseManager implements Listener, Runnable {
 
     @EventHandler
     public void playerTeleport(PlayerTeleportEvent e) {
+        if(!e.getFrom().getWorld().equals(e.getTo().getWorld())) {
+            return;
+        }
+        // This might be laggy and there's probably a better way to do it, hack fix
+        Player player = e.getPlayer();
+        for(Player other : player.getWorld().getPlayers()) {
+            if(player.equals(other)) {
+                continue;
+            }
+            double from_distance = other.getLocation().distance(e.getFrom());
+            double to_distance = other.getLocation().distance(e.getTo());
+            double despawn_distance = 90;
+            if(from_distance > despawn_distance && to_distance <= despawn_distance) {
+                showDisguise(player, other);
+                showDisguise(other, player);
+            }
+        }
+    }
+
+    @EventHandler
+    public void playerChangedWorld(PlayerChangedWorldEvent e) {
+        // Reload their disguises, and show their own disguise to other players
         showDisguises(e.getPlayer());
         for(Player player : e.getPlayer().getWorld().getPlayers()) {
             showDisguise(player, e.getPlayer());
@@ -271,15 +293,6 @@ public class DisguiseManager implements Listener, Runnable {
     @EventHandler
     public void playerLeave(PlayerQuitEvent e) {
         removeDisguise(e.getPlayer());
-    }
-
-    @EventHandler
-    public void playerChangedWorld(PlayerChangedWorldEvent e) {
-        // Reload their disguise, and show their own disguise to other players
-        showDisguises(e.getPlayer());
-        for(Player player : e.getPlayer().getWorld().getPlayers()) {
-            showDisguise(player, e.getPlayer());
-        }
     }
 
 }

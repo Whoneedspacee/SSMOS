@@ -82,7 +82,9 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     }
 
     public void destroy() {
-        projectile.remove();
+        if(projectile != null) {
+            projectile.remove();
+        }
         this.cancel();
     }
 

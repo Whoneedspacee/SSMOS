@@ -227,6 +227,23 @@ public abstract class Kit implements Listener {
         return attributes;
     }
 
+    public Attribute getAttributeByClass(Class check) {
+        // Check for exact class
+        for(Attribute attribute : attributes) {
+            if(attribute.getClass() == check) {
+                return attribute;
+            }
+        }
+        // Check if attribute is subclass of check
+        for(Attribute attribute : attributes) {
+            if(check.isInstance(attribute)) {
+                return attribute;
+            }
+        }
+        return null;
+    }
+
+    // Preferably use the above method to get by class
     public Attribute getAttributeByName(String name) {
         for(Attribute attribute : attributes) {
             if(attribute.name.equals(name)) {

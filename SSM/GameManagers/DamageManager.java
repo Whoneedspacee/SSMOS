@@ -8,6 +8,8 @@ import SSM.SSM;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
+import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
+import net.minecraft.server.v1_8_R3.EntityFallingBlock;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityStatus;
 import org.bukkit.*;
@@ -20,6 +22,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -63,25 +68,26 @@ public class DamageManager implements Listener {
                 damager = (LivingEntity) damageBy.getDamager();
             }
         }
-        if (e.getCause() == DamageCause.POISON) {
-            if (e.getEntity().hasMetadata("Poison Damager")) {
-                List<MetadataValue> values = e.getEntity().getMetadata("Poison Damager");
-                if (values.size() > 0) {
-                    damager = (Player) values.get(0).value();
-                    knockback = 0;
-                }
-            }
-        }
         double damage = e.getDamage();
         // Consistent Arrow Damage
         if (projectile != null && projectile instanceof Arrow) {
             damage = projectile.getVelocity().length() * 3;
         }
         // Consistent Melee Damage
-        if(damager instanceof Player) {
+        if (damager instanceof Player) {
             Kit kit = KitManager.getPlayerKit((Player) damager);
-            if(kit != null) {
+            if (kit != null) {
                 damage = kit.getMelee();
+            }
+        }
+        if (e.getCause() == DamageCause.POISON) {
+            if (e.getEntity().hasMetadata("Poison Damager")) {
+                List<MetadataValue> values = e.getEntity().getMetadata("Poison Damager");
+                if (values.size() > 0) {
+                    // Set damager so they get put on the damage rate
+                    damager = (Player) values.get(0).value();
+                    knockback = 0;
+                }
             }
         }
         SmashDamageEvent smashDamageEvent = new SmashDamageEvent(damagee, damager, damage);
@@ -94,7 +100,7 @@ public class DamageManager implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void removeArrows(EntityDamageEvent e) {
-        if(!(e.getEntity() instanceof Arrow)) {
+        if (!(e.getEntity() instanceof Arrow)) {
             return;
         }
         Arrow arrow = (Arrow) e.getEntity();
@@ -104,7 +110,7 @@ public class DamageManager implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void removeArrows(SmashDamageEvent e) {
-        if(!(e.getProjectile() instanceof Arrow)) {
+        if (!(e.getProjectile() instanceof Arrow)) {
             return;
         }
         Arrow arrow = (Arrow) e.getProjectile();
@@ -154,13 +160,13 @@ public class DamageManager implements Listener {
 
     @EventHandler
     public void borderKill(SmashDamageEvent e) {
-        if(e.getDamageCause() != DamageCause.VOID) {
+        if (e.getDamageCause() != DamageCause.VOID) {
             return;
         }
-        if(e.getIgnoreDamageDelay() != false) {
+        if (e.getIgnoreDamageDelay() != false) {
             return;
         }
-        if(!(e.getDamagee() instanceof Player)) {
+        if (!(e.getDamagee() instanceof Player)) {
             return;
         }
         DamageUtil.borderKill((Player) e.getDamagee(), true);
@@ -297,7 +303,7 @@ public class DamageManager implements Listener {
             Player player = (Player) damager;
             Kit kit = KitManager.getPlayerKit(player);
             if (kit != null) {
-                Hunger hunger = (Hunger) kit.getAttributeByName("Hunger");
+                Hunger hunger = (Hunger) kit.getAttributeByClass(Hunger.class);
                 if (hunger != null) {
                     hunger.hungerRestore(damage);
                 }

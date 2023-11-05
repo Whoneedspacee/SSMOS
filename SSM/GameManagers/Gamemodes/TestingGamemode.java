@@ -43,7 +43,7 @@ public class TestingGamemode extends SmashGamemode {
     @Override
     public void setPlayerLives(HashMap<Player, Integer> lives) {
         for(Player player : GameManager.getPlayers()) {
-            lives.put(player, 999);
+            lives.put(player, 99);
         }
     }
 

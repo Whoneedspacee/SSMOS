@@ -105,7 +105,7 @@ public class KitManager implements Listener {
             for (Kit kit : KitManager.getAllKits()) {
                 if (item.getType().equals(kit.getMenuItemType())) {
                     KitManager.equipPlayer(player, kit);
-                    player.getWorld().playSound(player.getLocation(), Sound.ORB_PICKUP, 1f, 1f);
+                    player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1f, 1f);
                     player.closeInventory();
                     break;
                 }

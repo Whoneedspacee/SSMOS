@@ -2,18 +2,21 @@ package SSM.Utilities;
 
 import SSM.Attributes.Attribute;
 import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftFirework;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.BlockIterator;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class Utils {
 
@@ -46,6 +49,13 @@ public class Utils {
 
     public static void sendTitleMessage(Player player, String title_string, String subtitle_string,
                                         int fade_in_ticks, int stay_ticks, int fade_out_ticks) {
+        // Prevent crashing
+        if(title_string == null) {
+            title_string = "";
+        }
+        if(subtitle_string == null) {
+            subtitle_string = "";
+        }
         PacketPlayOutTitle timing_packet = new PacketPlayOutTitle(fade_in_ticks, stay_ticks, fade_out_ticks);
         Utils.sendPacket(player, timing_packet);
         ChatMessage subtitle_message = new ChatMessage(subtitle_string);
@@ -54,6 +64,20 @@ public class Utils {
         ChatMessage title_message = new ChatMessage(title_string);
         PacketPlayOutTitle title_packet = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, title_message);
         Utils.sendPacket(player, title_packet);
+    }
+
+    public static String progressString(float exp) {
+        String out = "";
+        for (int i=0 ; i<40 ; i++) {
+            float cur = i * (1f /40f);
+            if (cur < exp) {
+                out += ChatColor.GREEN + "" + ChatColor.BOLD + "|";
+            }
+            else {
+                out += ChatColor.GRAY + "" + ChatColor.BOLD + "|";
+            }
+        }
+        return out;
     }
 
     public static boolean holdingItemWithName(Player player, String name) {
@@ -122,12 +146,43 @@ public class Utils {
         return ents;
     }
 
+    public static org.bukkit.block.Block getTargetBlock(Player player, int distance) {
+        org.bukkit.block.Block target = null;
+        Iterator<org.bukkit.block.Block> itr = new BlockIterator(player, distance);
+        while (itr.hasNext()) {
+            org.bukkit.block.Block block = itr.next();
+            if(!block.getType().isSolid() || block.isLiquid()) {
+                continue;
+            }
+            target = block;
+            break;
+        }
+        return target;
+    }
+
+    public static void playFirework(Location loc, FireworkEffect.Type type, Color color, boolean flicker, boolean trail) {
+        playFirework(loc, FireworkEffect.builder().flicker(flicker).withColor(color).with(type).trail(trail).build());
+    }
+
+    public static void playFirework(Location loc, FireworkEffect fe) {
+        Firework firework = loc.getWorld().spawn(loc, Firework.class);
+
+        FireworkMeta data = firework.getFireworkMeta();
+        data.clearEffects();
+        data.setPower(1);
+        data.addEffect(fe);
+        firework.setFireworkMeta(data);
+
+        ((CraftFirework) firework).getHandle().expectedLifespan = 1;
+    }
+
     public static void fullHeal(LivingEntity livingEntity) {
         livingEntity.setHealth(livingEntity.getMaxHealth());
         livingEntity.setFireTicks(0);
         if(livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
             player.setFoodLevel(20);
+            player.setSaturation(3);
             player.setLevel(0);
             player.setExp(0);
         }
