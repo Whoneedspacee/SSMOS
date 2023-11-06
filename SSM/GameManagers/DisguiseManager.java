@@ -55,6 +55,7 @@ public class DisguiseManager implements Listener, Runnable {
     }
 
     public static void addDisguise(Player player, Disguise disguise) {
+        removeDisguise(player);
         disguises.put(player, disguise);
         disguise.spawnLiving();
     }

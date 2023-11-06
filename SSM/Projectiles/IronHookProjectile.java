@@ -22,7 +22,7 @@ public class IronHookProjectile extends SmashProjectile {
     public IronHookProjectile(Player firer, String name) {
         super(firer, name);
         this.damage = 4;
-        this.hitbox_mult = 0.6;
+        this.hitbox_size = 0.6;
         this.knockback_mult = 0;
     }
 

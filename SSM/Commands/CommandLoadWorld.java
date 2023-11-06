@@ -17,7 +17,13 @@ public class CommandLoadWorld implements CommandExecutor {
             commandSender.sendMessage("Must specify a world to load.");
             return true;
         }
-        loadWorld(args[0]);
+        StringBuilder path_builder = new StringBuilder();
+        for(int i = 0; i < args.length; i++) {
+            path_builder.append(args[i]);
+            path_builder.append(" ");
+        }
+        String path_string = path_builder.substring(0, path_builder.length() - 1);
+        loadWorld(path_string);
         commandSender.sendMessage("World Loaded!");
         return true;
     }

@@ -24,7 +24,7 @@ public class InkProjectile extends SmashProjectile {
     public InkProjectile(Player firer, String name, double spread) {
         super(firer, name);
         this.damage = 1.725;
-        this.hitbox_mult = 0.5;
+        this.hitbox_size = 0.5;
         this.knockback_mult = 3;
         this.spread = spread;
     }

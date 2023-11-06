@@ -17,6 +17,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 public abstract class SmashProjectile extends BukkitRunnable implements Listener {
@@ -26,7 +29,7 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     protected String name;
     protected Entity projectile;
     protected double damage;
-    protected double hitbox_mult;
+    protected double hitbox_size;
     protected double knockback_mult;
     protected long expiration_ticks = 300;
 
@@ -89,47 +92,49 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     }
 
     protected LivingEntity checkClosestTarget() {
-        net.minecraft.server.v1_8_R3.World world = ((CraftWorld) projectile.getWorld()).getHandle();
+        // Realistically the fastest both a player and entity will move is about
+        // 80 blocks per second or 4 blocks per tick, (hue fast blocking with autoclicker got 3.5)
+        // If we do 15 iterations this should be more than enough for most projectiles leeway
+        // If you want to optimize this probably start with checking the magnitude of velocity
+        double max_realistic_velocity = 4;
+        int max_iterations = 15;
         net.minecraft.server.v1_8_R3.Entity entity = ((CraftEntity) projectile).getHandle();
-        // Do a raytrace to see what our real position is going to be
-        Vec3D vec_old = new Vec3D(entity.locX, entity.locY, entity.locZ);
-        Vec3D vec_new = new Vec3D(entity.locX + entity.motX, entity.locY + entity.motY, entity.locZ + entity.motZ);
-        MovingObjectPosition final_position = entity.world.rayTrace(vec_old, vec_new, false, true, false);
-        vec_old = new Vec3D(entity.locX, entity.locY, entity.locZ);
-        vec_new = new Vec3D(entity.locX + entity.motX, entity.locY + entity.motY, entity.locZ + entity.motZ);
-        if(final_position != null) {
-            vec_new = new Vec3D(final_position.pos.a, final_position.pos.b, final_position.pos.c);
+        // Get possible projectiles that could be hit on this tick
+        List<LivingEntity> possible = new ArrayList<LivingEntity>();
+        for(Entity check : projectile.getWorld().getNearbyEntities(projectile.getLocation(),
+                entity.motX + hitbox_size + max_realistic_velocity,
+                entity.motY + hitbox_size + max_realistic_velocity,
+                entity.motZ + hitbox_size + max_realistic_velocity)) {
+            if(!(check instanceof LivingEntity)) {
+                continue;
+            }
+            if (check.equals(firer) || check.equals(projectile)) {
+                continue;
+            }
+            possible.add((LivingEntity) check);
         }
-        LivingEntity target = null;
-        double closest_distance = 100;
-        List<net.minecraft.server.v1_8_R3.Entity> entities = world.getEntities(entity,
-                entity.getBoundingBox().a(entity.motX, entity.motY, entity.motZ).grow(
-                        hitbox_mult, hitbox_mult, hitbox_mult));
-        for(net.minecraft.server.v1_8_R3.Entity check : entities) {
-            if(!(check instanceof net.minecraft.server.v1_8_R3.EntityLiving)) {
-                continue;
-            }
-            LivingEntity living = (LivingEntity) ((EntityLiving) check).getBukkitEntity();
-            if (living.equals(firer) || living.equals(projectile)) {
-                continue;
-            }
-            if(DamageUtil.isIntangible(living)) {
-                continue;
-            }
-            // I have a feeling this is buggy somehow?
-            /*AxisAlignedBB axisAlignedBB = entity.getBoundingBox().grow(1F, 1F, 1F);
-            MovingObjectPosition collisionPosition = axisAlignedBB.a(vec_old, vec_new);
-            if(collisionPosition == null) {
-                continue;
-            }
-            double distance = vec_old.distanceSquared(collisionPosition.pos);*/
-            double distance = living.getLocation().distance(projectile.getLocation());
-            if(distance < closest_distance) {
-                closest_distance = distance;
-                target = living;
+        for(int i = 0; i < max_iterations; i++) {
+            double percent = i / (max_iterations - 1);
+            // Linearly interpolate the player and entity hitbox and see if they overlap
+            for(LivingEntity check : possible) {
+                net.minecraft.server.v1_8_R3.EntityLiving living = (EntityLiving) ((CraftEntity) check).getHandle();
+                AxisAlignedBB bb = living.getBoundingBox();
+                double l_x = living.motX * percent;
+                double l_y = living.motY * percent;
+                double l_z = living.motZ * percent;
+                AxisAlignedBB livingBB = new AxisAlignedBB(bb.a + l_x, bb.b + l_y, bb.c + l_z,
+                        bb.d + l_x, bb.e + l_y, bb.f + l_z);
+                double p_x = entity.locX + entity.motX * percent;
+                double p_y = entity.locY + entity.motY * percent;
+                double p_z = entity.locZ + entity.motZ * percent;
+                AxisAlignedBB projectileBB = new AxisAlignedBB(p_x, p_y, p_z, p_x, p_y, p_z);
+                projectileBB = projectileBB.grow(hitbox_size, hitbox_size, hitbox_size);
+                if(projectileBB.b(livingBB)) {
+                    return check;
+                }
             }
         }
-        return target;
+        return null;
     }
 
     protected Block checkHitBlock() {

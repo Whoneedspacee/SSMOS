@@ -5,8 +5,10 @@ import SSM.GameManagers.GameManager;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Wool;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -20,10 +22,11 @@ public class MapFile {
     protected String name = "N/A";
     protected String created_by = "N/A";
     protected File map_directory = null;
-    private List<Location> boundary_points = new ArrayList<Location>();
     private List<Location> respawn_points = new ArrayList<Location>();
     protected List<Player> voted = new ArrayList<Player>();
     public World copy_world = null;
+    private Vector boundary_min = null;
+    private Vector boundary_max = null;
 
     public MapFile(File file) {
         map_directory = file;
@@ -58,7 +61,6 @@ public class MapFile {
     }
 
     public void createWorld() {
-        boundary_points.clear();
         respawn_points.clear();
         try {
             File copy_directory = new File("maps/_Copies/" + map_directory.getName());
@@ -95,7 +97,7 @@ public class MapFile {
                         parsed.setType(Material.AIR);
                     }
                     if (isBoundaryPoint(parsed)) {
-                        boundary_points.add(parsed.getLocation());
+                        addBoundaryPoint(parsed.getLocation());
                         parsed.getRelative(0, 1, 0).setType(Material.AIR);
                         parsed.setType(Material.AIR);
                     }
@@ -143,6 +145,47 @@ public class MapFile {
 
     public void clearVoted() {
         voted.clear();
+    }
+
+    public void addBoundaryPoint(Location location) {
+        if(boundary_min == null) {
+            boundary_min = location.toVector();
+        }
+        if(boundary_max == null) {
+            boundary_max = location.toVector();
+        }
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+        boundary_min.setX(Math.min(x, boundary_min.getX()));
+        boundary_min.setY(Math.min(y, boundary_min.getY()));
+        boundary_min.setZ(Math.min(z, boundary_min.getZ()));
+        boundary_max.setX(Math.max(x, boundary_max.getX()));
+        boundary_max.setY(Math.max(y, boundary_max.getY()));
+        boundary_max.setZ(Math.max(z, boundary_max.getZ()));
+    }
+
+    public boolean isOutOfBounds(Entity entity) {
+        if(boundary_min == null || boundary_max == null) {
+            return false;
+        }
+        if(entity == null) {
+            return false;
+        }
+        if(copy_world == null || !entity.getWorld().equals(copy_world)) {
+            return false;
+        }
+        Vector vector = entity.getLocation().toVector();
+        if(vector.getX() < boundary_min.getX() || vector.getX() > boundary_max.getX()) {
+            return true;
+        }
+        if(vector.getY() < boundary_min.getY() || vector.getY() > boundary_max.getY()) {
+            return true;
+        }
+        if(vector.getZ() < boundary_min.getZ() || vector.getZ() > boundary_max.getZ()) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isRespawnPoint(Block check) {

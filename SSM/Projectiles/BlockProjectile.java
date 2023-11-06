@@ -4,17 +4,18 @@ import SSM.Events.SmashDamageEvent;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
+import net.minecraft.server.v1_8_R3.EntityFallingBlock;
 import net.minecraft.server.v1_8_R3.EnumParticle;
-import org.bukkit.ChatColor;
-import org.bukkit.Effect;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import net.minecraft.server.v1_8_R3.WorldServer;
+import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -32,7 +33,7 @@ public class BlockProjectile extends SmashProjectile {
         super(firer, name);
         this.damage = 8;
         this.max_damage = 9;
-        this.hitbox_mult = 1;
+        this.hitbox_size = 0.75;
         this.knockback_mult = 2.5;
         this.charge = charge;
         this.mult = mult;
@@ -42,8 +43,14 @@ public class BlockProjectile extends SmashProjectile {
 
     @Override
     protected Entity createProjectileEntity() {
-        FallingBlock block = firer.getWorld().spawnFallingBlock(firer.getEyeLocation().add(firer.getLocation().getDirection()),
-                block_id, block_data);
+        Location spawn_location = firer.getEyeLocation().add(firer.getLocation().getDirection());
+        FallingBlock block = firer.getWorld().spawnFallingBlock(spawn_location, block_id, block_data);
+        /*WorldServer world = ((CraftWorld) firer.getWorld()).getHandle();
+        EntityFallingBlock entity = new EntityFallingBlock(world, spawn_location.getX(), spawn_location.getY(), spawn_location.getZ(),
+                net.minecraft.server.v1_8_R3.Block.getById(block_id).fromLegacyData(block_data));
+        entity.ticksLived = 1;
+        world.addEntity(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        return entity.getBukkitEntity();*/
         return block;
     }
 

@@ -20,7 +20,7 @@ public class WebProjectile extends SmashProjectile {
     public WebProjectile(Player firer, String name) {
         super(firer, name);
         this.damage = 6;
-        this.hitbox_mult = 0.5;
+        this.hitbox_size = 0.5;
         this.knockback_mult = 0;
     }
 

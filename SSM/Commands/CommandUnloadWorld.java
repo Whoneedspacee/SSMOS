@@ -16,10 +16,16 @@ public class CommandUnloadWorld implements CommandExecutor {
             return true;
         }
         if (args.length < 1) {
-            commandSender.sendMessage("Must specify a world to load.");
+            commandSender.sendMessage("Must specify a world to unload.");
             return true;
         }
-        if (!unloadWorld(args[0])) {
+        StringBuilder path_builder = new StringBuilder();
+        for(int i = 0; i < args.length; i++) {
+            path_builder.append(args[i]);
+            path_builder.append(" ");
+        }
+        String path_string = path_builder.substring(0, path_builder.length() - 1);
+        if (!unloadWorld(path_string)) {
             commandSender.sendMessage("Could not find world specified.");
             return true;
         }

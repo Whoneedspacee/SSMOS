@@ -57,3 +57,6 @@ commands:
   randomkit:
     description: 'Sets your kit randomly.'
     usage: /randomkit
+  playerdisguise:
+    description: 'Creates a player disguise using the skin of the name given.'
+    usage: /playerdisguise

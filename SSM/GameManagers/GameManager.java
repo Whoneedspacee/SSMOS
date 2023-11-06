@@ -480,6 +480,9 @@ public class GameManager implements Listener, Runnable {
     @EventHandler
     public void PlayerMove(PlayerMoveEvent e) {
         if(!isStarting()) {
+            //if(selected_map != null) {
+            //    Bukkit.broadcastMessage("Out of Bounds: " + selected_map.isOutOfBounds(e.getPlayer()));
+            //}
             return;
         }
         if(!lives.containsKey(e.getPlayer())) {
