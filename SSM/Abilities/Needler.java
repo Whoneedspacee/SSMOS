@@ -88,6 +88,8 @@ public class Needler extends Ability implements OwnerRightClickEvent {
         }
     }
 
+    // Cancel the event after ignoredamagerate is checked so arrows dont deal damage
+    // This is also so arrows add a damage rate cooldown even if the custom needler arrows ignore it
     @EventHandler
     public void arrowDamage(SmashDamageEvent e) {
         if (e.getDamageCause() == EntityDamageEvent.DamageCause.PROJECTILE) {

@@ -44,14 +44,14 @@ public class BlockProjectile extends SmashProjectile {
     @Override
     protected Entity createProjectileEntity() {
         Location spawn_location = firer.getEyeLocation().add(firer.getLocation().getDirection());
-        FallingBlock block = firer.getWorld().spawnFallingBlock(spawn_location, block_id, block_data);
-        /*WorldServer world = ((CraftWorld) firer.getWorld()).getHandle();
+        //FallingBlock block = firer.getWorld().spawnFallingBlock(spawn_location, block_id, block_data);
+        WorldServer world = ((CraftWorld) firer.getWorld()).getHandle();
         EntityFallingBlock entity = new EntityFallingBlock(world, spawn_location.getX(), spawn_location.getY(), spawn_location.getZ(),
                 net.minecraft.server.v1_8_R3.Block.getById(block_id).fromLegacyData(block_data));
         entity.ticksLived = 1;
         world.addEntity(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
-        return entity.getBukkitEntity();*/
-        return block;
+        return entity.getBukkitEntity();
+        //return block;
     }
 
     @Override

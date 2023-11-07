@@ -1,9 +1,10 @@
 package SSM.Projectiles;
 
 import SSM.SSM;
-import SSM.Utilities.DamageUtil;
+import SSM.Utilities.Utils;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -11,15 +12,12 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 public abstract class SmashProjectile extends BukkitRunnable implements Listener {
@@ -32,6 +30,7 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     protected double hitbox_size;
     protected double knockback_mult;
     protected long expiration_ticks = 300;
+    protected boolean running = false;
 
     public SmashProjectile(Player firer, String name) {
         this.firer = firer;
@@ -47,36 +46,37 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
 
     @Override
     public void run() {
-        if(projectile == null || !projectile.isValid()) {
+        running = true;
+        if (projectile == null || !projectile.isValid()) {
             destroy();
             return;
         }
-        if(projectile.getTicksLived() > getExpirationTicks()) {
-            if(onExpire()) {
+        if (projectile.getTicksLived() > getExpirationTicks()) {
+            if (onExpire()) {
                 destroy();
                 return;
             }
         }
         // Check if we hit an entity first
         LivingEntity target = checkClosestTarget();
-        if(target != null) {
-            if(onHitLivingEntity(target)) {
-                firer.playSound(firer.getLocation(), Sound.ORB_PICKUP, 1.0f, 1.25f);
+        if (target != null) {
+            if (onHitLivingEntity(target)) {
+                playHitSound();
                 destroy();
                 return;
             }
         }
         // Check if we hit a block next
         Block block = checkHitBlock();
-        if(block != null) {
-            if(onHitBlock(block)) {
+        if (block != null) {
+            if (onHitBlock(block)) {
                 destroy();
                 return;
             }
         }
         // Check if we're idle next
-        if(checkIdle()) {
-            if(onIdle()) {
+        if (checkIdle()) {
+            if (onIdle()) {
                 destroy();
                 return;
             }
@@ -84,11 +84,27 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
         doEffect();
     }
 
+    @Override
+    public synchronized void cancel() {
+        running = false;
+        super.cancel();
+    }
+
     public void destroy() {
-        if(projectile != null) {
+        if (projectile != null) {
             projectile.remove();
         }
-        this.cancel();
+        if(running) {
+            this.cancel();
+        }
+    }
+
+    protected boolean canHitEntity(Entity entity) {
+        return true;
+    }
+
+    protected void playHitSound() {
+        firer.playSound(firer.getLocation(), Sound.ORB_PICKUP, 1.0f, 1.25f);
     }
 
     protected LivingEntity checkClosestTarget() {
@@ -99,24 +115,28 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
         double max_realistic_velocity = 4;
         int max_iterations = 15;
         net.minecraft.server.v1_8_R3.Entity entity = ((CraftEntity) projectile).getHandle();
+        //Bukkit.broadcastMessage(entity.getBoundingBox().toString());
         // Get possible projectiles that could be hit on this tick
         List<LivingEntity> possible = new ArrayList<LivingEntity>();
-        for(Entity check : projectile.getWorld().getNearbyEntities(projectile.getLocation(),
+        for (Entity check : projectile.getWorld().getNearbyEntities(projectile.getLocation(),
                 entity.motX + hitbox_size + max_realistic_velocity,
                 entity.motY + hitbox_size + max_realistic_velocity,
                 entity.motZ + hitbox_size + max_realistic_velocity)) {
-            if(!(check instanceof LivingEntity)) {
+            if (!(check instanceof LivingEntity)) {
                 continue;
             }
             if (check.equals(firer) || check.equals(projectile)) {
                 continue;
             }
+            if(!canHitEntity(check)) {
+                continue;
+            }
             possible.add((LivingEntity) check);
         }
-        for(int i = 0; i < max_iterations; i++) {
+        for (double i = 0; i < max_iterations; i++) {
             double percent = i / (max_iterations - 1);
             // Linearly interpolate the player and entity hitbox and see if they overlap
-            for(LivingEntity check : possible) {
+            for (LivingEntity check : possible) {
                 net.minecraft.server.v1_8_R3.EntityLiving living = (EntityLiving) ((CraftEntity) check).getHandle();
                 AxisAlignedBB bb = living.getBoundingBox();
                 double l_x = living.motX * percent;
@@ -128,8 +148,20 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
                 double p_y = entity.locY + entity.motY * percent;
                 double p_z = entity.locZ + entity.motZ * percent;
                 AxisAlignedBB projectileBB = new AxisAlignedBB(p_x, p_y, p_z, p_x, p_y, p_z);
+                // Grow by hitbox size given
+                // Falling Blocks are grown by 0.49 default (0.98 size)
+                // Item Entities are grown by 0.125 default (0.25 size)
                 projectileBB = projectileBB.grow(hitbox_size, hitbox_size, hitbox_size);
-                if(projectileBB.b(livingBB)) {
+                // Attempt at visually displaying the hitbox path of the projectile
+                /*for (double x_iterate : new double[]{projectileBB.a, projectileBB.d}) {
+                    for (double y_iterate : new double[]{projectileBB.b, projectileBB.e}) {
+                        for (double z_iterate : new double[]{projectileBB.c, projectileBB.f}) {
+                            Location vertex_loc = new Location(projectile.getWorld(), x_iterate, y_iterate, z_iterate);
+                            Utils.playParticle(EnumParticle.FIREWORKS_SPARK, vertex_loc, 0, 0, 0, 0, 1, 96, projectile.getWorld().getPlayers());
+                        }
+                    }
+                }*/
+                if (projectileBB.b(livingBB)) {
                     return check;
                 }
             }
@@ -144,12 +176,12 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
         Vec3D vec_old = new Vec3D(entity.locX, entity.locY, entity.locZ);
         Vec3D vec_new = new Vec3D(entity.locX + entity.motX, entity.locY + entity.motY, entity.locZ + entity.motZ);
         MovingObjectPosition final_position = entity.world.rayTrace(vec_old, vec_new, false, true, false);
-        if(final_position == null) {
+        if (final_position == null) {
             return null;
         }
         Block block = projectile.getWorld().getBlockAt(final_position.a().getX(),
                 final_position.a().getY(), final_position.a().getZ());
-        if(block.isLiquid() || !block.getType().isSolid()) {
+        if (block.isLiquid() || !block.getType().isSolid()) {
             return null;
         }
         // Set our motion to stop on the block we are hitting
@@ -165,18 +197,18 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     }
 
     protected boolean checkIdle() {
-        if(projectile.isDead() || !projectile.isValid()) {
+        if (projectile.isDead() || !projectile.isValid()) {
             return true;
         }
         Block check_block = projectile.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if(projectile.getVelocity().length() < 0.2 && (projectile.isOnGround() || check_block.getType().isSolid())) {
+        if (projectile.getVelocity().length() < 0.2 && (projectile.isOnGround() || check_block.getType().isSolid())) {
             return true;
         }
         return false;
     }
 
     public void setProjectileEntity(Entity projectile) {
-        if(projectile == null) {
+        if (projectile == null) {
             return;
         }
         this.projectile = projectile;

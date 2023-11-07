@@ -1,5 +1,6 @@
 package SSM.Utilities;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class BlocksUtil {
 
-    public static HashSet<Byte> blockUseSet = new HashSet<Byte>();
+    public static HashSet<Byte> blockUseSet = new HashSet<Byte>();;
 
     static {
         blockUseSet.add((byte) Material.DISPENSER.getId());
@@ -58,7 +59,7 @@ public class BlocksUtil {
     }
 
     public static boolean isUsable(Block block) {
-        return blockUseSet.contains(block.getTypeId());
+        return blockUseSet.contains((byte) block.getTypeId());
     }
 
     public static List<Block> getBlocks(Location start, int radius) {
@@ -76,6 +77,10 @@ public class BlocksUtil {
             }
         }
         return blocks;
+    }
+
+    public static HashMap<Block, Double> getInRadius(Location location, double dR) {
+        return getInRadius(location, dR, 9999);
     }
 
     public static HashMap<Block, Double> getInRadius(Location location, double dR, double maxHeight) {

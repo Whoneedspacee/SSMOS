@@ -25,6 +25,7 @@ public class SlimeSlam extends Ability implements OwnerRightClickEvent {
     private double hitbox = 2;
 
     public SlimeSlam() {
+        super();
         this.name = "Slime Slam";
         this.cooldownTime = 6;
         this.usage = AbilityUsage.RIGHT_CLICK;
@@ -44,6 +45,9 @@ public class SlimeSlam extends Ability implements OwnerRightClickEvent {
 
     public void activate() {
         VelocityUtil.setVelocity(owner, owner.getLocation().getDirection(), 1.2, false, 0, 0.2, 1.2, true);
+        if(Bukkit.getScheduler().isQueued(task) || Bukkit.getScheduler().isCurrentlyRunning(task)) {
+            Bukkit.getScheduler().cancelTask(task);
+        }
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {

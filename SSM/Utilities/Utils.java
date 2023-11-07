@@ -2,21 +2,23 @@ package SSM.Utilities;
 
 import SSM.Attributes.Attribute;
 import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.*;
 import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftFirework;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.BlockIterator;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 public class Utils {
 
@@ -50,10 +52,10 @@ public class Utils {
     public static void sendTitleMessage(Player player, String title_string, String subtitle_string,
                                         int fade_in_ticks, int stay_ticks, int fade_out_ticks) {
         // Prevent crashing
-        if(title_string == null) {
+        if (title_string == null) {
             title_string = "";
         }
-        if(subtitle_string == null) {
+        if (subtitle_string == null) {
             subtitle_string = "";
         }
         PacketPlayOutTitle timing_packet = new PacketPlayOutTitle(fade_in_ticks, stay_ticks, fade_out_ticks);
@@ -68,12 +70,11 @@ public class Utils {
 
     public static String progressString(float exp) {
         String out = "";
-        for (int i=0 ; i<40 ; i++) {
-            float cur = i * (1f /40f);
+        for (int i = 0; i < 40; i++) {
+            float cur = i * (1f / 40f);
             if (cur < exp) {
                 out += ChatColor.GREEN + "" + ChatColor.BOLD + "|";
-            }
-            else {
+            } else {
                 out += ChatColor.GRAY + "" + ChatColor.BOLD + "|";
             }
         }
@@ -127,8 +128,8 @@ public class Utils {
             if (!(cur instanceof LivingEntity)) {
                 continue;
             }
-            LivingEntity ent = (LivingEntity)cur;
-            if(!DamageUtil.canDamage(ent, null, 0)) {
+            LivingEntity ent = (LivingEntity) cur;
+            if (!DamageUtil.canDamage(ent, null, 0)) {
                 continue;
             }
             //Feet
@@ -151,7 +152,7 @@ public class Utils {
         Iterator<org.bukkit.block.Block> itr = new BlockIterator(player, distance);
         while (itr.hasNext()) {
             org.bukkit.block.Block block = itr.next();
-            if(!block.getType().isSolid() || block.isLiquid()) {
+            if (!block.getType().isSolid() || block.isLiquid()) {
                 continue;
             }
             target = block;
@@ -179,7 +180,7 @@ public class Utils {
     public static void fullHeal(LivingEntity livingEntity) {
         livingEntity.setHealth(livingEntity.getMaxHealth());
         livingEntity.setFireTicks(0);
-        if(livingEntity instanceof Player) {
+        if (livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
             player.setFoodLevel(20);
             player.setSaturation(3);
@@ -222,6 +223,27 @@ public class Utils {
     public static void sendPacketToAll(Packet packet) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             sendPacket(player, packet);
+        }
+    }
+
+    public static void creatureMove(Entity ent, Location target, float speed) {
+        if (!(ent instanceof Creature))
+            return;
+
+        if (ent.getLocation().toVector().distanceSquared(target.toVector()) < 0.01)
+            return;
+
+        EntityCreature ec = ((CraftCreature) ent).getHandle();
+        NavigationAbstract nav = ec.getNavigation();
+
+        if (ent.getLocation().toVector().distanceSquared(target.toVector()) > 16 * 16) {
+            Location newTarget = ent.getLocation();
+
+            newTarget.add(target.toVector().clone().subtract(ent.getLocation().toVector().clone()).normalize().multiply(16));
+
+            nav.a(newTarget.getX(), newTarget.getY(), newTarget.getZ(), speed);
+        } else {
+            nav.a(target.getX(), target.getY(), target.getZ(), speed);
         }
     }
 

@@ -263,6 +263,7 @@ public class DamageManager implements Listener {
             return;
         }
         //Bukkit.broadcastMessage("Damaged: " + e.getReason());
+        //Bukkit.broadcastMessage("Damage: " + e.getDamage());
         LivingEntity damagee = e.getDamagee();
         LivingEntity damager = e.getDamager();
         double damage = e.getDamage();

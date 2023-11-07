@@ -82,11 +82,6 @@ public class SlimeProjectile extends SmashProjectile {
     }
 
     @Override
-    public void destroy() {
-        this.cancel();
-    }
-
-    @Override
     protected Entity createProjectileEntity() {
         return null;
     }
@@ -116,12 +111,17 @@ public class SlimeProjectile extends SmashProjectile {
         smashDamageEvent.setIgnoreDamageDelay(true);
         smashDamageEvent.setReason(name);
         smashDamageEvent.callEvent();
-        return true;
+        playHitSound();
+        // Cancel hit detection
+        this.cancel();
+        return false;
     }
 
     @Override
     protected boolean onHitBlock(Block hit) {
-        return true;
+        // Cancel hit detection
+        this.cancel();
+        return false;
     }
 
     @Override

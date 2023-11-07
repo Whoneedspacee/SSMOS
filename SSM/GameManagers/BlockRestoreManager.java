@@ -220,7 +220,7 @@ public class BlockRestoreManager implements Listener, Runnable {
             return;
 
         //Not Buildable
-        if (!block.getType().isSolid() && block.getTypeId() != 78 && block.getType() != Material.CARPET)
+        if (block.getType().isSolid() && block.getTypeId() != 78 && block.getType() != Material.CARPET)
             return;
 
         //Limit Build Height

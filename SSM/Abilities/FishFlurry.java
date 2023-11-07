@@ -54,7 +54,7 @@ public class FishFlurry extends Ability implements OwnerRightClickEvent {
             return;
         }
         blocks.clear();
-        for (Block cur : BlocksUtil.getInRadius(target.getLocation(), 3.5, 9999).keySet()) {
+        for (Block cur : BlocksUtil.getInRadius(target.getLocation(), 3.5).keySet()) {
             if (cur == null) {
                 continue;
             }
