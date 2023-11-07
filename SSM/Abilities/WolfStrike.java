@@ -61,8 +61,8 @@ public class WolfStrike extends Ability implements OwnerRightClickEvent, OwnerDe
                     if(!DamageUtil.canDamage(player, owner, strike_damage)) {
                         continue;
                     }
-                    if (owner.getLocation().add(0, 1, 0).distance(player.getLocation()) < 1 ||
-                            owner.getLocation().add(0, 1, 0).distance(player.getEyeLocation()) < 1) {
+                    if (owner.getLocation().distance(player.getLocation()) < 1 ||
+                            owner.getLocation().distance(player.getEyeLocation()) < 1) {
                         doStrike(player);
                         Bukkit.getScheduler().cancelTask(strike_task);
                         return;
