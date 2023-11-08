@@ -24,9 +24,9 @@ public class KitZombie extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.CHAINMAIL_BOOTS, 0);
-        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.CHAINMAIL_BOOTS, 0);
+        setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
 
         addAttribute(new ItemGenerator(Material.ARROW, 1, 2, 3));
         addAttribute(new Regeneration(regeneration, 20));

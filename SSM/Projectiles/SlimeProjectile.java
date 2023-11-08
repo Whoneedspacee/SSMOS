@@ -28,6 +28,7 @@ public class SlimeProjectile extends SmashProjectile {
 
     private double charge = 0;
     private int clear_slime_task = -1;
+    private long last_slime_hit_time = 0;
 
     public SlimeProjectile(Player firer, String name, double charge) {
         super(firer, name);
@@ -56,7 +57,7 @@ public class SlimeProjectile extends SmashProjectile {
                     for (int i = 0; i < entity_amount; i++) {
                         Item item = slime.getLocation().getWorld().dropItem(slime.getLocation(), new ItemStack(Material.SLIME_BALL, 1));
                         double velocity = 0.2 + 0.1 * slime.getSize();
-                        item.setVelocity(new Vector((Math.random() - 0.5) * velocity, Math.random(), (Math.random() - 0.5) * velocity));
+                        item.setVelocity(new Vector((Math.random() - 0.5) * velocity, Math.random() * velocity, (Math.random() - 0.5) * velocity));
                         item.setPickupDelay(999999);
                         slimeItems.add(item);
                     }
@@ -112,6 +113,7 @@ public class SlimeProjectile extends SmashProjectile {
         smashDamageEvent.setReason(name);
         smashDamageEvent.callEvent();
         playHitSound();
+        last_slime_hit_time = System.currentTimeMillis();
         // Cancel hit detection
         this.cancel();
         return false;
@@ -165,6 +167,11 @@ public class SlimeProjectile extends SmashProjectile {
         if(!e.getDamager().equals(projectile)) {
             return;
         }
+        if(System.currentTimeMillis() - last_slime_hit_time < 500) {
+            e.setCancelled(true);
+            return;
+        }
+        last_slime_hit_time = System.currentTimeMillis();
         if(e.getDamagee().equals(firer)) {
             e.setCancelled(true);
             return;
@@ -177,6 +184,7 @@ public class SlimeProjectile extends SmashProjectile {
         e.setDamage(2 * slime.getSize());
         e.multiplyKnockback(2);
         firer.setLevel((int) e.getDamage());
+        //firer.sendMessage("Slime Damage: " + e.getDamage());
     }
 
 }

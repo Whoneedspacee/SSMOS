@@ -5,14 +5,10 @@ import SSM.Abilities.RopedArrow;
 import SSM.Attributes.*;
 import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Events.SmashDamageEvent;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SkeletonDisguise;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSkeleton extends Kit {
@@ -29,10 +25,10 @@ public class KitSkeleton extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.CHAINMAIL_BOOTS, 0);
-        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
-        setArmor(Material.CHAINMAIL_HELMET, 3);
+        setArmorSlot(Material.CHAINMAIL_BOOTS, 0);
+        setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.CHAINMAIL_HELMET, 3);
 
         setAbility(new BoneExplosion(), 0);
         setAbility(new RopedArrow(), 1);

@@ -1,6 +1,11 @@
 package SSM.Kits;
 
+import SSM.Abilities.FlameDash;
+import SSM.Abilities.MagmaBlast;
+import SSM.Attributes.Compass;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
+import SSM.Attributes.FuelTheFire;
+import SSM.Attributes.Hunger;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.MagmaCubeDisguise;
@@ -22,26 +27,35 @@ public class KitMagmaCube extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.CHAINMAIL_BOOTS, 0);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
-        setArmor(Material.CHAINMAIL_HELMET, 3);
+        setArmorSlot(Material.CHAINMAIL_BOOTS, 0);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.CHAINMAIL_HELMET, 3);
 
-        addAttribute(new Regeneration(regeneration, 20));
+        setAbility(new MagmaBlast(), 0);
+        setAbility(new FlameDash(), 1);
+
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new FuelTheFire());
 
         DisguiseManager.addDisguise(owner, new MagmaCubeDisguise(owner));
     }
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
-        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.IRON_SPADE), 1);
+        setItem(new ItemStack(Material.BLAZE_POWDER), 2, getAttributeByClass(FuelTheFire.class));
+        setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 
     @Override
     public void setGameHotbar() {
         setItem(new ItemStack(Material.IRON_AXE, 1), 0);
         setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+        setItem(Compass.COMPASS_ITEM, 2);
     }
 
 }

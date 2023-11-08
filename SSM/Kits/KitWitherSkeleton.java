@@ -6,7 +6,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.WitherSkeletonDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class KitWitherSkeleton extends Kit {
@@ -23,10 +22,10 @@ public class KitWitherSkeleton extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.CHAINMAIL_BOOTS, 0);
-        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
-        setArmor(Material.CHAINMAIL_HELMET, 3);
+        setArmorSlot(Material.CHAINMAIL_BOOTS, 0);
+        setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.CHAINMAIL_HELMET, 3);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));

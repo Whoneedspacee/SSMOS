@@ -14,7 +14,7 @@ import java.util.Map;
 public class ArcticAura extends Attribute {
 
     private double range = 5;
-    private double duration = 2;
+    private long duration_ms = 2000;
 
     public ArcticAura() {
         super();
@@ -41,7 +41,7 @@ public class ArcticAura extends Attribute {
             if(block.getType() == Material.SNOW_BLOCK) {
                 continue;
             }
-            BlockRestoreManager.ourInstance.snow(block, (byte) 1, (byte) 1, (int) (duration * (1 + blocks.get(block))), 250, 0);
+            BlockRestoreManager.ourInstance.snow(block, (byte) 1, (byte) 1, (int) (duration_ms * (1 + blocks.get(block))), 250, 0);
         }
     }
 

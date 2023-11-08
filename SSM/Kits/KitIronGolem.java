@@ -4,13 +4,11 @@ import SSM.Abilities.Fissure;
 import SSM.Abilities.IronHook;
 import SSM.Abilities.SeismicSlam;
 import SSM.Attributes.*;
-import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.IronGolemDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
@@ -28,10 +26,10 @@ public class KitIronGolem extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.DIAMOND_BOOTS, 0);
-        setArmor(Material.IRON_LEGGINGS, 1);
-        setArmor(Material.IRON_CHESTPLATE, 2);
-        setArmor(Material.IRON_HELMET, 3);
+        setArmorSlot(Material.DIAMOND_BOOTS, 0);
+        setArmorSlot(Material.IRON_LEGGINGS, 1);
+        setArmorSlot(Material.IRON_CHESTPLATE, 2);
+        setArmorSlot(Material.IRON_HELMET, 3);
 
         setAbility(new Fissure(), 0);
         setAbility(new IronHook(), 1);

@@ -21,7 +21,6 @@ import org.bukkit.util.Vector;
 public class WolfStrike extends Ability implements OwnerRightClickEvent, OwnerDealSmashDamageEvent {
 
     private double strike_damage = 7;
-    private double hitbox_size = 1;
     private long strike_time_ms = 0;
     private int strike_task = -1;
 

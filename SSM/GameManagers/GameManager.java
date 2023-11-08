@@ -1,5 +1,6 @@
 package SSM.GameManagers;
 
+import SSM.Attributes.Attribute;
 import SSM.Commands.CommandVote;
 import SSM.Events.GameStateChangeEvent;
 import SSM.Events.SmashDamageEvent;
@@ -8,6 +9,8 @@ import SSM.GameManagers.Gamemodes.SoloGamemode;
 import SSM.GameManagers.Gamemodes.TeamsGamemode;
 import SSM.GameManagers.Gamemodes.TestingGamemode;
 import SSM.GameManagers.Maps.MapFile;
+import SSM.GameManagers.OwnerEvents.OwnerKillEvent;
+import SSM.GameManagers.OwnerEvents.OwnerToggleSneakEvent;
 import SSM.Kits.Kit;
 import SSM.Kits.KitTemporarySpectator;
 import SSM.SSM;
@@ -293,7 +296,7 @@ public class GameManager implements Listener, Runnable {
         time_remaining_ms -= 50;
     }
 
-    public static void death(Player player, LivingEntity damager) {
+    public static void death(Player player) {
         if (lives.get(player) == null) {
             return;
         }
@@ -307,6 +310,19 @@ public class GameManager implements Listener, Runnable {
                 ChatColor.GRAY + " killed by " + ChatColor.YELLOW + record.getDamagerName() +
                 ChatColor.GRAY + " with " + ChatColor.GREEN + record.getReason() + ChatColor.GRAY + ".");
         DamageManager.deathReport(player);
+        if(record.getDamager() != null && record.getDamager() instanceof Player) {
+            Player damager = (Player) record.getDamager();
+            Kit kit = KitManager.getPlayerKit(damager);
+            if(kit != null) {
+                List<Attribute> attributes = kit.getAttributes();
+                for (Attribute attribute : attributes) {
+                    if (attribute instanceof OwnerKillEvent) {
+                        OwnerKillEvent killEvent = (OwnerKillEvent) attribute;
+                        killEvent.onOwnerKillEvent(player);
+                    }
+                }
+            }
+        }
         // Out of the game check
         if (lives.get(player) <= 1) {
             Utils.sendTitleMessage(player, ChatColor.RED + "You Died", "",

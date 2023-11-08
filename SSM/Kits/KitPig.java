@@ -23,13 +23,13 @@ public class KitPig extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.CHAINMAIL_BOOTS, 0);
-        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.CHAINMAIL_BOOTS, 0);
+        setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new ExpCharge(0.011F, 1, true, true));
+        addAttribute(new ExpCharge(0.011F, 1, true, true, false));
 
         DisguiseManager.addDisguise(owner, new PigDisguise(owner));
     }

@@ -262,8 +262,11 @@ public class DamageManager implements Listener {
         if (e.isCancelled()) {
             return;
         }
-        //Bukkit.broadcastMessage("Damaged: " + e.getReason());
-        //Bukkit.broadcastMessage("Damage: " + e.getDamage());
+        /*if(e.getDamager() instanceof Player) {
+            Player player = (Player) e.getDamager();
+            player.sendMessage("Damaged: " + e.getReason());
+            player.sendMessage("Damage: " + e.getDamage());
+        }*/
         LivingEntity damagee = e.getDamagee();
         LivingEntity damager = e.getDamager();
         double damage = e.getDamage();
@@ -320,7 +323,7 @@ public class DamageManager implements Listener {
         if (cause == DamageCause.ENTITY_ATTACK || cause == DamageCause.PROJECTILE) {
             if (damagee instanceof Player) {
                 if (disguise != null) {
-                    DamageUtil.playDamageSound(damagee, disguise.getType());
+                    disguise.playDamageSound();
                 } else {
                     DamageUtil.playDamageSound(damagee, damagee.getType());
                 }
@@ -338,7 +341,7 @@ public class DamageManager implements Listener {
         }
         if (died && damagee instanceof Player) {
             Player player = (Player) damagee;
-            GameManager.death(player, damager);
+            GameManager.death(player);
         }
         if (damager instanceof Player) {
             Player player = (Player) damager;
@@ -436,6 +439,7 @@ public class DamageManager implements Listener {
             SmashDamageEvent e = damage_record.get(i);
             // Expunge old records
             if ((System.currentTimeMillis() - e.getDamageTimeMs()) > 15000) {
+                to_remove.add(e);
                 continue;
             }
             if (!e.getDamageeName().equals(player.getName())) {
@@ -460,12 +464,42 @@ public class DamageManager implements Listener {
     public static SmashDamageEvent getLastDamageEvent(Player player) {
         long last_time = 0;
         SmashDamageEvent record = null;
+        // Check for ones with a damaging entity first
+        for (int i = 0; i < damage_record.size(); i++) {
+            SmashDamageEvent check = damage_record.get(i);
+            if(check.getDamager() == null) {
+                continue;
+            }
+            if(!(check.getDamager() instanceof Player)) {
+                continue;
+            }
+            if (!check.getDamageeName().equals(player.getName())) {
+                continue;
+            }
+            // Ignore old records
+            if ((System.currentTimeMillis() - check.getDamageTimeMs()) > 15000) {
+                continue;
+            }
+            if (check.getDamageTimeMs() <= last_time) {
+                continue;
+            }
+            last_time = check.getDamageTimeMs();
+            record = check;
+        }
+        if(record != null) {
+            return record;
+        }
+        // Now check all records if we didn't find one
         for (int i = 0; i < damage_record.size(); i++) {
             SmashDamageEvent check = damage_record.get(i);
             if (!check.getDamageeName().equals(player.getName())) {
                 continue;
             }
             if (check.getDamageTimeMs() <= last_time) {
+                continue;
+            }
+            // Ignore old records
+            if ((System.currentTimeMillis() - check.getDamageTimeMs()) > 15000) {
                 continue;
             }
             last_time = check.getDamageTimeMs();

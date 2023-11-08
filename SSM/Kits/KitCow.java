@@ -23,10 +23,10 @@ public class KitCow extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.IRON_BOOTS, 0);
-        setArmor(Material.IRON_LEGGINGS, 1);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
-        setArmor(Material.IRON_HELMET, 3);
+        setArmorSlot(Material.IRON_BOOTS, 0);
+        setArmorSlot(Material.IRON_LEGGINGS, 1);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.IRON_HELMET, 3);
 
         setAbility(new InkShotgun(), 0);
         setAbility(new InkShotgun(), 1);

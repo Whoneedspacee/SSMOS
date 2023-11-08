@@ -4,12 +4,10 @@ import SSM.Abilities.Needler;
 import SSM.Abilities.SpinWeb;
 import SSM.Attributes.*;
 import SSM.Attributes.DoubleJumps.Custom.SpiderJump;
-import SSM.Attributes.DoubleJumps.DirectDoubleJump;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SpiderDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSpider extends Kit {
@@ -26,9 +24,9 @@ public class KitSpider extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.IRON_BOOTS, 0);
-        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.IRON_BOOTS, 0);
+        setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
 
         setAbility(new Needler(), 0);
         setAbility(new SpinWeb(), 1);
@@ -37,7 +35,7 @@ public class KitSpider extends Kit {
         addAttribute(new Hunger());
         addAttribute(new Compass());
         addAttribute(new SpiderJump(1.0, 1.0, 1, Sound.SPIDER_IDLE));
-        addAttribute(new ExpCharge(0.005f, 1, false, false));
+        addAttribute(new ExpCharge(0.005f, 1, false, false, true));
         addAttribute(new Climb(0.2));
 
         DisguiseManager.addDisguise(owner, new SpiderDisguise(owner));

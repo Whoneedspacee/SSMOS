@@ -141,7 +141,7 @@ public class DisguiseManager implements Listener, Runnable {
 
             @Override
             public void write(ChannelHandlerContext channelHandlerContext, Object msg, ChannelPromise channelPromise) throws Exception {
-                if (msg instanceof PacketPlayOutEntityMetadata) {
+                /*if (msg instanceof PacketPlayOutEntityMetadata) {
                     try {
                         PacketPlayOutEntityMetadata packet = (PacketPlayOutEntityMetadata) msg;
                         Field f = packet.getClass().getDeclaredField("a");
@@ -212,7 +212,7 @@ public class DisguiseManager implements Listener, Runnable {
                     } catch (Exception e) {
                         Bukkit.broadcastMessage(ChatColor.RED + "Entity Metadata Packet Exception");
                     }
-                }
+                }*/
                 /*if(msg instanceof PacketPlayOutEntityEffect) {
                     PacketPlayOutEntityEffect packet = (PacketPlayOutEntityEffect) msg;
                     Field f = packet.getClass().getDeclaredField("a");

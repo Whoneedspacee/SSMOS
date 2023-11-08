@@ -1,10 +1,12 @@
 package SSM.GameManagers.Disguises;
 
+import SSM.Utilities.DamageUtil;
 import SSM.Utilities.Utils;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
 import org.bukkit.entity.EntityType;
@@ -74,6 +76,10 @@ public abstract class Disguise {
         if (player.equals(owner)) {
             return;
         }
+        // Can't show disguise if it doesn't exist
+        if(living == null) {
+            return;
+        }
         // Armor Stand Destroy (if player sees them already)
         PacketPlayOutEntityDestroy destroy_packet = new PacketPlayOutEntityDestroy(armorstand.getId());
         Utils.sendPacket(player, destroy_packet);
@@ -112,23 +118,14 @@ public abstract class Disguise {
     }
 
     public void update() {
+        if(living == null) {
+            return;
+        }
         Location location = owner.getLocation();
         // Hide the disguised player from other players
         // Don't use HidePlayer here, it stops the melees
         // But also stops the server from recognizing projectile hits like arrows
-        PacketPlayOutEntityDestroy destroy_packet = new PacketPlayOutEntityDestroy(owner.getEntityId());
-        Utils.sendPacketToAllBut(owner, destroy_packet);
-        // Hide the armor and weapon too
-        PacketPlayOutEntityEquipment handPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 0, null);
-        PacketPlayOutEntityEquipment helmetPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 1, null);
-        PacketPlayOutEntityEquipment chestPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 2, null);
-        PacketPlayOutEntityEquipment legPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 3, null);
-        PacketPlayOutEntityEquipment bootsPacket = new PacketPlayOutEntityEquipment(owner.getEntityId(), 4, null);
-        Utils.sendPacketToAllBut(owner, handPacket);
-        Utils.sendPacketToAllBut(owner, helmetPacket);
-        Utils.sendPacketToAllBut(owner, chestPacket);
-        Utils.sendPacketToAllBut(owner, legPacket);
-        Utils.sendPacketToAllBut(owner, bootsPacket);
+        hideOwner();
         // Hide the mob from the disguised player
         PacketPlayOutEntityDestroy disguise_destroy_packet = new PacketPlayOutEntityDestroy(living.getId());
         Utils.sendPacket(owner, disguise_destroy_packet);
@@ -178,18 +175,75 @@ public abstract class Disguise {
             Utils.sendPacket(player, destroy_armorstand_packet);
             Utils.sendPacket(player, destroy_squid_packet);
         }
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            player.showPlayer(owner);
-        }
+        showOwner();
         living = null;
         armorstand = null;
         squid = null;
+    }
+
+    public void hideOwner() {
+        PacketPlayOutEntityDestroy destroy_packet = new PacketPlayOutEntityDestroy(owner.getEntityId());
+        Utils.sendPacketToAllBut(owner, destroy_packet);
+    }
+
+    public void showOwner() {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            player.showPlayer(owner);
+        }
     }
 
     protected abstract EntityLiving newLiving();
 
     public boolean getShowAttackAnimation() {
         return showAttackAnimation;
+    }
+
+    public Sound getDamageSound() {
+        Sound sound = Sound.HURT_FLESH;
+
+        if (type == EntityType.BAT) sound = Sound.BAT_HURT;
+        else if (type == EntityType.BLAZE) sound = Sound.BLAZE_HIT;
+        else if (type == EntityType.CAVE_SPIDER) sound = Sound.SPIDER_IDLE;
+        else if (type == EntityType.CHICKEN) sound = Sound.CHICKEN_HURT;
+        else if (type == EntityType.COW) sound = Sound.COW_HURT;
+        else if (type == EntityType.CREEPER) sound = Sound.CREEPER_HISS;
+        else if (type == EntityType.ENDER_DRAGON) sound = Sound.ENDERDRAGON_GROWL;
+        else if (type == EntityType.ENDERMAN) sound = Sound.ENDERMAN_HIT;
+        else if (type == EntityType.GHAST) sound = Sound.GHAST_SCREAM;
+        else if (type == EntityType.GIANT) sound = Sound.ZOMBIE_HURT;
+            //else if (damagee.getType() == EntityType.HORSE)		sound = Sound.
+        else if (type == EntityType.IRON_GOLEM) sound = Sound.IRONGOLEM_HIT;
+        else if (type == EntityType.MAGMA_CUBE) sound = Sound.MAGMACUBE_JUMP;
+        else if (type == EntityType.MUSHROOM_COW) sound = Sound.COW_HURT;
+        else if (type == EntityType.OCELOT) sound = Sound.CAT_MEOW;
+        else if (type == EntityType.PIG) sound = Sound.PIG_IDLE;
+        else if (type == EntityType.PIG_ZOMBIE) sound = Sound.ZOMBIE_HURT;
+        else if (type == EntityType.SHEEP) sound = Sound.SHEEP_IDLE;
+        else if (type == EntityType.SILVERFISH) sound = Sound.SILVERFISH_HIT;
+        else if (type == EntityType.SKELETON) sound = Sound.SKELETON_HURT;
+        else if (type == EntityType.SLIME) sound = Sound.SLIME_ATTACK;
+        else if (type == EntityType.SNOWMAN) sound = Sound.STEP_SNOW;
+        else if (type == EntityType.SPIDER) sound = Sound.SPIDER_IDLE;
+            //else if (damagee.getType() == EntityType.SQUID)		sound = Sound;
+            //else if (damagee.getType() == EntityType.VILLAGER)	sound = Sound;
+            //else if (damagee.getType() == EntityType.WITCH)		sound = Sound.;
+        else if (type == EntityType.WITHER) sound = Sound.WITHER_HURT;
+        else if (type == EntityType.WOLF) sound = Sound.WOLF_HURT;
+        else if (type == EntityType.ZOMBIE) sound = Sound.ZOMBIE_HURT;
+
+        return sound;
+    }
+
+    public float getVolume() {
+        return 1.0f;
+    }
+
+    public float getPitch() {
+        return ((float) ((Math.random() - Math.random()) * 0.2f + 1.0f));
+    }
+
+    public void playDamageSound() {
+        owner.getWorld().playSound(owner.getLocation(), getDamageSound(), getVolume(), getPitch());
     }
 
 }

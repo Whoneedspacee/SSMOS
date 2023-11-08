@@ -11,8 +11,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.WolfDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.ItemStack;
 
 public class KitWolf extends Kit {
@@ -29,8 +27,8 @@ public class KitWolf extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
 
         setAbility(new CubTackle(), 0);
         setAbility(new WolfStrike(), 1);

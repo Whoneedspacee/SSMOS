@@ -9,15 +9,17 @@ public class ExpCharge extends Attribute {
     protected double delay;
     protected boolean chargeWhenInAir;
     protected boolean chargeWhenSneaking;
+    protected boolean startFullEnergy;
     public boolean enabled = true;
 
-    public ExpCharge(float expAdd, double delay, boolean chargeWhenInAir, boolean chargeWhenSneaking) {
+    public ExpCharge(float expAdd, double delay, boolean chargeWhenInAir, boolean chargeWhenSneaking, boolean startFullEnergy) {
         super();
         this.name = "Exp Charge";
         this.expAdd = expAdd;
         this.delay = delay;
         this.chargeWhenInAir = chargeWhenInAir;
         this.chargeWhenSneaking = chargeWhenSneaking;
+        this.startFullEnergy = startFullEnergy;
         task = this.runTaskTimer(plugin, 0, (long) delay);
     }
 
@@ -34,7 +36,7 @@ public class ExpCharge extends Attribute {
 
     @Override
     public void setOwner(Player owner) {
-        if (owner != null) {
+        if (owner != null && startFullEnergy) {
             owner.setExp(1.0f - expAdd);
         }
         super.setOwner(owner);

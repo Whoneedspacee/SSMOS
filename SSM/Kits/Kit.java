@@ -130,7 +130,7 @@ public abstract class Kit implements Listener {
     }
 
     // 0 = boots, 1 = leggings, 2 = chestplate, 3 = helmet
-    public void setArmor(Material itemMaterial, int armorSlot) {
+    public void setArmorSlot(Material itemMaterial, int armorSlot) {
         if (owner == null) {
             return;
         }
@@ -191,12 +191,20 @@ public abstract class Kit implements Listener {
         return name;
     }
 
+    public void setArmor(double armor) {
+        this.armor = armor;
+    }
+
     public double getArmor() {
         return armor;
     }
 
     public double getKnockback() {
         return knockback;
+    }
+
+    public void setMelee(double damage) {
+        this.damage = damage;
     }
 
     public double getMelee() {
@@ -217,10 +225,6 @@ public abstract class Kit implements Listener {
 
     public boolean isIntangible() {
         return intangible;
-    }
-
-    public void setMelee(double melee) {
-        damage = melee;
     }
 
     public List<Attribute> getAttributes() {

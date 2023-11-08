@@ -8,7 +8,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SnowmanDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSnowMan extends Kit {
@@ -25,10 +24,10 @@ public class KitSnowMan extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.CHAINMAIL_BOOTS, 0);
-        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
-        setArmor(Material.CHAINMAIL_HELMET, 3);
+        setArmorSlot(Material.CHAINMAIL_BOOTS, 0);
+        setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.CHAINMAIL_HELMET, 3);
 
         setAbility(new Blizzard(), 0);
         setAbility(new IcePath(), 1);
@@ -37,7 +36,7 @@ public class KitSnowMan extends Kit {
         addAttribute(new Hunger());
         addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new ExpCharge(0.01666666667F, 1, true, true));
+        addAttribute(new ExpCharge(0.01666666667F, 1, true, true, false));
         addAttribute(new ArcticAura());
         addAttribute(new SnowDamage());
 

@@ -6,7 +6,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.GuardianDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class KitGuardian extends Kit {
@@ -23,8 +22,8 @@ public class KitGuardian extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.LEATHER_BOOTS, 0);
-        setArmor(Material.DIAMOND_CHESTPLATE, 2);
+        setArmorSlot(Material.LEATHER_BOOTS, 0);
+        setArmorSlot(Material.DIAMOND_CHESTPLATE, 2);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));

@@ -11,7 +11,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SquidDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSquid extends Kit {
@@ -28,9 +27,9 @@ public class KitSquid extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.CHAINMAIL_BOOTS, 0);
-        setArmor(Material.CHAINMAIL_LEGGINGS, 1);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.CHAINMAIL_BOOTS, 0);
+        setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
 
         setAbility(new InkShotgun(), 0);
         setAbility(new SuperSquid(), 1);

@@ -105,7 +105,7 @@ public class LightningShield extends Attribute implements OwnerTakeSmashDamageEv
     public void setUnpowered() {
         active = false;
         Disguise disguise = DisguiseManager.disguises.get(owner);
-        if(disguise == null || !(disguise instanceof CreeperDisguise)) {
+        if(!(disguise instanceof CreeperDisguise)) {
             return;
         }
         CreeperDisguise creeperDisguise = (CreeperDisguise) disguise;
@@ -115,7 +115,7 @@ public class LightningShield extends Attribute implements OwnerTakeSmashDamageEv
     public void setPowered() {
         active = true;
         Disguise disguise = DisguiseManager.disguises.get(owner);
-        if(disguise == null || !(disguise instanceof CreeperDisguise)) {
+        if(!(disguise instanceof CreeperDisguise)) {
             return;
         }
         CreeperDisguise creeperDisguise = (CreeperDisguise) disguise;

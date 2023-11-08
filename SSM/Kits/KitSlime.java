@@ -11,7 +11,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SlimeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSlime extends Kit {
@@ -28,9 +27,9 @@ public class KitSlime extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.CHAINMAIL_BOOTS, 0);
-        setArmor(Material.CHAINMAIL_CHESTPLATE, 2);
-        setArmor(Material.CHAINMAIL_HELMET, 3);
+        setArmorSlot(Material.CHAINMAIL_BOOTS, 0);
+        setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
+        setArmorSlot(Material.CHAINMAIL_HELMET, 3);
 
         setAbility(new SlimeRocket(), 0);
         setAbility(new SlimeSlam(), 1);
@@ -39,7 +38,7 @@ public class KitSlime extends Kit {
         addAttribute(new Hunger());
         addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new ExpCharge(0.00321f, 1, true, true));
+        addAttribute(new ExpCharge(0.00321f, 1, true, true, false));
 
         DisguiseManager.addDisguise(owner, new SlimeDisguise(owner));
     }

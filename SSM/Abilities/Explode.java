@@ -100,7 +100,7 @@ public class Explode extends Ability implements OwnerRightClickEvent, OwnerToggl
 
     public void disguiseNormal() {
         Disguise disguise = DisguiseManager.disguises.get(owner);
-        if(disguise == null || !(disguise instanceof CreeperDisguise)) {
+        if(!(disguise instanceof CreeperDisguise)) {
             return;
         }
         CreeperDisguise creeperDisguise = (CreeperDisguise) disguise;
@@ -109,7 +109,7 @@ public class Explode extends Ability implements OwnerRightClickEvent, OwnerToggl
 
     public void disguiseLarge() {
         Disguise disguise = DisguiseManager.disguises.get(owner);
-        if(disguise == null || !(disguise instanceof CreeperDisguise)) {
+        if(!(disguise instanceof CreeperDisguise)) {
             return;
         }
         CreeperDisguise creeperDisguise = (CreeperDisguise) disguise;

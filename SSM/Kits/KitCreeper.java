@@ -11,7 +11,6 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.CreeperDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 public class KitCreeper extends Kit {
@@ -28,10 +27,10 @@ public class KitCreeper extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmor(Material.IRON_BOOTS, 0);
-        setArmor(Material.LEATHER_LEGGINGS, 1);
-        setArmor(Material.LEATHER_CHESTPLATE, 2);
-        setArmor(Material.LEATHER_HELMET, 3);
+        setArmorSlot(Material.IRON_BOOTS, 0);
+        setArmorSlot(Material.LEATHER_LEGGINGS, 1);
+        setArmorSlot(Material.LEATHER_CHESTPLATE, 2);
+        setArmorSlot(Material.LEATHER_HELMET, 3);
 
         setAbility(new SulphurBomb(), 0);
         setAbility(new Explode(), 1);
