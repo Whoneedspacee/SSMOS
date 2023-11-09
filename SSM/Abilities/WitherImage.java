@@ -63,15 +63,11 @@ public class WitherImage extends Ability implements OwnerRightClickEvent {
             setSwapDelay(swap_cooldown_ticks);
             Vector old_image_vector = wither_image.getVelocity().clone();
             Vector old_owner_vector = owner.getVelocity().clone();
-            Location tp_owner = wither_image.getLocation().clone();
-            Location tp_wither = owner.getLocation().clone();
-            // Can't teleport entities being ridden?
-            EntitySkeleton nms_wither = ((CraftSkeleton) wither_image).getHandle();
-            nms_wither.setPositionRotation(tp_wither.getX(), tp_wither.getY(), tp_wither.getZ(),
-                    tp_wither.getYaw(), tp_wither.getPitch());
+            Location wither_old_location = wither_image.getLocation().clone();
+            wither_image.teleport(owner.getLocation().clone());
             VelocityUtil.setVelocity(wither_image, old_owner_vector);
             // Teleporting adds no damage ticks?
-            owner.teleport(tp_owner);
+            owner.teleport(wither_old_location);
             owner.setVelocity(old_image_vector);
             owner.getWorld().playSound(owner.getLocation(), Sound.WITHER_SPAWN, 1f, 2f);
             return;
@@ -102,14 +98,6 @@ public class WitherImage extends Ability implements OwnerRightClickEvent {
                         wither_image.getTicksLived() > 160 || wither_image.getLocation().getBlock().isLiquid()) {
                     Utils.itemEffect(wither_image.getLocation().add(0, 0.5, 0), 12, 0.3,
                             Sound.WITHER_HURT, 1f, 0.75f, Material.BONE, (byte) 0, 40);
-                    if(wither_image.getPassenger() != null) {
-                        Entity squid = wither_image.getPassenger();
-                        if(squid.getPassenger() != null) {
-                            Entity armor_stand = squid.getPassenger();
-                            armor_stand.remove();;
-                        }
-                        squid.remove();
-                    }
                     wither_image.remove();
                     wither_image = null;
                     Bukkit.getScheduler().cancelTask(image_task);
