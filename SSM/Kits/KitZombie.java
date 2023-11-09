@@ -1,9 +1,11 @@
 package SSM.Kits;
 
+import SSM.Abilities.BileBlaster;
+import SSM.Abilities.DeathsGrasp;
+import SSM.Attributes.*;
+import SSM.Attributes.BowCharge.Barrage;
 import SSM.Attributes.BowCharge.DamageBoost;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Attributes.ItemGenerator;
-import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.ZombieDisguise;
 import org.bukkit.Material;
@@ -14,10 +16,10 @@ public class KitZombie extends Kit {
 
     public KitZombie() {
         super();
-        this.damage = 5;
+        this.damage = 6;
         this.armor = 5;
         this.regeneration = 0.25;
-        this.knockback = 1.4;
+        this.knockback = 1.25;
         this.name = "Zombie";
         this.menuItem = Material.ROTTEN_FLESH;
     }
@@ -28,10 +30,17 @@ public class KitZombie extends Kit {
         setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
         setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
 
-        addAttribute(new ItemGenerator(Material.ARROW, 1, 2, 3));
-        addAttribute(new Regeneration(regeneration, 20));
+        setAbility(new BileBlaster(), 0);
+        setAbility(new DeathsGrasp(), 1);
+
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
+        addAttribute(new ItemGenerator(Material.ARROW, 1, 2, 2));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new DamageBoost(1.1, 0.25, 5));
+        addAttribute(new DamageBoost(1, 0.25, 6));
+        addAttribute(new ArrowDamageModifier(-1));
+        addAttribute(new MultiplyArrowKnockback(1.5));
 
         DisguiseManager.addDisguise(owner, new ZombieDisguise(owner));
     }
@@ -40,12 +49,15 @@ public class KitZombie extends Kit {
     public void setPreviewHotbar() {
         setItem(new ItemStack(Material.IRON_AXE, 1), 0);
         setItem(new ItemStack(Material.BOW, 1), 1);
+        setItem(new ItemStack(Material.ARROW), 2, getAttributeByClass(DamageBoost.class));
+        setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 
     @Override
     public void setGameHotbar() {
         setItem(new ItemStack(Material.IRON_AXE, 1), 0);
         setItem(new ItemStack(Material.BOW, 1), 1);
+        setItem(Compass.COMPASS_ITEM, 2);
     }
 
 }

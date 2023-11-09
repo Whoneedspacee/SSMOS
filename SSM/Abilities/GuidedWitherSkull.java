@@ -62,7 +62,7 @@ public class GuidedWitherSkull extends Ability implements OwnerRightClickEvent {
 
             @Override
             public void run() {
-                if (owner == null || !skull.isValid()) {
+                if (owner == null || !owner.isValid() || !skull.isValid()) {
                     skull.remove();
                     cancel();
                     return;
@@ -71,7 +71,7 @@ public class GuidedWitherSkull extends Ability implements OwnerRightClickEvent {
                     skull_direction = owner.getLocation().getDirection();
                 }
                 Location new_location = skull.getLocation().add(skull_direction.clone().multiply(1.6));
-                new_location.setYaw((float) Math.atan2(skull_direction.getZ(), skull_direction.getX()));
+                new_location.setYaw((float) (Math.atan2(skull_direction.getZ(), skull_direction.getX()) / Math.PI * 180) - 90);
                 skull.teleport(new_location);
                 Utils.playParticle(EnumParticle.SMOKE_NORMAL, new_location.add(0, 2, 0),
                         0, 0, 0, 0.01f, 2, 96, skull.getWorld().getPlayers());
@@ -79,6 +79,9 @@ public class GuidedWitherSkull extends Ability implements OwnerRightClickEvent {
                 boolean hit_block = skull.getLocation().add(0, 1.5, 0).getBlock().getType().isSolid();
                 if (!hit_block) {
                     for (LivingEntity livingEntity : Utils.getInRadius(new_location, direct_radius).keySet()) {
+                        if(!(livingEntity instanceof Player)) {
+
+                        }
                         if (livingEntity.equals(owner)) {
                             continue;
                         }

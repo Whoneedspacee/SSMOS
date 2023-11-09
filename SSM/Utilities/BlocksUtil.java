@@ -13,8 +13,31 @@ import java.util.List;
 public class BlocksUtil {
 
     public static HashSet<Byte> blockUseSet = new HashSet<Byte>();;
+    public static HashSet<Byte> blockAirFoliageSet = new HashSet<Byte>();
 
     static {
+        blockAirFoliageSet.add((byte) Material.AIR.getId());
+        blockAirFoliageSet.add((byte) Material.SAPLING.getId());
+        blockAirFoliageSet.add((byte) Material.LONG_GRASS.getId());
+        blockAirFoliageSet.add((byte) Material.DOUBLE_PLANT.getId());
+        blockAirFoliageSet.add((byte) Material.DEAD_BUSH.getId());
+        blockAirFoliageSet.add((byte) Material.YELLOW_FLOWER.getId());
+        blockAirFoliageSet.add((byte) Material.RED_ROSE.getId());
+        blockAirFoliageSet.add((byte) Material.BROWN_MUSHROOM.getId());
+        blockAirFoliageSet.add((byte) Material.RED_MUSHROOM.getId());
+        blockAirFoliageSet.add((byte) Material.FIRE.getId());
+        blockAirFoliageSet.add((byte) Material.CROPS.getId());
+        blockAirFoliageSet.add((byte) Material.PUMPKIN_STEM.getId());
+        blockAirFoliageSet.add((byte) Material.MELON_STEM.getId());
+        blockAirFoliageSet.add((byte) Material.NETHER_WARTS.getId());
+        blockAirFoliageSet.add((byte) Material.TRIPWIRE_HOOK.getId());
+        blockAirFoliageSet.add((byte) Material.TRIPWIRE.getId());
+        blockAirFoliageSet.add((byte) Material.CARROT.getId());
+        blockAirFoliageSet.add((byte) Material.POTATO.getId());
+        blockAirFoliageSet.add((byte) Material.DOUBLE_PLANT.getId());
+        blockAirFoliageSet.add((byte) Material.STANDING_BANNER.getId());
+        blockAirFoliageSet.add((byte) Material.WALL_BANNER.getId());
+
         blockUseSet.add((byte) Material.DISPENSER.getId());
         blockUseSet.add((byte) Material.BED_BLOCK.getId());
         blockUseSet.add((byte) Material.PISTON_BASE.getId());
@@ -56,6 +79,10 @@ public class BlocksUtil {
         blockUseSet.add((byte) Material.JUNGLE_DOOR.getId());
         blockUseSet.add((byte) Material.ACACIA_DOOR.getId());
         blockUseSet.add((byte) Material.DARK_OAK_DOOR.getId());
+    }
+
+    public static boolean isAirOrFoliage(Block block) {
+        return blockAirFoliageSet.contains((byte) block.getTypeId());
     }
 
     public static boolean isUsable(Block block) {

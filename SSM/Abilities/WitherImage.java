@@ -64,7 +64,11 @@ public class WitherImage extends Ability implements OwnerRightClickEvent {
             Vector old_image_vector = wither_image.getVelocity().clone();
             Vector old_owner_vector = owner.getVelocity().clone();
             Location wither_old_location = wither_image.getLocation().clone();
-            wither_image.teleport(owner.getLocation().clone());
+            Location wither_new_location = owner.getLocation().clone();
+            // Cannot normally teleport entities with passengers
+            EntitySkeleton nms_wither_image = ((CraftSkeleton) wither_image).getHandle();
+            nms_wither_image.setPositionRotation(wither_new_location.getX(), wither_new_location.getY(), wither_new_location.getZ(),
+                    wither_new_location.getYaw(), wither_new_location.getPitch());
             VelocityUtil.setVelocity(wither_image, old_owner_vector);
             // Teleporting adds no damage ticks?
             owner.teleport(wither_old_location);

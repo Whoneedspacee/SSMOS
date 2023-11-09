@@ -140,6 +140,7 @@ public class DamageManager implements Listener {
         LivingEntity damagee = (LivingEntity) e.getEntity();
         LivingEntity damager = null;
         Projectile projectile = null;
+        ChatColor reason_color = ChatColor.GREEN;
         double knockback = 1;
         if (e instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent damageBy = (EntityDamageByEntityEvent) e;
@@ -154,11 +155,12 @@ public class DamageManager implements Listener {
         }
         double damage = e.getDamage();
         // Consistent Arrow Damage
-        if (projectile != null && projectile instanceof Arrow) {
+        if (projectile instanceof Arrow) {
             damage = projectile.getVelocity().length() * 3;
+            reason_color = ChatColor.YELLOW;
         }
         // Consistent Melee Damage
-        if (damager instanceof Player) {
+        if (damager instanceof Player && e.getCause() == DamageCause.ENTITY_ATTACK) {
             Kit kit = KitManager.getPlayerKit((Player) damager);
             if (kit != null) {
                 damage = kit.getMelee();
@@ -181,6 +183,7 @@ public class DamageManager implements Listener {
         smashDamageEvent.setDamageCause(e.getCause());
         smashDamageEvent.setProjectile(projectile);
         smashDamageEvent.setDisplayAsLastDamage(display_as_last_damage);
+        smashDamageEvent.setReasonColor(reason_color);
         smashDamageEvent.callEvent();
         e.setCancelled(true);
     }
@@ -250,7 +253,7 @@ public class DamageManager implements Listener {
         if (e.getDamageCause() != DamageCause.VOID) {
             return;
         }
-        if (e.getIgnoreDamageDelay() != false) {
+        if (e.getIgnoreDamageDelay()) {
             return;
         }
         if (!(e.getDamagee() instanceof Player)) {

@@ -11,6 +11,7 @@ import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,6 +26,7 @@ public class DisguiseManager implements Listener, Runnable {
 
     private static DisguiseManager ourInstance;
     public static HashMap<Player, Disguise> disguises = new HashMap<Player, Disguise>();
+    public static HashMap<Entity, Entity> redirect_melee = new HashMap<Entity, Entity>();
     private JavaPlugin plugin = SSM.getInstance();
 
     // Gives disguises to players
@@ -109,6 +111,14 @@ public class DisguiseManager implements Listener, Runnable {
                             if (disguise.getLiving().getId() == id ||
                                     disguise.getSquid().getId() == id) {
                                 f.setInt(packet, disguise.getOwner().getEntityId());
+                            }
+                        }
+                        for(Entity redirect_from : redirect_melee.keySet()) {
+                            if(redirect_from == null || redirect_melee.get(redirect_from) == null) {
+                                continue;
+                            }
+                            if(redirect_from.getEntityId() == id) {
+                                f.setInt(packet, redirect_melee.get(redirect_from).getEntityId());
                             }
                         }
                     }

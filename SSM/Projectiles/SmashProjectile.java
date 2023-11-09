@@ -1,6 +1,7 @@
 package SSM.Projectiles;
 
 import SSM.SSM;
+import SSM.Utilities.BlocksUtil;
 import SSM.Utilities.Utils;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
@@ -203,7 +204,7 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
             return true;
         }
         Block check_block = projectile.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        if (projectile.getVelocity().length() < 0.2 && (projectile.isOnGround() || check_block.getType().isSolid())) {
+        if (projectile.getVelocity().length() < 0.2 && (projectile.isOnGround() || !BlocksUtil.isAirOrFoliage(check_block))) {
             return true;
         }
         return false;

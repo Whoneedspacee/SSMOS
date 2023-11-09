@@ -28,6 +28,7 @@ public class SmashDamageEvent extends Event implements Cancellable {
     private String damagee_name;
     private String damager_name;
     private boolean display_as_last_damage = true;
+    private ChatColor reason_color = ChatColor.GREEN;
 
 
     public SmashDamageEvent(LivingEntity damagee, LivingEntity damager, double damage) {
@@ -112,7 +113,7 @@ public class SmashDamageEvent extends Event implements Cancellable {
         }
         String got_reason = "N/A";
         if (damageCause == DamageCause.PROJECTILE) {
-            got_reason = "Arrow";
+            got_reason = "Archery";
         } else if (damageCause == DamageCause.ENTITY_ATTACK) {
             got_reason = "Attack";
         } else if (damageCause == DamageCause.VOID) {
@@ -213,6 +214,14 @@ public class SmashDamageEvent extends Event implements Cancellable {
 
     public boolean getDisplayAsLastDamage() {
         return display_as_last_damage;
+    }
+
+    public void setReasonColor(ChatColor reason_color) {
+        this.reason_color = reason_color;
+    }
+
+    public ChatColor getReasonColor() {
+        return reason_color;
     }
 
     public static HandlerList getHandlerList() {

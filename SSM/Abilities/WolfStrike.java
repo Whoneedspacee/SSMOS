@@ -1,6 +1,7 @@
 package SSM.Abilities;
 
 import SSM.Events.SmashDamageEvent;
+import SSM.GameManagers.CooldownManager;
 import SSM.GameManagers.GameManager;
 import SSM.GameManagers.OwnerEvents.OwnerDealSmashDamageEvent;
 import SSM.GameManagers.OwnerEvents.OwnerRightClickEvent;
@@ -20,9 +21,9 @@ import org.bukkit.util.Vector;
 
 public class WolfStrike extends Ability implements OwnerRightClickEvent, OwnerDealSmashDamageEvent {
 
-    private long strike_time_ms = 0;
     private int strike_task = -1;
     protected double strike_damage = 7;
+    protected long strike_duration_ms = 1500;
 
     public WolfStrike() {
         super();
@@ -42,7 +43,6 @@ public class WolfStrike extends Ability implements OwnerRightClickEvent, OwnerDe
 
     public void activate() {
         VelocityUtil.setVelocity(owner, owner.getLocation().getDirection(), 1.6, false, 1, 0.2, 1.2, true);
-        strike_time_ms = System.currentTimeMillis();
         owner.getWorld().playSound(owner.getLocation(), Sound.WOLF_BARK, 1f, 1.2f);
         if (Bukkit.getScheduler().isQueued(strike_task) || Bukkit.getScheduler().isCurrentlyRunning(strike_task)) {
             Bukkit.getScheduler().cancelTask(strike_task);
@@ -70,7 +70,7 @@ public class WolfStrike extends Ability implements OwnerRightClickEvent, OwnerDe
                 if (!Utils.entityIsOnGround(owner)) {
                     return;
                 }
-                if (System.currentTimeMillis() - strike_time_ms < 1500) {
+                if(CooldownManager.getInstance().getTimeElapsedFor(WolfStrike.this, owner) < strike_duration_ms) {
                     return;
                 }
                 Bukkit.getScheduler().cancelTask(strike_task);

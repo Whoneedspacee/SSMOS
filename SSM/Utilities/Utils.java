@@ -1,6 +1,7 @@
 package SSM.Utilities;
 
 import SSM.Attributes.Attribute;
+import SSM.GameManagers.DisguiseManager;
 import SSM.SSM;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Material;
@@ -356,51 +357,34 @@ public class Utils {
         }
     }
 
-    // Borderline copied from disguise code
+    // This will make it so you cannot teleport entities since they have passengers
     public static void attachCustomName(Entity entity, String name) {
         if(entity == null) {
             return;
         }
         net.minecraft.server.v1_8_R3.Entity nms_entity = ((CraftEntity) entity).getHandle();
-        EntityArmorStand armorstand = new EntityArmorStand(((CraftWorld) entity.getWorld()).getHandle());
-        armorstand.setCustomName(name);
-        armorstand.setCustomNameVisible(true);
-        // Had no idea this existed, but seems like this is what other servers must be doing
-        ((CraftArmorStand) armorstand.getBukkitEntity()).setMarker(true);
-        EntitySquid squid = new EntitySquid(((CraftWorld) entity.getWorld()).getHandle());
-        // Set armor stand and squid position
-        squid.setPositionRotation(entity.getLocation().getX(), nms_entity.locY + nms_entity.an() + squid.am(), entity.getLocation().getZ(),
-                entity.getLocation().getYaw(), entity.getLocation().getPitch());
-        armorstand.setPositionRotation(entity.getLocation().getX(), squid.locY + squid.an() + armorstand.am(), entity.getLocation().getZ(),
-                entity.getLocation().getYaw(), entity.getLocation().getPitch());
-        // Spawn Armor Stand
-        PacketPlayOutSpawnEntityLiving armorstand_packet = new PacketPlayOutSpawnEntityLiving(armorstand);
-        Utils.sendPacketToAll(armorstand_packet);
-        // Invisibility for Armor Stand
-        DataWatcher dw = armorstand.getDataWatcher();
-        dw.watch(0, (byte) 0x20);
+        ArmorStand armor_stand = (ArmorStand) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ARMOR_STAND);
+        Squid squid = (Squid) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.SQUID);
+        armor_stand.setCustomName(name);
+        armor_stand.setCustomNameVisible(true);
+        armor_stand.setVisible(false);
+        armor_stand.setMarker(true);
         // Invisibility for Squid
-        dw = squid.getDataWatcher();
-        dw.watch(0, (byte) 0x20);
+        squid.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
+        // Apply melees from squid to entity
+        DisguiseManager.redirect_melee.put(squid, entity);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(!entity.isValid()) {
-                    PacketPlayOutEntityDestroy destroy_armorstand_packet = new PacketPlayOutEntityDestroy(armorstand.getId());
-                    Utils.sendPacketToAll(destroy_armorstand_packet);
+                    DisguiseManager.redirect_melee.remove(squid);
+                    armor_stand.remove();
+                    squid.remove();
                     cancel();
                     return;
                 }
-                // Account for velocity since this is a real entity unlike disguises
-                Vector vector = entity.getLocation().toVector().add(entity.getVelocity());
-                squid.setPositionRotation(vector.getX(), vector.getY() + nms_entity.an() + squid.am(), vector.getZ(),
-                        entity.getLocation().getYaw(), entity.getLocation().getPitch());
-                armorstand.setPositionRotation(vector.getX(), squid.locY + squid.an() + armorstand.am(), vector.getZ(),
-                        entity.getLocation().getYaw(), entity.getLocation().getPitch());
-                PacketPlayOutEntityTeleport teleport_packet = new PacketPlayOutEntityTeleport(squid);
-                Utils.sendPacketToAll(teleport_packet);
-                teleport_packet = new PacketPlayOutEntityTeleport(armorstand);
-                Utils.sendPacketToAll(teleport_packet);
+                squid.setPassenger(armor_stand);
+                entity.setPassenger(squid);
             }
         };
         runnable.runTaskTimer(SSM.getInstance(), 0L, 0L);

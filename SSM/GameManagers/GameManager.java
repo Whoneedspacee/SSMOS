@@ -309,7 +309,7 @@ public class GameManager implements Listener, Runnable {
         SmashDamageEvent record = DamageManager.getLastDamageEvent(player);
         Bukkit.broadcastMessage(ServerMessageType.DEATH + " " + ChatColor.YELLOW + player.getName() +
                 ChatColor.GRAY + " killed by " + ChatColor.YELLOW + record.getDamagerName() +
-                ChatColor.GRAY + " with " + ChatColor.GREEN + record.getReason() + ChatColor.GRAY + ".");
+                ChatColor.GRAY + " with " + record.getReasonColor() + record.getReason() + ChatColor.GRAY + ".");
         DamageManager.deathReport(player);
         if(record.getDamager() != null && record.getDamager() instanceof Player) {
             Player damager = (Player) record.getDamager();

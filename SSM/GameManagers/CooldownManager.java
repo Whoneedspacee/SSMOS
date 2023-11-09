@@ -106,8 +106,16 @@ public class CooldownManager extends BukkitRunnable {
         if (duration <= 0) {
             return;
         } else {
+            boolean replaced = false;
+            for(CooldownData cd : cooldownData) {
+                if(cd.getAttribute().equals(attribute)) {
+                    replaced = true;
+                    break;
+                }
+            }
+            cooldownData.removeIf(cd -> cd.getAttribute().equals(attribute));
             cooldownData.add(new CooldownData(attribute, duration, abilityUser));
-            if(attribute.getUseMessage() != null) {
+            if(!replaced && attribute.getUseMessage() != null) {
                 Utils.sendAttributeMessage(attribute.getUseMessage(), attribute.name, abilityUser, ServerMessageType.SKILL);
             }
         }
