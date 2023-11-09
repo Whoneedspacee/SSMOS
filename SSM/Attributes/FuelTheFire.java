@@ -39,7 +39,7 @@ public class FuelTheFire extends Attribute implements OwnerKillEvent, OwnerTakeS
 
     @Override
     public void run() {
-        if(owner == null) {
+        if(owner == null || !owner.isValid()) {
             this.cancel();
             return;
         }

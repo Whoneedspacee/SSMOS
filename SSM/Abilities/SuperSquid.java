@@ -37,7 +37,7 @@ public class SuperSquid extends Ability implements OwnerRightClickEvent {
 
     public void activate() {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            int ticks = 0;
+            private int ticks = 0;
 
             @Override
             public void run() {

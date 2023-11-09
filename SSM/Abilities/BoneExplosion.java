@@ -22,8 +22,8 @@ import java.util.List;
 
 public class BoneExplosion extends Ability implements OwnerRightClickEvent {
 
-    private double range = 7;
-    private double baseDamage = 6;
+    protected double range = 7;
+    protected double baseDamage = 6;
 
     public BoneExplosion() {
         super();
@@ -41,24 +41,8 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
     public void activate() {
         Location location = owner.getLocation().add(0, 0.5, 0);
         owner.getWorld().playSound(owner.getLocation(), Sound.SKELETON_HURT, 2f, 1.2f);
-
-        int entity_amount = 48;
-        List<Entity> boneItems = new ArrayList<>();
-        for (int i = 0; i < entity_amount; i++) {
-            Item item = location.getWorld().dropItem(location, new ItemStack(Material.BONE, 1));
-            item.setVelocity(new Vector((Math.random() - 0.5) * 0.8, Math.random() * 0.8, (Math.random() - 0.5) * 0.8));
-            item.setPickupDelay(999999);
-            boneItems.add(item);
-        }
-
-        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-            @Override
-            public void run() {
-                for (Entity ent : boneItems) {
-                    ent.remove();
-                }
-            }
-        }, 40L);
+        Utils.itemEffect(owner.getLocation().add(0, 0.5, 0), 48, 0.8,
+                Sound.SKELETON_HURT, 2f, 1.2f, Material.BONE, (byte) 0, 40);
 
         HashMap<LivingEntity, Double> canHit = Utils.getInRadius(owner.getLocation(), range);
         canHit.remove(owner);

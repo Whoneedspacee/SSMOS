@@ -107,7 +107,9 @@ public class CooldownManager extends BukkitRunnable {
             return;
         } else {
             cooldownData.add(new CooldownData(attribute, duration, abilityUser));
-            Utils.sendAttributeMessage(attribute.getUseMessage(), attribute.name, abilityUser, ServerMessageType.SKILL);
+            if(attribute.getUseMessage() != null) {
+                Utils.sendAttributeMessage(attribute.getUseMessage(), attribute.name, abilityUser, ServerMessageType.SKILL);
+            }
         }
     }
 

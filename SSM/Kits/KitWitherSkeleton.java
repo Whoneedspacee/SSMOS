@@ -1,6 +1,10 @@
 package SSM.Kits;
 
+import SSM.Abilities.GuidedWitherSkull;
+import SSM.Abilities.WitherImage;
+import SSM.Attributes.Compass;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
+import SSM.Attributes.Hunger;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.WitherSkeletonDisguise;
@@ -27,7 +31,12 @@ public class KitWitherSkeleton extends Kit {
         setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmorSlot(Material.CHAINMAIL_HELMET, 3);
 
-        addAttribute(new Regeneration(regeneration, 20));
+        setAbility(new GuidedWitherSkull(), 0);
+        setAbility(new WitherImage(), 1);
+
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new WitherSkeletonDisguise(owner));
@@ -35,14 +44,16 @@ public class KitWitherSkeleton extends Kit {
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(new ItemStack(Material.NETHER_STAR), 2);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(Compass.COMPASS_ITEM, 2);
     }
 
 }

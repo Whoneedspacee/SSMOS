@@ -115,7 +115,7 @@ public class MapFile {
         for (Player player : copy_world.getPlayers()) {
             player.teleport(GameManager.lobby_world.getSpawnLocation());
         }
-        Bukkit.unloadWorld(copy_world, false);
+        Bukkit.unloadWorld(copy_world, true);
     }
 
     public List<Location> getRespawnPoints() {

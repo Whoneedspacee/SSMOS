@@ -85,13 +85,14 @@ public abstract class Kit implements Listener {
         }
         boolean game_hotbar = GameManager.isStarting(new_state) || GameManager.isPlaying(new_state);
         // Set hotbar and register or unregister events for attributes
-        if(game_hotbar && game_hotbar_equipped == false) {
+        // Use booleans so we don't re-equip the same hotbar we already did
+        if(game_hotbar && !game_hotbar_equipped) {
             owner.getInventory().clear();
             setGameHotbar();
             game_hotbar_equipped = true;
             preview_hotbar_equipped = false;
         }
-        if(!game_hotbar && preview_hotbar_equipped == false) {
+        if(!game_hotbar && !preview_hotbar_equipped) {
             owner.getInventory().clear();
             setPreviewHotbar();
             preview_hotbar_equipped = true;
@@ -167,7 +168,11 @@ public abstract class Kit implements Listener {
         }
         ItemMeta meta = item.getItemMeta();
         if (attribute != null) {
-            meta.setDisplayName("§e§l" + attribute.getUsage().toString() + "§f§l" + " - " + "§a§l" + attribute.name);
+            String used_name = attribute.name;
+            if(attribute.item_name != null) {
+                used_name = attribute.item_name;
+            }
+            meta.setDisplayName("§e§l" + attribute.getUsage().toString() + "§f§l" + " - " + "§a§l" + used_name);
             meta.setLore(Arrays.asList(attribute.getDescription()));
         }
         if (meta instanceof Damageable) {

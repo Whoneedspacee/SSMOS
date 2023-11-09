@@ -27,6 +27,7 @@ public class SmashDamageEvent extends Event implements Cancellable {
     private Projectile projectile;
     private String damagee_name;
     private String damager_name;
+    private boolean display_as_last_damage = true;
 
 
     public SmashDamageEvent(LivingEntity damagee, LivingEntity damager, double damage) {
@@ -204,6 +205,14 @@ public class SmashDamageEvent extends Event implements Cancellable {
 
     public String getDamagerName() {
         return damager_name;
+    }
+
+    public void setDisplayAsLastDamage(boolean display_as_last_damage) {
+        this.display_as_last_damage = display_as_last_damage;
+    }
+
+    public boolean getDisplayAsLastDamage() {
+        return display_as_last_damage;
     }
 
     public static HandlerList getHandlerList() {

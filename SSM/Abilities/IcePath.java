@@ -13,9 +13,9 @@ import java.util.List;
 
 public class IcePath extends Ability implements OwnerRightClickEvent {
 
-    private long melt_time_ms = 6000;
     private int path_task = -1;
-    private List<Block> blocks = new ArrayList<Block>();
+    protected long melt_time_ms = 6000;
+    protected List<Block> blocks = new ArrayList<Block>();
 
     public IcePath() {
         super();

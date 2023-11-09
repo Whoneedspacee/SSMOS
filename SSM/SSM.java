@@ -78,6 +78,9 @@ public class SSM extends JavaPlugin implements Listener {
         for(Disguise disguise : DisguiseManager.disguises.values()) {
             disguise.deleteLiving();
         }
+        if(GameManager.selected_map != null) {
+            GameManager.selected_map.deleteWorld();
+        }
     }
 
     @EventHandler

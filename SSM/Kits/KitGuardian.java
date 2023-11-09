@@ -22,8 +22,8 @@ public class KitGuardian extends Kit {
 
     @Override
     public void initializeKit() {
-        setArmorSlot(Material.LEATHER_BOOTS, 0);
-        setArmorSlot(Material.DIAMOND_CHESTPLATE, 2);
+        setArmorSlot(Material.DIAMOND_BOOTS, 0);
+        setArmorSlot(Material.DIAMOND_LEGGINGS, 1);
 
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));

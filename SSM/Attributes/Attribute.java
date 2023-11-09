@@ -20,10 +20,12 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
         LEFT_CLICK("Left-Click"),
         RIGHT_CLICK("Right-Click"),
         BLOCKING("Hold/Release Block"),
+        HOLD_BLOCKING("Hold Block"),
         CHARGE_BOW("Charge Bow"),
         CROUCH("Crouch"),
         DOUBLE_JUMP("Double Jump"),
         PASSIVE("Passive"),
+        DOUBLE_RIGHT_CLICK("Double Right-Click"),
         SMASH_CRYSTAL("Smash Crystal");
 
 
@@ -39,6 +41,7 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     }
 
     public String name = "No Set Name.";
+    public String item_name = null;
     protected String[] description = new String[] { ChatColor.RESET + "No Set Description." };
     protected Plugin plugin;
     protected Player owner;

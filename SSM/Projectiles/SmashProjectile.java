@@ -169,6 +169,8 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
         return null;
     }
 
+    // This modifies projectile motion and location, this can cause
+    // Bugs with projectiles that do not delete themselves
     protected Block checkHitBlock() {
         net.minecraft.server.v1_8_R3.World world = ((CraftWorld) projectile.getWorld()).getHandle();
         net.minecraft.server.v1_8_R3.Entity entity = ((CraftEntity) projectile).getHandle();

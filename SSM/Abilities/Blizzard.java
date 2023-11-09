@@ -27,11 +27,10 @@ import java.util.List;
 
 public class Blizzard extends Ability {
 
-    private int shoot_task = -1;
     private int tick_count = 0;
-    private int ticks_to_fire = 3;
-    private float energy_per_shot = 0.1111111111f;
-    private HashMap<Player, Long> last_damage_time = new HashMap<Player, Long>();
+    protected int ticks_to_fire = 3;
+    protected float energy_per_shot = 0.1111111111f;
+    protected HashMap<Player, Long> last_damage_time = new HashMap<Player, Long>();
 
     public Blizzard() {
         super();

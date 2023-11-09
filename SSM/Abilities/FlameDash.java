@@ -23,22 +23,12 @@ import java.util.HashMap;
 
 public class FlameDash extends Ability implements OwnerRightClickEvent {
 
-    /*
-      - - Flame Dash
-      - - Time (ms)
-        - '800'
-      - - Damage Radius
-        - '3'
-      - - Knockback Magnitude
-        - '2'
-     */
-
     private long activation_time = 0;
-    private long dash_time_ms = 800;
-    private double damage_radius = 3;
-    private double dash_knockback = 2;
     private Location initial_location = null;
     private int dash_task = -1;
+    protected long dash_time_ms = 800;
+    protected double damage_radius = 3;
+    protected double dash_knockback = 2;
 
     public FlameDash() {
         super();

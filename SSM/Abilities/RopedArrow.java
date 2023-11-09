@@ -20,7 +20,7 @@ import org.bukkit.util.Vector;
 public class RopedArrow extends Ability implements OwnerLeftClickEvent {
 
     private Arrow arrow;
-    private int power = 1;
+    protected int power = 1;
 
     public RopedArrow() {
         super();

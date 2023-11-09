@@ -53,23 +53,8 @@ public class SlimeProjectile extends SmashProjectile {
                     slime.setTicksLived(1);
 
                     int entity_amount = 6 + 6 * slime.getSize();
-                    List<Entity> slimeItems = new ArrayList<Entity>();
-                    for (int i = 0; i < entity_amount; i++) {
-                        Item item = slime.getLocation().getWorld().dropItem(slime.getLocation(), new ItemStack(Material.SLIME_BALL, 1));
-                        double velocity = 0.2 + 0.1 * slime.getSize();
-                        item.setVelocity(new Vector((Math.random() - 0.5) * velocity, Math.random() * velocity, (Math.random() - 0.5) * velocity));
-                        item.setPickupDelay(999999);
-                        slimeItems.add(item);
-                    }
-
-                    Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-                        @Override
-                        public void run() {
-                            for (Entity ent : slimeItems) {
-                                ent.remove();
-                            }
-                        }
-                    }, 15L);
+                    Utils.itemEffect(slime.getLocation(), entity_amount, 0.2 + 0.1 * slime.getSize(),
+                            null, 1f, 1f, Material.SLIME_BALL, (byte) 0, 15);
 
                     if (slime.getSize() <= 1) {
                         slime.remove();

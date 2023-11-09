@@ -9,6 +9,7 @@ import SSM.GameManagers.Gamemodes.SoloGamemode;
 import SSM.GameManagers.Gamemodes.TeamsGamemode;
 import SSM.GameManagers.Gamemodes.TestingGamemode;
 import SSM.GameManagers.Maps.MapFile;
+import SSM.GameManagers.OwnerEvents.OwnerDeathEvent;
 import SSM.GameManagers.OwnerEvents.OwnerKillEvent;
 import SSM.GameManagers.OwnerEvents.OwnerToggleSneakEvent;
 import SSM.Kits.Kit;
@@ -323,6 +324,16 @@ public class GameManager implements Listener, Runnable {
                 }
             }
         }
+        Kit kit = KitManager.getPlayerKit(player);
+        if(kit != null) {
+            List<Attribute> attributes = kit.getAttributes();
+            for (Attribute attribute : attributes) {
+                if (attribute instanceof OwnerDeathEvent) {
+                    OwnerDeathEvent deathEvent = (OwnerDeathEvent) attribute;
+                    deathEvent.onOwnerDeathEvent();
+                }
+            }
+        }
         // Out of the game check
         if (lives.get(player) <= 1) {
             Utils.sendTitleMessage(player, ChatColor.RED + "You Died", "",
@@ -344,7 +355,6 @@ public class GameManager implements Listener, Runnable {
                 " " + (lives.get(player) == 1 ? "life" : "lives") + " left!");
         player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 2f, 0.5f);
         DisplayManager.buildScoreboard();
-        Kit kit = KitManager.getPlayerKit(player);
         KitManager.equipPlayer(player, new KitTemporarySpectator());
         // Respawn in 4 seconds
         Bukkit.getScheduler().scheduleSyncDelayedTask(SSM.getInstance(), new Runnable() {

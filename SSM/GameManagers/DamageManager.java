@@ -164,6 +164,7 @@ public class DamageManager implements Listener {
                 damage = kit.getMelee();
             }
         }
+        boolean display_as_last_damage = true;
         if (e.getCause() == DamageCause.POISON) {
             if (e.getEntity().hasMetadata("Poison Damager")) {
                 List<MetadataValue> values = e.getEntity().getMetadata("Poison Damager");
@@ -171,6 +172,7 @@ public class DamageManager implements Listener {
                     // Set damager so they get put on the damage rate
                     damager = (Player) values.get(0).value();
                     knockback = 0;
+                    display_as_last_damage = false;
                 }
             }
         }
@@ -178,6 +180,7 @@ public class DamageManager implements Listener {
         smashDamageEvent.multiplyKnockback(knockback);
         smashDamageEvent.setDamageCause(e.getCause());
         smashDamageEvent.setProjectile(projectile);
+        smashDamageEvent.setDisplayAsLastDamage(display_as_last_damage);
         smashDamageEvent.callEvent();
         e.setCancelled(true);
     }
@@ -257,7 +260,7 @@ public class DamageManager implements Listener {
         e.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onSmashDamage(SmashDamageEvent e) {
         if (e.isCancelled()) {
             return;
@@ -419,7 +422,7 @@ public class DamageManager implements Listener {
 
     public static void storeDamageEvent(SmashDamageEvent e) {
         // Condense Damage Records with same variable values except damage and time
-        for (int i = 0; i < damage_record.size(); i++) {
+        /*for (int i = 0; i < damage_record.size(); i++) {
             SmashDamageEvent check = damage_record.get(i);
             if (check == null) {
                 continue;
@@ -428,7 +431,7 @@ public class DamageManager implements Listener {
                 e.setDamage(e.getDamage() + check.getDamage());
                 damage_record.remove(i);
             }
-        }
+        }*/
         damage_record.add(e);
     }
 
@@ -474,6 +477,9 @@ public class DamageManager implements Listener {
                 continue;
             }
             if (!check.getDamageeName().equals(player.getName())) {
+                continue;
+            }
+            if(!check.getDisplayAsLastDamage()) {
                 continue;
             }
             // Ignore old records

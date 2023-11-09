@@ -53,8 +53,8 @@ public class KitMagmaCube extends Kit {
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
-        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.IRON_SPADE), 1);
         setItem(Compass.COMPASS_ITEM, 2);
     }
 

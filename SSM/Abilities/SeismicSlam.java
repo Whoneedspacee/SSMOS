@@ -17,9 +17,9 @@ import java.util.List;
 
 public class SeismicSlam extends Ability implements OwnerRightClickEvent {
 
-    private double baseDamage = 10;
-    private double range = 8;
     private int task = -1;
+    protected double baseDamage = 10;
+    protected double range = 8;
 
     public SeismicSlam() {
         super();

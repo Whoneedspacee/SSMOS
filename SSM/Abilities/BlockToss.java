@@ -23,7 +23,7 @@ public class BlockToss extends Ability implements OwnerRightClickEvent {
     private byte holding_data = 0;
     private long pickup_time_ms = 0;
     private int toss_task = -1;
-    private long charge_time_ms = 1200;
+    protected long charge_time_ms = 1200;
 
     public BlockToss() {
         super();

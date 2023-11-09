@@ -9,7 +9,9 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -244,6 +246,20 @@ public abstract class Disguise {
 
     public void playDamageSound() {
         owner.getWorld().playSound(owner.getLocation(), getDamageSound(), getVolume(), getPitch());
+    }
+
+    // Leashes the living mob to the specified entity
+    public void setAsLeashHolder(LivingEntity livingEntity) {
+        Entity nms_vehicle = ((CraftEntity) livingEntity).getHandle();
+        PacketPlayOutAttachEntity attach_living_packet = new PacketPlayOutAttachEntity(1, nms_vehicle, living);
+        Utils.sendPacketToAllBut(owner, attach_living_packet);
+    }
+
+    // Unleashes the living mob
+    public void removeLeashHolder(LivingEntity livingEntity) {
+        Entity nms_vehicle = ((CraftEntity) livingEntity).getHandle();
+        PacketPlayOutAttachEntity detach_living_packet = new PacketPlayOutAttachEntity(0, nms_vehicle, living);
+        Utils.sendPacketToAllBut(owner, detach_living_packet);
     }
 
 }

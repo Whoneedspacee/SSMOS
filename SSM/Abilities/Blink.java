@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Blink extends Ability implements OwnerRightClickEvent {
 
-    private double range = 16;
+    protected double range = 16;
 
     public Blink() {
         super();

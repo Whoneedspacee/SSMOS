@@ -1,24 +1,27 @@
 package SSM.Utilities;
 
 import SSM.Attributes.Attribute;
+import SSM.SSM;
 import net.minecraft.server.v1_8_R3.*;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftCreature;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftFirework;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.*;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
+import org.bukkit.util.Vector;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Utils {
 
@@ -149,7 +152,7 @@ public class Utils {
 
     public static org.bukkit.block.Block getTargetBlock(Player player, int distance) {
         org.bukkit.block.Block target = null;
-        Iterator<org.bukkit.block.Block> itr = new BlockIterator(player, distance);
+        Iterator<Block> itr = new BlockIterator(player, distance);
         while (itr.hasNext()) {
             org.bukkit.block.Block block = itr.next();
             if (!block.getType().isSolid() || block.isLiquid()) {
@@ -246,5 +249,162 @@ public class Utils {
             nav.a(target.getX(), target.getY(), target.getZ(), speed);
         }
     }
+
+    public static <T extends Entity> List<T> getEntitiesInsideEntity(Entity ent, List<T> entities) {
+        AxisAlignedBB box = ((CraftEntity) ent).getHandle().getBoundingBox();
+
+        List<T> list = new ArrayList<>();
+
+        for (T e : entities) {
+            AxisAlignedBB box2 = ((CraftEntity) e).getHandle().getBoundingBox();
+            if (box2.b(box)) list.add(e);
+        }
+        return list;
+    }
+
+    public static boolean isInsideBoundingBox(Entity ent, Vector a, Vector b) {
+        AxisAlignedBB box = ((CraftEntity) ent).getHandle().getBoundingBox();
+        AxisAlignedBB box2 = new AxisAlignedBB(a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ());
+        return box.b(box2);
+    }
+
+    public static boolean hitBox(Location loc, LivingEntity ent, double mult, EntityType disguise) {
+        if (disguise != null) {
+            if (disguise == EntityType.SQUID) {
+                return loc.distance(ent.getLocation().add(0, 0.4, 0)) < 0.6 * mult;
+            }
+        }
+
+        Location loc2d = loc.clone();
+        loc2d.setY(0);
+        Location entloc2d = ent.getLocation().clone();
+        entloc2d.setY(0);
+
+        if (ent instanceof Player) {
+            Player player = (Player) ent;
+
+            if (loc.distance(player.getEyeLocation()) < 0.4 * mult) {
+                return true;
+            } else if (loc2d.distance(entloc2d) < 0.6 * mult) {
+                if (loc.getY() >= player.getLocation().getY() - 0.2 * mult && loc.getY() <= player.getEyeLocation().getY() + 0.2 * mult) {
+                    return true;
+                }
+            }
+        } else {
+            if (ent instanceof Giant) {
+                if (loc.getY() > ent.getLocation().getY() && loc.getY() < ent.getLocation().getY() + 12)
+                    if (loc2d.distance(entloc2d) < 4)
+                        return true;
+            } else {
+                if (loc.getY() > ent.getLocation().getY() && loc.getY() < ent.getLocation().getY() + 2)
+                    if (loc2d.distance(entloc2d) < 0.5 * mult)
+                        return true;
+            }
+        }
+        return false;
+    }
+
+    public static List<Player> getNearby(Location loc, double maxDist) {
+        LinkedList<Player> nearbyMap = new LinkedList<>();
+        for (Player cur : loc.getWorld().getPlayers()) {
+            if (!DamageUtil.canDamage(cur, null, 0)) {
+                continue;
+            }
+            if (cur.isDead()) {
+                continue;
+            }
+            double dist = loc.distance(cur.getLocation());
+            if (dist > maxDist) {
+                continue;
+            }
+            for (int i = 0; i < nearbyMap.size(); i++) {
+                if (dist < loc.distance(nearbyMap.get(i).getLocation())) {
+                    nearbyMap.add(i, cur);
+                    break;
+                }
+            }
+            if (!nearbyMap.contains(cur)) {
+                nearbyMap.addLast(cur);
+            }
+        }
+        return nearbyMap;
+    }
+
+    public static void itemEffect(Location location, int item_count, double velocity,
+                                  Sound sound, float sound_volume, float sound_pitch, Material type, byte data, long ticks) {
+        if (type != null && type != Material.AIR) {
+            List<Entity> items = new ArrayList<>();
+            ItemStack itemStack = new ItemStack(type);
+            itemStack.setDurability(data);
+            for (int i = 0; i < item_count; i++) {
+                Item item = location.getWorld().dropItem(location, itemStack);
+                item.setVelocity(new Vector((Math.random() - 0.5) * velocity, Math.random() * velocity, (Math.random() - 0.5) * velocity));
+                item.setPickupDelay(999999);
+                items.add(item);
+            }
+            Bukkit.getScheduler().runTaskLater(SSM.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    for (Entity ent : items) {
+                        ent.remove();
+                    }
+                }
+            }, ticks);
+        }
+        if (sound != null) {
+            location.getWorld().playSound(location, sound, sound_volume, sound_pitch);
+        }
+    }
+
+    // Borderline copied from disguise code
+    public static void attachCustomName(Entity entity, String name) {
+        if(entity == null) {
+            return;
+        }
+        net.minecraft.server.v1_8_R3.Entity nms_entity = ((CraftEntity) entity).getHandle();
+        EntityArmorStand armorstand = new EntityArmorStand(((CraftWorld) entity.getWorld()).getHandle());
+        armorstand.setCustomName(name);
+        armorstand.setCustomNameVisible(true);
+        // Had no idea this existed, but seems like this is what other servers must be doing
+        ((CraftArmorStand) armorstand.getBukkitEntity()).setMarker(true);
+        EntitySquid squid = new EntitySquid(((CraftWorld) entity.getWorld()).getHandle());
+        // Set armor stand and squid position
+        squid.setPositionRotation(entity.getLocation().getX(), nms_entity.locY + nms_entity.an() + squid.am(), entity.getLocation().getZ(),
+                entity.getLocation().getYaw(), entity.getLocation().getPitch());
+        armorstand.setPositionRotation(entity.getLocation().getX(), squid.locY + squid.an() + armorstand.am(), entity.getLocation().getZ(),
+                entity.getLocation().getYaw(), entity.getLocation().getPitch());
+        // Spawn Armor Stand
+        PacketPlayOutSpawnEntityLiving armorstand_packet = new PacketPlayOutSpawnEntityLiving(armorstand);
+        Utils.sendPacketToAll(armorstand_packet);
+        // Invisibility for Armor Stand
+        DataWatcher dw = armorstand.getDataWatcher();
+        dw.watch(0, (byte) 0x20);
+        // Invisibility for Squid
+        dw = squid.getDataWatcher();
+        dw.watch(0, (byte) 0x20);
+        BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(!entity.isValid()) {
+                    PacketPlayOutEntityDestroy destroy_armorstand_packet = new PacketPlayOutEntityDestroy(armorstand.getId());
+                    Utils.sendPacketToAll(destroy_armorstand_packet);
+                    cancel();
+                    return;
+                }
+                // Account for velocity since this is a real entity unlike disguises
+                Vector vector = entity.getLocation().toVector().add(entity.getVelocity());
+                squid.setPositionRotation(vector.getX(), vector.getY() + nms_entity.an() + squid.am(), vector.getZ(),
+                        entity.getLocation().getYaw(), entity.getLocation().getPitch());
+                armorstand.setPositionRotation(vector.getX(), squid.locY + squid.an() + armorstand.am(), vector.getZ(),
+                        entity.getLocation().getYaw(), entity.getLocation().getPitch());
+                PacketPlayOutEntityTeleport teleport_packet = new PacketPlayOutEntityTeleport(squid);
+                Utils.sendPacketToAll(teleport_packet);
+                teleport_packet = new PacketPlayOutEntityTeleport(armorstand);
+                Utils.sendPacketToAll(teleport_packet);
+            }
+        };
+        runnable.runTaskTimer(SSM.getInstance(), 0L, 0L);
+    }
+
 
 }

@@ -24,7 +24,7 @@ import java.util.List;
 
 public class Needler extends Ability implements OwnerRightClickEvent {
 
-    private int needleAmount = 6;
+    protected int needleAmount = 6;
     private int fired = 0;
     private BukkitTask taskID;
 
@@ -47,7 +47,7 @@ public class Needler extends Ability implements OwnerRightClickEvent {
     public void activate() {
         taskID = Bukkit.getScheduler().runTaskTimer(plugin, () ->
         {
-            if (owner == null || !owner.isBlocking() || fired >= 6) {
+            if (owner == null || !owner.isBlocking() || fired >= needleAmount) {
                 fired = 0;
                 Bukkit.getScheduler().cancelTask(taskID.getTaskId());
                 return;

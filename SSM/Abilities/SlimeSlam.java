@@ -21,8 +21,8 @@ import java.util.List;
 public class SlimeSlam extends Ability implements OwnerRightClickEvent {
 
     private int task = -1;
-    private double damage = 7;
-    private double hitbox = 2;
+    protected double damage = 7;
+    protected double hitbox = 2;
 
     public SlimeSlam() {
         super();

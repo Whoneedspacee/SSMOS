@@ -28,9 +28,9 @@ import java.util.List;
 
 public class MagmaBlast extends Ability implements OwnerRightClickEvent, OwnerDealSmashDamageEvent {
 
-    private double velocity = 0.2;
-    private double velocity_radius = 8;
-    private double damage = 8;
+    protected double velocity = 0.2;
+    protected double velocity_radius = 8;
+    protected double damage = 8;
 
     public MagmaBlast() {
         super();
@@ -83,6 +83,9 @@ public class MagmaBlast extends Ability implements OwnerRightClickEvent, OwnerDe
         HashMap<LivingEntity, Double> hit_entities = Utils.getInRadius(projectile.getLocation().subtract(0, 1, 0), velocity_radius);
         for (LivingEntity livingEntity : hit_entities.keySet()) {
             if(!(livingEntity instanceof Player)) {
+                continue;
+            }
+            if(livingEntity.equals(owner)) {
                 continue;
             }
             Player player = (Player) livingEntity;

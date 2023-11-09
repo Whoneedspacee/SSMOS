@@ -25,8 +25,8 @@ import java.util.List;
 public class Fissure extends Ability implements OwnerRightClickEvent {
 
     private int task = -1;
-    private HashMap<Block, Integer> blocks = new HashMap<Block, Integer>();
-    private List<Entity> already_hit = new ArrayList<Entity>();
+    protected HashMap<Block, Integer> blocks = new HashMap<Block, Integer>();
+    protected List<Entity> already_hit = new ArrayList<Entity>();
 
     public Fissure() {
         super();
