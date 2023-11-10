@@ -5,6 +5,7 @@ import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SkeletonHorseDisguise;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -52,8 +53,8 @@ public class KitSkeletonHorse extends Kit {
     }
 
     @Override
-    public Entity getNewPodiumMob() {
-        Entity entity = super.getNewPodiumMob();
+    public Entity getNewPodiumMob(Location spawn_location) {
+        Entity entity = super.getNewPodiumMob(spawn_location);
         if(entity instanceof Horse) {
             Horse horse = (Horse) entity;
             horse.setVariant(Horse.Variant.SKELETON_HORSE);

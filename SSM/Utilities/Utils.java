@@ -365,8 +365,11 @@ public class Utils {
             return;
         }
         net.minecraft.server.v1_8_R3.Entity nms_entity = ((CraftEntity) entity).getHandle();
-        ArmorStand armor_stand = (ArmorStand) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ARMOR_STAND);
-        Squid squid = (Squid) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.SQUID);
+        Squid squid = (Squid) entity.getWorld().spawnEntity(new Location(entity.getWorld(),
+                nms_entity.locX, nms_entity.locY + nms_entity.an(), nms_entity.locZ), EntityType.SQUID);
+        EntitySquid nms_squid = ((CraftSquid) squid).getHandle();
+        ArmorStand armor_stand = (ArmorStand) entity.getWorld().spawnEntity(new Location(entity.getWorld(),
+                nms_entity.locX, nms_squid.locY + nms_squid.an(), nms_entity.locZ), EntityType.ARMOR_STAND);
         armor_stand.setCustomName(name);
         armor_stand.setCustomNameVisible(true);
         armor_stand.setVisible(false);

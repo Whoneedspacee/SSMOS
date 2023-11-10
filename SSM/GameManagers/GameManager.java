@@ -15,6 +15,7 @@ import SSM.GameManagers.OwnerEvents.OwnerToggleSneakEvent;
 import SSM.Kits.Kit;
 import SSM.Kits.KitTemporarySpectator;
 import SSM.SSM;
+import SSM.Utilities.DamageUtil;
 import SSM.Utilities.EffectUtil;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
@@ -422,8 +423,7 @@ public class GameManager implements Listener, Runnable {
                 Location temp = (Location) data;
                 podium_location = new Location(lobby_world, temp.getX(), temp.getY(), temp.getZ(), temp.getYaw(), temp.getPitch());
             }
-            Entity podium_mob = kit.getNewPodiumMob();
-            podium_mob.teleport(podium_location);
+            Entity podium_mob = kit.getNewPodiumMob(podium_location);
             Utils.attachCustomName(podium_mob, ChatColor.GREEN + kit.getName());
             DamageManager.invincible_mobs.put(podium_mob, 1);
             // Disable mob ai
@@ -584,15 +584,20 @@ public class GameManager implements Listener, Runnable {
     @EventHandler
     public void PlayerMove(PlayerMoveEvent e) {
         if(!isStarting()) {
-            //if(selected_map != null) {
-            //    Bukkit.broadcastMessage("Out of Bounds: " + selected_map.isOutOfBounds(e.getPlayer()));
-            //}
+            if(selected_map != null) {
+                if(selected_map.isOutOfBounds(e.getPlayer())) {
+                    DamageUtil.borderKill(e.getPlayer(), true);
+                }
+            }
             return;
         }
         if(!lives.containsKey(e.getPlayer())) {
             return;
         }
-        Location to = e.getFrom();
+        Location to = e.getTo();
+        if(!to.toVector().equals(e.getFrom().toVector())) {
+            to = e.getFrom();
+        }
         to.setPitch(e.getTo().getPitch());
         to.setYaw(e.getTo().getYaw());
         e.setTo(to);

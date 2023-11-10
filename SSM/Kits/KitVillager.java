@@ -4,6 +4,7 @@ import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.VillagerDisguise;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -50,8 +51,8 @@ public class KitVillager extends Kit {
     }
 
     @Override
-    public Entity getNewPodiumMob() {
-        Entity entity = super.getNewPodiumMob();
+    public Entity getNewPodiumMob(Location spawn_location) {
+        Entity entity = super.getNewPodiumMob(spawn_location);
         if(entity instanceof Villager) {
             Villager villager = (Villager) entity;
             villager.setProfession(Villager.Profession.FARMER);

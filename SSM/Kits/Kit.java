@@ -7,6 +7,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.GameManager;
 import SSM.SSM;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -271,8 +272,12 @@ public abstract class Kit implements Listener {
         return playing;
     }
 
-    public Entity getNewPodiumMob() {
-        return GameManager.getLobbyWorld().spawnEntity(new Location(GameManager.getLobbyWorld(), 0, 0, 0), podium_mob_type);
+    public Entity getNewPodiumMob(Location spawn_location) {
+        Entity podium_mob = GameManager.getLobbyWorld().spawnEntity(spawn_location, podium_mob_type);
+        net.minecraft.server.v1_8_R3.Entity nms_podium_mob = ((CraftEntity) podium_mob).getHandle();
+        nms_podium_mob.onGround = true;
+        nms_podium_mob.inWater = false;
+        return podium_mob;
     }
 
     @EventHandler

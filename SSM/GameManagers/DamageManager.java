@@ -333,7 +333,7 @@ public class DamageManager implements Listener {
         }
         storeDamageEvent(e);
         Disguise disguise = DisguiseManager.disguises.get(damagee);
-        if (disguise != null) {
+        if (disguise != null && disguise.getLiving() != null) {
             PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus((net.minecraft.server.v1_8_R3.Entity) disguise.getLiving(), (byte) 2);
             Utils.sendPacketToAllBut(disguise.getOwner(), packet);
         }

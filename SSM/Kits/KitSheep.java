@@ -5,6 +5,7 @@ import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SheepDisguise;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -51,8 +52,8 @@ public class KitSheep extends Kit {
     }
 
     @Override
-    public Entity getNewPodiumMob() {
-        Entity entity = super.getNewPodiumMob();
+    public Entity getNewPodiumMob(Location spawn_location) {
+        Entity entity = super.getNewPodiumMob(spawn_location);
         if(entity instanceof Sheep) {
             Sheep sheep = (Sheep) entity;
             sheep.setColor(DyeColor.WHITE);

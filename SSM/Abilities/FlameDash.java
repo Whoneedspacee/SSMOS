@@ -66,6 +66,10 @@ public class FlameDash extends Ability implements OwnerRightClickEvent {
         dash_task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
+                if(owner == null) {
+                    Bukkit.getScheduler().cancelTask(dash_task);
+                    return;
+                }
                 if (System.currentTimeMillis() - activation_time < dash_time_ms) {
                     Vector velocity = initial_location.getDirection();
                     velocity.setY(0);

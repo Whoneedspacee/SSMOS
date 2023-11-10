@@ -142,12 +142,24 @@ public abstract class SmashGamemode implements Listener {
             maximum = Math.max(maximum, closest);
             closest_player_distance.put(respawn_point, closest);
         }
+        Location selected_point = null;
         for(Location respawn_point : closest_player_distance.keySet()) {
             if(closest_player_distance.get(respawn_point) >= maximum) {
-                return respawn_point;
+                selected_point = respawn_point;
             }
         }
-        return selected_map.getRespawnPoints().get((int) (Math.random() * selected_map.getRespawnPoints().size()));
+        if(selected_point == null || maximum >= 1000) {
+            selected_point = selected_map.getRespawnPoints().get((int) (Math.random() * selected_map.getRespawnPoints().size()));
+        }
+        // Face towards map center
+        Vector difference = selected_map.copy_world.getSpawnLocation().toVector().subtract(selected_point.toVector());
+        if(Math.abs(difference.getX()) > Math.abs(difference.getZ())) {
+            selected_point.setDirection(new Vector(difference.getX(), 0, 0));
+        }
+        else {
+            selected_point.setDirection(new Vector(0, 0, difference.getZ()));
+        }
+        return selected_point;
     }
 
     public boolean isGameEnded(HashMap<Player, Integer> lives) {

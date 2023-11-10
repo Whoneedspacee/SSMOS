@@ -63,8 +63,8 @@ public class KitWitherSkeleton extends Kit {
     }
 
     @Override
-    public Entity getNewPodiumMob() {
-        Entity entity = super.getNewPodiumMob();
+    public Entity getNewPodiumMob(Location spawn_location) {
+        Entity entity = super.getNewPodiumMob(spawn_location);
         if(entity instanceof Skeleton) {
             Skeleton skeleton = (Skeleton) entity;
             skeleton.setSkeletonType(Skeleton.SkeletonType.WITHER);

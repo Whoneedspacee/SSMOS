@@ -13,6 +13,7 @@ import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -51,6 +52,10 @@ public class Explode extends Ability implements OwnerRightClickEvent, OwnerToggl
         explode_task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
+                if(owner == null) {
+                    Bukkit.getScheduler().cancelTask(explode_task);
+                    return;
+                }
                 long elapsed = System.currentTimeMillis() - start_time_ms;
                 VelocityUtil.setVelocity(owner, new Vector(0, 0, 0));
                 float volume = (float) 0.5f + elapsed / 1000f;
