@@ -424,17 +424,22 @@ public class DamageManager implements Listener {
     }
 
     public static void storeDamageEvent(SmashDamageEvent e) {
+        // Consider cloning these to avoid changing original event data
         // Condense Damage Records with same variable values except damage and time
-        /*for (int i = 0; i < damage_record.size(); i++) {
+        for (int i = 0; i < damage_record.size(); i++) {
             SmashDamageEvent check = damage_record.get(i);
             if (check == null) {
+                continue;
+            }
+            // Ignore old records
+            if ((System.currentTimeMillis() - check.getDamageTimeMs()) > 15000) {
                 continue;
             }
             if (e.equals(check)) {
                 e.setDamage(e.getDamage() + check.getDamage());
                 damage_record.remove(i);
             }
-        }*/
+        }
         damage_record.add(e);
     }
 

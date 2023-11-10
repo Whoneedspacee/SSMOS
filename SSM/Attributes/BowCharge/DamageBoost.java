@@ -37,7 +37,7 @@ public class DamageBoost extends BowCharge implements OwnerDealSmashDamageEvent 
     @Override
     public void run() {
         if(owner == null || !owner.isValid()) {
-            cancelTask();
+            this.cancel();
             return;
         }
         for(Iterator<Arrow> arrowIterator = fired_arrows.iterator(); arrowIterator.hasNext();) {
