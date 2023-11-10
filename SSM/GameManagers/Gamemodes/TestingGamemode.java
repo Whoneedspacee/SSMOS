@@ -54,9 +54,6 @@ public class TestingGamemode extends SmashGamemode {
 
     @EventHandler
     public void onGameStateChanged(GameStateChangeEvent e) {
-        if(!isCurrentGamemode()) {
-            return;
-        }
         GameManager.setTimeLeft(0);
     }
 

@@ -39,6 +39,7 @@ public class SSM extends JavaPlugin implements Listener {
     public void onEnable() {
         ourInstance = this;
         getServer().getPluginManager().registerEvents(this, this);
+        this.saveConfig();
         new CooldownManager();
         new EventManager();
         new KitManager();
@@ -78,9 +79,11 @@ public class SSM extends JavaPlugin implements Listener {
         for(Disguise disguise : DisguiseManager.disguises.values()) {
             disguise.deleteLiving();
         }
-        if(GameManager.selected_map != null) {
-            GameManager.selected_map.deleteWorld();
+        if(GameManager.getSelectedMap() != null) {
+            GameManager.getSelectedMap().deleteWorld();
         }
+        this.reloadConfig();
+        this.saveConfig();
     }
 
     @EventHandler

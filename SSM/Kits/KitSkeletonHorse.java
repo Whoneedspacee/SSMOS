@@ -4,8 +4,13 @@ import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SkeletonHorseDisguise;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Sheep;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSkeletonHorse extends Kit {
@@ -18,6 +23,7 @@ public class KitSkeletonHorse extends Kit {
         this.knockback = 1.25;
         this.name = "Skeleton Horse";
         this.menuItem = Material.BONE;
+        this.podium_mob_type = EntityType.HORSE;
     }
 
     @Override
@@ -43,6 +49,16 @@ public class KitSkeletonHorse extends Kit {
     public void setGameHotbar() {
         setItem(new ItemStack(Material.IRON_AXE, 1), 0);
         setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+    }
+
+    @Override
+    public Entity getNewPodiumMob() {
+        Entity entity = super.getNewPodiumMob();
+        if(entity instanceof Horse) {
+            Horse horse = (Horse) entity;
+            horse.setVariant(Horse.Variant.SKELETON_HORSE);
+        }
+        return entity;
     }
 
 }

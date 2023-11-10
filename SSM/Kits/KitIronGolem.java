@@ -9,6 +9,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.IronGolemDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
@@ -22,6 +23,7 @@ public class KitIronGolem extends Kit {
         this.knockback = 1.0;
         this.name = "Iron Golem";
         this.menuItem = Material.IRON_BLOCK;
+        this.podium_mob_type = EntityType.IRON_GOLEM;
     }
 
     @Override

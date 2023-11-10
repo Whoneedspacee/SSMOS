@@ -10,6 +10,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.ZombieDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitZombie extends Kit {
@@ -22,6 +23,7 @@ public class KitZombie extends Kit {
         this.knockback = 1.25;
         this.name = "Zombie";
         this.menuItem = Material.ROTTEN_FLESH;
+        this.podium_mob_type = EntityType.ZOMBIE;
     }
 
     @Override

@@ -9,6 +9,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SkeletonDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSkeleton extends Kit {
@@ -21,6 +22,7 @@ public class KitSkeleton extends Kit {
         this.knockback = 1.25;
         this.name = "Skeleton";
         this.menuItem = Material.BOW;
+        this.podium_mob_type = EntityType.SKELETON;
     }
 
     @Override

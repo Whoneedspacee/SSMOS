@@ -187,15 +187,4 @@ public class WitherImage extends Ability implements OwnerRightClickEvent {
         e.setDamage(5);
     }
 
-    @EventHandler
-    public void onImageCombust(EntityCombustEvent e) {
-        if(wither_image == null || !e.getEntity().equals(wither_image)) {
-            return;
-        }
-        if(e instanceof EntityCombustByBlockEvent || e instanceof EntityCombustByEntityEvent) {
-            return;
-        }
-        e.setCancelled(true);
-    }
-
 }

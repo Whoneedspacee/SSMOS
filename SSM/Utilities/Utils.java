@@ -1,6 +1,7 @@
 package SSM.Utilities;
 
 import SSM.Attributes.Attribute;
+import SSM.GameManagers.DamageManager;
 import SSM.GameManagers.DisguiseManager;
 import SSM.SSM;
 import net.minecraft.server.v1_8_R3.*;
@@ -372,6 +373,8 @@ public class Utils {
         armor_stand.setMarker(true);
         // Invisibility for Squid
         squid.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
+        // Invincibility
+        DamageManager.invincible_mobs.put(squid, 1);
         // Apply melees from squid to entity
         DisguiseManager.redirect_melee.put(squid, entity);
         BukkitRunnable runnable = new BukkitRunnable() {
@@ -379,6 +382,7 @@ public class Utils {
             public void run() {
                 if(!entity.isValid()) {
                     DisguiseManager.redirect_melee.remove(squid);
+                    DamageManager.invincible_mobs.remove(squid);
                     armor_stand.remove();
                     squid.remove();
                     cancel();
@@ -391,5 +395,15 @@ public class Utils {
         runnable.runTaskTimer(SSM.getInstance(), 0L, 0L);
     }
 
+    public static String getAttachedCustomName(Entity entity) {
+        if(entity.getPassenger() == null) {
+            return null;
+        }
+        if(!(entity.getPassenger().getPassenger() instanceof ArmorStand)) {
+            return null;
+        }
+        ArmorStand armor_stand = (ArmorStand) entity.getPassenger().getPassenger();
+        return armor_stand.getCustomName();
+    }
 
 }

@@ -11,6 +11,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SlimeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSlime extends Kit {
@@ -23,6 +24,7 @@ public class KitSlime extends Kit {
         this.knockback = 1.75;
         this.name = "Slime";
         this.menuItem = Material.SLIME_BALL;
+        this.podium_mob_type = EntityType.SLIME;
     }
 
     @Override

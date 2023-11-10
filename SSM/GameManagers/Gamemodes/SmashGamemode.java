@@ -6,19 +6,22 @@ import SSM.GameManagers.KitManager;
 import SSM.GameManagers.Maps.MapFile;
 import SSM.Kits.*;
 import SSM.SSM;
+import SSM.Utilities.Utils;
+import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import org.apache.commons.io.FileUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.util.Vector;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public abstract class SmashGamemode implements Listener {
 
@@ -27,20 +30,25 @@ public abstract class SmashGamemode implements Listener {
     protected List<MapFile> allowed_maps = new ArrayList<MapFile>();
     protected List<Kit> allowed_kits = new ArrayList<Kit>();
     protected int players_to_start = 2;
+    protected File all_gamemodes_folder = null;
+    protected File gamemode_folder = null;
+    protected File kit_podium_data = null;
 
-    public SmashGamemode() {
-        Bukkit.getPluginManager().registerEvents(this, SSM.getInstance());
-    }
+    public SmashGamemode() { }
 
     public void updateAllowedMaps() {
         allowed_maps.clear();
         File maps_folder = new File("maps");
         if(!maps_folder.exists()) {
-            maps_folder.mkdir();
+            if(!maps_folder.mkdir()) {
+                Bukkit.broadcastMessage(ChatColor.RED + "Failed to make Main Maps Folder");
+            }
         }
         File gamemode_maps_folder = new File("maps/" + name);
         if (!gamemode_maps_folder.exists()) {
-            gamemode_maps_folder.mkdir();
+            if(!gamemode_maps_folder.mkdir()) {
+                Bukkit.broadcastMessage(ChatColor.RED + "Failed to make Maps Folder: " + name);
+            }
         }
         for (File map : gamemode_maps_folder.listFiles()) {
             if (!map.isDirectory()) {
@@ -72,6 +80,29 @@ public abstract class SmashGamemode implements Listener {
         allowed_kits.add(new KitGuardian());
         allowed_kits.add(new KitSheep());
         allowed_kits.add(new KitVillager());
+    }
+
+    public void createDataFiles() {
+        /*all_gamemodes_folder = new File("gamemodes");
+        if(!all_gamemodes_folder.exists()) {
+            if(!all_gamemodes_folder.mkdir()) {
+                Bukkit.broadcastMessage(ChatColor.RED + "Failed to make Main Gamemode Folder");
+            }
+        }
+        gamemode_folder = new File(all_gamemodes_folder.getPath() + "/" + name);
+        if(!gamemode_folder.exists())  {
+            if(!gamemode_folder.mkdir()) {
+                Bukkit.broadcastMessage(ChatColor.RED + "Failed to make Gamemode Folder: " + name);
+            }
+        }
+        kit_podium_data = new File(gamemode_folder.getPath() + "/kit_podium_data.yml");
+        if(!kit_podium_data.exists()) {
+            try {
+                kit_podium_data.createNewFile();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }*/
     }
 
     public void setPlayerLives(HashMap<Player, Integer> lives) {
@@ -145,6 +176,34 @@ public abstract class SmashGamemode implements Listener {
 
     public int getPlayersToStart() {
         return players_to_start;
+    }
+
+    public void checkPodiumClick(Player player, Entity clicked) {
+        if(clicked == null) {
+            return;
+        }
+        String clicked_name = Utils.getAttachedCustomName(clicked);
+        if(clicked_name == null) {
+            return;
+        }
+        for(Kit kit : allowed_kits) {
+            if(clicked_name.equals(ChatColor.GREEN + kit.getName())) {
+                player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1.0f, 1.0f);
+                KitManager.equipPlayer(player, kit);
+                GameManager.setDefaultKit(player, kit);
+                return;
+            }
+        }
+    }
+
+    @EventHandler
+    public void leftClickPodiumMob(PrePlayerAttackEntityEvent e) {
+        checkPodiumClick(e.getPlayer(), e.getAttacked());
+    }
+
+    @EventHandler
+    public void rightClickPodiumMob(PlayerInteractEntityEvent e)  {
+        checkPodiumClick(e.getPlayer(), e.getRightClicked());
     }
 
 }

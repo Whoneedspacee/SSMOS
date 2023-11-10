@@ -8,8 +8,13 @@ import SSM.Attributes.Hunger;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.WitherSkeletonDisguise;
+import SSM.GameManagers.GameManager;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.inventory.ItemStack;
 
 public class KitWitherSkeleton extends Kit {
@@ -22,6 +27,7 @@ public class KitWitherSkeleton extends Kit {
         this.knockback = 1.2;
         this.name = "Wither Skeleton";
         this.menuItem = Material.IRON_SWORD;
+        this.podium_mob_type = EntityType.SKELETON;
     }
 
     @Override
@@ -54,6 +60,16 @@ public class KitWitherSkeleton extends Kit {
         setItem(new ItemStack(Material.IRON_SWORD), 0);
         setItem(new ItemStack(Material.IRON_AXE), 1);
         setItem(Compass.COMPASS_ITEM, 2);
+    }
+
+    @Override
+    public Entity getNewPodiumMob() {
+        Entity entity = super.getNewPodiumMob();
+        if(entity instanceof Skeleton) {
+            Skeleton skeleton = (Skeleton) entity;
+            skeleton.setSkeletonType(Skeleton.SkeletonType.WITHER);
+        }
+        return entity;
     }
 
 }

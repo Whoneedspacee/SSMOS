@@ -11,6 +11,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.WolfDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitWolf extends Kit {
@@ -23,6 +24,7 @@ public class KitWolf extends Kit {
         this.knockback = 1.5;
         this.name = "Wolf";
         this.menuItem = Material.BONE;
+        this.podium_mob_type = EntityType.WOLF;
     }
 
     @Override

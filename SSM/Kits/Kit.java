@@ -6,12 +6,8 @@ import SSM.Events.GameStateChangeEvent;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.GameManager;
 import SSM.SSM;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Player;
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -36,6 +32,7 @@ public abstract class Kit implements Listener {
     protected boolean invincible = false;
     protected boolean intangible = false;
     protected Material menuItem;
+    protected EntityType podium_mob_type = EntityType.SILVERFISH;
 
     protected List<Attribute> attributes = new ArrayList<Attribute>();
     protected Ability[] hotbarAbilities = new Ability[9];
@@ -272,6 +269,10 @@ public abstract class Kit implements Listener {
 
     public boolean isActive() {
         return playing;
+    }
+
+    public Entity getNewPodiumMob() {
+        return GameManager.getLobbyWorld().spawnEntity(new Location(GameManager.getLobbyWorld(), 0, 0, 0), podium_mob_type);
     }
 
     @EventHandler

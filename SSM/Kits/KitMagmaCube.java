@@ -11,6 +11,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.MagmaCubeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitMagmaCube extends Kit {
@@ -23,6 +24,7 @@ public class KitMagmaCube extends Kit {
         this.knockback = 1.75;
         this.name = "Magma Cube";
         this.menuItem = Material.MAGMA_CREAM;
+        this.podium_mob_type = EntityType.MAGMA_CUBE;
     }
 
     @Override

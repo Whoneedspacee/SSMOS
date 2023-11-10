@@ -12,6 +12,7 @@ import SSM.GameManagers.Disguises.WitchDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Bat;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitWitch extends Kit {
@@ -24,6 +25,7 @@ public class KitWitch extends Kit {
         this.knockback = 1.5;
         this.name = "Witch";
         this.menuItem = Material.POTION;
+        this.podium_mob_type = EntityType.WITCH;
     }
 
     @Override

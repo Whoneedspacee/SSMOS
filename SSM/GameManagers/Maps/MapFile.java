@@ -113,7 +113,7 @@ public class MapFile {
 
     public void deleteWorld() {
         for (Player player : copy_world.getPlayers()) {
-            player.teleport(GameManager.lobby_world.getSpawnLocation());
+            player.teleport(GameManager.getLobbyWorld().getSpawnLocation());
         }
         Bukkit.unloadWorld(copy_world, true);
     }

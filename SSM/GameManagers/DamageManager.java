@@ -21,11 +21,8 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityCombustByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -35,6 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DamageManager implements Listener {
@@ -42,10 +40,20 @@ public class DamageManager implements Listener {
     private static DamageManager ourInstance;
     private JavaPlugin plugin = SSM.getInstance();
     private static List<SmashDamageEvent> damage_record = new ArrayList<>();
+    public static HashMap<org.bukkit.entity.Entity, Integer> invincible_mobs = new HashMap<org.bukkit.entity.Entity, Integer>();
 
     public DamageManager() {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
+    }
+
+    // Disable mob combustion in sunlight
+    @EventHandler
+    public void onImageCombust(EntityCombustEvent e) {
+        if(e instanceof EntityCombustByBlockEvent || e instanceof EntityCombustByEntityEvent) {
+            return;
+        }
+        e.setCancelled(true);
     }
 
     // We will handle fast blocking in this way, the method
@@ -210,6 +218,10 @@ public class DamageManager implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void cancelSmashDamage(SmashDamageEvent e) {
+        if(invincible_mobs.containsKey(e.getDamagee())) {
+            e.setCancelled(true);
+            return;
+        }
         if (e.getDamagee().getHealth() <= 0) {
             e.setCancelled(true);
             return;

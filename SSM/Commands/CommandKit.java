@@ -1,6 +1,7 @@
 package SSM.Commands;
 
 import SSM.GameManagers.GameManager;
+import SSM.GameManagers.Gamemodes.TestingGamemode;
 import SSM.GameManagers.KitManager;
 import SSM.Kits.Kit;
 import org.bukkit.Bukkit;
@@ -22,7 +23,7 @@ public class CommandKit implements CommandExecutor {
         if (!(commandSender instanceof Player)) {
             return true;
         }
-        if(!GameManager.getGamemode().getName().equals("Testing")) {
+        if(!(GameManager.getGamemode() instanceof TestingGamemode)) {
             if(GameManager.getState() >= GameManager.GameState.GAME_PLAYING && !commandSender.isOp()) {
                 commandSender.sendMessage("You may not use this command while a game is in progress.");
                 return true;

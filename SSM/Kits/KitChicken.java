@@ -6,6 +6,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.ChickenDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitChicken extends Kit {
@@ -18,6 +19,7 @@ public class KitChicken extends Kit {
         this.knockback = 2.0;
         this.name = "Chicken";
         this.menuItem = Material.EGG;
+        this.podium_mob_type = EntityType.CHICKEN;
     }
 
     @Override

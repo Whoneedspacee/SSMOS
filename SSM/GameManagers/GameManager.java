@@ -19,12 +19,16 @@ import SSM.Utilities.EffectUtil;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import net.minecraft.server.v1_8_R3.ChatMessage;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -34,6 +38,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,10 +56,10 @@ public class GameManager implements Listener, Runnable {
     private static short state = GameState.LOBBY_WAITING;
     private static long time_remaining_ms = 0;
     private static long last_time_update_ms = 0;
-    public static World lobby_world = Bukkit.getWorlds().get(0);
+    private static World lobby_world = Bukkit.getWorlds().get(0);
     public static List<SmashGamemode> all_gamemodes = new ArrayList<SmashGamemode>();
     private static SmashGamemode selected_gamemode = null;
-    public static MapFile selected_map = null;
+    private static MapFile selected_map = null;
 
     public GameManager() {
         all_gamemodes.add(new SoloGamemode());
@@ -63,14 +68,13 @@ public class GameManager implements Listener, Runnable {
         for(SmashGamemode gamemode : all_gamemodes) {
             gamemode.updateAllowedMaps();
             gamemode.updateAllowedKits();
+            gamemode.createDataFiles();
         }
-        selected_gamemode = all_gamemodes.get(2);
+        setGamemode(all_gamemodes.get(0));
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            players.add(player);
-        }
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        players.addAll(Bukkit.getOnlinePlayers());
+        for (Player player : players) {
             player.teleport(lobby_world.getSpawnLocation());
         }
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 0L);
@@ -129,6 +133,10 @@ public class GameManager implements Listener, Runnable {
             Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + selected_map.getName() + ChatColor.WHITE + ChatColor.BOLD + " won the vote!");
             for (Player player : lobby_world.getPlayers()) {
                 player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
+                Kit kit = getDefaultKit(player);
+                if(kit != null) {
+                    KitManager.equipPlayer(player, kit);
+                }
             }
             selected_map.createWorld();
             setTimeLeft(15);
@@ -387,8 +395,46 @@ public class GameManager implements Listener, Runnable {
         return spectators.contains(player);
     }
 
+    public static void clearLobbyWorldEntities() {
+        for(Entity entity : lobby_world.getEntities()) {
+            if(!(entity instanceof Player)) {
+                DamageManager.invincible_mobs.remove(entity);
+                entity.remove();
+            }
+        }
+    }
+
     public static void setGamemode(SmashGamemode gamemode) {
+        HandlerList.unregisterAll(selected_gamemode);
         selected_gamemode = gamemode;
+        Bukkit.getPluginManager().registerEvents(gamemode, SSM.getInstance());
+        // Clear current lobby world entities
+        clearLobbyWorldEntities();
+        // Make kit podiums
+        for(int i = 1; i <= KitManager.getAllKits().size(); i++) {
+            Kit kit = KitManager.getAllKits().get(i - 1);
+            Location podium_location = new Location(lobby_world, 0, 0, 0);
+            Object data = ConfigManager.getConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, String.valueOf(i));
+            if(data == null) {
+                ConfigManager.setConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, new Location(lobby_world, 0, 0, 0, 0, 0), String.valueOf(i));
+            }
+            if(data instanceof Location) {
+                Location temp = (Location) data;
+                podium_location = new Location(lobby_world, temp.getX(), temp.getY(), temp.getZ(), temp.getYaw(), temp.getPitch());
+            }
+            Entity podium_mob = kit.getNewPodiumMob();
+            podium_mob.teleport(podium_location);
+            Utils.attachCustomName(podium_mob, ChatColor.GREEN + kit.getName());
+            DamageManager.invincible_mobs.put(podium_mob, 1);
+            // Disable mob ai
+            net.minecraft.server.v1_8_R3.Entity nms_entity = ((CraftEntity) podium_mob).getHandle();
+            NBTTagCompound comp = new NBTTagCompound();
+            nms_entity.c(comp);
+            comp.setByte("NoAI", (byte) 1);
+            nms_entity.f(comp);
+            nms_entity.b(true);
+        }
+        // Clear all current map votes
         for(SmashGamemode check : all_gamemodes) {
             for(MapFile mapFile : check.getAllowedMaps()) {
                 mapFile.clearVoted();
@@ -398,6 +444,10 @@ public class GameManager implements Listener, Runnable {
 
     public static SmashGamemode getGamemode() {
         return selected_gamemode;
+    }
+
+    public static World getLobbyWorld() {
+        return lobby_world;
     }
 
     public static void setState(short value) {
@@ -501,6 +551,34 @@ public class GameManager implements Listener, Runnable {
         }
         // Choose random from tied list
         return tied.get((int) (Math.random() * tied.size()));
+    }
+
+    public static MapFile getSelectedMap() {
+        return selected_map;
+    }
+
+    public static void setDefaultKit(Player player, Kit kit) {
+        Utils.sendServerMessageToPlayer("Set " + ChatColor.GREEN + kit.getName() +
+                ChatColor.GRAY + " as your default kit.", player, ServerMessageType.GAME);
+        ConfigManager.setPlayerGamemodeConfigOption(player, ConfigManager.ConfigOption.DEFAULT_KIT, kit.getName());
+    }
+
+    public static Kit getDefaultKit(Player player) {
+        SmashGamemode gamemode = selected_gamemode;
+        if(selected_gamemode instanceof TestingGamemode) {
+            gamemode = all_gamemodes.get(0);
+        }
+        Object config_option = ConfigManager.getPlayerGamemodeConfigOption(player, ConfigManager.ConfigOption.DEFAULT_KIT, gamemode);
+        if(config_option == null) {
+            return null;
+        }
+        String default_kit_name = config_option.toString();
+        for(Kit kit : KitManager.getAllKits()) {
+            if(kit.getName().equals(default_kit_name)) {
+                return kit;
+            }
+        }
+        return null;
     }
 
     @EventHandler

@@ -8,6 +8,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SnowmanDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSnowMan extends Kit {
@@ -20,6 +21,7 @@ public class KitSnowMan extends Kit {
         this.knockback = 1.4;
         this.name = "Snowman";
         this.menuItem = Material.SNOW_BALL;
+        this.podium_mob_type = EntityType.SNOWMAN;
     }
 
     @Override

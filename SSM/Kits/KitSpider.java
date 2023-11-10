@@ -8,6 +8,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SpiderDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSpider extends Kit {
@@ -20,6 +21,7 @@ public class KitSpider extends Kit {
         this.knockback = 1.5;
         this.name = "Spider";
         this.menuItem = Material.SPIDER_EYE;
+        this.podium_mob_type = EntityType.SPIDER;
     }
 
     @Override

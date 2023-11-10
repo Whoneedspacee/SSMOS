@@ -11,6 +11,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.EndermanDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitEnderman extends Kit {
@@ -23,6 +24,7 @@ public class KitEnderman extends Kit {
         this.knockback = 1.25;
         this.name = "Enderman";
         this.menuItem = Material.ENDER_PEARL;
+        this.podium_mob_type = EntityType.ENDERMAN;
     }
 
     @Override

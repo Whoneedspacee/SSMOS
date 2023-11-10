@@ -11,6 +11,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SquidDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitSquid extends Kit {
@@ -23,6 +24,7 @@ public class KitSquid extends Kit {
         this.knockback = 1.5;
         this.name = "Sky Squid";
         this.menuItem = Material.INK_SACK;
+        this.podium_mob_type = EntityType.SQUID;
     }
 
     @Override

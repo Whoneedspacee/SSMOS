@@ -7,6 +7,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.PigDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitPig extends Kit {
@@ -19,6 +20,7 @@ public class KitPig extends Kit {
         this.knockback = 1.5;
         this.name = "Pig";
         this.menuItem = Material.PORK;
+        this.podium_mob_type = EntityType.PIG;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class CommandUnloadWorld implements CommandExecutor {
             return false;
         }
         for (Player player : world.getPlayers()) {
-            player.teleport(GameManager.lobby_world.getSpawnLocation());
+            player.teleport(GameManager.getLobbyWorld().getSpawnLocation());
         }
         Bukkit.unloadWorld(world, true);
         return true;

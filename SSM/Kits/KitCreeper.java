@@ -11,6 +11,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.CreeperDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitCreeper extends Kit {
@@ -23,6 +24,7 @@ public class KitCreeper extends Kit {
         this.knockback = 1.65;
         this.name = "Creeper";
         this.menuItem = Material.SULPHUR;
+        this.podium_mob_type = EntityType.CREEPER;
     }
 
     @Override

@@ -7,6 +7,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.BlazeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
@@ -20,6 +21,7 @@ public class KitBlaze extends Kit {
         this.knockback = 1.50;
         this.name = "Blaze";
         this.menuItem = Material.BLAZE_POWDER;
+        this.podium_mob_type = EntityType.BLAZE;
     }
 
     @Override

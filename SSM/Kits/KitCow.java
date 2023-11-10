@@ -12,6 +12,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.CowDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitCow extends Kit {
@@ -24,6 +25,7 @@ public class KitCow extends Kit {
         this.knockback = 1.1;
         this.name = "Cow";
         this.menuItem = Material.RAW_BEEF;
+        this.podium_mob_type = EntityType.COW;
     }
 
     @Override

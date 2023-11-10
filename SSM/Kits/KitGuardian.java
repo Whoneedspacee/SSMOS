@@ -6,6 +6,7 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.GuardianDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class KitGuardian extends Kit {
@@ -18,6 +19,7 @@ public class KitGuardian extends Kit {
         this.knockback = 1.25;
         this.name = "Guardian";
         this.menuItem = Material.PRISMARINE_SHARD;
+        this.podium_mob_type = EntityType.GUARDIAN;
     }
 
     @Override

@@ -6,6 +6,10 @@ import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.VillagerDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 
 public class KitVillager extends Kit {
@@ -18,6 +22,7 @@ public class KitVillager extends Kit {
         this.knockback = 1.45;
         this.name = "Villager";
         this.menuItem = Material.WHEAT;
+        this.podium_mob_type = EntityType.VILLAGER;
     }
 
     @Override
@@ -42,6 +47,16 @@ public class KitVillager extends Kit {
     public void setGameHotbar() {
         setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
         setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+    }
+
+    @Override
+    public Entity getNewPodiumMob() {
+        Entity entity = super.getNewPodiumMob();
+        if(entity instanceof Villager) {
+            Villager villager = (Villager) entity;
+            villager.setProfession(Villager.Profession.FARMER);
+        }
+        return entity;
     }
 
 }
