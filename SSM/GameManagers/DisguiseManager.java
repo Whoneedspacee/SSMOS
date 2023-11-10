@@ -258,7 +258,7 @@ public class DisguiseManager implements Listener, Runnable {
             }
             double from_distance = other.getLocation().distance(e.getFrom());
             double to_distance = other.getLocation().distance(e.getTo());
-            double despawn_distance = 90;
+            double despawn_distance = 80;
             if(from_distance > despawn_distance && to_distance <= despawn_distance) {
                 showDisguise(player, other);
                 showDisguise(other, player);
@@ -279,7 +279,7 @@ public class DisguiseManager implements Listener, Runnable {
             }
             double from_distance = other.getLocation().distance(e.getFrom());
             double to_distance = other.getLocation().distance(e.getTo());
-            double despawn_distance = 90;
+            double despawn_distance = 80;
             if(from_distance > despawn_distance && to_distance <= despawn_distance) {
                 showDisguise(player, other);
                 showDisguise(other, player);
