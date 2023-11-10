@@ -115,6 +115,7 @@ public class Utils {
         }
         World world = ent.getWorld();
         Location location = ent.getLocation();
+        // Hitbox Edges
         double[] coords = {-0.3, 0, 0.3};
         for (double x : coords) {
             for (double z : coords) {

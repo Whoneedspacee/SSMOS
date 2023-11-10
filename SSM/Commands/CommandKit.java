@@ -52,7 +52,7 @@ public class CommandKit implements CommandExecutor {
         for (Kit kit : KitManager.getAllKits()) {
             ItemStack item = kit.getMenuItemStack();
             ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.RESET + kit.getName().replace("_", " "));
+            itemMeta.setDisplayName(ChatColor.RESET + kit.getName());
             item.setItemMeta(itemMeta);
 
             selectKit.setItem(slot, item);

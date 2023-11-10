@@ -25,13 +25,13 @@ import java.util.List;
 public class AngryHerd extends Ability implements OwnerRightClickEvent {
 
     private int herd_task = -1;
-    private long duration_ms = 2500;
-    private long stuck_time_ms = 300;
-    private long force_move_time_ms = 350;
     private HashMap<Entity, Vector> cow_direction = new HashMap<Entity, Vector>();
     private HashMap<Entity, Location> last_cow_location = new HashMap<Entity, Location>();
     private HashMap<Entity, Long> last_move_time = new HashMap<Entity, Long>();
     protected HashMap<Player, Long> last_damage_time = new HashMap<Player, Long>();
+    protected long stuck_time_ms = 300;
+    protected long force_move_time_ms = 350;
+    protected long duration_ms = 2500;
     protected double hitbox_radius = 2.2;
     protected long damage_cooldown_ms = 600;
     protected double damage = 5;

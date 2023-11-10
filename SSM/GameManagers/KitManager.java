@@ -98,12 +98,13 @@ public class KitManager implements Listener {
     public void clickEvent(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         ItemStack item = e.getCurrentItem();
-        if (item == null) {
+        if (item == null || item.getItemMeta() == null) {
             return;
         }
         if (e.getView().getTitle().contains("Kit")) {
             for (Kit kit : KitManager.getAllKits()) {
-                if (item.getType().equals(kit.getMenuItemType())) {
+                // Hard Coded Horribleness
+                if (item.getItemMeta().getDisplayName().equals(ChatColor.RESET + kit.getName())) {
                     KitManager.equipPlayer(player, kit);
                     player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1f, 1f);
                     player.closeInventory();
