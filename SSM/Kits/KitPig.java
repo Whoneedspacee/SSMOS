@@ -1,7 +1,10 @@
 package SSM.Kits;
 
+import SSM.Abilities.BabyBaconBomb;
+import SSM.Abilities.BouncyBacon;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
 import SSM.Attributes.ExpCharge;
+import SSM.Attributes.NetherPig;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.PigDisguise;
@@ -27,9 +30,13 @@ public class KitPig extends Kit {
         setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
         setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
 
+        setAbility(new BouncyBacon(), 0);
+        setAbility(new BabyBaconBomb(), 1);
+
         addAttribute(new Regeneration(regeneration, 20));
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new ExpCharge(0.011F, 1, true, true, false));
+        addAttribute(new ExpCharge(0.005F, 1, true, true, false));
+        addAttribute(new NetherPig());
 
         DisguiseManager.addDisguise(owner, new PigDisguise(owner));
     }

@@ -86,6 +86,13 @@ public class DisguiseManager implements Listener, Runnable {
         }
     }
 
+    public static Disguise getDisguise(Player player){
+        if (!disguises.containsKey(player)){
+            return null;
+        }
+        return disguises.get(player);
+    }
+
     public static void initializePlayer(Player player) {
         ChannelDuplexHandler channelDuplexHandler = new ChannelDuplexHandler() {
             @Override

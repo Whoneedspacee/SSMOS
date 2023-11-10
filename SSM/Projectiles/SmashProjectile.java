@@ -209,6 +209,10 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
         return false;
     }
 
+    public Entity getProjectileEntity(){
+        return projectile;
+    }
+
     public void setProjectileEntity(Entity projectile) {
         if (projectile == null) {
             return;
