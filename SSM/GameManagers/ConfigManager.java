@@ -14,6 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class ConfigManager implements Listener {
 
+    // This manager was thrown together, if you want more config options please make this better
     public enum ConfigOption {
         DEFAULT_KIT("default-kit"),
         BOSS_KIT("preferred-boss-kit"),

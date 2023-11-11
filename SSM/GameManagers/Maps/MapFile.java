@@ -85,12 +85,12 @@ public class MapFile {
         } catch (Exception e) {
             Bukkit.broadcastMessage(ChatColor.RED + "Failed to load world.");
         }
-        // Parse map for objects
-        int size = 200;
+        int size = 150;
+        // Parse map for other objects
         for (int x = -size; x <= size; x++) {
             for (int y = -size; y <= size; y++) {
                 for (int z = -size; z <= size; z++) {
-                    Block parsed = copy_world.getSpawnLocation().getBlock().getRelative(x, y, z);
+                    Block parsed = copy_world.getBlockAt(x, y, z);
                     if (isRespawnPoint(parsed)) {
                         respawn_points.add(parsed.getLocation());
                         parsed.getRelative(0, 1, 0).setType(Material.AIR);

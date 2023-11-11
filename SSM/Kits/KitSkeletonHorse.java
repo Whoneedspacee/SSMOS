@@ -1,7 +1,10 @@
 package SSM.Kits;
 
+import SSM.Abilities.BoneExplosion;
+import SSM.Abilities.BoneKick;
+import SSM.Abilities.BoneRush;
+import SSM.Attributes.*;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SkeletonHorseDisguise;
 import org.bukkit.DyeColor;
@@ -21,7 +24,7 @@ public class KitSkeletonHorse extends Kit {
         this.damage = 6;
         this.armor = 6.5;
         this.regeneration = 0.3;
-        this.knockback = 1.25;
+        this.knockback = 1.4;
         this.name = "Skeleton Horse";
         this.menuItem = Material.BONE;
         this.podium_mob_type = EntityType.HORSE;
@@ -34,22 +37,31 @@ public class KitSkeletonHorse extends Kit {
         setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmorSlot(Material.CHAINMAIL_HELMET, 3);
 
-        addAttribute(new Regeneration(regeneration, 20));
+        setAbility(new BoneKick(), 0);
+        setAbility(new BoneRush(), 1);
+
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new DeadlyBones());
 
         DisguiseManager.addDisguise(owner, new SkeletonHorseDisguise(owner));
     }
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
-        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.IRON_SPADE), 1);
+        setItem(new ItemStack(Material.BONE), 2, getAttributeByClass(DeadlyBones.class));
+        setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
-        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.IRON_SPADE), 1);
+        setItem(Compass.COMPASS_ITEM, 2);
     }
 
     @Override

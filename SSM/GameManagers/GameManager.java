@@ -71,7 +71,7 @@ public class GameManager implements Listener, Runnable {
             gamemode.updateAllowedKits();
             gamemode.createDataFiles();
         }
-        setGamemode(all_gamemodes.get(0));
+        setGamemode(all_gamemodes.get(2));
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
         players.addAll(Bukkit.getOnlinePlayers());

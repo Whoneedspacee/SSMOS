@@ -1,7 +1,10 @@
 package SSM.Projectiles;
 
+import SSM.GameManagers.KitManager;
+import SSM.Kits.Kit;
 import SSM.SSM;
 import SSM.Utilities.BlocksUtil;
+import SSM.Utilities.DamageUtil;
 import SSM.Utilities.Utils;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
@@ -131,6 +134,12 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
             }
             if(!canHitEntity(check)) {
                 continue;
+            }
+            if(check instanceof Player) {
+                Kit kit = KitManager.getPlayerKit((Player) check);
+                if(kit != null && kit.isIntangible()) {
+                    continue;
+                }
             }
             possible.add((LivingEntity) check);
         }
