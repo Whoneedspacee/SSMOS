@@ -1,6 +1,7 @@
 package SSM.Projectiles;
 
 import SSM.Events.SmashDamageEvent;
+import SSM.Utilities.DamageUtil;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import SSM.Utilities.VelocityUtil;
@@ -22,7 +23,7 @@ public class BaconProjectile extends SmashProjectile {
         super(firer, name);
         this.damage = 4;
         this.hitbox_size = 0.58;
-        this.knockback_mult = 1; //temp
+        this.knockback_mult = 1;
         this.expiration_ticks = 100;
     }
 
@@ -51,46 +52,51 @@ public class BaconProjectile extends SmashProjectile {
 
     @Override
     protected boolean onExpire() {
+        bounceBack();
         this.cancel();
         return false;
     }
 
     @Override
     protected boolean onHitLivingEntity(LivingEntity hit) {
-        bounceBack(true);
+        if (projectile instanceof Item && DamageUtil.canDamage(hit, firer, damage)) {
+            Item pork = (Item) projectile;
+            pork.setItemStack(new ItemStack(Material.GRILLED_PORK));
+        }
         SmashDamageEvent smashDamageEvent = new SmashDamageEvent(hit, firer, damage);
         smashDamageEvent.multiplyKnockback(knockback_mult);
         smashDamageEvent.setIgnoreDamageDelay(true);
         smashDamageEvent.setReason(name);
         smashDamageEvent.callEvent();
+        playHitSound();
+        bounceBack();
         this.cancel();
         return false;
     }
 
     @Override
     protected boolean onHitBlock(Block hit) {
-        bounceBack(false);
+        bounceBack();
         this.cancel();
         return false;
     }
 
     @Override
     protected boolean onIdle() {
+        bounceBack();
         this.cancel();
         return false;
     }
 
-    protected void bounceBack(boolean hitEntity){
+    protected void bounceBack(){
         if (projectile instanceof Item){
             Item pork = (Item) projectile;
             pork.setPickupDelay(5);
-            if (hitEntity) pork.setItemStack(new ItemStack(Material.GRILLED_PORK));
         }
         firer.getWorld().playSound(firer.getLocation(), Sound.ITEM_PICKUP, 1f, 0.5f);
+        double mult = 0.5 + (0.035 * (firer.getLocation().distance(projectile.getLocation())));
         Vector playerVector = firer.getLocation().toVector();
         Vector projectileVector = projectile.getLocation().toVector();
-
-        double mult = 0.5 + (0.035 * (playerVector.clone().subtract(projectileVector).length()));
         projectile.setVelocity(playerVector.subtract(projectileVector).normalize().add(new Vector(0, 0.4, 0)).multiply(mult));
     }
 

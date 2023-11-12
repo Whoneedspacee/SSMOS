@@ -110,8 +110,6 @@ public class GuidedWitherSkull extends Ability implements OwnerRightClickEvent {
                         continue;
                     }
                     double distance_scale = can_hit.get(livingEntity);
-                    Bukkit.broadcastMessage("Distance Scale: " + distance_scale);
-                    Bukkit.broadcastMessage("Scale: " + scale);
                     SmashDamageEvent smashDamageEvent = new SmashDamageEvent(livingEntity, owner, damage * scale * distance_scale);
                     smashDamageEvent.multiplyKnockback(knockback);
                     smashDamageEvent.setIgnoreDamageDelay(true);

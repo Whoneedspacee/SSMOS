@@ -53,7 +53,7 @@ public class WolfStrike extends Ability implements OwnerRightClickEvent, OwnerDe
                 if (owner == null) {
                     Bukkit.getScheduler().cancelTask(strike_task);
                 }
-                for (Player player : GameManager.getPlayers()) {
+                for (Player player : owner.getWorld().getPlayers()) {
                     if(player.equals(owner)) {
                         continue;
                     }

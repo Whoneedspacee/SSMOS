@@ -14,7 +14,7 @@ public class SkeletonHorseDisguise extends Disguise {
     public SkeletonHorseDisguise(Player owner) {
         super(owner);
         name = "Sheep";
-        type = EntityType.SHEEP;
+        type = EntityType.HORSE;
     }
 
     protected EntityLiving newLiving() {

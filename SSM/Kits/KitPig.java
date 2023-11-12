@@ -1,11 +1,9 @@
 package SSM.Kits;
 
-import SSM.Abilities.BabyBaconBomb;
+import SSM.Abilities.BabyBaconBombs;
 import SSM.Abilities.BouncyBacon;
+import SSM.Attributes.*;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Attributes.ExpCharge;
-import SSM.Attributes.NetherPig;
-import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.PigDisguise;
 import org.bukkit.Material;
@@ -33,9 +31,11 @@ public class KitPig extends Kit {
         setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
 
         setAbility(new BouncyBacon(), 0);
-        setAbility(new BabyBaconBomb(), 1);
+        setAbility(new BabyBaconBombs(), 1);
 
-        addAttribute(new Regeneration(regeneration, 20));
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
         addAttribute(new ExpCharge(0.005F, 1, true, true, false));
         addAttribute(new NetherPig());
@@ -45,14 +45,17 @@ public class KitPig extends Kit {
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
-        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.IRON_SPADE), 1);
+        setItem(new ItemStack(Material.PORK), 2, getAttributeByClass(NetherPig.class));
+        setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_AXE, 1), 0);
-        setItem(new ItemStack(Material.IRON_SPADE, 1), 1);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.IRON_SPADE), 1);
+        setItem(Compass.COMPASS_ITEM, 2);
     }
 
 }

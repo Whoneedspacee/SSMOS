@@ -21,6 +21,7 @@ public class Stampede extends Attribute implements OwnerDealSmashDamageEvent, Ow
     private int ticks = 0;
     protected int stack_increase_time_ms = 3000;
     protected int stacks = -1;
+    protected int max_stacks = 3;
     protected double stop_sprint_damage = 3;
 
     public Stampede() {
@@ -50,7 +51,7 @@ public class Stampede extends Attribute implements OwnerDealSmashDamageEvent, Ow
                     (float) (Math.random() - 0.5), 0, stacks * 2, 96, owner.getWorld().getPlayers());
         }
         ticks = (ticks + 1) % 5;
-        if(ticks == 0) {
+        if(ticks != 0) {
             return;
         }
         if(stacks == -1) {
@@ -72,7 +73,7 @@ public class Stampede extends Attribute implements OwnerDealSmashDamageEvent, Ow
             return;
         }
         start_time_ms = System.currentTimeMillis();
-        if(stacks < 3) {
+        if(stacks < max_stacks) {
             stacks++;
             owner.getWorld().playSound(owner.getLocation(), Sound.COW_HURT, 2f, 0.75f + 0.25f * stacks);
         }

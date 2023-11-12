@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +40,7 @@ public class DeadlyBones extends Attribute implements OwnerTakeSmashDamageEvent 
 
     public void activate() {
         BukkitRunnable runnable = new BukkitRunnable() {
-            private Entity bone = owner.getWorld().dropItemNaturally(owner.getLocation().add(0, 0.5, 0), new ItemStack(Material.BONE));
+            private Item bone = owner.getWorld().dropItemNaturally(owner.getLocation().add(0, 0.5, 0), new ItemStack(Material.BONE));
             private long drop_item = System.currentTimeMillis();
 
             @Override
@@ -52,6 +53,7 @@ public class DeadlyBones extends Attribute implements OwnerTakeSmashDamageEvent 
                 if(bone.isValid() && bone.getTicksLived() < ticks_to_explode) {
                     return;
                 }
+                bone.setPickupDelay(1000000);
                 Utils.playParticle(EnumParticle.EXPLOSION_LARGE, bone.getLocation(),
                         0, 0, 0, 0, 1, 96, bone.getWorld().getPlayers());
                 bone.getWorld().playSound(bone.getLocation(), Sound.EXPLODE, 0.8f, 1.4f);

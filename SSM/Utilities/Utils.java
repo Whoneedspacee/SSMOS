@@ -307,21 +307,21 @@ public class Utils {
         return false;
     }
 
-    public static List<Player> getNearby(Location loc, double maxDist) {
+    public static List<Player> getNearby(Location location, double maxDist) {
         LinkedList<Player> nearbyMap = new LinkedList<>();
-        for (Player cur : loc.getWorld().getPlayers()) {
+        for (Player cur : location.getWorld().getPlayers()) {
             if (!DamageUtil.canDamage(cur, null, 0)) {
                 continue;
             }
             if (cur.isDead()) {
                 continue;
             }
-            double dist = loc.distance(cur.getLocation());
+            double dist = location.distance(cur.getLocation());
             if (dist > maxDist) {
                 continue;
             }
             for (int i = 0; i < nearbyMap.size(); i++) {
-                if (dist < loc.distance(nearbyMap.get(i).getLocation())) {
+                if (dist < location.distance(nearbyMap.get(i).getLocation())) {
                     nearbyMap.add(i, cur);
                     break;
                 }

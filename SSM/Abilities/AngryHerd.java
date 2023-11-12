@@ -36,6 +36,7 @@ public class AngryHerd extends Ability implements OwnerRightClickEvent {
     protected long damage_cooldown_ms = 600;
     protected double damage = 5;
     protected int cow_amount_radius = 3;
+    protected int cow_amount_height = 1;
     protected double knockback = 1.25;
 
     public AngryHerd() {
@@ -59,18 +60,21 @@ public class AngryHerd extends Ability implements OwnerRightClickEvent {
         last_move_time.clear();
         last_damage_time.clear();
         List<Entity> cows = new ArrayList<Entity>();
-        for(int i = 1 - cow_amount_radius; i < cow_amount_radius; i++) {
-            Vector direction = owner.getLocation().getDirection();
-            direction.setY(0);
-            direction.normalize();
-            Location cow_location = owner.getLocation();
-            cow_location.add(direction);
-            cow_location.add(new Vector(-direction.getZ(), 0, direction.getX()).multiply(i * 1.5));
-            Cow cow = owner.getWorld().spawn(cow_location, Cow.class);
-            cows.add(cow);
-            cow_direction.put(cow, owner.getLocation().getDirection());
-            last_cow_location.put(cow, cow_location);
-            last_move_time.put(cow, System.currentTimeMillis());
+        for(int j = 0; j < cow_amount_height; j++) {
+            for (int i = 1 - cow_amount_radius; i < cow_amount_radius; i++) {
+                Vector direction = owner.getLocation().getDirection();
+                direction.setY(0);
+                direction.normalize();
+                Location cow_location = owner.getLocation();
+                cow_location.add(direction);
+                cow_location.add(new Vector(-direction.getZ(), 0, direction.getX()).multiply(i * 1.5));
+                cow_location.add(new Vector(0, j, 0));
+                Cow cow = owner.getWorld().spawn(cow_location, Cow.class);
+                cows.add(cow);
+                cow_direction.put(cow, owner.getLocation().getDirection());
+                last_cow_location.put(cow, cow_location);
+                last_move_time.put(cow, System.currentTimeMillis());
+            }
         }
         owner.getWorld().playSound(owner.getLocation(), Sound.COW_IDLE, 2f, 0.6f);
         if (Bukkit.getScheduler().isQueued(herd_task) || Bukkit.getScheduler().isCurrentlyRunning(herd_task)) {
