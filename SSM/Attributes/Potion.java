@@ -13,7 +13,7 @@ public class Potion extends Attribute {
         this.name = "Potion";
         this.level = level;
         this.effect = effect;
-        task = this.runTaskTimer(plugin, 0, 1);
+        task = this.runTaskTimer(plugin, 0, 100);
     }
 
     @Override
@@ -22,7 +22,8 @@ public class Potion extends Attribute {
     }
 
     public void activate() {
-        owner.addPotionEffect(new PotionEffect(effect, 80, level, false, false));
+        owner.removePotionEffect(effect);
+        owner.addPotionEffect(new PotionEffect(effect, 160, level, false, false));
     }
 
 }

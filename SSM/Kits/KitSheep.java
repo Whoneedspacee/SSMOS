@@ -1,6 +1,12 @@
 package SSM.Kits;
 
+import SSM.Abilities.StaticLaser;
+import SSM.Abilities.WoolMine;
+import SSM.Abilities.WoolyRocket;
+import SSM.Attributes.Compass;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
+import SSM.Attributes.Hunger;
+import SSM.Attributes.RainbowSheep;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.SheepDisguise;
@@ -22,7 +28,7 @@ public class KitSheep extends Kit {
         this.armor = 5;
         this.regeneration = 0.25;
         this.knockback = 1.7;
-        this.name = "Sheep";
+        this.name = "Sir. Sheep";
         this.menuItem = Material.WOOL;
         this.podium_mob_type = EntityType.SHEEP;
     }
@@ -33,7 +39,13 @@ public class KitSheep extends Kit {
         setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
         setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
 
-        addAttribute(new Regeneration(regeneration, 20));
+        setAbility(new StaticLaser(), 0);
+        setAbility(new WoolMine(), 1);
+        setAbility(new WoolyRocket(), 2);
+
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(1, 1, 1, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new SheepDisguise(owner));
@@ -41,14 +53,18 @@ public class KitSheep extends Kit {
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(new ItemStack(Material.IRON_SPADE), 2);
+        setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(new ItemStack(Material.IRON_SPADE), 2);
+        setItem(Compass.COMPASS_ITEM, 3);
     }
 
     @Override

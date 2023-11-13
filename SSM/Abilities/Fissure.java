@@ -45,7 +45,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
         }
         if (!Utils.entityIsOnGround(owner)) {
             Utils.sendAttributeMessage("You cannot use",
-                    name + ChatColor.GRAY + " while airborne", owner, ServerMessageType.GAME);
+                    name + ChatColor.GRAY + " while airborne", owner, ServerMessageType.SKILL);
             return;
         }
         checkAndActivate();

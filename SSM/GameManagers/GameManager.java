@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -166,8 +167,8 @@ public class GameManager implements Listener, Runnable {
                 }
                 Location starting_point = selected_gamemode.getRandomRespawnPoint(selected_map, player);
                 player.teleport(starting_point);
-                selected_gamemode.setPlayerLives(lives);
             }
+            selected_gamemode.setPlayerLives(lives);
             for (Player player : selected_map.getCopyWorld().getPlayers()) {
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
                 for(int i = 0; i < 6 - selected_gamemode.getDescription().length; i++) {
@@ -319,7 +320,7 @@ public class GameManager implements Listener, Runnable {
         Bukkit.broadcastMessage(ServerMessageType.DEATH + " " + ChatColor.YELLOW + player.getName() +
                 ChatColor.GRAY + " killed by " + ChatColor.YELLOW + record.getDamagerName() +
                 ChatColor.GRAY + " with " + record.getReasonColor() + record.getReason() + ChatColor.GRAY + ".");
-        DamageManager.deathReport(player);
+        DamageManager.deathReport(player, true);
         if(record.getDamager() != null && record.getDamager() instanceof Player) {
             Player damager = (Player) record.getDamager();
             Kit kit = KitManager.getPlayerKit(damager);
@@ -628,6 +629,13 @@ public class GameManager implements Listener, Runnable {
             map.getVoted().remove(e.getPlayer());
         }
         DisplayManager.buildScoreboard();
+    }
+
+    @EventHandler
+    public void cancelChickenEggSpawn(CreatureSpawnEvent e) {
+        if(e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.EGG) {
+            e.setCancelled(true);
+        }
     }
 
     @EventHandler

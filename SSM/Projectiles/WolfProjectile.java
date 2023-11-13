@@ -33,6 +33,7 @@ public class WolfProjectile extends SmashProjectile {
         this.hitbox_size = 1;
         this.knockback_mult = 0;
         this.expiration_ticks = 70;
+        this.blockDetection = false;
     }
 
     @Override
@@ -55,13 +56,6 @@ public class WolfProjectile extends SmashProjectile {
     @Override
     protected boolean canHitEntity(Entity entity) {
         return (entity instanceof Player);
-    }
-
-    // Causes issues with the projectile due to the projectile not cancelling
-    // on block hit, and checkHitBlock changing the projectiles motion and location
-    @Override
-    protected Block checkHitBlock() {
-        return null;
     }
 
     @Override

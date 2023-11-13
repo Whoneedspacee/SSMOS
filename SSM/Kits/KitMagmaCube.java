@@ -2,17 +2,15 @@ package SSM.Kits;
 
 import SSM.Abilities.FlameDash;
 import SSM.Abilities.MagmaBlast;
-import SSM.Attributes.Compass;
+import SSM.Attributes.*;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Attributes.FuelTheFire;
-import SSM.Attributes.Hunger;
-import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.MagmaCubeDisguise;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 
 public class KitMagmaCube extends Kit {
 
@@ -40,6 +38,7 @@ public class KitMagmaCube extends Kit {
         addAttribute(new Hunger());
         addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new FireImmunity());
         addAttribute(new FuelTheFire());
 
         DisguiseManager.addDisguise(owner, new MagmaCubeDisguise(owner));

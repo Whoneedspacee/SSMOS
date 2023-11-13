@@ -37,7 +37,7 @@ public class ExpCharge extends Attribute {
     @Override
     public void setOwner(Player owner) {
         if (owner != null && startFullEnergy) {
-            owner.setExp(1.0f - expAdd);
+            owner.setExp(1.0f);
         }
         super.setOwner(owner);
     }

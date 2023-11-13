@@ -2,6 +2,7 @@ package SSM.GameManagers;
 
 import SSM.Abilities.Ability;
 import SSM.Attributes.Attribute;
+import SSM.Events.RechargeAttributeEvent;
 import SSM.Kits.Kit;
 import SSM.SSM;
 import SSM.Utilities.ServerMessageType;
@@ -55,6 +56,8 @@ public class CooldownManager extends BukkitRunnable {
             if (currData.getRemainingTimeMs() <= 0) {
                 cdDataIterator.remove();
 
+                RechargeAttributeEvent event = new RechargeAttributeEvent(currData.getAbilityUser(), currData.getAttribute());
+                event.callEvent();
                 Utils.sendAttributeMessage("You can use", currData.getAttribute().name,
                         currData.getAbilityUser(), ServerMessageType.RECHARGE);
                 Utils.sendActionBarMessage("§a§l" + currData.getAttribute().name + " Recharged", currData.getAbilityUser());
@@ -103,21 +106,20 @@ public class CooldownManager extends BukkitRunnable {
      */
     public void addCooldown(Attribute attribute, long duration, Player abilityUser) {
         Kit kit = KitManager.getPlayerKit(abilityUser);
-        if (duration <= 0) {
+        boolean replaced = false;
+        for(CooldownData cd : cooldownData) {
+            if(cd.getAttribute().equals(attribute)) {
+                replaced = true;
+                break;
+            }
+        }
+        if(!replaced && duration == 0) {
             return;
-        } else {
-            boolean replaced = false;
-            for(CooldownData cd : cooldownData) {
-                if(cd.getAttribute().equals(attribute)) {
-                    replaced = true;
-                    break;
-                }
-            }
-            cooldownData.removeIf(cd -> cd.getAttribute().equals(attribute));
-            cooldownData.add(new CooldownData(attribute, duration, abilityUser));
-            if(!replaced && attribute.getUseMessage() != null) {
-                Utils.sendAttributeMessage(attribute.getUseMessage(), attribute.name, abilityUser, ServerMessageType.SKILL);
-            }
+        }
+        cooldownData.removeIf(cd -> cd.getAttribute().equals(attribute));
+        cooldownData.add(new CooldownData(attribute, duration, abilityUser));
+        if(!replaced && attribute.getUseMessage() != null) {
+            Utils.sendAttributeMessage(attribute.getUseMessage(), attribute.name, abilityUser, ServerMessageType.SKILL);
         }
     }
 

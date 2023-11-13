@@ -1,8 +1,9 @@
 package SSM.Kits;
 
+import SSM.Abilities.Firefly;
+import SSM.Abilities.Inferno;
+import SSM.Attributes.*;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
-import SSM.Attributes.Potion;
-import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.BlazeDisguise;
 import org.bukkit.Material;
@@ -31,23 +32,35 @@ public class KitBlaze extends Kit {
         setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
         setArmorSlot(Material.CHAINMAIL_HELMET, 3);
 
-        addAttribute(new Regeneration(regeneration, 20));
+        setAbility(new Inferno(), 0);
+        setAbility(new Firefly(), 1);
+
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new ExpCharge(0.025F, 1, true, true, false));
         addAttribute(new Potion(PotionEffectType.SPEED, 0));
+        addAttribute(new Potion(PotionEffectType.FIRE_RESISTANCE, 0));
+        addAttribute(new FireImmunity());
+        addAttribute(new FlamingKnockback(1.5));
 
         DisguiseManager.addDisguise(owner, new BlazeDisguise(owner));
     }
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(new ItemStack(Material.BLAZE_ROD), 2, getAttributeByClass(FlamingKnockback.class));
+        setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_SWORD), 0);
+        setItem(new ItemStack(Material.IRON_AXE), 1);
+        setItem(Compass.COMPASS_ITEM, 2);
     }
 
 }

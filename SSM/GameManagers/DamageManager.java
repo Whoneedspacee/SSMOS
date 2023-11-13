@@ -332,10 +332,13 @@ public class DamageManager implements Listener {
             damagee.setHealth(new_health);
         }
         storeDamageEvent(e);
-        Disguise disguise = DisguiseManager.disguises.get(damagee);
-        if (disguise != null && disguise.getLiving() != null) {
-            PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus((net.minecraft.server.v1_8_R3.Entity) disguise.getLiving(), (byte) 2);
-            Utils.sendPacketToAllBut(disguise.getOwner(), packet);
+        Disguise disguise = null;
+        if(damagee instanceof Player) {
+            disguise = DisguiseManager.disguises.get(damagee);
+            if (disguise != null && disguise.getLiving() != null) {
+                PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus((net.minecraft.server.v1_8_R3.Entity) disguise.getLiving(), (byte) 2);
+                Utils.sendPacketToAllBut(disguise.getOwner(), packet);
+            }
         }
         damagee.playEffect(EntityEffect.HURT);
         if (cause == DamageCause.ENTITY_ATTACK || cause == DamageCause.PROJECTILE) {
@@ -349,7 +352,7 @@ public class DamageManager implements Listener {
                 DamageUtil.playDamageSound(damagee, damagee.getType());
             }
         }
-        if (damager instanceof Player && cause == DamageCause.PROJECTILE) {
+        if (damager instanceof Player && cause == DamageCause.PROJECTILE && projectile instanceof Arrow) {
             Player player = (Player) damager;
             player.playSound(player.getLocation(), Sound.ORB_PICKUP, 0.5f, 0.5f);
         }
@@ -455,7 +458,7 @@ public class DamageManager implements Listener {
         damage_record.add(e);
     }
 
-    public static void deathReport(Player player) {
+    public static void deathReport(Player player, boolean remove) {
         int count = 1;
         List<SmashDamageEvent> to_remove = new ArrayList<SmashDamageEvent>();
         for (int i = damage_record.size() - 1; i >= 0; i--) {
@@ -481,7 +484,9 @@ public class DamageManager implements Listener {
             count++;
             to_remove.add(e);
         }
-        damage_record.removeAll(to_remove);
+        if(remove) {
+            damage_record.removeAll(to_remove);
+        }
     }
 
     public static SmashDamageEvent getLastDamageEvent(Player player) {

@@ -107,6 +107,9 @@ public abstract class SmashGamemode implements Listener {
 
     public void setPlayerLives(HashMap<Player, Integer> lives) {
         for(Player player : GameManager.getPlayers()) {
+            if (GameManager.isSpectator(player)) {
+                continue;
+            }
             lives.put(player, 4);
         }
     }

@@ -29,7 +29,7 @@ public class BabyBaconBombs extends Ability implements OwnerRightClickEvent {
     private long last_time_used = 0;
     protected double damage = 4;
     protected double damage_radius = 4;
-    protected long cooldown_time_ms = 100;
+    protected long cooldown_time_ms = 500;
     protected float base_energy_cost = 0.35f;
     protected float nether_pig_modifier = 0.7f;
     protected long ticks_to_explode = 80;

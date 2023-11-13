@@ -35,6 +35,9 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     protected double knockback_mult;
     protected long expiration_ticks = 300;
     protected boolean running = false;
+    protected boolean entityDetection = true;
+    protected boolean blockDetection = true;
+    protected boolean idleDetection = true;
 
     public SmashProjectile(Player firer, String name) {
         this.firer = firer;
@@ -62,27 +65,33 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
             }
         }
         // Check if we hit an entity first
-        LivingEntity target = checkClosestTarget();
-        if (target != null) {
-            if (onHitLivingEntity(target)) {
-                playHitSound();
-                destroy();
-                return;
+        if(entityDetection) {
+            LivingEntity target = checkClosestTarget();
+            if (target != null) {
+                if (onHitLivingEntity(target)) {
+                    playHitSound();
+                    destroy();
+                    return;
+                }
             }
         }
         // Check if we hit a block next
-        Block block = checkHitBlock();
-        if (block != null) {
-            if (onHitBlock(block)) {
-                destroy();
-                return;
+        if(blockDetection) {
+            Block block = checkHitBlock();
+            if (block != null) {
+                if (onHitBlock(block)) {
+                    destroy();
+                    return;
+                }
             }
         }
         // Check if we're idle next
-        if (checkIdle()) {
-            if (onIdle()) {
-                destroy();
-                return;
+        if(idleDetection) {
+            if (checkIdle()) {
+                if (onIdle()) {
+                    destroy();
+                    return;
+                }
             }
         }
         doEffect();

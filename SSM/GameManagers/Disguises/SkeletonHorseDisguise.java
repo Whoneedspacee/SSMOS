@@ -30,8 +30,8 @@ public class SkeletonHorseDisguise extends Disguise {
             mask_value = 0x40;
         }
         dw.watch(16, mask_value);
-        PacketPlayOutEntityMetadata size_packet = new PacketPlayOutEntityMetadata(living.getId(), dw, true);
-        Utils.sendPacketToAll(size_packet);
+        PacketPlayOutEntityMetadata rearing_packet = new PacketPlayOutEntityMetadata(living.getId(), dw, true);
+        Utils.sendPacketToAll(rearing_packet);
     }
 
 }

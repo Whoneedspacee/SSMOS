@@ -60,3 +60,12 @@ commands:
   playerdisguise:
     description: 'Creates a player disguise using the skin of the name given.'
     usage: /playerdisguise
+  damagelog:
+    description: 'Shows a report of damage taken in the last 15 seconds.'
+    usage: /damagelog
+  setlives:
+    description: 'Sets the lives of the player given to the number given.'
+    usage: /setlives player number
+  setkit:
+    description: 'Sets the kit of the player given by name.'
+    usage: /setkit player name

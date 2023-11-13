@@ -14,14 +14,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class DoubleJump extends Attribute {
 
+    protected int maxDoubleJumps;
+    protected int remainingDoubleJumps = 0;
     protected double height;
     protected double power;
-    private int maxDoubleJumps;
-    private int remainingDoubleJumps = 0;
     protected Sound doubleJumpSound;
+    protected long recharge_air_ticks = 0;
+    protected boolean needs_xp = false;
 
     public DoubleJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound) {
         super();
@@ -68,15 +71,40 @@ public abstract class DoubleJump extends Attribute {
             Bukkit.broadcastMessage("Remaining jumps were 0 even though you toggled flight... what?");
         }
 
-        if (remainingDoubleJumps > 0) {
+        if (remainingDoubleJumps > 0 && check()) {
             remainingDoubleJumps--;
 
             playDoubleJumpSound();
 
-            jump();
+            checkAndActivate();
 
             if (remainingDoubleJumps <= 0) {
                 player.setAllowFlight(false);
+            } else {
+                BukkitRunnable runnable = new BukkitRunnable() {
+                    private int ticks_passed = 0;
+
+                    @Override
+                    public void run() {
+                        if(owner == null) {
+                            return;
+                        }
+                        if(owner.getAllowFlight()) {
+                            cancel();
+                            return;
+                        }
+                        if(ticks_passed >= recharge_air_ticks) {
+                            if(needs_xp && owner.getExp() <= 0) {
+                                cancel();
+                                return;
+                            }
+                            player.setAllowFlight(true);
+                            cancel();
+                        }
+                        ticks_passed++;
+                    }
+                };
+                runnable.runTaskTimer(plugin, 0L, 0L);
             }
         }
     }

@@ -50,7 +50,7 @@ public class FishFlurry extends Ability implements OwnerRightClickEvent {
         target = Utils.getTargetBlock(owner, 64);
         if (target == null || target.getType() == Material.AIR) {
             Utils.sendServerMessageToPlayer("You must target a block.",
-                    owner, ServerMessageType.GAME);
+                    owner, ServerMessageType.SKILL);
             return;
         }
         blocks.clear();

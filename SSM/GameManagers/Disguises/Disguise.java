@@ -15,6 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 public abstract class Disguise {
 
@@ -25,6 +26,7 @@ public abstract class Disguise {
     protected EntityArmorStand armorstand;
     protected EntitySquid squid;
     protected boolean showAttackAnimation = true;
+    protected org.bukkit.entity.Entity target = null;
 
     public Disguise(Player owner) {
         this.owner = owner;
@@ -136,8 +138,12 @@ public abstract class Disguise {
             return;
         }
         living.onGround = Utils.entityIsOnGround(owner);
+        if(target != null) {
+            Vector direction = target.getLocation().toVector().subtract(location.toVector());
+            location.setDirection(direction);
+        }
         living.setPositionRotation(location.getX(), location.getY(), location.getZ(),
-                owner.getLocation().getYaw(), owner.getLocation().getPitch());
+                location.getYaw(), location.getPitch());
         PacketPlayOutEntityTeleport teleport_packet = new PacketPlayOutEntityTeleport(living);
         Utils.sendPacketToAllBut(owner, teleport_packet);
         PacketPlayOutEntityHeadRotation head_packet = new PacketPlayOutEntityHeadRotation(living,
@@ -153,14 +159,19 @@ public abstract class Disguise {
                 owner.getLocation().getYaw(), owner.getLocation().getPitch());
         teleport_packet = new PacketPlayOutEntityTeleport(armorstand);
         Utils.sendPacketToAllBut(owner, teleport_packet);
-        // Show crouching
+        // Show player data
         DataWatcher dw = living.getDataWatcher();
+        byte player_data = 0;
+        if(owner.getFireTicks() > 0) {
+            player_data = (byte) (player_data | 0x01);
+        }
         if(owner.isSneaking()) {
-            dw.watch(0, (byte) 0x02);
+            player_data = (byte) (player_data | 0x02);
         }
-        else {
-            dw.watch(0, (byte) 0);
+        if(owner.isSprinting()) {
+            player_data = (byte) (player_data | 0x08);
         }
+        dw.watch(0, player_data);
         PacketPlayOutEntityMetadata data_packet = new PacketPlayOutEntityMetadata(living.getId(), dw, true);
         Utils.sendPacketToAll(data_packet);
     }
@@ -219,7 +230,7 @@ public abstract class Disguise {
         else if (type == EntityType.MUSHROOM_COW) sound = Sound.COW_HURT;
         else if (type == EntityType.OCELOT) sound = Sound.CAT_MEOW;
         else if (type == EntityType.PIG) sound = Sound.PIG_IDLE;
-        else if (type == EntityType.PIG_ZOMBIE) sound = Sound.ZOMBIE_HURT;
+        else if (type == EntityType.PIG_ZOMBIE) sound = Sound.ZOMBIE_PIG_HURT;
         else if (type == EntityType.SHEEP) sound = Sound.SHEEP_IDLE;
         else if (type == EntityType.SILVERFISH) sound = Sound.SILVERFISH_HIT;
         else if (type == EntityType.SKELETON) sound = Sound.SKELETON_HURT;

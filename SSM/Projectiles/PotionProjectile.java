@@ -29,8 +29,8 @@ import java.util.List;
 
 public class PotionProjectile extends SmashProjectile {
 
-    private double splash_range = 2;
-    private double splash_damage = 5;
+    protected double splash_range = 2;
+    protected double splash_damage = 5;
 
     public PotionProjectile(Player firer, String name) {
         super(firer, name);
@@ -38,6 +38,9 @@ public class PotionProjectile extends SmashProjectile {
         this.hitbox_size = 0;
         this.knockback_mult = 2;
         this.expiration_ticks = 200;
+        this.entityDetection = false;
+        this.blockDetection = false;
+        this.idleDetection = false;
     }
 
     @Override
@@ -49,19 +52,6 @@ public class PotionProjectile extends SmashProjectile {
             return;
         }
         super.run();
-    }
-
-    // Don't do normal projectile hit detection
-    @Override
-    protected LivingEntity checkClosestTarget() {
-        return null;
-    }
-
-    // Causes issues with the projectile due to the projectile not cancelling
-    // on block hit, and checkHitBlock changing the projectiles motion and location
-    @Override
-    protected Block checkHitBlock() {
-        return null;
     }
 
     @Override
