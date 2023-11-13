@@ -49,7 +49,7 @@ public class Blizzard extends Ability {
     public void run() {
         Kit kit = KitManager.getPlayerKit(owner);
         if (kit != null) {
-            ExpCharge charge = (ExpCharge) kit.getAttributeByClass(ExpCharge.class);
+            ExpCharge charge = kit.getAttributeByClass(ExpCharge.class);
             charge.enabled = !owner.isBlocking();
         }
         if (tick_count % ticks_to_fire == 0) {

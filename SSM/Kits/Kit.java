@@ -235,17 +235,17 @@ public abstract class Kit implements Listener {
         return attributes;
     }
 
-    public Attribute getAttributeByClass(Class check) {
+    public <T extends Attribute> T getAttributeByClass(Class<T> check) {
         // Check for exact class
         for(Attribute attribute : attributes) {
             if(attribute.getClass() == check) {
-                return attribute;
+                return check.cast(attribute);
             }
         }
         // Check if attribute is subclass of check
         for(Attribute attribute : attributes) {
             if(check.isInstance(attribute)) {
-                return attribute;
+                return check.cast(attribute);
             }
         }
         return null;

@@ -53,7 +53,7 @@ public class WoolyRocket extends Ability implements OwnerRightClickEvent {
         owner.getWorld().playEffect(owner.getLocation(), Effect.BLAZE_SHOOT, 0);
         Kit kit = KitManager.getPlayerKit(owner);
         if(kit != null) {
-            DoubleJump doubleJump = (DoubleJump) kit.getAttributeByClass(DoubleJump.class);
+            DoubleJump doubleJump = kit.getAttributeByClass(DoubleJump.class);
             if(doubleJump != null) {
                 doubleJump.resetDoubleJumps();
             }

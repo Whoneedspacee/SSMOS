@@ -51,7 +51,7 @@ public class BabyBaconBombs extends Ability implements OwnerRightClickEvent {
     public void onOwnerRightClick(PlayerInteractEvent e) {
         Kit kit = KitManager.getPlayerKit(owner);
         if(kit != null) {
-            NetherPig netherPig = (NetherPig) kit.getAttributeByClass(NetherPig.class);
+            NetherPig netherPig = kit.getAttributeByClass(NetherPig.class);
             this.expUsed = (netherPig.active ? base_energy_cost * nether_pig_modifier : base_energy_cost);
         }
         if(owner.getExp() < this.expUsed) {

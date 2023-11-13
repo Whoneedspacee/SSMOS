@@ -413,7 +413,7 @@ public class DamageManager implements Listener {
             Player player = (Player) damager;
             Kit kit = KitManager.getPlayerKit(player);
             if (kit != null) {
-                Hunger hunger = (Hunger) kit.getAttributeByClass(Hunger.class);
+                Hunger hunger = kit.getAttributeByClass(Hunger.class);
                 if (hunger != null) {
                     hunger.hungerRestore(damage);
                 }

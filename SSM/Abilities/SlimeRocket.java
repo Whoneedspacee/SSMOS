@@ -10,12 +10,11 @@ import SSM.Projectiles.SlimeProjectile;
 import SSM.Utilities.DamageUtil;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
+import net.minecraft.server.v1_8_R3.EntitySlime;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import net.minecraft.server.v1_8_R3.Packet;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftSlime;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -56,7 +55,7 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
     public void activate() {
         Kit kit = KitManager.getPlayerKit(owner);
         if(kit != null) {
-            ExpCharge charge = (ExpCharge) kit.getAttributeByClass(ExpCharge.class);
+            ExpCharge charge = kit.getAttributeByClass(ExpCharge.class);
             charge.enabled = false;
         }
         long activation_ms = System.currentTimeMillis();
@@ -81,7 +80,7 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
                 return;
             }
             if (elapsed_ms < 3000) {
-                owner.setExp((float) Math.max(0, owner.getExp() - 0.00916f));
+                owner.setExp(Math.max(0, owner.getExp() - 0.00916f));
             }
             owner.getWorld().playSound(owner.getLocation(), Sound.SLIME_WALK, 0.5f, (float) (0.5 + 1.5 * (elapsed_sound / 3d)));
             Utils.playParticle(EnumParticle.SLIME, owner.getLocation().add(0, 1, 0),
@@ -93,17 +92,21 @@ public class SlimeRocket extends Ability implements OwnerRightClickEvent {
     public void fireRocket() {
         Kit kit = KitManager.getPlayerKit(owner);
         if(kit != null) {
-            ExpCharge charge = (ExpCharge) kit.getAttributeByClass(ExpCharge.class);
-            charge.enabled = true;
+            ExpCharge charge = kit.getAttributeByClass(ExpCharge.class);
+            if(charge != null) {
+                charge.enabled = true;
+            }
         }
         Utils.sendServerMessageToPlayer("§7You released §a" + name + "§7.",
                 owner, ServerMessageType.SKILL);
         long startTime = CooldownManager.getInstance().getStartTimeFor(this, owner);
         double charge = Math.min(3, (double) (System.currentTimeMillis() - startTime) / 1000d);
-        Slime slime = (Slime) owner.getWorld().spawnEntity(owner.getEyeLocation(), EntityType.SLIME);
+        Slime slime = owner.getWorld().spawn(owner.getEyeLocation(), Slime.class);
         slime.setSize(Math.max(1, (int) charge));
         slime.setMaxHealth(5 + charge * 7);
         slime.setHealth(slime.getMaxHealth());
+        slime.leaveVehicle();
+        slime.eject();
         slime.setMetadata("Slime Owner", new FixedMetadataValue(plugin, owner));
         SlimeProjectile projectile = new SlimeProjectile(owner, "Slime Rocket", charge);
         projectile.setProjectileEntity(slime);

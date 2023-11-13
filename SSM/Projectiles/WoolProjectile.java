@@ -83,7 +83,7 @@ public class WoolProjectile extends SmashProjectile {
         BlockRestoreManager.ourInstance.restore(block);
         Kit kit = KitManager.getPlayerKit(firer);
         if (kit != null) {
-            WoolMine mine = (WoolMine) kit.getAttributeByClass(WoolMine.class);
+            WoolMine mine = kit.getAttributeByClass(WoolMine.class);
             if (mine != null) {
                 mine.wool_block = block;
                 mine.block_material = block.getType();

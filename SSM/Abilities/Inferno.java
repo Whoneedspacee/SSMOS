@@ -39,7 +39,7 @@ public class Inferno extends Ability implements OwnerRightClickEvent {
         if(kit == null) {
             return;
         }
-        ExpCharge expCharge = (ExpCharge) kit.getAttributeByClass(ExpCharge.class);
+        ExpCharge expCharge = kit.getAttributeByClass(ExpCharge.class);
         if(expCharge == null) {
             return;
         }

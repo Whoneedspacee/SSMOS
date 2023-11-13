@@ -35,7 +35,7 @@ public class SpiderJump extends DirectDoubleJump {
         if(kit == null) {
             return;
         }
-        Climb climb = (Climb) kit.getAttributeByClass(Climb.class);
+        Climb climb = kit.getAttributeByClass(Climb.class);
         if(climb == null) {
             return;
         }
