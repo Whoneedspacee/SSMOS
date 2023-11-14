@@ -145,6 +145,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
                             //Condition
                             player.removePotionEffect(PotionEffectType.SLOW);
                             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 1));
+                            player.setVelocity(new Vector(0, 0, 0));
                         }
             }
         }

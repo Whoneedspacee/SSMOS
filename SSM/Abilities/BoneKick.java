@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 
@@ -77,6 +78,7 @@ public class BoneKick extends Ability implements OwnerRightClickEvent {
         }
         owner.removePotionEffect(PotionEffectType.SLOW);
         owner.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, slow_ticks, 3, false, false));
+        owner.setVelocity(new Vector(0, 0, 0));
         if(Bukkit.getScheduler().isQueued(end_kick_task) || Bukkit.getScheduler().isCurrentlyRunning(end_kick_task)) {
             Bukkit.getScheduler().cancelTask(end_kick_task);
         }

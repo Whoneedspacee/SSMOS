@@ -123,19 +123,13 @@ public class DisguiseManager implements Listener, Runnable {
                         }
                     }
                 }
-                // Intercept player arm animation packet
-                // For some reason when within 3-4 blocks of attacking an entity the game sends no packets
-                // So we need to track this one to make abilities like roped arrow work
-                /*if(msg instanceof PacketPlayInArmAnimation) {
-                    Player player = Bukkit.getPlayer(channelHandlerContext.name());
-                    Block block = player.getTargetBlock((HashSet<Byte>) null, 5);
-                    new PlayerInteractEvent(player, Action.LEFT_CLICK_AIR,
-                            player.getItemInHand(), block, null).callEvent();
-                }*/
                 if (msg instanceof PacketPlayInArmAnimation) {
                     PacketPlayInArmAnimation packet = (PacketPlayInArmAnimation) msg;
                     // Make their disguise show the arm animation as well
                     for(Disguise disguise : DisguiseManager.disguises.values()) {
+                        if(disguise.getLiving() == null) {
+                            return;
+                        }
                         if(!disguise.getOwner().getName().equals(channelHandlerContext.name())) {
                             continue;
                         }
