@@ -49,7 +49,7 @@ public class CommandKit implements CommandExecutor {
 
         int slot = 10; // beginning slot
         int count = 0;
-        Inventory selectKit = Bukkit.createInventory(player, 45, "Choose a Kit");
+        Inventory selectKit = Bukkit.createInventory(player, 9 * 5, "Choose a Kit");
         for (Kit kit : KitManager.getAllKits()) {
             ItemStack item = kit.getMenuItemStack();
             ItemMeta itemMeta = item.getItemMeta();

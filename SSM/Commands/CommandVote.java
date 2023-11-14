@@ -38,12 +38,13 @@ public class CommandVote implements CommandExecutor {
             player.sendMessage("You may not vote after the voting period has ended.");
             return;
         }
-        Inventory selectMap = Bukkit.createInventory(player, 54, "Choose a Map");
+        Inventory selectMap = Bukkit.createInventory(player, 9 * 5  , "Choose a Map");
 
         List<MapFile> sortedMaps = new ArrayList<>(GameManager.getGamemode().getAllowedMaps());
         sortedMaps.sort(Comparator.comparing(MapFile::getName));
 
-        int slot = 0;
+        int slot = 10; // beginning slot
+        int count = 0;
         for (MapFile mapfile : sortedMaps) {
             ItemStack item;
             if (GameManager.getVotesFor(mapfile) == 0) {
@@ -55,18 +56,22 @@ public class CommandVote implements CommandExecutor {
                 item = new ItemStack(Material.MAP, GameManager.getVotesFor(mapfile));
             }
             ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setLore(Lists.newArrayList(mapfile.getName()));
-            itemMeta.setDisplayName(ChatColor.RESET + mapfile.getName());
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemMeta.setDisplayName(ChatColor.YELLOW + mapfile.getName());
             item.setItemMeta(itemMeta);
-            selectMap.setItem(9 + slot, item);
-            slot++;
 
-            ItemStack bed = new ItemStack(Material.BED);
-            ItemMeta bedMeta = bed.getItemMeta();
-            bedMeta.setLore(Lists.newArrayList("lore"));
-            bed.setItemMeta(bedMeta);
-            selectMap.setItem(4, bed);
+            selectMap.setItem(slot, item);
+            slot++;
+            count++;
+
+            if (count % 7 == 0) {
+                slot += 2;
+            }
+
+            ItemStack exit = new ItemStack(Material.BARRIER);
+            ItemMeta exitMeta = exit.getItemMeta();
+            exitMeta.setDisplayName(ChatColor.RED + "Exit");
+            exit.setItemMeta(exitMeta);
+            selectMap.setItem(4, exit);
         }
         player.openInventory(selectMap);
     }
