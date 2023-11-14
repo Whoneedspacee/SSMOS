@@ -37,7 +37,7 @@ public class KitPig extends Kit {
         addAttribute(new Hunger());
         addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
-        addAttribute(new ExpCharge(0.5F, 1, true, true, false));
+        addAttribute(new ExpCharge(0.005F, 1, true, true, false));
         addAttribute(new NetherPig());
 
         DisguiseManager.addDisguise(owner, new PigDisguise(owner));
