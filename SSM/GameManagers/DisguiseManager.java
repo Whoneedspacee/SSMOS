@@ -187,7 +187,9 @@ public class DisguiseManager implements Listener, Runnable {
             }
             double from_distance = other.getLocation().distance(e.getFrom());
             double to_distance = other.getLocation().distance(e.getTo());
-            double despawn_distance = 80;
+            // Players seem to come into view at a distance of 45 blocks (on one axis)
+            // And go out of view at a distance of 50 blocks (on one axis)
+            double despawn_distance = 45;
             if(from_distance > despawn_distance && to_distance <= despawn_distance) {
                 showDisguise(player, other);
                 showDisguise(other, player);
