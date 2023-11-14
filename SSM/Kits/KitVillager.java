@@ -1,16 +1,20 @@
 package SSM.Kits;
 
+import SSM.Abilities.CycleArts;
+import SSM.Abilities.SonicHurr;
+import SSM.Abilities.TradeScatter;
+import SSM.Attributes.Compass;
+import SSM.Attributes.DoubleJumps.DoubleJump;
 import SSM.Attributes.DoubleJumps.GenericDoubleJump;
+import SSM.Attributes.Hunger;
 import SSM.Attributes.Regeneration;
 import SSM.GameManagers.DisguiseManager;
 import SSM.GameManagers.Disguises.VillagerDisguise;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
 public class KitVillager extends Kit {
@@ -32,7 +36,13 @@ public class KitVillager extends Kit {
         setArmorSlot(Material.CHAINMAIL_LEGGINGS, 1);
         setArmorSlot(Material.CHAINMAIL_CHESTPLATE, 2);
 
-        addAttribute(new Regeneration(regeneration, 20));
+        setAbility(new SonicHurr(), 0);
+        setAbility(new TradeScatter(), 1);
+        setAbility(new CycleArts(), 2);
+
+        addAttribute(new Regeneration(regeneration));
+        addAttribute(new Hunger());
+        addAttribute(new Compass());
         addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new VillagerDisguise(owner));
@@ -40,14 +50,19 @@ public class KitVillager extends Kit {
 
     @Override
     public void setPreviewHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.IRON_HOE), 1);
+        setItem(new ItemStack(Material.IRON_SPADE), 2);
+        setItem(new ItemStack(Material.NETHER_STAR), 3);
     }
 
     @Override
     public void setGameHotbar() {
-        setItem(new ItemStack(Material.IRON_SWORD, 1), 0);
-        setItem(new ItemStack(Material.IRON_AXE, 1), 1);
+        setItem(new ItemStack(Material.IRON_AXE), 0);
+        setItem(new ItemStack(Material.IRON_HOE), 1);
+        setItem(new ItemStack(Material.IRON_SPADE), 2);
+        setItem(Compass.COMPASS_ITEM, 3);
+        setItem(new ItemStack(Material.INK_SACK, 1, (short)(15 - DyeColor.RED.getData())), 7);
     }
 
     @Override

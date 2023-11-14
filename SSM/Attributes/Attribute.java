@@ -1,11 +1,11 @@
 package SSM.Attributes;
 
 import SSM.GameManagers.CooldownManager;
-import SSM.GameManagers.GameManager;
 import SSM.GameManagers.KitManager;
 import SSM.Kits.Kit;
 import SSM.SSM;
-import org.bukkit.Bukkit;
+import SSM.Utilities.ServerMessageType;
+import SSM.Utilities.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -26,6 +26,7 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
         DOUBLE_JUMP("Double Jump"),
         PASSIVE("Passive"),
         DOUBLE_RIGHT_CLICK("Double Right-Click"),
+        RIGHT_CLICK_DROP("Right-Click/Drop"),
         SMASH_CRYSTAL("Smash Crystal");
 
 
@@ -42,7 +43,7 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
 
     public String name = "No Set Name.";
     public String item_name = null;
-    protected String[] description = new String[] { ChatColor.RESET + "No Set Description." };
+    protected String[] description = new String[]{ChatColor.RESET + "No Set Description."};
     protected Plugin plugin;
     protected Player owner;
     protected BukkitTask task;
@@ -50,17 +51,18 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     protected float expUsed = 0;
     protected AbilityUsage usage = AbilityUsage.RIGHT_CLICK;
     protected String useMessage = "You used";
+    protected boolean inform_cooldown = true;
 
     public Attribute() {
         this.plugin = SSM.getInstance();
     }
 
     public boolean check() {
-        if(owner == null) {
+        if (owner == null) {
             return false;
         }
         Kit kit = KitManager.getPlayerKit(owner);
-        if(kit != null && !kit.isActive()) {
+        if (kit != null && !kit.isActive()) {
             return false;
         }
         if (hasCooldown()) {
@@ -73,10 +75,16 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     }
 
     public void checkAndActivate() {
-        if(!check()) {
+        if (hasCooldown() && inform_cooldown) {
+            String time_string = String.format("%.1f seconds", CooldownManager.getInstance().getRemainingTimeFor(this, owner) / 1000.0);
+            Utils.sendAttributeMessage("You cannot use " + ChatColor.GREEN + name +
+                    ChatColor.GRAY + " for", time_string, owner, ServerMessageType.RECHARGE);
             return;
         }
         if (!hasCooldown()) {
+            if (!check()) {
+                return;
+            }
             if (expUsed > 0) {
                 owner.setExp(Math.max(owner.getExp() - expUsed, 0));
             }

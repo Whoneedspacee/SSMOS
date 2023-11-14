@@ -100,6 +100,7 @@ public abstract class Kit implements Listener {
         if(GameManager.isPlaying(new_state)) {
             playing = true;
             for(Attribute attribute : attributes) {
+                HandlerList.unregisterAll(attribute);
                 Bukkit.getPluginManager().registerEvents(attribute, plugin);
             }
         }
@@ -127,6 +128,12 @@ public abstract class Kit implements Listener {
     public void addAttribute(Attribute attribute) {
         attributes.add(attribute);
         attribute.setOwner(owner);
+        updatePlaying(GameManager.getState());
+    }
+
+    public void removeAttribute(Attribute attribute) {
+        attributes.remove(attribute);
+        attribute.remove();
     }
 
     // 0 = boots, 1 = leggings, 2 = chestplate, 3 = helmet
@@ -201,6 +208,10 @@ public abstract class Kit implements Listener {
 
     public double getArmor() {
         return armor;
+    }
+
+    public void setKnockback(double knockback) {
+        this.knockback = knockback;
     }
 
     public double getKnockback() {

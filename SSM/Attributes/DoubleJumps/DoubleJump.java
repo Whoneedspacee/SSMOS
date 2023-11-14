@@ -13,18 +13,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class DoubleJump extends Attribute {
 
     protected int maxDoubleJumps;
-    protected int remainingDoubleJumps = 0;
     protected double height;
     protected double power;
     protected Sound doubleJumpSound;
     protected long recharge_air_ticks = 0;
     protected boolean needs_xp = false;
+    protected int remainingDoubleJumps = 0;
 
     public DoubleJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound) {
         super();
@@ -53,6 +54,9 @@ public abstract class DoubleJump extends Attribute {
      */
     @EventHandler
     public void playerFlightEvent(PlayerToggleFlightEvent e) {
+        if(owner == null) {
+            return;
+        }
         Player player = e.getPlayer();
         if (!player.equals(owner)) {
             return;
@@ -134,6 +138,24 @@ public abstract class DoubleJump extends Attribute {
     @Override
     public void setOwner(Player owner) {
         super.setOwner(owner);
+        if(owner == null) {
+            return;
+        }
+        owner.setFlying(false);
+        owner.setAllowFlight(remainingDoubleJumps > 0);
+    }
+
+    public void setRemainingDoubleJumps(int remainingDoubleJumps) {
+        this.remainingDoubleJumps = remainingDoubleJumps;
+        if(owner == null) {
+            return;
+        }
+        owner.setFlying(false);
+        owner.setAllowFlight(remainingDoubleJumps > 0);
+    }
+
+    public int getRemainingDoubleJumps() {
+        return remainingDoubleJumps;
     }
 
 }

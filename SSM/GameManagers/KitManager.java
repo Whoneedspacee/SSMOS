@@ -60,6 +60,7 @@ public class KitManager implements Listener {
         player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
         player.setFlying(false);
         player.setAllowFlight(false);
+        player.setWalkSpeed(0.2f);
         Kit kit = playerKit.get(player);
         if (kit == null) {
             return;

@@ -20,6 +20,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.projectiles.ProjectileSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventManager implements Listener {
@@ -57,6 +58,25 @@ public class EventManager implements Listener {
         if (ability instanceof OwnerLeftClickEvent && (e.getAnimationType() == PlayerAnimationType.ARM_SWING)) {
             OwnerLeftClickEvent leftClick = (OwnerLeftClickEvent) ability;
             leftClick.onOwnerLeftClick(e);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent e) {
+        Player player = e.getPlayer();
+        if(KitManager.getPlayerKit(player) == null) {
+            return;
+        }
+        List<Attribute> attributes = KitManager.getPlayerKit(player).getAttributes();
+        List<OwnerDropItemEvent> to_call = new ArrayList<OwnerDropItemEvent>();
+        for (Attribute attribute : attributes) {
+            if (attribute instanceof OwnerDropItemEvent) {
+                OwnerDropItemEvent dropEvent = (OwnerDropItemEvent) attribute;
+                to_call.add(dropEvent);
+            }
+        }
+        for(OwnerDropItemEvent dropEvent : to_call) {
+            dropEvent.onOwnerDropItem(e);
         }
     }
 

@@ -110,7 +110,8 @@ public class SSM extends JavaPlugin implements Listener {
         if(e.getPlayer().isOp()) {
             newMessage = ChatColor.RED + playerName + ChatColor.WHITE + " " + message;
         }
-        e.setFormat(newMessage);
+        e.setFormat(newMessage.replace("%", ""));
+        e.setMessage(e.getMessage().replace("%", ""));
     }
 
     @EventHandler

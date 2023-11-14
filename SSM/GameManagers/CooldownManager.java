@@ -123,6 +123,20 @@ public class CooldownManager extends BukkitRunnable {
         }
     }
 
+    public void displayCooldownTo(Player player, Attribute attribute) {
+        CooldownData found = null;
+        for(CooldownData data : cooldownData) {
+            if(data.getAttribute().equals(attribute)) {
+                found = data;
+                break;
+            }
+        }
+        if(found == null) {
+            return;
+        }
+        displayCooldownTo(player, found);
+    }
+
     /**
      * Create and display the cooldown message shown to players above their action bar when holding an ability
      */

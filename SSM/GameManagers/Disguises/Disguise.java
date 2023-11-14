@@ -238,7 +238,7 @@ public abstract class Disguise {
         else if (type == EntityType.SNOWMAN) sound = Sound.STEP_SNOW;
         else if (type == EntityType.SPIDER) sound = Sound.SPIDER_IDLE;
             //else if (damagee.getType() == EntityType.SQUID)		sound = Sound;
-            //else if (damagee.getType() == EntityType.VILLAGER)	sound = Sound;
+        else if (type == EntityType.VILLAGER) sound = Sound.VILLAGER_HIT;
             //else if (damagee.getType() == EntityType.WITCH)		sound = Sound.;
         else if (type == EntityType.WITHER) sound = Sound.WITHER_HURT;
         else if (type == EntityType.WOLF) sound = Sound.WOLF_HURT;
