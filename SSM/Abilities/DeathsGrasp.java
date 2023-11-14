@@ -45,6 +45,10 @@ public class DeathsGrasp extends Ability implements OwnerLeftClickEvent {
             public void run() {
                 for(Iterator<Player> iterator = weakness_end_time.keySet().iterator(); iterator.hasNext();) {
                     Player player = iterator.next();
+                    if(player == null) {
+                        iterator.remove();
+                        continue;
+                    }
                     if(!Utils.entityIsOnGround(player)) {
                         continue;
                     }
@@ -86,6 +90,10 @@ public class DeathsGrasp extends Ability implements OwnerLeftClickEvent {
         grasp_task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
+                if(owner == null) {
+                    Bukkit.getScheduler().cancelTask(grasp_task);
+                    return;
+                }
                 if(Utils.entityIsOnGround(owner)) {
                     if(CooldownManager.getInstance().getTimeElapsedFor(DeathsGrasp.this, owner) >= leap_duration_ms) {
                         Bukkit.getScheduler().cancelTask(grasp_task);
