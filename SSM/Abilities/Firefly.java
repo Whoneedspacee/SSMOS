@@ -85,9 +85,9 @@ public class Firefly extends Ability implements OwnerRightClickEvent, OwnerTakeS
                 VelocityUtil.setVelocity(owner, owner.getLocation().getDirection().multiply(velocity).add(new Vector(0, 0.15, 0)));
                 owner.getWorld().playSound(owner.getLocation(), Sound.EXPLODE, 0.6f, 1.2f);
                 Utils.playParticle(EnumParticle.FLAME, owner.getLocation().add(0, 1, 0),
-                        1f, 1f, 1f, 0, 30, 96, owner.getWorld().getPlayers());
+                        1f, 1f, 1f, 0, 15, 96, owner.getWorld().getPlayers());
                 Utils.playParticle(EnumParticle.LAVA, owner.getLocation().add(0, 1, 0),
-                        1f, 1f, 1f, 0, 20, 96, owner.getWorld().getPlayers());
+                        1f, 1f, 1f, 0, 10, 96, owner.getWorld().getPlayers());
                 owner.getWorld().playSound(owner.getLocation(), Sound.EXPLODE, 0.75f, 0.75f);
                 for(Player player : Utils.getNearby(owner.getLocation(), hitbox_radius)) {
                     if(player.equals(owner)) {
