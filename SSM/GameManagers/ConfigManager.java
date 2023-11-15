@@ -1,16 +1,11 @@
 package SSM.GameManagers;
 
 import SSM.GameManagers.Gamemodes.SmashGamemode;
-import SSM.GameManagers.Gamemodes.SoloGamemode;
-import SSM.GameManagers.Gamemodes.TeamsGamemode;
-import SSM.GameManagers.Gamemodes.TestingGamemode;
 import SSM.SSM;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class ConfigManager implements Listener {
 
@@ -85,7 +80,7 @@ public class ConfigManager implements Listener {
 
     public static void setPlayerGamemodeConfigOption(Player player, ConfigOption option, Object data, SmashGamemode gamemode) {
         if(gamemode == null) {
-            gamemode = GameManager.getGamemode();
+            gamemode = GameManager.getCurrentGamemode();
         }
         String storage_location = "players." + player.getUniqueId() + "." + option + "." + gamemode.getName();
         SSM.getInstance().getConfig().set(storage_location, data);
@@ -94,7 +89,7 @@ public class ConfigManager implements Listener {
 
     public static Object getPlayerGamemodeConfigOption(Player player, ConfigOption option, SmashGamemode gamemode) {
         if(gamemode == null) {
-            gamemode = GameManager.getGamemode();
+            gamemode = GameManager.getCurrentGamemode();
         }
         String storage_location = "players." + player.getUniqueId() + "." + option + "." + gamemode.getName();
         return SSM.getInstance().getConfig().get(storage_location);

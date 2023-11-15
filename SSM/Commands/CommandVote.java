@@ -2,18 +2,14 @@ package SSM.Commands;
 
 import SSM.GameManagers.GameManager;
 import SSM.GameManagers.Maps.MapFile;
-import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -38,9 +34,10 @@ public class CommandVote implements CommandExecutor {
             player.sendMessage("You may not vote after the voting period has ended.");
             return;
         }
-        Inventory selectMap = Bukkit.createInventory(player, 9 * 5  , "Choose a Map");
+        int size = GameManager.getCurrentGamemode().getAllowedMaps().size() / 7 + 2;
+        Inventory selectMap = Bukkit.createInventory(player, 9 * size  , "Choose a Map");
 
-        List<MapFile> sortedMaps = new ArrayList<>(GameManager.getGamemode().getAllowedMaps());
+        List<MapFile> sortedMaps = new ArrayList<>(GameManager.getCurrentGamemode().getAllowedMaps());
         sortedMaps.sort(Comparator.comparing(MapFile::getName));
 
         int slot = 10;

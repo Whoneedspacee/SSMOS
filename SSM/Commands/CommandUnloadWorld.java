@@ -1,6 +1,7 @@
 package SSM.Commands;
 
 import SSM.GameManagers.GameManager;
+import SSM.GameManagers.Maps.MapFile;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -16,7 +17,20 @@ public class CommandUnloadWorld implements CommandExecutor {
             return true;
         }
         if (args.length < 1) {
-            commandSender.sendMessage("Must specify a world to unload.");
+            if(commandSender instanceof Player) {
+                Player player = (Player) commandSender;
+                if(unloadWorld(player.getWorld().getName())) {
+                    commandSender.sendMessage("World Saved!");
+                } else {
+                    commandSender.sendMessage("Could not unload world.");
+                }
+                return true;
+            }
+            StringBuilder world_string = new StringBuilder("Options: ");
+            for(World world : Bukkit.getWorlds()) {
+                world_string.append(world.getName()).append(", ");
+            }
+            commandSender.sendMessage(world_string.substring(0, world_string.length() - 2));
             return true;
         }
         StringBuilder path_builder = new StringBuilder();
@@ -25,11 +39,19 @@ public class CommandUnloadWorld implements CommandExecutor {
             path_builder.append(" ");
         }
         String path_string = path_builder.substring(0, path_builder.length() - 1);
-        if (!unloadWorld(path_string)) {
-            commandSender.sendMessage("Could not find world specified.");
+        if (unloadWorld(path_string)) {
+            commandSender.sendMessage("World Saved!");
             return true;
         }
-        commandSender.sendMessage("World Saved!");
+        for(World world : Bukkit.getWorlds()) {
+            if(world.getName().contains(path_string)) {
+                if (unloadWorld(world.getName())) {
+                    commandSender.sendMessage("World Saved!");
+                    return true;
+                }
+            }
+        }
+        commandSender.sendMessage("Could not find world specified.");
         return true;
     }
 

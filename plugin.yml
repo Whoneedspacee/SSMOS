@@ -69,3 +69,6 @@ commands:
   setkit:
     description: 'Sets the kit of the player given by name.'
     usage: /setkit player name
+  loadgamemodeworld:
+    description: 'Loads the base gamemode world specified to be edited.'
+    usage: /loadgamemodeworld

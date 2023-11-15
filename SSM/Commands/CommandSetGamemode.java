@@ -6,7 +6,6 @@ import SSM.GameManagers.Gamemodes.SmashGamemode;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.*;
@@ -43,7 +42,7 @@ public class CommandSetGamemode implements TabExecutor {
             commandSender.sendMessage("Unable to find specified gamemode.");
             return true;
         }
-        GameManager.setGamemode(selected_gamemode);
+        GameManager.setCurrentGamemode(selected_gamemode);
         DisplayManager.buildScoreboard();
         for(Player player : Bukkit.getOnlinePlayers()) {
             Utils.sendServerMessageToPlayer("Set " +

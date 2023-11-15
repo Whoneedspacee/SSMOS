@@ -6,8 +6,6 @@ import SSM.GameManagers.KitManager;
 import SSM.Kits.Kit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,7 +21,7 @@ public class CommandKit implements CommandExecutor {
         if (!(commandSender instanceof Player)) {
             return true;
         }
-        if(!(GameManager.getGamemode() instanceof TestingGamemode)) {
+        if(!(GameManager.getCurrentGamemode() instanceof TestingGamemode)) {
             if(GameManager.getState() >= GameManager.GameState.GAME_PLAYING && !commandSender.isOp()) {
                 commandSender.sendMessage("You may not use this command while a game is in progress.");
                 return true;

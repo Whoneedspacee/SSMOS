@@ -11,7 +11,6 @@ import SSM.GameManagers.Gamemodes.TestingGamemode;
 import SSM.GameManagers.Maps.MapFile;
 import SSM.GameManagers.OwnerEvents.OwnerDeathEvent;
 import SSM.GameManagers.OwnerEvents.OwnerKillEvent;
-import SSM.GameManagers.OwnerEvents.OwnerToggleSneakEvent;
 import SSM.Kits.Kit;
 import SSM.Kits.KitTemporarySpectator;
 import SSM.SSM;
@@ -19,15 +18,11 @@ import SSM.Utilities.DamageUtil;
 import SSM.Utilities.EffectUtil;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
-import net.minecraft.server.v1_8_R3.ChatMessage;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
-import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -41,10 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Team;
-import org.bukkit.util.Vector;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +66,7 @@ public class GameManager implements Listener, Runnable {
             gamemode.updateAllowedMaps();
             gamemode.updateAllowedKits();
         }
-        setGamemode(all_gamemodes.get(0));
+        setCurrentGamemode(all_gamemodes.get(0));
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
         players.addAll(Bukkit.getOnlinePlayers());
@@ -408,11 +400,11 @@ public class GameManager implements Listener, Runnable {
         }
     }
 
-    public static SmashGamemode getGamemode() {
+    public static SmashGamemode getCurrentGamemode() {
         return selected_gamemode;
     }
 
-    public static void setGamemode(SmashGamemode gamemode) {
+    public static void setCurrentGamemode(SmashGamemode gamemode) {
         HandlerList.unregisterAll(selected_gamemode);
         selected_gamemode = gamemode;
         Bukkit.getPluginManager().registerEvents(gamemode, SSM.getInstance());

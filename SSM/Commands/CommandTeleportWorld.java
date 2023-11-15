@@ -20,7 +20,11 @@ public class CommandTeleportWorld implements CommandExecutor {
         }
         Player player = (Player) commandSender;
         if (args.length < 1) {
-            commandSender.sendMessage("Must specify a world to teleport to.");
+            StringBuilder world_string = new StringBuilder("Options: ");
+            for(World world : Bukkit.getWorlds()) {
+                world_string.append(world.getName()).append(", ");
+            }
+            commandSender.sendMessage(world_string.substring(0, world_string.length() - 2));
             return true;
         }
         World previous = player.getWorld();

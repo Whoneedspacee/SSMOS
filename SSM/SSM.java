@@ -70,6 +70,7 @@ public class SSM extends JavaPlugin implements Listener {
         CommandSetKit setKit = new CommandSetKit();
         this.getCommand("setkit").setExecutor(setKit);
         this.getCommand("setkit").setTabCompleter(setKit);
+        this.getCommand("loadgamemodeworld").setExecutor(new CommandLoadGamemodeWorld());
         // Do not do anything before manager creation please
         for(Player player : Bukkit.getOnlinePlayers()) {
             Utils.fullHeal(player);

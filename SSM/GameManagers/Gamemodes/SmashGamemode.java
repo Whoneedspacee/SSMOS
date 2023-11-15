@@ -1,23 +1,17 @@
 package SSM.GameManagers.Gamemodes;
 
-import SSM.Events.GameStateChangeEvent;
 import SSM.GameManagers.GameManager;
 import SSM.GameManagers.KitManager;
 import SSM.GameManagers.Maps.MapFile;
 import SSM.Kits.*;
-import SSM.SSM;
 import SSM.Utilities.Utils;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
-import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
 import java.io.File;
@@ -147,7 +141,7 @@ public abstract class SmashGamemode implements Listener {
     }
 
     public boolean isCurrentGamemode() {
-        return (GameManager.getGamemode().equals(this));
+        return (GameManager.getCurrentGamemode().equals(this));
     }
 
     public String getName() {

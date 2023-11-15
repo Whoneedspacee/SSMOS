@@ -85,12 +85,13 @@ public class MapFile {
         } catch (Exception e) {
             Bukkit.broadcastMessage(ChatColor.RED + "Failed to load world.");
         }
+        Block center = copy_world.getSpawnLocation().getBlock();
         int size = 150;
         // Parse map for other objects
         for (int x = -size; x <= size; x++) {
             for (int y = -size; y <= size; y++) {
                 for (int z = -size; z <= size; z++) {
-                    Block parsed = copy_world.getBlockAt(x, y, z);
+                    Block parsed = center.getRelative(x, y, z);
                     if (isRespawnPoint(parsed)) {
                         respawn_points.add(parsed.getLocation());
                         parsed.getRelative(0, 1, 0).setType(Material.AIR);
@@ -102,7 +103,7 @@ public class MapFile {
                         parsed.setType(Material.AIR);
                     }
                     if (isCenterPoint(parsed)) {
-                        copy_world.setSpawnLocation(parsed.getX(), parsed.getY(), parsed.getZ());
+                        //copy_world.setSpawnLocation(parsed.getX(), parsed.getY(), parsed.getZ());
                         parsed.getRelative(0, 1, 0).setType(Material.AIR);
                         parsed.setType(Material.AIR);
                     }
@@ -132,6 +133,10 @@ public class MapFile {
 
     public World getCopyWorld() {
         return copy_world;
+    }
+
+    public File getMapDirectory() {
+        return map_directory;
     }
 
     public List<Player> getVoted() {

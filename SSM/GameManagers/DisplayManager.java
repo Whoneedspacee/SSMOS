@@ -4,7 +4,6 @@ import SSM.Kits.Kit;
 import SSM.SSM;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,7 +53,7 @@ public class DisplayManager implements Listener {
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
-                obj.getScore(GameManager.getGamemode().getName()).setScore(7);
+                obj.getScore(GameManager.getCurrentGamemode().getName()).setScore(7);
                 obj.getScore(ChatColor.GREEN + "").setScore(6);
                 obj.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "Kit").setScore(5);
                 obj.getScore(kit_name).setScore(4);
@@ -74,7 +73,7 @@ public class DisplayManager implements Listener {
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
-                obj.getScore(GameManager.getGamemode().getName()).setScore(7);
+                obj.getScore(GameManager.getCurrentGamemode().getName()).setScore(7);
                 obj.getScore(ChatColor.GREEN + "").setScore(6);
                 obj.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "Kit").setScore(5);
                 obj.getScore(kit_name).setScore(4);
@@ -94,7 +93,7 @@ public class DisplayManager implements Listener {
                 obj.getScore(GameManager.getTotalPlayers() + "/4").setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
-                obj.getScore(GameManager.getGamemode().getName()).setScore(7);
+                obj.getScore(GameManager.getCurrentGamemode().getName()).setScore(7);
                 obj.getScore(ChatColor.GREEN + "").setScore(6);
                 obj.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "Kit").setScore(5);
                 obj.getScore(kit_name).setScore(4);
