@@ -39,7 +39,7 @@ public class SpiderJump extends DirectDoubleJump {
         if(climb == null) {
             return;
         }
-        climb.cooldown_ticks = 0;
+        climb.last_cooldown_time = System.currentTimeMillis();
     }
 
     @Override

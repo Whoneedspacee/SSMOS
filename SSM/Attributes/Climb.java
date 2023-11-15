@@ -14,7 +14,8 @@ public class Climb extends Attribute {
 
     protected double power;
     protected boolean chargedDoubleJump;
-    public double cooldown_ticks = 0;
+    public long last_cooldown_time = 0;
+    public long cooldown_time_ms = 150;
 
     public Climb(double power) {
         super();
@@ -42,14 +43,13 @@ public class Climb extends Attribute {
         if (!owner.isSneaking()) {
             return;
         }
-        if(cooldown_ticks > 0) {
-            cooldown_ticks--;
-            return;
-        }
         checkAndActivate();
     }
 
     public void activate() {
+        if(System.currentTimeMillis() - last_cooldown_time < cooldown_time_ms) {
+            return;
+        }
         for (Block block : BlocksUtil.getBlocks(owner.getLocation(), 1)) {
             if (block.getType().isSolid() && !block.isLiquid()) {
                 VelocityUtil.setVelocity(owner, new Vector(0, power, 0));

@@ -47,7 +47,7 @@ public class CommandKit implements CommandExecutor {
             return false;
         }
 
-        int slot = 10; // beginning slot
+        int slot = 10;
         int count = 0;
         Inventory selectKit = Bukkit.createInventory(player, 9 * 5, "Choose a Kit");
         for (Kit kit : KitManager.getAllKits()) {

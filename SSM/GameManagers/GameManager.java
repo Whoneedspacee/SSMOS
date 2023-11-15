@@ -19,7 +19,6 @@ import SSM.Utilities.DamageUtil;
 import SSM.Utilities.EffectUtil;
 import SSM.Utilities.ServerMessageType;
 import SSM.Utilities.Utils;
-import com.avaje.ebean.enhance.asm.Type;
 import net.minecraft.server.v1_8_R3.ChatMessage;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
@@ -53,9 +52,7 @@ import java.util.Random;
 
 public class GameManager implements Listener, Runnable {
 
-    public static GameManager ourInstance;
-    public static World lobby_world = Bukkit.getWorlds().get(0);
-    public static List<SmashGamemode> all_gamemodes = new ArrayList<SmashGamemode>();
+    private static World lobby_world = Bukkit.getWorlds().get(0);
     private static JavaPlugin plugin = SSM.getInstance();
     private static List<Player> players = new ArrayList<Player>();
     private static List<Player> spectators = new ArrayList<Player>();
@@ -66,6 +63,8 @@ public class GameManager implements Listener, Runnable {
     private static long last_time_update_ms = 0;
     private static SmashGamemode selected_gamemode = null;
     private static MapFile selected_map = null;
+    public static GameManager ourInstance;
+    public static List<SmashGamemode> all_gamemodes = new ArrayList<SmashGamemode>();
 
     public GameManager() {
         all_gamemodes.add(new SoloGamemode());
@@ -74,290 +73,13 @@ public class GameManager implements Listener, Runnable {
         for (SmashGamemode gamemode : all_gamemodes) {
             gamemode.updateAllowedMaps();
             gamemode.updateAllowedKits();
-            gamemode.createDataFiles();
         }
         setGamemode(all_gamemodes.get(0));
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
         players.addAll(Bukkit.getOnlinePlayers());
-//        SSM.teleportAllPlayers();
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 0L);
         setState(GameState.LOBBY_WAITING);
-    }
-
-    public static void death(Player player) {
-        if (lives.get(player) == null) {
-            return;
-        }
-        // Don't do anything before setting to full hp again
-        Utils.fullHeal(player);
-        // Blood Particles
-        EffectUtil.createEffect(player.getEyeLocation(), 10, 0.5, Sound.HURT_FLESH,
-                1f, 1f, Material.INK_SACK, (byte) 1, 10, true);
-        SmashDamageEvent record = DamageManager.getLastDamageEvent(player);
-        Bukkit.broadcastMessage(ServerMessageType.DEATH + " " + ChatColor.YELLOW + player.getName() +
-                ChatColor.GRAY + " killed by " + ChatColor.YELLOW + record.getDamagerName() +
-                ChatColor.GRAY + " with " + record.getReasonColor() + record.getReason() + ChatColor.GRAY + ".");
-        DamageManager.deathReport(player, true);
-        if (record.getDamager() != null && record.getDamager() instanceof Player) {
-            Player damager = (Player) record.getDamager();
-            Kit kit = KitManager.getPlayerKit(damager);
-            if (kit != null) {
-                List<Attribute> attributes = kit.getAttributes();
-                for (Attribute attribute : attributes) {
-                    if (attribute instanceof OwnerKillEvent) {
-                        OwnerKillEvent killEvent = (OwnerKillEvent) attribute;
-                        killEvent.onOwnerKillEvent(player);
-                    }
-                }
-            }
-        }
-        Kit kit = KitManager.getPlayerKit(player);
-        if (kit != null) {
-            List<Attribute> attributes = kit.getAttributes();
-            for (Attribute attribute : attributes) {
-                if (attribute instanceof OwnerDeathEvent) {
-                    OwnerDeathEvent deathEvent = (OwnerDeathEvent) attribute;
-                    deathEvent.onOwnerDeathEvent();
-                }
-            }
-        }
-        // Out of the game check
-        if (lives.get(player) <= 1) {
-            Utils.sendTitleMessage(player, ChatColor.RED + "You Died", "",
-                    10, 50, 10);
-            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You ran out of lives!");
-            player.playSound(player.getLocation(), Sound.EXPLODE, 2f, 1f);
-            lives.remove(player);
-            deaths[1] = deaths[0];
-            deaths[0] = player;
-            KitManager.equipPlayer(player, new KitTemporarySpectator());
-            DisplayManager.buildScoreboard();
-            return;
-        }
-        // Normal Life Lost
-        lives.put(player, lives.get(player) - 1);
-        Utils.sendTitleMessage(player, "", "Respawning in 4 seconds...", 10, 50, 10);
-        player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You have died!");
-        player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You have " + lives.get(player) +
-                " " + (lives.get(player) == 1 ? "life" : "lives") + " left!");
-        player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 2f, 0.5f);
-        DisplayManager.buildScoreboard();
-        KitManager.equipPlayer(player, new KitTemporarySpectator());
-        // Respawn in 4 seconds
-        Bukkit.getScheduler().scheduleSyncDelayedTask(SSM.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                if (state == GameState.GAME_PLAYING && lives.get(player) > 0) {
-                    player.teleport(selected_gamemode.getRandomRespawnPoint(selected_map, player));
-                    Utils.sendTitleMessage(player, "", DisplayManager.getLivesColor(player) +
-                                    "" + lives.get(player) + " " + (lives.get(player) == 1 ? "life" : "lives") + " left!",
-                            10, 50, 10);
-                    if (!kit.getName().equals("Temporary Spectator")) {
-                        KitManager.equipPlayer(player, kit);
-                    }
-                    DisguiseManager.showDisguises(player);
-                }
-            }
-        }, 80L);
-    }
-
-    // Not for temporary spectators, for people who want to spectate all games
-    public static void toggleSpectator(Player player) {
-        if (spectators.contains(player)) {
-            spectators.remove(player);
-            return;
-        }
-        spectators.add(player);
-    }
-
-    public static boolean isSpectator(Player player) {
-        return spectators.contains(player);
-    }
-
-    public static void clearLobbyWorldEntities() {
-        for (Entity entity : lobby_world.getEntities()) {
-            if (!(entity instanceof Player)) {
-                DamageManager.invincible_mobs.remove(entity);
-                entity.remove();
-            }
-        }
-    }
-
-    public static SmashGamemode getGamemode() {
-        return selected_gamemode;
-    }
-
-    public static void setGamemode(SmashGamemode gamemode) {
-        HandlerList.unregisterAll(selected_gamemode);
-        selected_gamemode = gamemode;
-        Bukkit.getPluginManager().registerEvents(gamemode, SSM.getInstance());
-        // Clear current lobby world entities
-        clearLobbyWorldEntities();
-        // Make kit podiums
-        for (int i = 1; i <= KitManager.getAllKits().size(); i++) {
-            Kit kit = KitManager.getAllKits().get(i - 1);
-            Location podium_location = new Location(lobby_world, 0, 0, 0);
-            Object data = ConfigManager.getConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, String.valueOf(i));
-            if (data == null) {
-                ConfigManager.setConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, new Location(lobby_world, 0, 0, 0, 0, 0), String.valueOf(i));
-            }
-            if (data instanceof Location) {
-                Location temp = (Location) data;
-                podium_location = new Location(lobby_world, temp.getX(), temp.getY(), temp.getZ(), temp.getYaw(), temp.getPitch());
-            }
-            Entity podium_mob = kit.getNewPodiumMob(podium_location);
-            Utils.attachCustomName(podium_mob, ChatColor.GREEN + kit.getName());
-            DamageManager.invincible_mobs.put(podium_mob, 1);
-            // Disable mob ai
-            net.minecraft.server.v1_8_R3.Entity nms_entity = ((CraftEntity) podium_mob).getHandle();
-            NBTTagCompound comp = new NBTTagCompound();
-            nms_entity.c(comp);
-            comp.setByte("NoAI", (byte) 1);
-            nms_entity.f(comp);
-            nms_entity.b(true);
-        }
-        // Clear all current map votes
-        for (SmashGamemode check : all_gamemodes) {
-            for (MapFile mapFile : check.getAllowedMaps()) {
-                mapFile.clearVoted();
-            }
-        }
-    }
-
-    public static World getLobbyWorld() {
-        return lobby_world;
-    }
-
-    public static short getState() {
-        return state;
-    }
-
-    public static void setState(short value) {
-        GameStateChangeEvent event = new GameStateChangeEvent(state, value);
-        Bukkit.getPluginManager().callEvent(event);
-        boolean changed = (state != value);
-        state = value;
-        if (changed) {
-            ourInstance.run();
-        }
-        DisplayManager.buildScoreboard();
-    }
-
-    public static boolean isStarting() {
-        return isStarting(state);
-    }
-
-    public static boolean isStarting(short given_state) {
-        return given_state == GameState.GAME_STARTING;
-    }
-
-    public static boolean isPlaying() {
-        return isPlaying(state);
-    }
-
-    public static boolean isPlaying(short given_state) {
-        return given_state == GameState.GAME_PLAYING;
-    }
-
-    public static int getTimeLeft() {
-        return (int) (time_remaining_ms / 1000.0);
-    }
-
-    public static void setTimeLeft(double time) {
-        time_remaining_ms = (long) (time * 1000.0);
-    }
-
-    public static int getTotalPlayers() {
-        return players.size() - spectators.size();
-    }
-
-    public static int getLives(Player player) {
-        if (lives.get(player) == null) {
-            return 0;
-        }
-        return lives.get(player);
-    }
-
-    public static List<Player> getPlayers() {
-        return players;
-    }
-
-    public static HashMap<Player, Integer> getAllLives() {
-        return lives;
-    }
-
-    public static MapFile getCurrentVotedMap(Player player) {
-        for (MapFile mapfile : selected_gamemode.getAllowedMaps()) {
-            List<Player> current = mapfile.getVoted();
-            if (current.contains(player)) {
-                return mapfile;
-            }
-        }
-        return null;
-    }
-
-    public static int getVotesFor(MapFile mapfile) {
-        if (mapfile == null) {
-            return 0;
-        }
-        return mapfile.getVoted().size();
-    }
-
-    public static MapFile getChosenMap() {
-        if (selected_gamemode.getAllowedMaps().size() == 0) {
-            Bukkit.broadcastMessage("SSM Maps Folder Empty, loading Default World");
-            return new MapFile(Bukkit.getWorlds().get(0).getWorldFolder());
-        }
-        // Calculate max voted map
-        int max = 0;
-        for (MapFile mapfile : selected_gamemode.getAllowedMaps()) {
-            List<Player> votes = mapfile.getVoted();
-            if (votes != null && votes.size() > max) {
-                max = votes.size();
-            }
-        }
-        if (max == 0) {
-            return selected_gamemode.getAllowedMaps().get((int) (Math.random() * selected_gamemode.getAllowedMaps().size()));
-        }
-        // Get tied maps
-        List<MapFile> tied = new ArrayList<MapFile>();
-        for (MapFile mapfile : selected_gamemode.getAllowedMaps()) {
-            List<Player> votes = mapfile.getVoted();
-            if (votes.size() >= max) {
-                tied.add(mapfile);
-            }
-        }
-        // Choose random from tied list
-        return tied.get((int) (Math.random() * tied.size()));
-    }
-
-    public static MapFile getSelectedMap() {
-        return selected_map;
-    }
-
-    public static void setDefaultKit(Player player, Kit kit) {
-        Utils.sendServerMessageToPlayer("Set " + ChatColor.GREEN + kit.getName() +
-                ChatColor.GRAY + " as your default kit.", player, ServerMessageType.GAME);
-        ConfigManager.setPlayerGamemodeConfigOption(player, ConfigManager.ConfigOption.DEFAULT_KIT, kit.getName());
-    }
-
-    public static Kit getDefaultKit(Player player) {
-        SmashGamemode gamemode = selected_gamemode;
-        if (selected_gamemode instanceof TestingGamemode) {
-            gamemode = all_gamemodes.get(0);
-        }
-        Object config_option = ConfigManager.getPlayerGamemodeConfigOption(player, ConfigManager.ConfigOption.DEFAULT_KIT, gamemode);
-        if (config_option == null) {
-            return null;
-        }
-        String default_kit_name = config_option.toString();
-        for (Kit kit : KitManager.getAllKits()) {
-            if (kit.getName().equals(default_kit_name)) {
-                return kit;
-            }
-        }
-        return null;
     }
 
     public void run() {
@@ -587,10 +309,286 @@ public class GameManager implements Listener, Runnable {
         time_remaining_ms -= 50;
     }
 
+    public static void death(Player player) {
+        if (lives.get(player) == null) {
+            return;
+        }
+        // Don't do anything before setting to full hp again
+        Utils.fullHeal(player);
+        // Blood Particles
+        EffectUtil.createEffect(player.getEyeLocation(), 10, 0.5, Sound.HURT_FLESH,
+                1f, 1f, Material.INK_SACK, (byte) 1, 10, true);
+        SmashDamageEvent record = DamageManager.getLastDamageEvent(player);
+        Bukkit.broadcastMessage(ServerMessageType.DEATH + " " + ChatColor.YELLOW + player.getName() +
+                ChatColor.GRAY + " killed by " + ChatColor.YELLOW + record.getDamagerName() +
+                ChatColor.GRAY + " with " + record.getReasonColor() + record.getReason() + ChatColor.GRAY + ".");
+        DamageManager.deathReport(player, true);
+        if (record.getDamager() != null && record.getDamager() instanceof Player) {
+            Player damager = (Player) record.getDamager();
+            Kit kit = KitManager.getPlayerKit(damager);
+            if (kit != null) {
+                List<Attribute> attributes = kit.getAttributes();
+                for (Attribute attribute : attributes) {
+                    if (attribute instanceof OwnerKillEvent) {
+                        OwnerKillEvent killEvent = (OwnerKillEvent) attribute;
+                        killEvent.onOwnerKillEvent(player);
+                    }
+                }
+            }
+        }
+        Kit kit = KitManager.getPlayerKit(player);
+        if (kit != null) {
+            List<Attribute> attributes = kit.getAttributes();
+            for (Attribute attribute : attributes) {
+                if (attribute instanceof OwnerDeathEvent) {
+                    OwnerDeathEvent deathEvent = (OwnerDeathEvent) attribute;
+                    deathEvent.onOwnerDeathEvent();
+                }
+            }
+        }
+        // Out of the game check
+        if (lives.get(player) <= 1) {
+            Utils.sendTitleMessage(player, ChatColor.RED + "You Died", "",
+                    10, 50, 10);
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You ran out of lives!");
+            player.playSound(player.getLocation(), Sound.EXPLODE, 2f, 1f);
+            lives.remove(player);
+            deaths[1] = deaths[0];
+            deaths[0] = player;
+            KitManager.equipPlayer(player, new KitTemporarySpectator());
+            DisplayManager.buildScoreboard();
+            return;
+        }
+        // Normal Life Lost
+        lives.put(player, lives.get(player) - 1);
+        Utils.sendTitleMessage(player, "", "Respawning in 4 seconds...", 10, 50, 10);
+        player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You have died!");
+        player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You have " + lives.get(player) +
+                " " + (lives.get(player) == 1 ? "life" : "lives") + " left!");
+        player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 2f, 0.5f);
+        DisplayManager.buildScoreboard();
+        KitManager.equipPlayer(player, new KitTemporarySpectator());
+        // Respawn in 4 seconds
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SSM.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                if (state == GameState.GAME_PLAYING && lives.get(player) > 0) {
+                    player.teleport(selected_gamemode.getRandomRespawnPoint(selected_map, player));
+                    Utils.sendTitleMessage(player, "", DisplayManager.getLivesColor(player) +
+                                    "" + lives.get(player) + " " + (lives.get(player) == 1 ? "life" : "lives") + " left!",
+                            10, 50, 10);
+                    if (!kit.getName().equals("Temporary Spectator")) {
+                        KitManager.equipPlayer(player, kit);
+                    }
+                    DisguiseManager.showDisguises(player);
+                }
+            }
+        }, 80L);
+    }
+
+    // Not for temporary spectators, for people who want to spectate all games
+    public static void toggleSpectator(Player player) {
+        if (spectators.contains(player)) {
+            spectators.remove(player);
+            return;
+        }
+        spectators.add(player);
+    }
+
+    public static boolean isSpectator(Player player) {
+        return spectators.contains(player);
+    }
+
+    public static void clearLobbyWorldEntities() {
+        for (Entity entity : lobby_world.getEntities()) {
+            if (!(entity instanceof Player)) {
+                DamageManager.invincible_mobs.remove(entity);
+                entity.remove();
+            }
+        }
+    }
+
+    public static SmashGamemode getGamemode() {
+        return selected_gamemode;
+    }
+
+    public static void setGamemode(SmashGamemode gamemode) {
+        HandlerList.unregisterAll(selected_gamemode);
+        selected_gamemode = gamemode;
+        Bukkit.getPluginManager().registerEvents(gamemode, SSM.getInstance());
+        // Clear current lobby world entities
+        clearLobbyWorldEntities();
+        // Make kit podiums
+        for (int i = 1; i <= KitManager.getAllKits().size(); i++) {
+            Kit kit = KitManager.getAllKits().get(i - 1);
+            Location podium_location = new Location(lobby_world, 0, 0, 0);
+            Object data = ConfigManager.getConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, String.valueOf(i));
+            if (data == null) {
+                ConfigManager.setConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, new Location(lobby_world, 0, 0, 0, 0, 0), String.valueOf(i));
+            }
+            if (data instanceof Location) {
+                Location temp = (Location) data;
+                podium_location = new Location(lobby_world, temp.getX(), temp.getY(), temp.getZ(), temp.getYaw(), temp.getPitch());
+            }
+            Entity podium_mob = kit.getNewPodiumMob(podium_location);
+            Utils.attachCustomName(podium_mob, ChatColor.GREEN + kit.getName());
+            DamageManager.invincible_mobs.put(podium_mob, 1);
+            // Disable mob ai
+            net.minecraft.server.v1_8_R3.Entity nms_entity = ((CraftEntity) podium_mob).getHandle();
+            NBTTagCompound comp = new NBTTagCompound();
+            nms_entity.c(comp);
+            comp.setByte("NoAI", (byte) 1);
+            nms_entity.f(comp);
+            nms_entity.b(true);
+        }
+        // Clear all current map votes
+        for (SmashGamemode check : all_gamemodes) {
+            for (MapFile mapFile : check.getAllowedMaps()) {
+                mapFile.clearVoted();
+            }
+        }
+    }
+
+    public static World getLobbyWorld() {
+        return lobby_world;
+    }
+
+    public static short getState() {
+        return state;
+    }
+
+    public static void setState(short value) {
+        GameStateChangeEvent event = new GameStateChangeEvent(state, value);
+        Bukkit.getPluginManager().callEvent(event);
+        boolean changed = (state != value);
+        state = value;
+        if (changed) {
+            ourInstance.run();
+        }
+        DisplayManager.buildScoreboard();
+    }
+
+    public static boolean isStarting() {
+        return isStarting(state);
+    }
+
+    public static boolean isStarting(short given_state) {
+        return given_state == GameState.GAME_STARTING;
+    }
+
+    public static boolean isPlaying() {
+        return isPlaying(state);
+    }
+
+    public static boolean isPlaying(short given_state) {
+        return given_state == GameState.GAME_PLAYING;
+    }
+
+    public static void setTimeLeft(double time) {
+        time_remaining_ms = (long) (time * 1000.0);
+    }
+
+    public static int getTimeLeft() {
+        return (int) (time_remaining_ms / 1000.0);
+    }
+
+    public static int getTotalPlayers() {
+        return players.size() - spectators.size();
+    }
+
+    public static int getLives(Player player) {
+        if (lives.get(player) == null) {
+            return 0;
+        }
+        return lives.get(player);
+    }
+
+    public static List<Player> getPlayers() {
+        return players;
+    }
+
+    public static HashMap<Player, Integer> getAllLives() {
+        return lives;
+    }
+
+    public static MapFile getCurrentVotedMap(Player player) {
+        for (MapFile mapfile : selected_gamemode.getAllowedMaps()) {
+            List<Player> current = mapfile.getVoted();
+            if (current.contains(player)) {
+                return mapfile;
+            }
+        }
+        return null;
+    }
+
+    public static int getVotesFor(MapFile mapfile) {
+        if (mapfile == null) {
+            return 0;
+        }
+        return mapfile.getVoted().size();
+    }
+
+    public static MapFile getChosenMap() {
+        if (selected_gamemode.getAllowedMaps().size() == 0) {
+            Bukkit.broadcastMessage("SSM Maps Folder Empty, loading Default World");
+            return new MapFile(Bukkit.getWorlds().get(0).getWorldFolder());
+        }
+        // Calculate max voted map
+        int max = 0;
+        for (MapFile mapfile : selected_gamemode.getAllowedMaps()) {
+            List<Player> votes = mapfile.getVoted();
+            if (votes != null && votes.size() > max) {
+                max = votes.size();
+            }
+        }
+        if (max == 0) {
+            return selected_gamemode.getAllowedMaps().get((int) (Math.random() * selected_gamemode.getAllowedMaps().size()));
+        }
+        // Get tied maps
+        List<MapFile> tied = new ArrayList<MapFile>();
+        for (MapFile mapfile : selected_gamemode.getAllowedMaps()) {
+            List<Player> votes = mapfile.getVoted();
+            if (votes.size() >= max) {
+                tied.add(mapfile);
+            }
+        }
+        // Choose random from tied list
+        return tied.get((int) (Math.random() * tied.size()));
+    }
+
+    public static MapFile getSelectedMap() {
+        return selected_map;
+    }
+
+    public static void setDefaultKit(Player player, Kit kit) {
+        Utils.sendServerMessageToPlayer("Set " + ChatColor.GREEN + kit.getName() +
+                ChatColor.GRAY + " as your default kit.", player, ServerMessageType.GAME);
+        ConfigManager.setPlayerGamemodeConfigOption(player, ConfigManager.ConfigOption.DEFAULT_KIT, kit.getName());
+    }
+
+    public static Kit getDefaultKit(Player player) {
+        SmashGamemode gamemode = selected_gamemode;
+        if (selected_gamemode instanceof TestingGamemode) {
+            gamemode = all_gamemodes.get(0);
+        }
+        Object config_option = ConfigManager.getPlayerGamemodeConfigOption(player, ConfigManager.ConfigOption.DEFAULT_KIT, gamemode);
+        if (config_option == null) {
+            return null;
+        }
+        String default_kit_name = config_option.toString();
+        for (Kit kit : KitManager.getAllKits()) {
+            if (kit.getName().equals(default_kit_name)) {
+                return kit;
+            }
+        }
+        return null;
+    }
+
     private void spawnFireworks() {
-        double x = Math.random() * 200 - 100;
-        double y = 80;
-        double z = Math.random() * 200 - 100;
+        Location location = selected_map.copy_world.getSpawnLocation();
+        double x = location.getX() + Math.random() * 100;
+        double y = location.getY();
+        double z = location.getZ() + Math.random() * 100;
         Location random = new Location(selected_map.getCopyWorld(), x, y, z);
 
         Firework firework = random.getWorld().spawn(random, Firework.class);
@@ -715,17 +713,12 @@ public class GameManager implements Listener, Runnable {
 
     public static void teleportAllPlayersToLobby() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Location location = new Location(lobby_world, 0.5, 57, 0.5);
-            location.setYaw(-90);
-            location.setPitch(0);
-            player.teleport(location);
+            teleportPlayerToLobby(player);
         }
     }
 
     public static void teleportPlayerToLobby(Player player) {
-        Location location = new Location(lobby_world, 0.5, 57, 0.5);
-        location.setYaw(-90);
-        location.setPitch(0);
+        Location location = lobby_world.getSpawnLocation();
         player.teleport(location);
     }
 

@@ -103,6 +103,9 @@ public class DisguiseManager implements Listener, Runnable {
                     PacketPlayInUseEntity.EnumEntityUseAction action = packet.a();
                     if (action.equals(PacketPlayInUseEntity.EnumEntityUseAction.ATTACK)) {
                         for (Disguise disguise : DisguiseManager.disguises.values()) {
+                            if(disguise.getLiving() == null) {
+                                continue;
+                            }
                             // Ignore player melees in case they bounced the destroy entity packet
                             // This matters for disguises where the player is larger than the disguise
                             if(disguise.getOwner().getEntityId() == id) {

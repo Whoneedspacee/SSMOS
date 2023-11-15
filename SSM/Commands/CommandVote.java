@@ -43,7 +43,7 @@ public class CommandVote implements CommandExecutor {
         List<MapFile> sortedMaps = new ArrayList<>(GameManager.getGamemode().getAllowedMaps());
         sortedMaps.sort(Comparator.comparing(MapFile::getName));
 
-        int slot = 10; // beginning slot
+        int slot = 10;
         int count = 0;
         for (MapFile mapfile : sortedMaps) {
             ItemStack item;

@@ -100,6 +100,7 @@ public class DamageManager implements Listener {
             if (flag2) {
                 if (i > 0) {
                     entityFallingBlock.g((double)(-MathHelper.sin(player.yaw * 3.1415927F / 180.0F) * (float)i * 0.5F), 0.1, (double)(MathHelper.cos(player.yaw * 3.1415927F / 180.0F) * (float)i * 0.5F));
+                    //Bukkit.broadcastMessage(String.format("X: %.1f, Y: %.1f, Z: %.1f", entityFallingBlock.motX, entityFallingBlock.motY, entityFallingBlock.motZ));
                     player.motX *= 0.6;
                     player.motZ *= 0.6;
                     // This sets it on the server only, so just don't do that

@@ -82,29 +82,6 @@ public abstract class SmashGamemode implements Listener {
         allowed_kits.add(new KitVillager());
     }
 
-    public void createDataFiles() {
-        /*all_gamemodes_folder = new File("gamemodes");
-        if(!all_gamemodes_folder.exists()) {
-            if(!all_gamemodes_folder.mkdir()) {
-                Bukkit.broadcastMessage(ChatColor.RED + "Failed to make Main Gamemode Folder");
-            }
-        }
-        gamemode_folder = new File(all_gamemodes_folder.getPath() + "/" + name);
-        if(!gamemode_folder.exists())  {
-            if(!gamemode_folder.mkdir()) {
-                Bukkit.broadcastMessage(ChatColor.RED + "Failed to make Gamemode Folder: " + name);
-            }
-        }
-        kit_podium_data = new File(gamemode_folder.getPath() + "/kit_podium_data.yml");
-        if(!kit_podium_data.exists()) {
-            try {
-                kit_podium_data.createNewFile();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        }*/
-    }
-
     public void setPlayerLives(HashMap<Player, Integer> lives) {
         for(Player player : GameManager.getPlayers()) {
             if (GameManager.isSpectator(player)) {
