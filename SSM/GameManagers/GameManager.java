@@ -80,7 +80,7 @@ public class GameManager implements Listener, Runnable {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
         ourInstance = this;
         players.addAll(Bukkit.getOnlinePlayers());
-        SSM.teleportAllPlayers();
+//        SSM.teleportAllPlayers();
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 0L);
         setState(GameState.LOBBY_WAITING);
     }
@@ -571,7 +571,7 @@ public class GameManager implements Listener, Runnable {
         if (time_remaining_ms <= 0) {
             players.clear();
             lives.clear();
-            SSM.teleportAllPlayers();
+            teleportAllPlayersToLobby();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 players.add(player);
                 KitManager.unequipPlayer(player);
@@ -645,7 +645,7 @@ public class GameManager implements Listener, Runnable {
             KitManager.equipPlayer(e.getPlayer(), new KitTemporarySpectator());
             return;
         }
-        SSM.teleportAllPlayers();
+        teleportPlayerToLobby(e.getPlayer());
         KitManager.unequipPlayer(e.getPlayer());
         e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
         e.getPlayer().setFoodLevel(20);
@@ -711,6 +711,22 @@ public class GameManager implements Listener, Runnable {
         player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1.0f, 1.0f);
         CommandVote.openVotingMenu(player);
         e.setCancelled(true);
+    }
+
+    public static void teleportAllPlayersToLobby() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Location location = new Location(lobby_world, 0.5, 57, 0.5);
+            location.setYaw(-90);
+            location.setPitch(0);
+            player.teleport(location);
+        }
+    }
+
+    public static void teleportPlayerToLobby(Player player) {
+        Location location = new Location(lobby_world, 0.5, 57, 0.5);
+        location.setYaw(-90);
+        location.setPitch(0);
+        player.teleport(location);
     }
 
     public class GameState {

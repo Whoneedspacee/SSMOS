@@ -22,8 +22,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import static SSM.GameManagers.GameManager.lobby_world;
-
 public class SSM extends JavaPlugin implements Listener {
 
     private static JavaPlugin ourInstance;
@@ -192,15 +190,6 @@ public class SSM extends JavaPlugin implements Listener {
             return;
         }
         e.setCancelled(true);
-    }
-
-    public static void teleportAllPlayers() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Location location = new Location(lobby_world, 0.5, 57, 0.5);
-            location.setYaw(-90);
-            location.setPitch(0);
-            player.teleport(location);
-        }
     }
 
 }
