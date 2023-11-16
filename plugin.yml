@@ -1,4 +1,4 @@
-main: SSM.SSM
+main: ssm.Main
 name: SSMOS
 version: 1
 author: Whoneedspacee, Deidara, YaBoiTim

@@ -73,25 +73,25 @@ public abstract class Kit implements Listener {
         hotbarAbilities = new Ability[9];
         player.setGameMode(GameMode.ADVENTURE);
         initializeKit();
-        updatePlaying(GameManager.getState());
+        updatePlaying(GameManager.getState(), true);
     }
 
     protected abstract void initializeKit();
 
-    public void updatePlaying(short new_state) {
+    public void updatePlaying(short new_state, boolean reload_hotbar) {
         if(owner == null) {
             return;
         }
         boolean game_hotbar = GameManager.isStarting(new_state) || GameManager.isPlaying(new_state);
         // Set hotbar and register or unregister events for attributes
         // Use booleans so we don't re-equip the same hotbar we already did
-        if(game_hotbar && !game_hotbar_equipped) {
+        if(game_hotbar && (!game_hotbar_equipped || reload_hotbar)) {
             owner.getInventory().clear();
             setGameHotbar();
             game_hotbar_equipped = true;
             preview_hotbar_equipped = false;
         }
-        if(!game_hotbar && !preview_hotbar_equipped) {
+        if(!game_hotbar && (!preview_hotbar_equipped || reload_hotbar)) {
             owner.getInventory().clear();
             setPreviewHotbar();
             preview_hotbar_equipped = true;
@@ -128,7 +128,7 @@ public abstract class Kit implements Listener {
     public void addAttribute(Attribute attribute) {
         attributes.add(attribute);
         attribute.setOwner(owner);
-        updatePlaying(GameManager.getState());
+        updatePlaying(GameManager.getState(), false);
     }
 
     public void removeAttribute(Attribute attribute) {
@@ -296,7 +296,7 @@ public abstract class Kit implements Listener {
 
     @EventHandler
     public void onGameStateChange(GameStateChangeEvent e) {
-        updatePlaying(e.getNewState());
+        updatePlaying(e.getNewState(), false);
     }
 
 }

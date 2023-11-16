@@ -1,8 +1,10 @@
 package ssm.kits;
 
+import org.bukkit.Bukkit;
 import ssm.abilities.Needler;
 import ssm.abilities.SpinWeb;
 import ssm.attributes.*;
+import ssm.attributes.doublejumps.DoubleJump;
 import ssm.attributes.doublejumps.custom.SpiderJump;
 import ssm.gamemanagers.DisguiseManager;
 import ssm.gamemanagers.disguises.SpiderDisguise;
