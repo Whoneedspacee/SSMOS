@@ -26,12 +26,20 @@ public class MagmaCubeDisguise extends Disguise {
         return magmaCube;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    @Override
+    public void update() {
+        if (living == null) {
+            return;
+        }
         DataWatcher dw = living.getDataWatcher();
         dw.watch(16, (byte) size);
         PacketPlayOutEntityMetadata size_packet = new PacketPlayOutEntityMetadata(living.getId(), dw, true);
         Utils.sendPacketToAll(size_packet);
+        super.update();
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     @Override
