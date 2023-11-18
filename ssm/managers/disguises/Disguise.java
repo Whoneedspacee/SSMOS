@@ -99,6 +99,7 @@ public abstract class Disguise {
         living.setPositionRotation(owner.getLocation().getX(), owner.getLocation().getY(), owner.getLocation().getZ(),
                 owner.getLocation().getYaw(), owner.getLocation().getPitch());
         // Set exact head rotation before entity is spawned since setPositionRotation does not do that
+        // The body of a mob is rotated on the client so this will make the body spawn already rotated
         living.f(owner.getLocation().getYaw());
         PacketPlayOutSpawnEntityLiving living_packet = new PacketPlayOutSpawnEntityLiving(living);
         Utils.sendPacket(player, living_packet);
