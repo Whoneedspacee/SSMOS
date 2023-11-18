@@ -1,7 +1,7 @@
 package ssm.abilities;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.Main;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.Utils;
@@ -20,9 +20,9 @@ import org.bukkit.util.Vector;
 public class SonicHurr extends Ability implements OwnerRightClickEvent {
 
     protected double damage = 11;
-    protected double hitbox_size = 3;
-    protected double velocity_factor = 0.5;
-    protected double distance = 6;
+    protected double hitbox_size = 4;
+    protected double velocity_factor = 1.5;
+    protected double distance = 7;
 
     public SonicHurr() {
         super();
@@ -42,7 +42,7 @@ public class SonicHurr extends Ability implements OwnerRightClickEvent {
         Location location = owner.getEyeLocation();
         location.add(location.getDirection());
         owner.getWorld().playSound(owner.getLocation(), Sound.VILLAGER_IDLE, 1.5f, 1.2f);
-        new SpiralEffect(1, 2, 6 * 10, location) {
+        new SpiralEffect(1, 2, (int) distance * 10, location) {
             @Override
             public void playParticle(Location location) {
                 Utils.playParticle(EnumParticle.CLOUD, location,
@@ -185,7 +185,7 @@ public class SonicHurr extends Ability implements OwnerRightClickEvent {
 
     }
 
-    public abstract class SpiralEffect extends Effect {
+    public static abstract class SpiralEffect extends Effect {
 
         private static final double DELTA_THETA = Math.PI / 20D;
         private static final double DELTA_Z = 0.1;

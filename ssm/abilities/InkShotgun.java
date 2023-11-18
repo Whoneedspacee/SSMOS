@@ -1,6 +1,6 @@
 package ssm.abilities;
 
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.projectiles.InkProjectile;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;

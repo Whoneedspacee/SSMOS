@@ -1,7 +1,6 @@
 package ssm.attributes;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.GameManager;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
 import org.bukkit.GameMode;
@@ -50,10 +49,6 @@ public class Hunger extends Attribute {
             smashDamageEvent.setDamagerName("Starvation");
             smashDamageEvent.setReason("Starvation");
             smashDamageEvent.callEvent();
-            return;
-        }
-        // Lazy hack for lobby testing shenanigans
-        if(!GameManager.isPlaying()) {
             return;
         }
         if(hunger_ticks == 0) {

@@ -2,7 +2,7 @@ package ssm.attributes.doublejumps;
 
 import ssm.attributes.Attribute;
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.KitManager;
+import ssm.managers.KitManager;
 import ssm.kits.Kit;
 import ssm.utilities.Utils;
 import org.bukkit.Bukkit;

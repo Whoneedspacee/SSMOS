@@ -2,8 +2,8 @@ package ssm.abilities;
 
 import ssm.attributes.NetherPig;
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.KitManager;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.KitManager;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.kits.Kit;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.ServerMessageType;

@@ -1,9 +1,9 @@
 package ssm.abilities;
 
-import ssm.gamemanagers.DisguiseManager;
-import ssm.gamemanagers.disguises.Disguise;
-import ssm.gamemanagers.disguises.EndermanDisguise;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.DisguiseManager;
+import ssm.managers.disguises.Disguise;
+import ssm.managers.disguises.EndermanDisguise;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.projectiles.BlockProjectile;
 import ssm.utilities.BlocksUtil;
 import org.bukkit.*;

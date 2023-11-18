@@ -1,8 +1,8 @@
 package ssm.abilities;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.CooldownManager;
-import ssm.gamemanagers.ownerevents.OwnerLeftClickEvent;
+import ssm.managers.CooldownManager;
+import ssm.managers.ownerevents.OwnerLeftClickEvent;
 import ssm.Main;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.ServerMessageType;

@@ -1,8 +1,8 @@
 package ssm.attributes;
 
-import ssm.gamemanagers.DisguiseManager;
-import ssm.gamemanagers.disguises.Disguise;
-import ssm.gamemanagers.disguises.SheepDisguise;
+import ssm.managers.DisguiseManager;
+import ssm.managers.disguises.Disguise;
+import ssm.managers.disguises.SheepDisguise;
 import net.minecraft.server.v1_8_R3.EntityLiving;
 
 public class RainbowSheep extends Attribute {

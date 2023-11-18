@@ -1,13 +1,13 @@
 package ssm.abilities;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.CooldownManager;
-import ssm.gamemanagers.DisguiseManager;
-import ssm.gamemanagers.disguises.Disguise;
-import ssm.gamemanagers.disguises.GuardianDisguise;
-import ssm.gamemanagers.ownerevents.OwnerDealSmashDamageEvent;
-import ssm.gamemanagers.ownerevents.OwnerKillEvent;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.CooldownManager;
+import ssm.managers.DisguiseManager;
+import ssm.managers.disguises.Disguise;
+import ssm.managers.disguises.GuardianDisguise;
+import ssm.managers.ownerevents.OwnerDealSmashDamageEvent;
+import ssm.managers.ownerevents.OwnerKillEvent;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;

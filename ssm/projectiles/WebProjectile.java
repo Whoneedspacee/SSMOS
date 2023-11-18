@@ -1,7 +1,7 @@
 package ssm.projectiles;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.BlockRestoreManager;
+import ssm.managers.BlockRestoreManager;
 import ssm.utilities.VelocityUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;

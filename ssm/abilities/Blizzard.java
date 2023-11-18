@@ -2,8 +2,8 @@ package ssm.abilities;
 
 import ssm.attributes.ExpCharge;
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.BlockRestoreManager;
-import ssm.gamemanagers.KitManager;
+import ssm.managers.BlockRestoreManager;
+import ssm.managers.KitManager;
 import ssm.kits.Kit;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.VelocityUtil;

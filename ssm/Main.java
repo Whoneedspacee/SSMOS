@@ -1,10 +1,15 @@
 package ssm;
 
+import org.bukkit.scoreboard.DisplaySlot;
 import ssm.attributes.Hunger;
 import ssm.commands.*;
 import ssm.commands.CommandStop;
-import ssm.gamemanagers.*;
-import ssm.gamemanagers.disguises.Disguise;
+import ssm.managers.*;
+import ssm.managers.disguises.Disguise;
+import ssm.managers.gamemodes.SoloGamemode;
+import ssm.managers.gamemodes.TeamsGamemode;
+import ssm.managers.gamemodes.TestingGamemode;
+import ssm.managers.smashserver.SmashServer;
 import ssm.kits.Kit;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.Utils;
@@ -22,13 +27,15 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
+
 public class Main extends JavaPlugin implements Listener {
 
     private static JavaPlugin ourInstance;
-
     public static JavaPlugin getInstance() {
         return ourInstance;
     }
+    public static boolean DEBUG_MODE = false;
 
     @Override
     public void onEnable() {
@@ -41,11 +48,11 @@ public class Main extends JavaPlugin implements Listener {
         new DamageManager();
         new DisguiseManager();
         new GameManager();
-        new DisplayManager();
         new BlockRestoreManager();
+        new TeamManager();
+        new MenuManager();
         this.getCommand("start").setExecutor(new CommandStart());
         this.getCommand("stop").setExecutor(new CommandStop());
-        this.getCommand("getstate").setExecutor(new CommandGetState());
         this.getCommand("tpworld").setExecutor(new CommandTeleportWorld());
         this.getCommand("getloadedworlds").setExecutor(new CommandGetLoadedWorlds());
         this.getCommand("loadworld").setExecutor(new CommandLoadWorld());
@@ -58,9 +65,6 @@ public class Main extends JavaPlugin implements Listener {
         this.getCommand("spectate").setExecutor(new CommandSpectate());
         this.getCommand("unloadworld").setExecutor(new CommandUnloadWorld());
         this.getCommand("setplaying").setExecutor(new CommandSetPlaying());
-        CommandSetGamemode setgamemode = new CommandSetGamemode();
-        this.getCommand("setgamemode").setExecutor(setgamemode);
-        this.getCommand("setgamemode").setTabCompleter(setgamemode);
         this.getCommand("randomkit").setExecutor(new CommandRandomKit());
         this.getCommand("playerdisguise").setExecutor(new CommandPlayerDisguise());
         this.getCommand("damagelog").setExecutor(new CommandDamageLog());
@@ -70,10 +74,24 @@ public class Main extends JavaPlugin implements Listener {
         CommandSetKit setKit = new CommandSetKit();
         this.getCommand("setkit").setExecutor(setKit);
         this.getCommand("setkit").setTabCompleter(setKit);
-        this.getCommand("loadgamemodeworld").setExecutor(new CommandLoadGamemodeWorld());
+        this.getCommand("makeserver").setExecutor(new CommandMakeServer());
+        this.getCommand("server").setExecutor(new CommandServer());
+        this.getCommand("hub").setExecutor(new CommandHub());
         // Do not do anything before manager creation please
         for(Player player : Bukkit.getOnlinePlayers()) {
             Utils.fullHeal(player);
+        }
+        if(DEBUG_MODE) {
+            SmashServer server = GameManager.createSmashServer(new TestingGamemode());
+            for(Player player : Bukkit.getOnlinePlayers()) {
+                server.teleportToServer(player);
+            }
+        } else {
+            GameManager.createSmashServer(new SoloGamemode());
+            GameManager.createSmashServer(new SoloGamemode());
+            GameManager.createSmashServer(new TeamsGamemode());
+            GameManager.createSmashServer(new TeamsGamemode());
+            GameManager.createSmashServer(new TestingGamemode());
         }
     }
 
@@ -82,8 +100,13 @@ public class Main extends JavaPlugin implements Listener {
         for(Disguise disguise : DisguiseManager.disguises.values()) {
             disguise.deleteLiving();
         }
-        if(GameManager.getSelectedMap() != null) {
-            GameManager.getSelectedMap().deleteWorld();
+        List<SmashServer> to_delete = List.copyOf(GameManager.servers);
+        for(SmashServer server : to_delete) {
+            GameManager.deleteSmashServer(server);
+        }
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+            KitManager.unequipPlayer(player);
         }
         this.reloadConfig();
         this.saveConfig();

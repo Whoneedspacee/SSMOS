@@ -1,6 +1,6 @@
 package ssm.attributes;
 
-import ssm.gamemanagers.ownerevents.OwnerToggleSneakEvent;
+import ssm.managers.ownerevents.OwnerToggleSneakEvent;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.Bukkit;

@@ -1,7 +1,7 @@
 package ssm.attributes;
 
 import ssm.attributes.doublejumps.DoubleJump;
-import ssm.gamemanagers.KitManager;
+import ssm.managers.KitManager;
 import ssm.utilities.BlocksUtil;
 import ssm.utilities.Utils;
 import ssm.utilities.VelocityUtil;
@@ -13,6 +13,7 @@ public class Climb extends Attribute {
 
     protected double power;
     protected boolean chargedDoubleJump;
+    public long last_use_time = 0;
     public long last_cooldown_time = 0;
     public long cooldown_time_ms = 150;
 
@@ -49,6 +50,10 @@ public class Climb extends Attribute {
         if(System.currentTimeMillis() - last_cooldown_time < cooldown_time_ms) {
             return;
         }
+        if(System.currentTimeMillis() - last_use_time < 100) {
+            return;
+        }
+        last_use_time = System.currentTimeMillis();
         for (Block block : BlocksUtil.getBlocks(owner.getLocation(), 1)) {
             if (block.getType().isSolid() && !block.isLiquid()) {
                 VelocityUtil.setVelocity(owner, new Vector(0, power, 0));

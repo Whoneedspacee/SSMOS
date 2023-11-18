@@ -1,7 +1,7 @@
 package ssm.commands;
 
-import ssm.gamemanagers.DisplayManager;
-import ssm.gamemanagers.GameManager;
+import ssm.managers.GameManager;
+import ssm.managers.smashserver.SmashServer;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
 import org.bukkit.Bukkit;
@@ -25,6 +25,10 @@ public class CommandSetLives implements TabExecutor {
             return true;
         }
         Player player = (Player) commandSender;
+        SmashServer server = GameManager.getPlayerServer(player);
+        if(server == null) {
+            return true;
+        }
         if (args.length == 2) {
             Player set = Bukkit.getPlayer(args[0]);
             if(set == null) {
@@ -33,12 +37,12 @@ public class CommandSetLives implements TabExecutor {
             }
             try {
                 int number = Integer.parseInt(args[1]);
-                GameManager.getAllLives().put(set, number);
+                server.lives.put(set, number);
                 for(Player to_message : set.getWorld().getPlayers()) {
                     Utils.sendServerMessageToPlayer(ChatColor.YELLOW + set.getName() + ChatColor.GRAY +
                             " had their lives set to " + ChatColor.GREEN + number + ChatColor.GRAY + ".", to_message, ServerMessageType.GAME);
                 }
-                DisplayManager.buildScoreboard();
+                server.getScoreboard().buildScoreboard();
                 return true;
             } catch (NumberFormatException e) {
                 player.sendMessage("You need to input a number!");

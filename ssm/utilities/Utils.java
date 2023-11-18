@@ -1,8 +1,8 @@
 package ssm.utilities;
 
 import ssm.attributes.Attribute;
-import ssm.gamemanagers.DamageManager;
-import ssm.gamemanagers.DisguiseManager;
+import ssm.managers.DamageManager;
+import ssm.managers.DisguiseManager;
 import ssm.Main;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Material;

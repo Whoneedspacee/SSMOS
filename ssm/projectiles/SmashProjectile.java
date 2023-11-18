@@ -1,6 +1,6 @@
 package ssm.projectiles;
 
-import ssm.gamemanagers.KitManager;
+import ssm.managers.KitManager;
 import ssm.kits.Kit;
 import ssm.Main;
 import ssm.utilities.BlocksUtil;

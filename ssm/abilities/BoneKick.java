@@ -1,10 +1,10 @@
 package ssm.abilities;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.CooldownManager;
-import ssm.gamemanagers.DisguiseManager;
-import ssm.gamemanagers.disguises.SkeletonHorseDisguise;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.CooldownManager;
+import ssm.managers.DisguiseManager;
+import ssm.managers.disguises.SkeletonHorseDisguise;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;

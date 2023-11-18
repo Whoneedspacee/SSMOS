@@ -1,8 +1,8 @@
 package ssm.abilities;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.ownerevents.OwnerDealSmashDamageEvent;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.ownerevents.OwnerDealSmashDamageEvent;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.utilities.Utils;
 import ssm.utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.EntityLargeFireball;

@@ -1,9 +1,9 @@
 package ssm.attributes;
 
-import ssm.gamemanagers.DisguiseManager;
-import ssm.gamemanagers.disguises.NetherPigDisguise;
-import ssm.gamemanagers.disguises.PigDisguise;
-import ssm.gamemanagers.KitManager;
+import ssm.managers.DisguiseManager;
+import ssm.managers.disguises.NetherPigDisguise;
+import ssm.managers.disguises.PigDisguise;
+import ssm.managers.KitManager;
 import ssm.kits.Kit;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;

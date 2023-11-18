@@ -1,6 +1,6 @@
 package ssm.commands;
 
-import ssm.gamemanagers.DamageManager;
+import ssm.managers.DamageManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

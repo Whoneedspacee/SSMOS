@@ -1,7 +1,7 @@
 package ssm.commands;
 
-import ssm.gamemanagers.DisguiseManager;
-import ssm.gamemanagers.disguises.PlayerDisguise;
+import ssm.managers.DisguiseManager;
+import ssm.managers.disguises.PlayerDisguise;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -1,11 +1,13 @@
 package ssm.commands;
 
-import ssm.gamemanagers.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ssm.managers.GameManager;
+import ssm.managers.gamestate.GameState;
+import ssm.managers.smashserver.SmashServer;
 
 public class CommandStop implements CommandExecutor {
 
@@ -18,18 +20,13 @@ public class CommandStop implements CommandExecutor {
         if(!commandSender.isOp()) {
             return true;
         }
-        stopGame();
+        Player player = (Player) commandSender;
+        SmashServer server = GameManager.getPlayerServer(player);
+        if(server == null) {
+            return true;
+        }
+        server.stopGame();
         return true;
-    }
-
-    public static void stopGame() {
-        if (GameManager.getState() >= GameManager.GameState.GAME_STARTING) {
-            GameManager.setTimeLeft(0);
-            GameManager.setState(GameManager.GameState.GAME_ENDING);
-        }
-        else {
-            GameManager.setState(GameManager.GameState.LOBBY_WAITING);
-        }
     }
 
 }

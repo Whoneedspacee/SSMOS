@@ -1,6 +1,6 @@
 package ssm.abilities;
 
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.utilities.LineParticle;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.EnumParticle;

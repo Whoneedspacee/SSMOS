@@ -1,6 +1,5 @@
 package ssm.commands;
 
-import ssm.gamemanagers.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -60,7 +59,7 @@ public class CommandUnloadWorld implements CommandExecutor {
             return false;
         }
         for (Player player : world.getPlayers()) {
-            player.teleport(GameManager.getLobbyWorld().getSpawnLocation());
+            player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
         }
         Bukkit.unloadWorld(world, true);
         return true;

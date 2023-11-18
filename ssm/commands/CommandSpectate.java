@@ -1,6 +1,7 @@
 package ssm.commands;
 
-import ssm.gamemanagers.GameManager;
+import ssm.managers.GameManager;
+import ssm.managers.smashserver.SmashServer;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
 import org.bukkit.command.Command;
@@ -16,12 +17,12 @@ public class CommandSpectate implements CommandExecutor {
             return true;
         }
         Player player = (Player) commandSender;
-        if (GameManager.getState() > GameManager.GameState.LOBBY_STARTING) {
-            Utils.sendServerMessageToPlayer("You cannot toggle Spectator during games.", player, ServerMessageType.GAME);
+        SmashServer server = GameManager.getPlayerServer(player);
+        if(server == null) {
             return true;
         }
-        GameManager.toggleSpectator(player);
-        if (GameManager.isSpectator(player)) {
+        server.toggleSpectator(player);
+        if (server.isSpectator(player)) {
             Utils.sendServerMessageToPlayer("You are now a Spectator!", player, ServerMessageType.GAME);
             return true;
         }

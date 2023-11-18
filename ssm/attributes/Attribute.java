@@ -1,7 +1,7 @@
 package ssm.attributes;
 
-import ssm.gamemanagers.CooldownManager;
-import ssm.gamemanagers.KitManager;
+import ssm.managers.CooldownManager;
+import ssm.managers.KitManager;
 import ssm.kits.Kit;
 import ssm.Main;
 import ssm.utilities.ServerMessageType;
@@ -76,6 +76,10 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     }
 
     public void checkAndActivate() {
+        Kit kit = KitManager.getPlayerKit(owner);
+        if (kit != null && !kit.isActive()) {
+            return;
+        }
         if (hasCooldown() && inform_cooldown && System.currentTimeMillis() - last_inform_time >= 50) {
             String time_string = String.format("%.1f seconds", CooldownManager.getInstance().getRemainingTimeFor(this, owner) / 1000.0);
             Utils.sendAttributeMessage("You cannot use " + ChatColor.GREEN + name +

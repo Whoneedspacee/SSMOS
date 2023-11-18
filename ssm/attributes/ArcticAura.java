@@ -1,6 +1,6 @@
 package ssm.attributes;
 
-import ssm.gamemanagers.BlockRestoreManager;
+import ssm.managers.BlockRestoreManager;
 import ssm.utilities.BlocksUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

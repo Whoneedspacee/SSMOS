@@ -1,10 +1,10 @@
 package ssm.abilities;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.DisguiseManager;
-import ssm.gamemanagers.disguises.Disguise;
-import ssm.gamemanagers.disguises.MagmaCubeDisguise;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.DisguiseManager;
+import ssm.managers.disguises.Disguise;
+import ssm.managers.disguises.MagmaCubeDisguise;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;

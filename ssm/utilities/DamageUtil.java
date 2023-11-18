@@ -1,10 +1,12 @@
 package ssm.utilities;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.GameManager;
-import ssm.gamemanagers.KitManager;
-import ssm.gamemanagers.TeamManager;
-import ssm.gamemanagers.teams.SmashTeam;
+import ssm.managers.GameManager;
+import ssm.managers.KitManager;
+import ssm.managers.TeamManager;
+import ssm.managers.gamestate.GameState;
+import ssm.managers.smashserver.SmashServer;
+import ssm.managers.teams.SmashTeam;
 import ssm.kits.Kit;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
@@ -39,9 +41,6 @@ public class DamageUtil {
     }
 
     public static boolean canDamage(LivingEntity damagee, LivingEntity damager) {
-        if (GameManager.getState() != GameManager.GameState.GAME_PLAYING) {
-            return false;
-        }
         if(damagee.equals(damager)) {
             return true;
         }
@@ -61,6 +60,13 @@ public class DamageUtil {
                 if(damagee_team != null && damagee_team.equals(damager_team)) {
                     return false;
                 }
+            }
+            SmashServer server = GameManager.getPlayerServer(player);
+            if(server != null) {
+                return (server.getState() == GameState.GAME_PLAYING);
+            }
+            if(damager instanceof Player) {
+                return false;
             }
         }
         return true;

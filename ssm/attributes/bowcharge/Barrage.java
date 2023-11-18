@@ -1,6 +1,6 @@
 package ssm.attributes.bowcharge;
 
-import ssm.gamemanagers.KitManager;
+import ssm.managers.KitManager;
 import ssm.kits.KitSkeleton;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

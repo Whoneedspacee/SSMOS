@@ -1,7 +1,7 @@
 package ssm.attributes;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.ownerevents.OwnerDealSmashDamageEvent;
+import ssm.managers.ownerevents.OwnerDealSmashDamageEvent;
 import org.bukkit.ChatColor;
 
 public class FlamingKnockback extends Attribute implements OwnerDealSmashDamageEvent {

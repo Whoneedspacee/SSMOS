@@ -1,8 +1,8 @@
 package ssm.abilities;
 
 import ssm.attributes.Attribute;
-import ssm.gamemanagers.KitManager;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.KitManager;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.kits.Kit;
 import ssm.projectiles.ScatterProjectile;
 import ssm.utilities.VelocityUtil;

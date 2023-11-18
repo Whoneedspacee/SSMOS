@@ -1,7 +1,7 @@
 package ssm.attributes.bowcharge;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.ownerevents.OwnerDealSmashDamageEvent;
+import ssm.managers.ownerevents.OwnerDealSmashDamageEvent;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.ChatColor;

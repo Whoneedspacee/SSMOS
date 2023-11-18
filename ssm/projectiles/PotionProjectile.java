@@ -1,7 +1,6 @@
 package ssm.projectiles;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.GameManager;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.Utils;
 import ssm.utilities.VelocityUtil;
@@ -74,7 +73,7 @@ public class PotionProjectile extends SmashProjectile {
         if(!running) {
             return false;
         }
-        List<Player> players = new ArrayList<>(GameManager.getPlayers());
+        List<Player> players = new ArrayList<>(projectile.getWorld().getPlayers());
         List<Player> directHit = Utils.getEntitiesInsideEntity(projectile, players);
         for(Player player : directHit) {
             if(player.equals(firer)) {

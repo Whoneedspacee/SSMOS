@@ -1,8 +1,8 @@
 package ssm.commands;
 
-import ssm.gamemanagers.GameManager;
-import ssm.gamemanagers.gamemodes.TestingGamemode;
-import ssm.gamemanagers.KitManager;
+import ssm.managers.GameManager;
+import ssm.managers.gamemodes.TestingGamemode;
+import ssm.managers.KitManager;
 import ssm.kits.Kit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import ssm.managers.gamestate.GameState;
+import ssm.managers.smashserver.SmashServer;
 
 public class CommandKit implements CommandExecutor {
 
@@ -21,49 +23,18 @@ public class CommandKit implements CommandExecutor {
         if (!(commandSender instanceof Player)) {
             return true;
         }
-        if(!(GameManager.getCurrentGamemode() instanceof TestingGamemode)) {
-            if(GameManager.getState() >= GameManager.GameState.GAME_PLAYING && !commandSender.isOp()) {
+        Player player = (Player) commandSender;
+        SmashServer server = GameManager.getPlayerServer(player);
+        if(server == null) {
+            return true;
+        }
+        if(!(server.getCurrentGamemode() instanceof TestingGamemode)) {
+            if(server.getState() >= GameState.GAME_PLAYING && !commandSender.isOp()) {
                 commandSender.sendMessage("You may not use this command while a game is in progress.");
                 return true;
             }
         }
-        Player player = (Player) commandSender;
-        if (args.length >= 1) {
-            StringBuilder builder = new StringBuilder();
-            for (String value : args) {
-                builder.append(value);
-                builder.append(" ");
-            }
-            builder.deleteCharAt(builder.length() - 1);
-            String kitname = builder.toString();
-            for (Kit kit : KitManager.getAllKits()) {
-                if (kit.getName().equalsIgnoreCase(kitname)) {
-                    KitManager.equipPlayer(player, kit);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        int slot = 10;
-        int count = 0;
-        Inventory selectKit = Bukkit.createInventory(player, 9 * 5, "Choose a Kit");
-        for (Kit kit : KitManager.getAllKits()) {
-            ItemStack item = kit.getMenuItemStack();
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.RESET + kit.getName());
-            item.setItemMeta(itemMeta);
-
-            selectKit.setItem(slot, item);
-            slot++;
-            count++;
-
-            if (count % 7 == 0) {
-                slot += 2;
-            }
-        }
-        player.openInventory(selectKit);
-
+        KitManager.openKitMenu(player);
         return true;
     }
 }

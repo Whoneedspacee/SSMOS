@@ -3,8 +3,7 @@ package ssm.kits;
 import ssm.abilities.Ability;
 import ssm.attributes.Attribute;
 import ssm.events.GameStateChangeEvent;
-import ssm.gamemanagers.DisguiseManager;
-import ssm.gamemanagers.GameManager;
+import ssm.managers.DisguiseManager;
 import ssm.Main;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
@@ -16,6 +15,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import ssm.managers.GameManager;
+import ssm.managers.gamestate.GameState;
+import ssm.managers.smashscoreboard.SmashScoreboard;
+import ssm.managers.smashserver.SmashServer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,7 +76,12 @@ public abstract class Kit implements Listener {
         hotbarAbilities = new Ability[9];
         player.setGameMode(GameMode.ADVENTURE);
         initializeKit();
-        updatePlaying(GameManager.getState(), true);
+        SmashServer server = GameManager.getPlayerServer(owner);
+        if(server == null) {
+            updatePlaying(GameState.GAME_PLAYING, true);
+            return;
+        }
+        updatePlaying(server.getState(), true);
     }
 
     protected abstract void initializeKit();
@@ -82,7 +90,7 @@ public abstract class Kit implements Listener {
         if(owner == null) {
             return;
         }
-        boolean game_hotbar = GameManager.isStarting(new_state) || GameManager.isPlaying(new_state);
+        boolean game_hotbar = GameState.isStarting(new_state) || GameState.isPlaying(new_state);
         // Set hotbar and register or unregister events for attributes
         // Use booleans so we don't re-equip the same hotbar we already did
         if(game_hotbar && (!game_hotbar_equipped || reload_hotbar)) {
@@ -97,7 +105,7 @@ public abstract class Kit implements Listener {
             preview_hotbar_equipped = true;
             game_hotbar_equipped = false;
         }
-        if(GameManager.isPlaying(new_state)) {
+        if(GameState.isPlaying(new_state)) {
             playing = true;
             for(Attribute attribute : attributes) {
                 HandlerList.unregisterAll(attribute);
@@ -128,7 +136,12 @@ public abstract class Kit implements Listener {
     public void addAttribute(Attribute attribute) {
         attributes.add(attribute);
         attribute.setOwner(owner);
-        updatePlaying(GameManager.getState(), false);
+        SmashServer server = GameManager.getPlayerServer(owner);
+        if(server == null) {
+            updatePlaying(GameState.GAME_PLAYING, false);
+            return;
+        }
+        updatePlaying(server.getState(), false);
     }
 
     public void removeAttribute(Attribute attribute) {
@@ -296,6 +309,10 @@ public abstract class Kit implements Listener {
 
     @EventHandler
     public void onGameStateChange(GameStateChangeEvent e) {
+        SmashServer server = GameManager.getPlayerServer(owner);
+        if(!e.getServer().equals(server)) {
+            return;
+        }
         updatePlaying(e.getNewState(), false);
     }
 

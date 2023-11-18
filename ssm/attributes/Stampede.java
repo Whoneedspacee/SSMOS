@@ -1,8 +1,8 @@
 package ssm.attributes;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.ownerevents.OwnerDealSmashDamageEvent;
-import ssm.gamemanagers.ownerevents.OwnerTakeSmashDamageEvent;
+import ssm.managers.ownerevents.OwnerDealSmashDamageEvent;
+import ssm.managers.ownerevents.OwnerTakeSmashDamageEvent;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.EnumParticle;

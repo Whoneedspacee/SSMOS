@@ -1,8 +1,8 @@
 package ssm.abilities;
 
 import ssm.attributes.ExpCharge;
-import ssm.gamemanagers.KitManager;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.KitManager;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.kits.Kit;
 import ssm.projectiles.FireProjectile;
 import org.bukkit.Bukkit;

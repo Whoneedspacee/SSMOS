@@ -1,7 +1,7 @@
 package ssm.abilities;
 
-import ssm.gamemanagers.BlockRestoreManager;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.BlockRestoreManager;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.utilities.VelocityUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;

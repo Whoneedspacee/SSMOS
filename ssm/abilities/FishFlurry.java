@@ -1,6 +1,6 @@
 package ssm.abilities;
 
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.projectiles.FishFlurryProjectile;
 import ssm.utilities.BlocksUtil;
 import ssm.utilities.ServerMessageType;

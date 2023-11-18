@@ -1,13 +1,13 @@
 package ssm.attributes;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.DisguiseManager;
-import ssm.gamemanagers.disguises.Disguise;
-import ssm.gamemanagers.disguises.MagmaCubeDisguise;
-import ssm.gamemanagers.KitManager;
-import ssm.gamemanagers.ownerevents.OwnerDealSmashDamageEvent;
-import ssm.gamemanagers.ownerevents.OwnerKillEvent;
-import ssm.gamemanagers.ownerevents.OwnerTakeSmashDamageEvent;
+import ssm.managers.DisguiseManager;
+import ssm.managers.disguises.Disguise;
+import ssm.managers.disguises.MagmaCubeDisguise;
+import ssm.managers.KitManager;
+import ssm.managers.ownerevents.OwnerDealSmashDamageEvent;
+import ssm.managers.ownerevents.OwnerKillEvent;
+import ssm.managers.ownerevents.OwnerTakeSmashDamageEvent;
 import ssm.kits.Kit;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.EnumParticle;

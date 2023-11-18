@@ -1,13 +1,13 @@
 package ssm.commands;
 
-import ssm.gamemanagers.GameManager;
-import ssm.gamemanagers.KitManager;
+import ssm.managers.KitManager;
 import ssm.kits.Kit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ssm.managers.gamestate.GameState;
 
 public class CommandSetPlaying implements CommandExecutor {
 
@@ -22,9 +22,7 @@ public class CommandSetPlaying implements CommandExecutor {
         Player player = (Player) commandSender;
         Kit kit = KitManager.getPlayerKit(player);
         if(kit != null) {
-            // Need first part to unhandle existing stuff
-            kit.updatePlaying(GameManager.GameState.LOBBY_WAITING, false);
-            kit.updatePlaying(GameManager.GameState.GAME_PLAYING, false);
+            kit.updatePlaying(GameState.GAME_PLAYING, false);
             player.sendMessage(ChatColor.YELLOW + "Forced Kit State to Playing");
         }
         return true;

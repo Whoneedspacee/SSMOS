@@ -1,8 +1,9 @@
 package ssm.commands;
 
-import ssm.gamemanagers.DisplayManager;
-import ssm.gamemanagers.KitManager;
+import ssm.managers.GameManager;
+import ssm.managers.KitManager;
 import ssm.kits.Kit;
+import ssm.managers.smashserver.SmashServer;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
 import org.bukkit.Bukkit;
@@ -26,6 +27,10 @@ public class CommandSetKit implements TabExecutor {
             return true;
         }
         Player player = (Player) commandSender;
+        SmashServer server = GameManager.getPlayerServer(player);
+        if(server == null) {
+            return true;
+        }
         if (args.length >= 2) {
             Player set = Bukkit.getPlayer(args[0]);
             if (set == null) {
@@ -39,7 +44,7 @@ public class CommandSetKit implements TabExecutor {
             }
             String kit_string = kit_builder.substring(0, kit_builder.length() - 1);
             Kit kit = null;
-            for (Kit check : KitManager.getAllKits()) {
+            for (Kit check : server.getCurrentGamemode().getAllowedKits()) {
                 if (check.getName().equalsIgnoreCase(kit_string)) {
                     kit = check;
                     break;
@@ -54,7 +59,6 @@ public class CommandSetKit implements TabExecutor {
                 Utils.sendServerMessageToPlayer(ChatColor.YELLOW + set.getName() + ChatColor.GRAY +
                         " had their kit set to " + ChatColor.GREEN + kit.getName() + ChatColor.GRAY + ".", to_message, ServerMessageType.GAME);
             }
-            DisplayManager.buildScoreboard();
             return true;
         }
         return false;

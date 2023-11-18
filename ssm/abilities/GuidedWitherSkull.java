@@ -1,7 +1,7 @@
 package ssm.abilities;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.*;

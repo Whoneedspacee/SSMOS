@@ -1,8 +1,8 @@
 package ssm.abilities;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.KitManager;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.KitManager;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.utilities.Utils;
 import ssm.utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.EnumParticle;

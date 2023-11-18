@@ -1,6 +1,6 @@
 package ssm.abilities;
 
-import ssm.gamemanagers.ownerevents.OwnerLeftClickEvent;
+import ssm.managers.ownerevents.OwnerLeftClickEvent;
 import ssm.utilities.VelocityUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;

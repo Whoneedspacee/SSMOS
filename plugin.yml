@@ -29,9 +29,6 @@ commands:
   stop:
     description: 'Stops the game.'
     usage: /stop
-  getstate:
-    description: 'Gets the state of the game.'
-    usage: /getstate
   tpworld:
     description: 'Teleports you to the provided world name.'
     usage: /tpworld world
@@ -51,9 +48,6 @@ commands:
   setplaying:
     description: 'Forces a kits abilities to be active.'
     usage: /setplaying
-  setgamemode:
-    description: 'Sets the current gamemode.'
-    usage: /setgamemode
   randomkit:
     description: 'Sets your kit randomly.'
     usage: /randomkit
@@ -69,6 +63,12 @@ commands:
   setkit:
     description: 'Sets the kit of the player given by name.'
     usage: /setkit player name
-  loadgamemodeworld:
-    description: 'Loads the base gamemode world specified to be edited.'
-    usage: /loadgamemodeworld
+  makeserver:
+    description: 'Creates a smash server that can be joined.'
+    usage: /makeserver
+  server:
+    description: 'Opens a browser for all created smash servers.'
+    usage: /server
+  hub:
+    description: 'Teleports the player to the lobby world.'
+    usage: /hub

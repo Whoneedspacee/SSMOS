@@ -1,9 +1,8 @@
 package ssm.abilities;
 
 import ssm.events.SmashDamageEvent;
-import ssm.gamemanagers.CooldownManager;
-import ssm.gamemanagers.GameManager;
-import ssm.gamemanagers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.CooldownManager;
+import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.EnumParticle;
@@ -124,7 +123,7 @@ public class AngryHerd extends Ability implements OwnerRightClickEvent {
                     if(Math.random() > 0.97) {
                         cow.getWorld().playSound(cow.getLocation(), Sound.COW_WALK, 1f, 1.2f);
                     }
-                    for(Player player : GameManager.getPlayers()) {
+                    for(Player player : owner.getWorld().getPlayers()) {
                         if(player.equals(owner)) {
                             continue;
                         }
