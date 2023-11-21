@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import ssm.managers.smashserver.SmashServer;
 
 public class ConfigManager implements Listener {
 
@@ -69,14 +70,6 @@ public class ConfigManager implements Listener {
     public static Object getPlayerConfigOption(Player player, ConfigOption option) {
         String storage_location = "players." + player.getUniqueId() + "." + option;
         return Main.getInstance().getConfig().get(storage_location);
-    }
-
-    public static void setPlayerGamemodeConfigOption(Player player, ConfigOption option, Object data) {
-        setPlayerGamemodeConfigOption(player, option, data, null);
-    }
-
-    public static Object getPlayerGamemodeConfigOption(Player player, ConfigOption option) {
-        return getPlayerGamemodeConfigOption(player, option, null);
     }
 
     public static void setPlayerGamemodeConfigOption(Player player, ConfigOption option, Object data, SmashGamemode gamemode) {

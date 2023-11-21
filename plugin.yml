@@ -29,18 +29,6 @@ commands:
   stop:
     description: 'Stops the game.'
     usage: /stop
-  tpworld:
-    description: 'Teleports you to the provided world name.'
-    usage: /tpworld world
-  getloadedworlds:
-    description: 'Prints a list of loaded worlds.'
-    usage: /getloadedworlds
-  loadworld:
-    description: 'Loads the world specified.'
-    usage: /loadworld world
-  unloadworld:
-    description: 'Unloads the world specified.'
-    usage: /unloadworld world
   spectate:
     description: 'Toggles whether the player is spectating or not.'
     usage: /spectate
@@ -72,3 +60,20 @@ commands:
   hub:
     description: 'Teleports the player to the lobby world.'
     usage: /hub
+  world:
+    description: 'Allows you to interact with SSM Worlds.'
+    usage: /world
+  printentities:
+    description: 'Prints all entities in your current world.'
+    usage: /printentities
+  shout:
+    description: 'Sends a message to players in all worlds.'
+    usage: /shout
+  message:
+    description: 'Sends a private message to a specific player.'
+    usage: /message
+    aliases: [whisper, msg, w]
+  reply:
+    description: 'Sends a private message to the last player who messaged you.'
+    usage: /reply
+    aliases: [r]

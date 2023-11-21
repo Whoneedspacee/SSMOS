@@ -1,13 +1,21 @@
 package ssm.managers.smashserver;
 
+import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
@@ -57,6 +65,7 @@ public class SmashServer implements Listener, Runnable {
     public List<Player> toggled_spectator = new ArrayList<Player>();
     public HashMap<Player, Integer> lives = new HashMap<Player, Integer>();
     public Player[] deaths = new Player[2];
+    public HashMap<Player, Kit> pre_selected_kits = new HashMap<Player, Kit>();
 
     public SmashServer() {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
@@ -101,6 +110,13 @@ public class SmashServer implements Listener, Runnable {
     }
 
     private void doLobbyWaiting() {
+        for(Player player : players) {
+            Kit kit = KitManager.getPlayerKit(player);
+            if(kit != null) {
+                KitManager.unequipPlayer(player);
+                setPlayerLobbyItems(player);
+            }
+        }
         if (getActivePlayerCount() >= current_gamemode.getPlayersToStart()) {
             setTimeLeft(15);
             setState(GameState.LOBBY_VOTING);
@@ -118,15 +134,19 @@ public class SmashServer implements Listener, Runnable {
                 game_map.unloadWorld();
             }
             game_map = getChosenMap();
-            Bukkit.broadcastMessage(ChatColor.GREEN + "" + ChatColor.BOLD + game_map.getName() + ChatColor.WHITE + ChatColor.BOLD + " won the vote!");
             for (Player player : players) {
+                player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + game_map.getName() + ChatColor.WHITE + ChatColor.BOLD + " won the vote!");
+                player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
                 if(isSpectator(player)) {
                     continue;
                 }
-                player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
-                Kit kit = GameManager.getDefaultKit(player);
-                if (kit != null) {
-                    KitManager.equipPlayer(player, kit);
+                Kit equipped_kit = KitManager.getPlayerKit(player);
+                Kit default_kit = GameManager.getDefaultKit(player);
+                Kit pre_selected_kit = pre_selected_kits.get(player);
+                if (pre_selected_kit != null) {
+                    KitManager.equipPlayer(player, pre_selected_kit);
+                } else if(equipped_kit == null && default_kit != null) {
+                    KitManager.equipPlayer(player, default_kit);
                 }
             }
             game_map.createWorld();
@@ -146,6 +166,7 @@ public class SmashServer implements Listener, Runnable {
             if (game_map == null) {
                 return;
             }
+            pre_selected_kits.clear();
             for (GameMap map : current_gamemode.getAllowedMaps()) {
                 map.clearVoted();
             }
@@ -290,8 +311,9 @@ public class SmashServer implements Listener, Runnable {
         if (time_remaining_ms <= 0) {
             lives.clear();
             for (Player player : players) {
-                player.teleport(lobby_map.getWorld().getSpawnLocation());
+                // Unequip first so our lobby items get set properly
                 KitManager.unequipPlayer(player);
+                player.teleport(lobby_map.getWorld().getSpawnLocation());
                 Utils.fullHeal(player);
             }
             game_map.unloadWorld();
@@ -357,9 +379,11 @@ public class SmashServer implements Listener, Runnable {
         EffectUtil.createEffect(player.getEyeLocation(), 10, 0.5, Sound.HURT_FLESH,
                 1f, 1f, Material.INK_SACK, (byte) 1, 10, true);
         SmashDamageEvent record = DamageManager.getLastDamageEvent(player);
-        Bukkit.broadcastMessage(ServerMessageType.DEATH + " " + ChatColor.YELLOW + player.getName() +
-                ChatColor.GRAY + " killed by " + ChatColor.YELLOW + record.getDamagerName() +
-                ChatColor.GRAY + " with " + record.getReasonColor() + record.getReason() + ChatColor.GRAY + ".");
+        for(Player message : players) {
+            message.sendMessage(ServerMessageType.DEATH + " " + ChatColor.YELLOW + player.getName() +
+                    ChatColor.GRAY + " killed by " + ChatColor.YELLOW + record.getDamagerName() +
+                    ChatColor.GRAY + " with " + record.getReasonColor() + record.getReason() + ChatColor.GRAY + ".");
+        }
         DamageManager.deathReport(player, true);
         if (record.getDamager() != null && record.getDamager() instanceof Player) {
             Player damager = (Player) record.getDamager();
@@ -449,7 +473,7 @@ public class SmashServer implements Listener, Runnable {
     }
 
     public void teleportToServer(Player player) {
-        if(game_map == null) {
+        if(game_map == null || state < GameState.GAME_STARTING) {
             player.teleport(lobby_map.getWorld().getSpawnLocation());
             return;
         }
@@ -467,6 +491,37 @@ public class SmashServer implements Listener, Runnable {
         current_gamemode.updateAllowedKits();
         current_gamemode.updateAllowedMaps();
         Bukkit.getPluginManager().registerEvents(gamemode, Main.getInstance());
+        // Clear existing entities
+        for (Entity entity : lobby_map.getWorld().getEntities()) {
+            if (!(entity instanceof Player)) {
+                DamageManager.invincible_mobs.remove(entity);
+                entity.remove();
+            }
+        }
+        // Make kit podiums
+        for (int i = 0; i < current_gamemode.getAllowedKits().size(); i++) {
+            Kit kit = current_gamemode.getAllowedKits().get(i);
+            Location podium_location = new Location(lobby_map.getWorld(), 0, 0, 0);
+            Object data = ConfigManager.getConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, String.valueOf(i + 1));
+            if (data == null) {
+                ConfigManager.setConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, new Location(null, 0, 0, 0, 0, 0), String.valueOf(i + 1));
+            }
+            if (data instanceof Location) {
+                Location temp = (Location) data;
+                podium_location = new Location(null, temp.getX(), temp.getY(), temp.getZ(), temp.getYaw(), temp.getPitch());
+            }
+            podium_location.setWorld(lobby_map.getWorld());
+            Entity podium_mob = kit.getNewPodiumMob(podium_location);
+            Utils.attachCustomName(podium_mob, ChatColor.GREEN + kit.getName());
+            DamageManager.invincible_mobs.put(podium_mob, 1);
+            // Disable mob ai
+            net.minecraft.server.v1_8_R3.Entity nms_entity = ((CraftEntity) podium_mob).getHandle();
+            NBTTagCompound comp = new NBTTagCompound();
+            nms_entity.c(comp);
+            comp.setByte("NoAI", (byte) 1);
+            nms_entity.f(comp);
+            nms_entity.b(true);
+        }
         // Clear all current map votes
         for (GameMap map : current_gamemode.getAllowedMaps()) {
             map.clearVoted();
@@ -479,6 +534,30 @@ public class SmashServer implements Listener, Runnable {
             player.playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
         }
         stopGame();
+    }
+
+    public void checkPodiumClick(Player player, Entity clicked) {
+        if(clicked == null) {
+            return;
+        }
+        String clicked_name = Utils.getAttachedCustomName(clicked);
+        if(clicked_name == null) {
+            return;
+        }
+        for(Kit kit : current_gamemode.getAllowedKits()) {
+            if(clicked_name.equals(ChatColor.GREEN + kit.getName())) {
+                player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1.0f, 1.0f);
+                if(state == GameState.LOBBY_STARTING) {
+                    KitManager.equipPlayer(player, kit);
+                }
+                if(state <= GameState.LOBBY_VOTING) {
+                    pre_selected_kits.put(player, kit);
+                    scoreboard.buildScoreboard();
+                }
+                GameManager.setDefaultKit(player, kit);
+                return;
+            }
+        }
     }
 
     public SmashScoreboard getScoreboard() {
@@ -597,6 +676,12 @@ public class SmashServer implements Listener, Runnable {
         firework.setFireworkMeta(fireworkMeta);
     }
 
+    public void setPlayerLobbyItems(Player player) {
+        player.getInventory().setItem(0, Main.KIT_SELECTOR_ITEM);
+        player.getInventory().setItem(1, Main.VOTING_MENU_ITEM);
+        player.getInventory().setItem(8, Main.TELEPORT_HUB_ITEM);
+    }
+
     public void openVotingMenu(Player player) {
         if (!canVote()) {
             Utils.sendServerMessageToPlayer("You may not vote after the voting period has ended.",
@@ -662,7 +747,7 @@ public class SmashServer implements Listener, Runnable {
 
     @Override
     public String toString() {
-        return current_gamemode.getName() + " " + players.size() + "/4";
+        return current_gamemode.getName() + "-" + (GameManager.servers.indexOf(this) + 1);
     }
 
     @EventHandler
@@ -692,6 +777,9 @@ public class SmashServer implements Listener, Runnable {
         players.remove(e.getPlayer());
         toggled_spectator.remove(e.getPlayer());
         lives.remove(e.getPlayer());
+        pre_selected_kits.remove(e.getPlayer());
+        e.getPlayer().getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+        KitManager.unequipPlayer(e.getPlayer());
         scoreboard.buildScoreboard();
     }
 
@@ -710,28 +798,62 @@ public class SmashServer implements Listener, Runnable {
         players.remove(player);
         toggled_spectator.remove(player);
         lives.remove(player);
+        pre_selected_kits.remove(player);
         KitManager.unequipPlayer(player);
         player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         scoreboard.buildScoreboard();
+        for (Player message : players) {
+            message.sendMessage(ChatColor.DARK_GRAY + "Quit> " + ChatColor.GRAY + player.getName());
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void playerJoinedWorld(PlayerChangedWorldEvent e) {
         Player player = e.getPlayer();
         if(players.contains(player)) {
+            if(lobby_map != null && lobby_map.getWorld().equals(player.getWorld())) {
+                setPlayerLobbyItems(player);
+            }
             return;
         }
         if(lobby_map != null && lobby_map.getWorld().equals(player.getWorld())) {
+            for (Player message : players) {
+                message.sendMessage(ChatColor.DARK_GRAY + "Join> " + ChatColor.GRAY + player.getName());
+            }
             players.add(player);
+            setPlayerLobbyItems(player);
             scoreboard.buildScoreboard();
             return;
         }
         if(game_map != null && game_map.getWorld().equals(player.getWorld())) {
+            for (Player message : players) {
+                message.sendMessage(ChatColor.DARK_GRAY + "Join> " + ChatColor.GRAY + player.getName());
+            }
             players.add(player);
             KitManager.equipPlayer(player, new KitTemporarySpectator());
             scoreboard.buildScoreboard();
             return;
         }
+    }
+
+    @EventHandler
+    public void leftClickPodiumMob(EntityDamageByEntityEvent e) {
+        if(!(e.getDamager() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) e.getDamager();
+        if(lobby_map == null || !player.getWorld().equals(lobby_map.getWorld())) {
+            return;
+        }
+        checkPodiumClick(player, e.getEntity());
+    }
+
+    @EventHandler
+    public void clickPodiumMob(PlayerInteractEntityEvent e)  {
+        if(lobby_map == null || !e.getPlayer().getWorld().equals(lobby_map.getWorld())) {
+            return;
+        }
+        checkPodiumClick(e.getPlayer(), e.getRightClicked());
     }
 
 }

@@ -1,5 +1,6 @@
 package ssm.attributes;
 
+import org.bukkit.Bukkit;
 import ssm.attributes.doublejumps.DoubleJump;
 import ssm.managers.KitManager;
 import ssm.utilities.BlocksUtil;
@@ -15,7 +16,7 @@ public class Climb extends Attribute {
     protected boolean chargedDoubleJump;
     public long last_use_time = 0;
     public long last_cooldown_time = 0;
-    public long cooldown_time_ms = 150;
+    public long cooldown_time_ms = 50;
 
     public Climb(double power) {
         super();

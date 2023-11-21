@@ -47,8 +47,8 @@ public class TradeScatter extends Ability implements OwnerRightClickEvent {
         }
         Location location = null;
         Vector direction = null;
-        double player_velocity = 1;
-        double bullet_velocity = 1.2;
+        double player_velocity = 1.25;
+        double bullet_velocity = 2;
         double bullet_spread = 0.2;
         double bullet_damage = 0.5;
         long tick_effect_rate = 1;
@@ -62,14 +62,18 @@ public class TradeScatter extends Ability implements OwnerRightClickEvent {
             bullet_item = Material.RAW_BEEF;
             bullet_damage = 1;
             tick_effect_rate = 3;
+            player_velocity = 1;
         } else if (currentForm instanceof CycleArts.BlacksmithForm) {
             front = true;
-            bullet_spread = 1;
+            bullet_spread = 0.75;
             particle_type = EnumParticle.FIREWORKS_SPARK;
             bullet_item = Material.IRON_INGOT;
+            player_velocity = 1;
         } else if (currentForm instanceof CycleArts.SpeedsterForm) {
             particle_type = EnumParticle.ENCHANTMENT_TABLE;
             bullet_item = Material.FEATHER;
+            player_velocity = 1.5;
+            //bullet_velocity = 2;
         }
         if(front) {
             location = owner.getEyeLocation();

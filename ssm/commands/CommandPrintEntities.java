@@ -1,14 +1,14 @@
 package ssm.commands;
 
-import ssm.managers.DisguiseManager;
-import ssm.managers.disguises.PlayerDisguise;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
+import ssm.events.SmashDamageEvent;
 
-public class CommandPlayerDisguise implements CommandExecutor {
+public class CommandPrintEntities implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String commandLabel, String[] args) {
@@ -18,12 +18,10 @@ public class CommandPlayerDisguise implements CommandExecutor {
         if (!(commandSender instanceof Player)) {
             return true;
         }
-        if(args.length < 1) {
-            commandSender.sendMessage("Specify the name of the player to turn into.");
-            return true;
-        }
         Player player = (Player) commandSender;
-        DisguiseManager.addDisguise(player, new PlayerDisguise(player));
+        for(Entity entity : player.getWorld().getEntities()) {
+            player.sendMessage(entity.getName());
+        }
         return true;
     }
 

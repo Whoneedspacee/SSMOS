@@ -1,5 +1,6 @@
 package ssm.managers.maps;
 
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ public class LobbyMap extends SmashMap {
 
     public LobbyMap(File file) {
         super(file);
+        this.permanent_chunk_load_radius = 5;
     }
 
     @Override

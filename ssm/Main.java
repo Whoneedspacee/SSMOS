@@ -1,5 +1,10 @@
 package ssm;
 
+import com.google.common.collect.Lists;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import ssm.attributes.Hunger;
 import ssm.commands.*;
@@ -27,6 +32,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Main extends JavaPlugin implements Listener {
@@ -36,12 +42,33 @@ public class Main extends JavaPlugin implements Listener {
         return ourInstance;
     }
     public static boolean DEBUG_MODE = false;
+    public static ItemStack SERVER_BROWSER_ITEM;
+    public static ItemStack KIT_SELECTOR_ITEM;
+    public static ItemStack TELEPORT_HUB_ITEM;
+    public static ItemStack VOTING_MENU_ITEM;
 
     @Override
     public void onEnable() {
         ourInstance = this;
         getServer().getPluginManager().registerEvents(this, this);
         this.saveConfig();
+        SERVER_BROWSER_ITEM = new ItemStack(Material.COMPASS);
+        ItemMeta server_meta = SERVER_BROWSER_ITEM.getItemMeta();
+        server_meta.setDisplayName(ChatColor.GREEN + "" + "Quick Compass");
+        SERVER_BROWSER_ITEM.setItemMeta(server_meta);
+        KIT_SELECTOR_ITEM = new ItemStack(Material.COMPASS);
+        ItemMeta kit_meta = KIT_SELECTOR_ITEM.getItemMeta();
+        kit_meta.setDisplayName(ChatColor.GREEN + "" + "Choose a Kit");
+        KIT_SELECTOR_ITEM.setItemMeta(kit_meta);
+        TELEPORT_HUB_ITEM = new ItemStack(Material.WATCH);
+        ItemMeta hub_meta = TELEPORT_HUB_ITEM.getItemMeta();
+        hub_meta.setDisplayName(ChatColor.GREEN + "" + "Return to Hub");
+        hub_meta.setLore(Arrays.asList(ChatColor.RESET + "Click while holding this", ChatColor.RESET + "to return to the Hub."));
+        TELEPORT_HUB_ITEM.setItemMeta(hub_meta);
+        VOTING_MENU_ITEM = new ItemStack(Material.BOOK);
+        ItemMeta vote_meta = VOTING_MENU_ITEM.getItemMeta();
+        vote_meta.setDisplayName(ChatColor.GREEN + "" + "Vote for the next Map");
+        VOTING_MENU_ITEM.setItemMeta(vote_meta);
         new CooldownManager();
         new EventManager();
         new KitManager();
@@ -53,9 +80,6 @@ public class Main extends JavaPlugin implements Listener {
         new MenuManager();
         this.getCommand("start").setExecutor(new CommandStart());
         this.getCommand("stop").setExecutor(new CommandStop());
-        this.getCommand("tpworld").setExecutor(new CommandTeleportWorld());
-        this.getCommand("getloadedworlds").setExecutor(new CommandGetLoadedWorlds());
-        this.getCommand("loadworld").setExecutor(new CommandLoadWorld());
         this.getCommand("kit").setExecutor(new CommandKit());
         this.getCommand("damage").setExecutor(new CommandDamage());
         this.getCommand("setspeed").setExecutor(new CommandSetSpeed());
@@ -63,7 +87,6 @@ public class Main extends JavaPlugin implements Listener {
         this.getCommand("jump").setExecutor(new CommandJump());
         this.getCommand("vote").setExecutor(new CommandVote());
         this.getCommand("spectate").setExecutor(new CommandSpectate());
-        this.getCommand("unloadworld").setExecutor(new CommandUnloadWorld());
         this.getCommand("setplaying").setExecutor(new CommandSetPlaying());
         this.getCommand("randomkit").setExecutor(new CommandRandomKit());
         this.getCommand("playerdisguise").setExecutor(new CommandPlayerDisguise());
@@ -77,10 +100,11 @@ public class Main extends JavaPlugin implements Listener {
         this.getCommand("makeserver").setExecutor(new CommandMakeServer());
         this.getCommand("server").setExecutor(new CommandServer());
         this.getCommand("hub").setExecutor(new CommandHub());
-        // Do not do anything before manager creation please
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            Utils.fullHeal(player);
-        }
+        this.getCommand("world").setExecutor(new CommandWorld());
+        this.getCommand("printentities").setExecutor(new CommandPrintEntities());
+        this.getCommand("shout").setExecutor(new CommandShout());
+        this.getCommand("message").setExecutor(new CommandMessage());
+        this.getCommand("reply").setExecutor(new CommandReply());
         if(DEBUG_MODE) {
             SmashServer server = GameManager.createSmashServer(new TestingGamemode());
             for(Player player : Bukkit.getOnlinePlayers()) {
@@ -92,6 +116,12 @@ public class Main extends JavaPlugin implements Listener {
             GameManager.createSmashServer(new TeamsGamemode());
             GameManager.createSmashServer(new TeamsGamemode());
             GameManager.createSmashServer(new TestingGamemode());
+        }
+        // Do not do anything before manager creation please
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            Utils.fullHeal(player);
+            player.getInventory().clear();
+            player.getInventory().setItem(0, SERVER_BROWSER_ITEM);
         }
     }
 
@@ -112,6 +142,50 @@ public class Main extends JavaPlugin implements Listener {
         this.saveConfig();
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        e.getPlayer().getInventory().clear();
+        e.getPlayer().getInventory().setItem(0, SERVER_BROWSER_ITEM);
+        e.setJoinMessage("");
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        e.getPlayer().teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+        e.setQuitMessage("");
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        if(e.getAction() != Action.LEFT_CLICK_AIR && e.getAction() != Action.LEFT_CLICK_BLOCK &&
+                e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+        if(e.getPlayer().getItemInHand().equals(SERVER_BROWSER_ITEM)) {
+            GameManager.openServerMenu(e.getPlayer());
+        }
+        if(e.getPlayer().getItemInHand().equals(KIT_SELECTOR_ITEM)) {
+            KitManager.openKitMenu(e.getPlayer());
+        }
+        if(e.getPlayer().getItemInHand().equals(TELEPORT_HUB_ITEM)) {
+            e.getPlayer().teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+        }
+        if(e.getPlayer().getItemInHand().equals(VOTING_MENU_ITEM)) {
+            SmashServer server = GameManager.getPlayerServer(e.getPlayer());
+            if(server != null) {
+                server.openVotingMenu(e.getPlayer());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerChangedWorld(PlayerChangedWorldEvent e) {
+        if(Bukkit.getWorlds().get(0).equals(e.getPlayer().getWorld())) {
+            e.getPlayer().getInventory().clear();
+            e.getPlayer().getInventory().setItem(0, SERVER_BROWSER_ITEM);
+        }
+    }
+
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
@@ -128,14 +202,17 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerMessage(AsyncPlayerChatEvent e) {
+        e.setCancelled(true);
         String message = e.getMessage();
         String playerName = e.getPlayer().getName();
         String newMessage = ChatColor.YELLOW + playerName + ChatColor.WHITE + " " + message;
         if(e.getPlayer().isOp()) {
             newMessage = ChatColor.RED + playerName + ChatColor.WHITE + " " + message;
         }
-        e.setFormat(newMessage.replace("%", ""));
-        e.setMessage(e.getMessage().replace("%", ""));
+        for(Player player : e.getPlayer().getWorld().getPlayers()) {
+            player.sendMessage(newMessage);
+        }
+        Bukkit.getConsoleSender().sendMessage(newMessage);
     }
 
     @EventHandler
@@ -157,18 +234,6 @@ public class Main extends JavaPlugin implements Listener {
             return;
         }
         e.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) {
-        String name = e.getPlayer().getName();
-        e.setJoinMessage(ChatColor.DARK_GRAY + "Join> " + ChatColor.GRAY + name);
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        String name = e.getPlayer().getName();
-        e.setQuitMessage(ChatColor.DARK_GRAY + "Quit> " + ChatColor.GRAY + name);
     }
 
     @EventHandler

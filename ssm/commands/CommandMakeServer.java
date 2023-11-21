@@ -19,7 +19,7 @@ public class CommandMakeServer implements CommandExecutor {
             return true;
         }
         SmashServer server = GameManager.createSmashServer(new SoloGamemode());
-        commandSender.sendMessage(ServerMessageType.GAME + " Created Server: " + server.toString());
+        commandSender.sendMessage(ServerMessageType.ADMIN + " Created Server: " + server.toString());
         if(commandSender instanceof Player) {
             Player player = (Player) commandSender;
             player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1f, 1f);

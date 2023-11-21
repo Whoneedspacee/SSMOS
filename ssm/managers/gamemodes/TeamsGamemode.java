@@ -14,11 +14,11 @@ import java.util.List;
 
 public class TeamsGamemode extends SmashGamemode {
 
-    private TeamColor current_team_data = TeamColor.first();
     private int name_index = 0;
     private List<SmashTeam> teams = new ArrayList<SmashTeam>();
     private SmashTeam[] team_deaths = new SmashTeam[2];
-    protected int players_per_team = 2;
+    protected TeamColor current_team_data = TeamColor.first();
+    public int players_per_team = 2;
 
     public TeamsGamemode() {
         super();
@@ -29,6 +29,7 @@ public class TeamsGamemode extends SmashGamemode {
                 "Last player alive wins!"
         };
         this.players_to_start = 3;
+        this.max_players = 6;
     }
 
     // Even distribution of players across the teams

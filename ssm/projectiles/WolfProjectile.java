@@ -22,7 +22,7 @@ public class WolfProjectile extends SmashProjectile {
     public WolfProjectile(Player firer, String name) {
         super(firer, name);
         this.damage = 5;
-        this.hitbox_size = 1;
+        this.hitbox_size = 0.75;
         this.knockback_mult = 0;
         this.expiration_ticks = 70;
         this.blockDetection = false;

@@ -42,7 +42,7 @@ public class KitVillager extends Kit {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(1.1, 1.1, 1, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new VillagerDisguise(owner));
     }

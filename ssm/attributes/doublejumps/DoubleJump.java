@@ -35,7 +35,7 @@ public abstract class DoubleJump extends Attribute {
             @Override
             public void run() {
                 Kit kit = KitManager.getPlayerKit(owner);
-                if(kit == null || !kit.getGameHotbarEquipped()) {
+                if(kit == null || !kit.isActive()) {
                     owner.setAllowFlight(false);
                     owner.setFlying(false);
                     return;
@@ -61,6 +61,13 @@ public abstract class DoubleJump extends Attribute {
         }
 
         if (player.getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
+
+        if(!check()) {
+            e.setCancelled(true);
+            player.setFlying(false);
+            player.setAllowFlight(false);
             return;
         }
 

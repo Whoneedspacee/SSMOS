@@ -64,8 +64,7 @@ public class DamageUtil {
             SmashServer server = GameManager.getPlayerServer(player);
             if(server != null) {
                 return (server.getState() == GameState.GAME_PLAYING);
-            }
-            if(damager instanceof Player) {
+            } else {
                 return false;
             }
         }

@@ -6,7 +6,9 @@ public enum ServerMessageType {
     DEATH("§9Death>§7"),
     SKILL("§9Skill>§7"),
     ENERGY("§9Energy>§7"),
-    CONDITION("§9Condition>§7");
+    CONDITION("§9Condition>§7"),
+    COMMAND("§9Command>§7"),
+    ADMIN("§9Admin>§7");
 
     private String message;
 

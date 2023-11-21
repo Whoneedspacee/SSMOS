@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ssm.Main;
 import ssm.managers.gamemodes.SmashGamemode;
 import ssm.managers.gamemodes.SoloGamemode;
+import ssm.managers.gamemodes.TestingGamemode;
 import ssm.managers.smashmenu.SmashMenu;
 import ssm.managers.smashserver.SmashServer;
 import ssm.kits.Kit;
@@ -62,9 +63,13 @@ public class GameManager implements Listener {
     }
 
     public static void setDefaultKit(Player player, Kit kit) {
+        SmashServer server = getPlayerServer(player);
+        if(server == null) {
+            return;
+        }
         Utils.sendServerMessageToPlayer("Set " + ChatColor.GREEN + kit.getName() +
                 ChatColor.GRAY + " as your default kit.", player, ServerMessageType.GAME);
-        ConfigManager.setPlayerGamemodeConfigOption(player, ConfigManager.ConfigOption.DEFAULT_KIT, kit.getName());
+        ConfigManager.setPlayerGamemodeConfigOption(player, ConfigManager.ConfigOption.DEFAULT_KIT, kit.getName(), server.getCurrentGamemode());
     }
 
     public static Kit getDefaultKit(Player player) {
@@ -73,9 +78,9 @@ public class GameManager implements Listener {
             return null;
         }
         SmashGamemode gamemode = server.getCurrentGamemode();
-        /*if (gamemode instanceof TestingGamemode) {
-            gamemode = all_gamemodes.get(0);
-        }*/
+        if (gamemode instanceof TestingGamemode) {
+            gamemode = new SoloGamemode();
+        }
         Object config_option = ConfigManager.getPlayerGamemodeConfigOption(player, ConfigManager.ConfigOption.DEFAULT_KIT, gamemode);
         if (config_option == null) {
             return null;
@@ -105,9 +110,16 @@ public class GameManager implements Listener {
         Inventory selectServer = Bukkit.createInventory(player, 9 * 2, "Choose a Server");
         SmashMenu menu = MenuManager.createPlayerMenu(player, selectServer);
         for (SmashServer server : servers) {
-            ItemStack item = new ItemStack(Material.EMERALD_BLOCK);
+            Material server_material = Material.EMERALD_BLOCK;
+            if(server.isStarting() || server.isPlaying()) {
+                server_material = Material.GOLD_BLOCK;
+            }
+            if(server.players.size() >= server.getCurrentGamemode().max_players) {
+                server_material = Material.REDSTONE_BLOCK;
+            }
+            ItemStack item = new ItemStack(server_material);
             ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.RESET + "Server-" + (slot + 1) + ": " + server.toString());
+            itemMeta.setDisplayName(ChatColor.RESET + server.toString() + " " + server.players.size() + "/" + server.getCurrentGamemode().max_players);
             item.setItemMeta(itemMeta);
             selectServer.setItem(slot, item);
             menu.setActionFromSlot(slot, (e) -> {

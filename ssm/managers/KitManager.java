@@ -6,6 +6,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import ssm.abilities.Ability;
 import ssm.kits.Kit;
 import ssm.Main;
+import ssm.managers.gamestate.GameState;
 import ssm.managers.smashmenu.SmashMenu;
 import ssm.managers.smashserver.SmashServer;
 import ssm.utilities.Utils;
@@ -104,7 +105,12 @@ public class KitManager implements Listener {
             menu.setActionFromSlot(slot, (e) -> {
                 if(e.getWhoClicked() instanceof Player) {
                     Player clicked = (Player) e.getWhoClicked();
-                    KitManager.equipPlayer(clicked, kit);
+                    if(server.getState() <= GameState.LOBBY_VOTING) {
+                        server.pre_selected_kits.put(clicked, kit);
+                        server.getScoreboard().buildScoreboard();
+                    } else {
+                        KitManager.equipPlayer(clicked, kit);
+                    }
                     clicked.playSound(clicked.getLocation(), Sound.ORB_PICKUP, 1f, 1f);
                     clicked.closeInventory();
                 }

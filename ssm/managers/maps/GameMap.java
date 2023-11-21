@@ -6,7 +6,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Wool;
 import org.bukkit.util.Vector;
-import ssm.commands.CommandLoadWorld;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -23,7 +22,7 @@ public class GameMap extends SmashMap {
 
     public GameMap(File file) {
         super(file);
-        this.parse_radius = 150;
+        this.parse_chunk_radius = 10;
         name = file.getName().replace("_", " ");
         name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
         File name_file = new File(map_directory.getPath() + "/map_name.txt");

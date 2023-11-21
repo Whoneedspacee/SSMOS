@@ -19,7 +19,7 @@ public class FishFlurryProjectile extends SmashProjectile {
     public FishFlurryProjectile(Player firer, String name, Block block) {
         super(firer, name);
         this.damage = 2;
-        this.hitbox_size = 1;
+        this.hitbox_size = 0.75;
         this.knockback_mult = 0;
         this.block = block;
     }

@@ -1,5 +1,6 @@
 package ssm.managers.disguises;
 
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import ssm.managers.smashscoreboard.SmashScoreboard;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.*;
@@ -221,6 +222,8 @@ public abstract class Disguise {
 
     public void showOwner() {
         for(Player player : Bukkit.getOnlinePlayers()) {
+            // Hide and then re-show so bukkit will recognize the player as having been hidden
+            player.hidePlayer(owner);
             player.showPlayer(owner);
         }
     }

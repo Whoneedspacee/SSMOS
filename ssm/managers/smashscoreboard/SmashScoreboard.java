@@ -44,10 +44,14 @@ public class SmashScoreboard implements Listener {
             obj = scoreboard.registerNewObjective("menu", "dummy");
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
             if (server.getState() == GameState.LOBBY_WAITING) {
-                Kit kit = KitManager.getPlayerKit(player);
+                Kit pre_selected_kit = server.pre_selected_kits.get(player);
+                Kit equipped_kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
-                if (kit != null) {
-                    kit_name = kit.getName();
+                if(pre_selected_kit != null) {
+                    kit_name = pre_selected_kit.getName();
+                }
+                if (equipped_kit != null) {
+                    kit_name = equipped_kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Waiting for players...");
                 obj.getScore("").setScore(12);
@@ -64,10 +68,14 @@ public class SmashScoreboard implements Listener {
                 obj.getScore("SSM-1").setScore(1);
             }
             if (server.getState() == GameState.LOBBY_VOTING) {
-                Kit kit = KitManager.getPlayerKit(player);
+                Kit pre_selected_kit = server.pre_selected_kits.get(player);
+                Kit equipped_kit = KitManager.getPlayerKit(player);
                 String kit_name = "None";
-                if (kit != null) {
-                    kit_name = kit.getName();
+                if(pre_selected_kit != null) {
+                    kit_name = pre_selected_kit.getName();
+                }
+                if (equipped_kit != null) {
+                    kit_name = equipped_kit.getName();
                 }
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Voting ends in " + server.getTimeLeft() + " seconds");
                 obj.getScore("").setScore(12);

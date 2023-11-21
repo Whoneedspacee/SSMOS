@@ -1,6 +1,7 @@
 package ssm.managers.gamemodes;
 
 import org.apache.logging.log4j.core.util.FileUtils;
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
 import ssm.managers.KitManager;
 import ssm.managers.maps.GameMap;
@@ -21,11 +22,13 @@ public abstract class SmashGamemode implements Listener {
     protected List<GameMap> allowed_maps = new ArrayList<GameMap>();
     protected List<Kit> allowed_kits = new ArrayList<Kit>();
     protected int players_to_start = 2;
+    public int max_players = 4;
     public SmashServer server = null;
 
     public SmashGamemode() { }
 
     public void updateAllowedKits() {
+        allowed_kits.clear();
         allowed_kits.add(new KitSkeleton());
         allowed_kits.add(new KitIronGolem());
         allowed_kits.add(new KitSpider());
@@ -70,6 +73,10 @@ public abstract class SmashGamemode implements Listener {
             }
             for (File file : files) {
                 if (!file.isDirectory()) {
+                    continue;
+                }
+                File region_directory = new File(file.getPath() + "/region");
+                if (!region_directory.exists()) {
                     continue;
                 }
                 allowed_maps.add(new GameMap(file));

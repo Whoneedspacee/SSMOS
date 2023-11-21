@@ -18,6 +18,7 @@ public class TestingGamemode extends SmashGamemode {
                 "Last player alive wins!"
         };
         this.players_to_start = 1;
+        this.max_players = 99;
     }
 
     @Override

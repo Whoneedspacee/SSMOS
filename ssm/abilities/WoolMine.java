@@ -1,5 +1,6 @@
 package ssm.abilities;
 
+import org.bukkit.*;
 import ssm.events.RechargeAttributeEvent;
 import ssm.events.SmashDamageEvent;
 import ssm.managers.DisguiseManager;
@@ -12,10 +13,6 @@ import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
 import ssm.utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.EnumParticle;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -99,6 +96,9 @@ public class WoolMine extends Ability implements OwnerRightClickEvent {
     }
 
     public void detonate(boolean inform) {
+        if(wool_block == null) {
+            return;
+        }
         Utils.playParticle(EnumParticle.EXPLOSION_HUGE, wool_block.getLocation().add(0.5, 0.5, 0.5),
                 0, 0, 0, 0, 1, 96, wool_block.getWorld().getPlayers());
         wool_block.getWorld().playSound(wool_block.getLocation(), Sound.EXPLODE, 3f, 0.8f);

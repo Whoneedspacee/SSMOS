@@ -276,7 +276,7 @@ public class CycleArts extends Ability implements OwnerRightClickEvent, OwnerDro
                 return;
             }
             Utils.playFirework(owner.getLocation().add(0., 1, 0), FireworkEffect.Type.BALL, Color.ORANGE, true, true);
-            owner.setWalkSpeed(0.16f);
+            owner.setWalkSpeed(0.15f);
             kit.setMelee(5);
             kit.setArmor(7.5);
             kit.setArmorSlot(Material.DIAMOND_BOOTS, 0);
@@ -328,7 +328,7 @@ public class CycleArts extends Ability implements OwnerRightClickEvent, OwnerDro
                 return;
             }
             Utils.playFirework(owner.getLocation().add(0., 1, 0), FireworkEffect.Type.BALL, Color.LIME, true, true);
-            owner.setWalkSpeed(0.24f);
+            owner.setWalkSpeed(0.3f);
             kit.setMelee(4.5);
             kit.setArmor(4);
             owner.getInventory().setBoots(null);
