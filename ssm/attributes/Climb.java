@@ -1,6 +1,5 @@
 package ssm.attributes;
 
-import org.bukkit.Bukkit;
 import ssm.attributes.doublejumps.DoubleJump;
 import ssm.managers.KitManager;
 import ssm.utilities.BlocksUtil;
@@ -16,7 +15,8 @@ public class Climb extends Attribute {
     protected boolean chargedDoubleJump;
     public long last_use_time = 0;
     public long last_cooldown_time = 0;
-    public long cooldown_time_ms = 50;
+    public long doublejump_cooldown_time_ms = 150;
+    public long cooldown_time_ms = 0;
 
     public Climb(double power) {
         super();
@@ -48,10 +48,10 @@ public class Climb extends Attribute {
     }
 
     public void activate() {
-        if(System.currentTimeMillis() - last_cooldown_time < cooldown_time_ms) {
+        if(System.currentTimeMillis() - last_cooldown_time < doublejump_cooldown_time_ms) {
             return;
         }
-        if(System.currentTimeMillis() - last_use_time < 100) {
+        if(System.currentTimeMillis() - last_use_time < cooldown_time_ms) {
             return;
         }
         last_use_time = System.currentTimeMillis();
