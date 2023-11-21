@@ -5,7 +5,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 public class CommandJump implements CommandExecutor {
 
@@ -23,7 +25,10 @@ public class CommandJump implements CommandExecutor {
         if (args.length == 1) {
             power = Float.parseFloat(args[0]);
         }
-        craftplayer.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityVelocity(player.getEntityId(), 0, power, 0));
+        for(Entity entity : player.getWorld().getEntities()) {
+            entity.setVelocity(new Vector(0, power, 0));
+        }
+        //craftplayer.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityVelocity(player.getEntityId(), 0, power, 0));
         return true;
     }
 

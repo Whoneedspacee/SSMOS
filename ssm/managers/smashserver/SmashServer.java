@@ -3,6 +3,7 @@ package ssm.managers.smashserver;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
@@ -504,11 +505,11 @@ public class SmashServer implements Listener, Runnable {
             Location podium_location = new Location(lobby_map.getWorld(), 0, 0, 0);
             Object data = ConfigManager.getConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, String.valueOf(i + 1));
             if (data == null) {
-                ConfigManager.setConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, new Location(null, 0, 0, 0, 0, 0), String.valueOf(i + 1));
+                ConfigManager.setConfigOption(ConfigManager.ConfigOption.PODIUM_LOCATION, new Location(Bukkit.getWorlds().get(0), 0, 0, 0, 0, 0), String.valueOf(i + 1));
             }
             if (data instanceof Location) {
                 Location temp = (Location) data;
-                podium_location = new Location(null, temp.getX(), temp.getY(), temp.getZ(), temp.getYaw(), temp.getPitch());
+                podium_location = new Location(Bukkit.getWorlds().get(0), temp.getX(), temp.getY(), temp.getZ(), temp.getYaw(), temp.getPitch());
             }
             podium_location.setWorld(lobby_map.getWorld());
             Entity podium_mob = kit.getNewPodiumMob(podium_location);
