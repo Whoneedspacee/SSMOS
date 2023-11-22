@@ -77,9 +77,6 @@ public class GuidedWitherSkull extends Ability implements OwnerRightClickEvent {
                 boolean hit_block = skull.getLocation().add(0, 1.5, 0).getBlock().getType().isSolid();
                 if (!hit_block) {
                     for (LivingEntity livingEntity : Utils.getInRadius(new_location, direct_radius).keySet()) {
-                        if(!(livingEntity instanceof Player)) {
-
-                        }
                         if (livingEntity.equals(owner)) {
                             continue;
                         }

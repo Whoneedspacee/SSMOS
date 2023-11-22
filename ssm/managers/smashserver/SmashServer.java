@@ -783,6 +783,9 @@ public class SmashServer implements Listener, Runnable {
             team.removePlayer(e.getPlayer());
         }
         scoreboard.buildScoreboard();
+        for (Player message : players) {
+            message.sendMessage(ChatColor.DARK_GRAY + "Quit> " + ChatColor.GRAY + e.getPlayer().getName());
+        }
     }
 
     @EventHandler(priority = EventPriority.LOW)
