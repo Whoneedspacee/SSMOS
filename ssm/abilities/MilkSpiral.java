@@ -104,6 +104,9 @@ public class MilkSpiral extends Ability implements OwnerRightClickEvent {
                 }
                 // Damage Portion
                 for(Player player : owner.getWorld().getPlayers()) {
+                    if (player.equals(owner)) {
+                        continue;
+                    }
                     if(!DamageUtil.canDamage(player, owner)) {
                         continue;
                     }

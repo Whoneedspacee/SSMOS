@@ -23,7 +23,7 @@ import java.util.List;
 public class AngryHerd extends Ability implements OwnerRightClickEvent {
 
     private int herd_task = -1;
-    private HashMap<Entity, Vector> cow_direction = new HashMap<Entity, Vector>();
+    private HashMap<Entity, Vector> cow_directions = new HashMap<Entity, Vector>();
     private HashMap<Entity, Location> last_cow_location = new HashMap<Entity, Location>();
     private HashMap<Entity, Long> last_move_time = new HashMap<Entity, Long>();
     protected HashMap<Player, Long> last_damage_time = new HashMap<Player, Long>();
@@ -53,7 +53,7 @@ public class AngryHerd extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
-        cow_direction.clear();
+        cow_directions.clear();
         last_cow_location.clear();
         last_move_time.clear();
         last_damage_time.clear();
@@ -69,7 +69,12 @@ public class AngryHerd extends Ability implements OwnerRightClickEvent {
                 cow_location.add(new Vector(0, j, 0));
                 Cow cow = owner.getWorld().spawn(cow_location, Cow.class);
                 cows.add(cow);
-                cow_direction.put(cow, owner.getLocation().getDirection());
+                Vector cow_direction = owner.getLocation().getDirection();
+                cow_direction.setY(0);
+                cow_direction.normalize();
+                cow_direction.multiply(0.75);
+                cow_direction.setY(-0.2);
+                cow_directions.put(cow, cow_direction);
                 last_cow_location.put(cow, cow_location);
                 last_move_time.put(cow, System.currentTimeMillis());
             }
@@ -106,16 +111,16 @@ public class AngryHerd extends Ability implements OwnerRightClickEvent {
                         continue;
                     }
                     if(Utils.entityIsOnGround(cow)) {
-                        cow_direction.put(cow, cow_direction.get(cow).setY(-0.1));
+                        cow_directions.put(cow, cow_directions.get(cow).setY(-0.1));
                     }
                     else {
-                        cow_direction.put(cow, cow_direction.get(cow).setY(Math.max(-1, cow_direction.get(cow).getY() - 0.03)));
+                        cow_directions.put(cow, cow_directions.get(cow).setY(Math.max(-1, cow_directions.get(cow).getY() - 0.03)));
                     }
                     if(Utils.entityIsOnGround(cow) && System.currentTimeMillis() - last_move_time.get(cow) >= force_move_time_ms) {
-                        cow.setVelocity(cow_direction.get(cow).clone().add(new Vector(0, 0.75, 0)));
+                        cow.setVelocity(cow_directions.get(cow).clone().add(new Vector(0, 0.75, 0)));
                     }
                     else {
-                        cow.setVelocity(cow_direction.get(cow));
+                        cow.setVelocity(cow_directions.get(cow));
                     }
                     if(Math.random() > 0.99) {
                         cow.getWorld().playSound(cow.getLocation(), Sound.COW_IDLE, 1f, 1f);
