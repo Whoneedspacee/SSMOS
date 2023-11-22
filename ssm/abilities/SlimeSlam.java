@@ -64,7 +64,7 @@ public class SlimeSlam extends Ability implements OwnerRightClickEvent {
                     Bukkit.getScheduler().cancelTask(task);
                     return;
                 }
-                if(!Utils.entityIsOnGround(owner)) {
+                if(!Utils.checkLeapEndGrounded(owner)) {
                     return;
                 }
                 if(CooldownManager.getInstance().getTimeElapsedFor(SlimeSlam.this, owner) < 1000) {

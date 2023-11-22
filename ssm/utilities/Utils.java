@@ -110,6 +110,10 @@ public class Utils {
     }
 
     public static boolean entityIsOnGround(Entity ent) {
+        return entityIsOnGround(ent, 0.5);
+    }
+
+    public static boolean entityIsOnGround(Entity ent, double distance) {
         if (ent == null) {
             return false;
         }
@@ -119,12 +123,16 @@ public class Utils {
         double[] coords = {-0.3, 0, 0.3};
         for (double x : coords) {
             for (double z : coords) {
-                if (!world.getBlockAt(ent.getLocation().subtract(x, 0.5, z)).getType().isTransparent()) {
+                if (!world.getBlockAt(ent.getLocation().subtract(x, distance, z)).getType().isTransparent()) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    public static boolean checkLeapEndGrounded(Entity ent) {
+        return ent.isOnGround();
     }
 
     public static HashMap<LivingEntity, Double> getInRadius(Location location, double radius) {

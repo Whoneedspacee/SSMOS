@@ -1,6 +1,8 @@
 package ssm;
 
 import com.google.common.collect.Lists;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventoryPlayer;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
@@ -186,7 +188,9 @@ public class Main extends JavaPlugin implements Listener {
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e) {
         if(Bukkit.getWorlds().get(0).equals(e.getPlayer().getWorld())) {
             e.getPlayer().getInventory().clear();
+            e.getPlayer().getInventory().setArmorContents(null);
             e.getPlayer().getInventory().setItem(0, SERVER_BROWSER_ITEM);
+            Utils.fullHeal(e.getPlayer());
         }
     }
 

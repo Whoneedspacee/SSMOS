@@ -3,6 +3,7 @@ package ssm.managers;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
 import ssm.abilities.Ability;
 import ssm.kits.Kit;
 import ssm.Main;
@@ -62,6 +63,9 @@ public class KitManager implements Listener {
         player.setFlying(false);
         player.setAllowFlight(false);
         player.setWalkSpeed(0.2f);
+        for(PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
         Kit kit = playerKit.get(player);
         if (kit == null) {
             return;

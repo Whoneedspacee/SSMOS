@@ -179,10 +179,6 @@ public class SmashServer implements Listener, Runnable {
                 }
                 Location starting_point = getRandomRespawnPoint(player);
                 player.teleport(starting_point);
-                SmashTeam team = TeamManager.getPlayerTeam(player);
-                if(team != null) {
-                    TeamManager.removeTeam(team);
-                }
             }
             for (Player player : players) {
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
@@ -781,6 +777,11 @@ public class SmashServer implements Listener, Runnable {
         pre_selected_kits.remove(e.getPlayer());
         e.getPlayer().getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         KitManager.unequipPlayer(e.getPlayer());
+        // Remove any teams that may have been added
+        SmashTeam team = TeamManager.getPlayerTeam(e.getPlayer());
+        if(team != null) {
+            team.removePlayer(e.getPlayer());
+        }
         scoreboard.buildScoreboard();
     }
 
@@ -802,6 +803,11 @@ public class SmashServer implements Listener, Runnable {
         pre_selected_kits.remove(player);
         KitManager.unequipPlayer(player);
         player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+        // Remove any teams that may have been added
+        SmashTeam team = TeamManager.getPlayerTeam(player);
+        if(team != null) {
+            team.removePlayer(player);
+        }
         scoreboard.buildScoreboard();
         for (Player message : players) {
             message.sendMessage(ChatColor.DARK_GRAY + "Quit> " + ChatColor.GRAY + player.getName());

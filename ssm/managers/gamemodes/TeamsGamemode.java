@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import ssm.managers.GameManager;
 import ssm.managers.TeamManager;
 import ssm.managers.TeamManager.TeamColor;
+import ssm.managers.gamestate.GameState;
 import ssm.managers.smashscoreboard.SmashScoreboard;
 import ssm.managers.teams.SmashTeam;
 import ssm.utilities.ServerMessageType;
@@ -91,6 +92,8 @@ public class TeamsGamemode extends SmashGamemode {
             if(team.getTeamSize() >= players_per_team - 1) {
                 Bukkit.broadcastMessage(ChatColor.RED + "Went over players per team.");
             }
+            lives.put(player, 4);
+            lives.put(our_choice, 4);
             team.addPlayer(player);
             team.addPlayer(our_choice);
             already_added.add(player);
@@ -118,6 +121,7 @@ public class TeamsGamemode extends SmashGamemode {
             team.addPlayer(player);
         }
         preferred_teammate.clear();
+        server.getScoreboard().buildScoreboard();
     }
 
     public List<String> getLivesScoreboard() {
@@ -202,16 +206,19 @@ public class TeamsGamemode extends SmashGamemode {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEntityEvent e) {
-        if(server == null || !server.equals(GameManager.getPlayerServer(e.getPlayer()))) {
+        if (server == null || !server.equals(GameManager.getPlayerServer(e.getPlayer()))) {
             return;
         }
-        if(!(e.getRightClicked() instanceof Player)) {
+        if(server.getState() >= GameState.GAME_STARTING) {
+            return;
+        }
+        if (!(e.getRightClicked() instanceof Player)) {
             return;
         }
         Player player = e.getPlayer();
         Player clicked = (Player) e.getRightClicked();
         Player current_preferred = preferred_teammate.get(player);
-        if(clicked.equals(current_preferred)) {
+        if (clicked.equals(current_preferred)) {
             Utils.sendServerMessageToPlayer("Removed " + ChatColor.YELLOW + clicked.getName() +
                     ChatColor.GRAY + " as your preferred teammate.", player, ServerMessageType.GAME);
             preferred_teammate.remove(player);

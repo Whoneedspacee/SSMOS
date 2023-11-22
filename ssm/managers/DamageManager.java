@@ -1,5 +1,6 @@
 package ssm.managers;
 
+import org.bukkit.entity.Item;
 import ssm.attributes.Hunger;
 import ssm.events.SmashDamageEvent;
 import ssm.managers.disguises.Disguise;
@@ -45,7 +46,7 @@ public class DamageManager implements Listener {
 
     // Disable mob combustion in sunlight
     @EventHandler
-    public void onImageCombust(EntityCombustEvent e) {
+    public void onCombust(EntityCombustEvent e) {
         if(e instanceof EntityCombustByBlockEvent || e instanceof EntityCombustByEntityEvent) {
             return;
         }
@@ -138,6 +139,9 @@ public class DamageManager implements Listener {
         if (e.isCancelled()) {
             Bukkit.broadcastMessage(ChatColor.RED + "Error: Cancelled EntityDamageEvent, please use SmashDamageEvent");
             return;
+        }
+        if(e.getEntity() instanceof Item) {
+            e.setCancelled(true);
         }
         if (!(e.getEntity() instanceof LivingEntity)) {
             return;

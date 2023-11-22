@@ -108,7 +108,8 @@ public class DisguiseManager implements Listener, Runnable {
                     f.setAccessible(true);
                     int id = Integer.parseInt(f.get(packet).toString());
                     PacketPlayInUseEntity.EnumEntityUseAction action = packet.a();
-                    if (action.equals(PacketPlayInUseEntity.EnumEntityUseAction.ATTACK)) {
+                    if (action.equals(PacketPlayInUseEntity.EnumEntityUseAction.ATTACK) ||
+                            action.equals(PacketPlayInUseEntity.EnumEntityUseAction.INTERACT)) {
                         for (Disguise disguise : DisguiseManager.disguises.values()) {
                             if(disguise.getLiving() == null) {
                                 continue;

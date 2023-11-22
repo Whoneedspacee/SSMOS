@@ -3,10 +3,7 @@ package ssm.abilities;
 import ssm.events.SmashDamageEvent;
 import ssm.managers.BlockRestoreManager;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
-import ssm.utilities.DamageUtil;
-import ssm.utilities.ServerMessageType;
-import ssm.utilities.Utils;
-import ssm.utilities.VelocityUtil;
+import ssm.utilities.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -163,7 +160,7 @@ public class Fissure extends Ability implements OwnerRightClickEvent {
             Block up = block.getRelative(0, height + 1, 0);
 
             //Done Column
-            if (up.getType().isSolid()) {
+            if (!BlocksUtil.isAirOrFoliage(up)) {
                 loc.getWorld().playEffect(up.getLocation(), Effect.STEP_SOUND, up.getTypeId());
                 height = 0;
                 handled++;

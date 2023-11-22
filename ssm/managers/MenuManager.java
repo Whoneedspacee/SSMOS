@@ -38,7 +38,7 @@ public class MenuManager implements Listener {
         }
         Player player = (Player) e.getWhoClicked();
         SmashMenu menu = player_menus.get(player);
-        if(menu == null || !e.getClickedInventory().equals(menu.getInventory())) {
+        if(menu == null || menu.getInventory() == null || !menu.getInventory().equals(e.getClickedInventory())) {
             return;
         }
         MenuRunnable runnable = menu.getActionFromSlot(e.getRawSlot());
