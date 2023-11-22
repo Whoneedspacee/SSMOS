@@ -748,7 +748,7 @@ public class SmashServer implements Listener, Runnable {
 
     @Override
     public String toString() {
-        return current_gamemode.getName() + "-" + (GameManager.servers.indexOf(this) + 1);
+        return current_gamemode.getShortName() + "-" + (GameManager.servers.indexOf(this) + 1);
     }
 
     @EventHandler

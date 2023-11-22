@@ -113,6 +113,10 @@ public class Main extends JavaPlugin implements Listener {
         } else {
             GameManager.createSmashServer(new SoloGamemode());
             GameManager.createSmashServer(new SoloGamemode());
+            GameManager.createSmashServer(new SoloGamemode());
+            GameManager.createSmashServer(new SoloGamemode());
+            GameManager.createSmashServer(new SoloGamemode());
+            GameManager.createSmashServer(new SoloGamemode());
             GameManager.createSmashServer(new TeamsGamemode());
             GameManager.createSmashServer(new TeamsGamemode());
             GameManager.createSmashServer(new TestingGamemode());

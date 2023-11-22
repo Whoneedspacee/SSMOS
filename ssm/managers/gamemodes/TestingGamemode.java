@@ -12,6 +12,7 @@ public class TestingGamemode extends SmashGamemode {
     public TestingGamemode() {
         super();
         this.name = "Testing";
+        this.short_name = "TEST";
         this.description = new String[] {
                 "Each player has 3 respawns",
                 "Attack to restore hunger!",

@@ -56,7 +56,7 @@ public class SmashScoreboard implements Listener {
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Waiting for players...");
                 obj.getScore("").setScore(12);
                 obj.getScore(ChatColor.YELLOW + "" + ChatColor.BOLD + "Players").setScore(11);
-                obj.getScore(server.getActivePlayerCount() + "/4").setScore(10);
+                obj.getScore(server.getActivePlayerCount() + "/" + server.getCurrentGamemode().max_players).setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
                 obj.getScore(server.getCurrentGamemode().getName()).setScore(7);
@@ -65,7 +65,7 @@ public class SmashScoreboard implements Listener {
                 obj.getScore(kit_name).setScore(4);
                 obj.getScore(ChatColor.YELLOW + "").setScore(3);
                 obj.getScore(ChatColor.AQUA + "" + ChatColor.BOLD + "Server").setScore(2);
-                obj.getScore("SSM-1").setScore(1);
+                obj.getScore(server.toString()).setScore(1);
             }
             if (server.getState() == GameState.LOBBY_VOTING) {
                 Kit pre_selected_kit = server.pre_selected_kits.get(player);
@@ -80,7 +80,7 @@ public class SmashScoreboard implements Listener {
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Voting ends in " + server.getTimeLeft() + " seconds");
                 obj.getScore("").setScore(12);
                 obj.getScore(ChatColor.YELLOW + "" + ChatColor.BOLD + "Players").setScore(11);
-                obj.getScore(server.getActivePlayerCount() + "/4").setScore(10);
+                obj.getScore(server.getActivePlayerCount() + "/" + server.getCurrentGamemode().max_players).setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
                 obj.getScore(server.getCurrentGamemode().getName()).setScore(7);
@@ -89,7 +89,7 @@ public class SmashScoreboard implements Listener {
                 obj.getScore(kit_name).setScore(4);
                 obj.getScore(ChatColor.YELLOW + "").setScore(3);
                 obj.getScore(ChatColor.AQUA + "" + ChatColor.BOLD + "Server").setScore(2);
-                obj.getScore("SSM-1").setScore(1);
+                obj.getScore(server.toString()).setScore(1);
             }
             if (server.getState() == GameState.LOBBY_STARTING) {
                 Kit kit = KitManager.getPlayerKit(player);
@@ -100,7 +100,7 @@ public class SmashScoreboard implements Listener {
                 obj.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Starting in " + server.getTimeLeft() + " seconds");
                 obj.getScore("").setScore(12);
                 obj.getScore(ChatColor.YELLOW + "" + ChatColor.BOLD + "Players").setScore(11);
-                obj.getScore(server.getActivePlayerCount() + "/4").setScore(10);
+                obj.getScore(server.getActivePlayerCount() + "/" + server.getCurrentGamemode().max_players).setScore(10);
                 obj.getScore(ChatColor.RED + "").setScore(9);
                 obj.getScore(ChatColor.RED + "" + ChatColor.BOLD + "Game").setScore(8);
                 obj.getScore(server.getCurrentGamemode().getName()).setScore(7);
@@ -109,7 +109,7 @@ public class SmashScoreboard implements Listener {
                 obj.getScore(kit_name).setScore(4);
                 obj.getScore(ChatColor.YELLOW + "").setScore(3);
                 obj.getScore(ChatColor.AQUA + "" + ChatColor.BOLD + "Server").setScore(2);
-                obj.getScore("SSM-1").setScore(1);
+                obj.getScore(server.toString()).setScore(1);
             }
             if (server.getState() == GameState.GAME_STARTING) {
                 Kit kit = KitManager.getPlayerKit(player);

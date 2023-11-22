@@ -17,6 +17,7 @@ import java.util.*;
 public abstract class SmashGamemode implements Listener {
 
     protected String name = "N/A";
+    protected String short_name = "N/A";
     protected String maps_folder_name = "Super Smash Mobs";
     protected String[] description = new String[] {"N/A"};
     protected List<GameMap> allowed_maps = new ArrayList<GameMap>();
@@ -143,6 +144,10 @@ public abstract class SmashGamemode implements Listener {
 
     public String getName() {
         return name;
+    }
+
+    public String getShortName() {
+        return short_name;
     }
 
     public String[] getDescription() {
