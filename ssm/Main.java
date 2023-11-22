@@ -237,7 +237,14 @@ public class Main extends JavaPlugin implements Listener {
     public void onPlayerMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         Block blockIn = e.getTo().getBlock();
-        Block blockOn = e.getFrom().getBlock().getRelative(BlockFace.DOWN);
+        Block blockFromAbove = e.getFrom().getBlock().getRelative(BlockFace.UP);
+        Block blockToAbove = e.getTo().getBlock().getRelative(BlockFace.UP);
+        if(player.getLocation().getWorld() == Bukkit.getWorlds().get(0)) {
+            if (blockToAbove.getType() == Material.PORTAL && blockFromAbove.getType() != Material.PORTAL) {
+                player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+                Bukkit.getScheduler().runTaskLater(this, () -> GameManager.openServerMenu(player), 5L);
+            }
+        }
         if (blockIn.isLiquid() && DamageUtil.canDamage(player, null)) {
             boolean lighting = false;
             if(blockIn.getType() == Material.LAVA || blockIn.getType() == Material.STATIONARY_LAVA) {
