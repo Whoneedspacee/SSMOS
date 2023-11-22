@@ -47,7 +47,7 @@ public class SeismicSlam extends Ability implements OwnerRightClickEvent {
                 if (owner == null || owner.isDead()) {
                     Bukkit.getScheduler().cancelTask(task);
                 }
-                if (Utils.checkLeapEndGrounded(owner)) {
+                if (Utils.entityIsDirectlyOnGround(owner)) {
                     Bukkit.getScheduler().cancelTask(task);
                     doSlam();
                 }

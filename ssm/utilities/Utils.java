@@ -118,7 +118,6 @@ public class Utils {
             return false;
         }
         World world = ent.getWorld();
-        Location location = ent.getLocation();
         // Hitbox Edges
         double[] coords = {-0.3, 0, 0.3};
         for (double x : coords) {
@@ -131,8 +130,8 @@ public class Utils {
         return false;
     }
 
-    public static boolean checkLeapEndGrounded(Entity ent) {
-        return ent.isOnGround();
+    public static boolean entityIsDirectlyOnGround(Entity ent) {
+        return entityIsOnGround(ent, 0.01);
     }
 
     public static HashMap<LivingEntity, Double> getInRadius(Location location, double radius) {

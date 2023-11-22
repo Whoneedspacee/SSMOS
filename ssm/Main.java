@@ -4,11 +4,15 @@ import com.google.common.collect.Lists;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventoryPlayer;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.util.Vector;
 import ssm.attributes.Hunger;
+import ssm.attributes.doublejumps.DoubleJump;
+import ssm.attributes.doublejumps.GenericDoubleJump;
 import ssm.commands.*;
 import ssm.commands.CommandStop;
 import ssm.managers.*;
@@ -33,8 +37,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import ssm.utilities.VelocityUtil;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Main extends JavaPlugin implements Listener {
@@ -48,6 +54,7 @@ public class Main extends JavaPlugin implements Listener {
     public static ItemStack KIT_SELECTOR_ITEM;
     public static ItemStack TELEPORT_HUB_ITEM;
     public static ItemStack VOTING_MENU_ITEM;
+    public static HashMap<Player, DoubleJump> hub_doublejump = new HashMap<Player, DoubleJump>();
 
     @Override
     public void onEnable() {
@@ -125,9 +132,7 @@ public class Main extends JavaPlugin implements Listener {
         }
         // Do not do anything before manager creation please
         for(Player player : Bukkit.getOnlinePlayers()) {
-            Utils.fullHeal(player);
-            player.getInventory().clear();
-            player.getInventory().setItem(0, SERVER_BROWSER_ITEM);
+            equipPlayerHub(player);
         }
     }
 
@@ -148,16 +153,51 @@ public class Main extends JavaPlugin implements Listener {
         this.saveConfig();
     }
 
+    public void equipPlayerHub(Player player) {
+        if(hub_doublejump.containsKey(player)) {
+            Bukkit.broadcastMessage(ChatColor.RED + player.getName() + " equipped player hub twice");
+            hub_doublejump.get(player).remove();
+        }
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
+        player.getInventory().setItem(0, SERVER_BROWSER_ITEM);
+        Utils.fullHeal(player);
+        DoubleJump double_jump = new DoubleJump(1, 1, 1, Sound.GHAST_FIREBALL) {
+            @Override
+            public boolean groundCheck() {
+                return Utils.entityIsDirectlyOnGround(owner);
+            }
+
+            @Override
+            protected void jump() {
+                Vector vector = owner.getLocation().getDirection();
+                vector.setY(Math.abs(vector.getY()));
+                VelocityUtil.setVelocity(owner, vector, 1.4, false, 0, 0.2, 1, true);
+            }
+        };
+        double_jump.setOwner(player);
+        hub_doublejump.put(player, double_jump);
+    }
+
+    public void unequipPlayerHub(Player player) {
+        DoubleJump double_jump = hub_doublejump.get(player);
+        if(double_jump == null) {
+            return;
+        }
+        hub_doublejump.remove(player);
+        double_jump.remove();
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent e) {
-        e.getPlayer().getInventory().clear();
-        e.getPlayer().getInventory().setItem(0, SERVER_BROWSER_ITEM);
+        equipPlayerHub(e.getPlayer());
         e.setJoinMessage("");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent e) {
         e.getPlayer().teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+        unequipPlayerHub(e.getPlayer());
         e.setQuitMessage("");
     }
 
@@ -187,10 +227,9 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e) {
         if(Bukkit.getWorlds().get(0).equals(e.getPlayer().getWorld())) {
-            e.getPlayer().getInventory().clear();
-            e.getPlayer().getInventory().setArmorContents(null);
-            e.getPlayer().getInventory().setItem(0, SERVER_BROWSER_ITEM);
-            Utils.fullHeal(e.getPlayer());
+            equipPlayerHub(e.getPlayer());
+        } else {
+            unequipPlayerHub(e.getPlayer());
         }
     }
 

@@ -34,13 +34,16 @@ public abstract class DoubleJump extends Attribute {
         task = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
             @Override
             public void run() {
+                if(owner == null) {
+                    return;
+                }
                 Kit kit = KitManager.getPlayerKit(owner);
-                if(kit == null || !kit.isActive()) {
+                if(kit != null && !kit.isActive()) {
                     owner.setAllowFlight(false);
                     owner.setFlying(false);
                     return;
                 }
-                if (Utils.entityIsOnGround(owner)) {
+                if (groundCheck()) {
                     resetDoubleJumps();
                 }
             }
@@ -122,6 +125,10 @@ public abstract class DoubleJump extends Attribute {
         owner.getWorld().playSound(owner.getLocation(), doubleJumpSound, 1f, 1f);
     }
 
+    public boolean groundCheck() {
+        return Utils.entityIsOnGround(owner);
+    }
+
     public void resetDoubleJumps() {
         remainingDoubleJumps = maxDoubleJumps;
         owner.setAllowFlight(true);
@@ -142,6 +149,10 @@ public abstract class DoubleJump extends Attribute {
 
     @Override
     public void setOwner(Player owner) {
+        if(owner == null) {
+            this.owner.setFlying(false);
+            this.owner.setAllowFlight(false);
+        }
         super.setOwner(owner);
         if(owner == null) {
             return;

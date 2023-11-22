@@ -65,7 +65,7 @@ public class WolfStrike extends Ability implements OwnerRightClickEvent, OwnerDe
                         return;
                     }
                 }
-                if (!Utils.checkLeapEndGrounded(owner)) {
+                if (!Utils.entityIsDirectlyOnGround(owner)) {
                     return;
                 }
                 if(CooldownManager.getInstance().getTimeElapsedFor(WolfStrike.this, owner) < strike_duration_ms) {

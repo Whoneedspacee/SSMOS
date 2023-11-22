@@ -1,5 +1,6 @@
 package ssm.attributes;
 
+import org.bukkit.Bukkit;
 import ssm.managers.CooldownManager;
 import ssm.managers.KitManager;
 import ssm.kits.Kit;
@@ -56,6 +57,7 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
 
     public Attribute() {
         this.plugin = Main.getInstance();
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public boolean check() {

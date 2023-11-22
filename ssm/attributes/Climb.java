@@ -16,7 +16,7 @@ public class Climb extends Attribute {
     public long last_use_time = 0;
     public long last_cooldown_time = 0;
     public long doublejump_cooldown_time_ms = 150;
-    public long cooldown_time_ms = 0;
+    public long cooldown_time_ms = 75;
 
     public Climb(double power) {
         super();

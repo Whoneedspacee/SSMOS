@@ -75,7 +75,7 @@ public class WaterSplash extends Ability implements OwnerRightClickEvent, OwnerT
                 Utils.playParticle(EnumParticle.DRIP_WATER, owner.getLocation(),
                         0.5f, 0.5f, 0.5f, 0.01f, 10, 96, owner.getWorld().getPlayers());
                 long time_elapsed = CooldownManager.getInstance().getTimeElapsedFor(WaterSplash.this, owner);
-                if (Utils.checkLeapEndGrounded(owner) && owner.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() != Material.FENCE &&
+                if (Utils.entityIsDirectlyOnGround(owner) && owner.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() != Material.FENCE &&
                         time_elapsed >= minimum_air_time_ms) {
                     Utils.playParticle(EnumParticle.FIREWORKS_SPARK, owner.getEyeLocation(),
                             0, 0, 0, 0.5f, 50, 96, owner.getWorld().getPlayers());
