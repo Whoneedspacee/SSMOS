@@ -90,7 +90,7 @@ public abstract class Kit implements Listener {
         if(owner == null) {
             return;
         }
-        boolean game_hotbar = GameState.isStarting(new_state) || GameState.isPlaying(new_state);
+        boolean game_hotbar = GameState.isStarting(new_state) || GameState.isPlaying(new_state) || new_state == GameState.GAME_ENDING;
         // Set hotbar and register or unregister events for attributes
         // Use booleans so we don't re-equip the same hotbar we already did
         if(game_hotbar && (!game_hotbar_equipped || reload_hotbar)) {
@@ -105,7 +105,7 @@ public abstract class Kit implements Listener {
             preview_hotbar_equipped = true;
             game_hotbar_equipped = false;
         }
-        if(GameState.isPlaying(new_state)) {
+        if(GameState.isPlaying(new_state) || new_state == GameState.GAME_ENDING) {
             playing = true;
             for(Attribute attribute : attributes) {
                 HandlerList.unregisterAll(attribute);

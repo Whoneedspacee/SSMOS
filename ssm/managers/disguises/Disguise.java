@@ -193,6 +193,9 @@ public abstract class Disguise {
         dw.watch(0, player_data);
         PacketPlayOutEntityMetadata data_packet = new PacketPlayOutEntityMetadata(living.getId(), dw, true);
         Utils.sendPacketToAllBut(owner, data_packet);
+        // Keep the entity loaded by sending status 0 packets repeatedly
+        PacketPlayOutEntityStatus status_packet = new PacketPlayOutEntityStatus(living, (byte) 0);
+        Utils.sendPacketToAllBut(owner, status_packet);
     }
 
     public void deleteLiving() {

@@ -168,47 +168,6 @@ public class DisguiseManager implements Listener, Runnable {
     }
 
     @EventHandler
-    public void playerMove(PlayerMoveEvent e) {
-        // This might be laggy and there's probably a better way to do it, hack fix
-        Player player = e.getPlayer();
-        for(Player other : player.getWorld().getPlayers()) {
-            if(player.equals(other)) {
-                continue;
-            }
-            double from_distance = other.getLocation().distance(e.getFrom());
-            double to_distance = other.getLocation().distance(e.getTo());
-            double despawn_distance = 80;
-            if(from_distance > despawn_distance && to_distance <= despawn_distance) {
-                showDisguise(player, other);
-                showDisguise(other, player);
-            }
-        }
-    }
-
-    @EventHandler
-    public void playerTeleport(PlayerTeleportEvent e) {
-        if(!e.getFrom().getWorld().equals(e.getTo().getWorld())) {
-            return;
-        }
-        // This might be laggy and there's probably a better way to do it, hack fix
-        Player player = e.getPlayer();
-        for(Player other : player.getWorld().getPlayers()) {
-            if(player.equals(other)) {
-                continue;
-            }
-            double from_distance = other.getLocation().distance(e.getFrom());
-            double to_distance = other.getLocation().distance(e.getTo());
-            // Players seem to come into view at a distance of 45 blocks (on one axis)
-            // And go out of view at a distance of 50 blocks (on one axis)
-            double despawn_distance = 45;
-            if(from_distance > despawn_distance && to_distance <= despawn_distance) {
-                showDisguise(player, other);
-                showDisguise(other, player);
-            }
-        }
-    }
-
-    @EventHandler
     public void playerChangedWorld(PlayerChangedWorldEvent e) {
         // Reload their disguises, and show their own disguise to other players
         showDisguises(e.getPlayer());
