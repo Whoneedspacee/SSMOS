@@ -21,7 +21,7 @@ public class FireProjectile extends SmashProjectile {
     public FireProjectile(Player firer, String name) {
         super(firer, name);
         this.damage = 0.25;
-        this.hitbox_size = 0.3;
+        this.hitbox_size = 0.125;
         this.knockback_mult = 0;
         this.expiration_ticks = 14;
         this.blockDetection = false;
