@@ -35,9 +35,6 @@ public class DamageUtil {
             smashDamageEvent.callEvent();
         }
         player.teleport(player.getWorld().getSpawnLocation());
-        if(player.getAllowFlight()) {
-            player.setFlying(true);
-        }
     }
 
     public static boolean canDamage(LivingEntity damagee, LivingEntity damager) {

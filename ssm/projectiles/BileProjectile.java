@@ -15,7 +15,7 @@ public class BileProjectile extends SmashProjectile {
     public BileProjectile(Player firer, String name) {
         super(firer, name);
         this.damage = 1;
-        this.hitbox_size = 0.5;
+        this.hitbox_size = 0.25;
         this.knockback_mult = 1;
         this.expiration_ticks = 40;
     }

@@ -97,7 +97,7 @@ public class WolfStrike extends Ability implements OwnerRightClickEvent, OwnerDe
         }
         if(CubTackle.tackle_wolf.get(owner) != null) {
             Wolf wolf = CubTackle.tackle_wolf.get(owner);
-            if(CubTackle.tackled_by.get(wolf).equals(e.getDamagee())) {
+            if(e.getDamagee() != null && e.getDamagee().equals(CubTackle.tackled_by.get(wolf))) {
                 CubTackle.tackled_by.remove(wolf);
                 CubTackle.tackle_wolf.remove(owner);
                 wolf.remove();
