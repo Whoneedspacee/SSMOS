@@ -111,6 +111,7 @@ public class Main extends JavaPlugin implements Listener {
         this.getCommand("shout").setExecutor(new CommandShout());
         this.getCommand("message").setExecutor(new CommandMessage());
         this.getCommand("reply").setExecutor(new CommandReply());
+        this.getCommand("showhitboxes").setExecutor(new CommandShowHitboxes());
         if (DEBUG_MODE) {
             SmashServer server = GameManager.createSmashServer(new TestingGamemode());
             for (Player player : Bukkit.getOnlinePlayers()) {

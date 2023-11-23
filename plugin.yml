@@ -77,3 +77,6 @@ commands:
     description: 'Sends a private message to the last player who messaged you.'
     usage: /reply
     aliases: [r]
+  showhitboxes:
+    description: 'Toggles showing entity projectile hitboxes to the user.'
+    usage: /showhitboxes

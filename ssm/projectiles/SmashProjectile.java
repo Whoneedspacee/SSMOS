@@ -1,6 +1,7 @@
 package ssm.projectiles;
 
 import org.bukkit.Location;
+import ssm.commands.CommandShowHitboxes;
 import ssm.managers.KitManager;
 import ssm.kits.Kit;
 import ssm.Main;
@@ -171,14 +172,16 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
                 // Item Entities are grown by 0.125 default (0.25 size)
                 projectileBB = projectileBB.grow(hitbox_size, hitbox_size, hitbox_size);
                 // Attempt at visually displaying the hitbox path of the projectile
-                /*for (double x_iterate : new double[]{projectileBB.a, projectileBB.d}) {
-                    for (double y_iterate : new double[]{projectileBB.b, projectileBB.e}) {
-                        for (double z_iterate : new double[]{projectileBB.c, projectileBB.f}) {
-                            Location vertex_loc = new Location(projectile.getWorld(), x_iterate, y_iterate, z_iterate);
-                            Utils.playParticle(EnumParticle.FIREWORKS_SPARK, vertex_loc, 0, 0, 0, 0, 1, 96, projectile.getWorld().getPlayers());
+                if(CommandShowHitboxes.show_hitboxes) {
+                    for (double x_iterate : new double[]{projectileBB.a, projectileBB.d}) {
+                        for (double y_iterate : new double[]{projectileBB.b, projectileBB.e}) {
+                            for (double z_iterate : new double[]{projectileBB.c, projectileBB.f}) {
+                                Location vertex_loc = new Location(projectile.getWorld(), x_iterate, y_iterate, z_iterate);
+                                Utils.playParticle(EnumParticle.FIREWORKS_SPARK, vertex_loc, 0, 0, 0, 0, 1, 96, projectile.getWorld().getPlayers());
+                            }
                         }
                     }
-                }*/
+                }
                 if (projectileBB.b(livingBB)) {
                     return check;
                 }

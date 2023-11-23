@@ -86,7 +86,7 @@ public class AngryHerd extends Ability implements OwnerRightClickEvent {
         herd_task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if(CooldownManager.getInstance().getTimeElapsedFor(AngryHerd.this, owner) >= duration_ms) {
+                if(owner == null || CooldownManager.getInstance().getTimeElapsedFor(AngryHerd.this, owner) >= duration_ms) {
                     Bukkit.getScheduler().cancelTask(herd_task);
                     for(Entity cow : cows) {
                         if(cow.isValid()) {
