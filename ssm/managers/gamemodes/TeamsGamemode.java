@@ -11,7 +11,7 @@ import ssm.managers.TeamManager;
 import ssm.managers.TeamManager.TeamColor;
 import ssm.managers.gamestate.GameState;
 import ssm.managers.smashscoreboard.SmashScoreboard;
-import ssm.managers.teams.SmashTeam;
+import ssm.managers.smashteam.SmashTeam;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
 

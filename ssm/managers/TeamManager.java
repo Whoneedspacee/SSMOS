@@ -1,6 +1,6 @@
 package ssm.managers;
 
-import ssm.managers.teams.SmashTeam;
+import ssm.managers.smashteam.SmashTeam;
 import ssm.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

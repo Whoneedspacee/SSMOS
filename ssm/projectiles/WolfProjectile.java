@@ -1,6 +1,6 @@
 package ssm.projectiles;
 
-import ssm.abilities.CubTackle;
+import ssm.abilities.original.CubTackle;
 import ssm.events.SmashDamageEvent;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;

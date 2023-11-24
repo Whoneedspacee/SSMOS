@@ -5,7 +5,7 @@ import ssm.managers.KitManager;
 import ssm.managers.TeamManager;
 import ssm.managers.gamestate.GameState;
 import ssm.managers.smashserver.SmashServer;
-import ssm.managers.teams.SmashTeam;
+import ssm.managers.smashteam.SmashTeam;
 import ssm.kits.Kit;
 import ssm.Main;
 import org.bukkit.Bukkit;

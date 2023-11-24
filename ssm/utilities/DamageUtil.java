@@ -1,12 +1,13 @@
 package ssm.utilities;
 
 import ssm.events.SmashDamageEvent;
+import ssm.managers.DamageManager;
 import ssm.managers.GameManager;
 import ssm.managers.KitManager;
 import ssm.managers.TeamManager;
 import ssm.managers.gamestate.GameState;
 import ssm.managers.smashserver.SmashServer;
-import ssm.managers.teams.SmashTeam;
+import ssm.managers.smashteam.SmashTeam;
 import ssm.kits.Kit;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
@@ -24,16 +25,19 @@ public class DamageUtil {
         if(lightning && DamageUtil.canDamage(player, null)) {
             player.getWorld().strikeLightningEffect(player.getLocation());
         }
-        if (DamageUtil.canDamage(player, null)) {
-            SmashDamageEvent smashDamageEvent = new SmashDamageEvent(player, null, 1000);
-            smashDamageEvent.multiplyKnockback(0);
-            smashDamageEvent.setIgnoreArmor(true);
-            smashDamageEvent.setIgnoreDamageDelay(true);
-            smashDamageEvent.setDamageCause(DamageCause.VOID);
-            smashDamageEvent.setDamagerName("Void");
-            smashDamageEvent.setReason("World Border");
-            smashDamageEvent.callEvent();
+        Player last_damager = null;
+        SmashDamageEvent last_damage_event = DamageManager.getLastDamageEvent(player);
+        if(last_damage_event != null && last_damage_event.getDamager() instanceof Player) {
+            last_damager = (Player) DamageManager.getLastDamageEvent(player).getDamager();
         }
+        SmashDamageEvent smashDamageEvent = new SmashDamageEvent(player, last_damager, 1000);
+        smashDamageEvent.multiplyKnockback(0);
+        smashDamageEvent.setIgnoreArmor(true);
+        smashDamageEvent.setIgnoreDamageDelay(true);
+        smashDamageEvent.setDamageCause(DamageCause.VOID);
+        smashDamageEvent.setDamagerName("Void");
+        smashDamageEvent.setReason("World Border");
+        smashDamageEvent.callEvent();
         player.teleport(player.getWorld().getSpawnLocation());
     }
 

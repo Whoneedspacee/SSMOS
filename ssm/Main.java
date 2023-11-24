@@ -25,6 +25,7 @@ import ssm.commands.*;
 import ssm.kits.Kit;
 import ssm.managers.*;
 import ssm.managers.disguises.Disguise;
+import ssm.managers.gamemodes.BossGamemode;
 import ssm.managers.gamemodes.SoloGamemode;
 import ssm.managers.gamemodes.TeamsGamemode;
 import ssm.managers.gamemodes.TestingGamemode;
@@ -84,6 +85,7 @@ public class Main extends JavaPlugin implements Listener {
         new BlockRestoreManager();
         new TeamManager();
         new MenuManager();
+        new BossBarManager();
         this.getCommand("start").setExecutor(new CommandStart());
         this.getCommand("stop").setExecutor(new CommandStop());
         this.getCommand("kit").setExecutor(new CommandKit());
@@ -112,8 +114,11 @@ public class Main extends JavaPlugin implements Listener {
         this.getCommand("message").setExecutor(new CommandMessage());
         this.getCommand("reply").setExecutor(new CommandReply());
         this.getCommand("showhitboxes").setExecutor(new CommandShowHitboxes());
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            equipPlayerHub(player);
+        }
         if (DEBUG_MODE) {
-            SmashServer server = GameManager.createSmashServer(new TestingGamemode());
+            SmashServer server = GameManager.createSmashServer(new BossGamemode());
             for (Player player : Bukkit.getOnlinePlayers()) {
                 server.teleportToServer(player);
             }
@@ -123,15 +128,12 @@ public class Main extends JavaPlugin implements Listener {
             GameManager.createSmashServer(new SoloGamemode());
             GameManager.createSmashServer(new SoloGamemode());
             GameManager.createSmashServer(new SoloGamemode());
-            GameManager.createSmashServer(new SoloGamemode());
             GameManager.createSmashServer(new TeamsGamemode());
             GameManager.createSmashServer(new TeamsGamemode());
+            GameManager.createSmashServer(new BossGamemode());
             GameManager.createSmashServer(new TestingGamemode());
         }
         // Do not do anything before manager creation please
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            equipPlayerHub(player);
-        }
     }
 
     @Override

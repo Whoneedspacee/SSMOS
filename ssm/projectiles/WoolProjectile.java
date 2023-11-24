@@ -1,6 +1,6 @@
 package ssm.projectiles;
 
-import ssm.abilities.WoolMine;
+import ssm.abilities.original.WoolMine;
 import ssm.events.SmashDamageEvent;
 import ssm.managers.BlockRestoreManager;
 import ssm.managers.KitManager;

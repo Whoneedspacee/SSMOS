@@ -1,9 +1,5 @@
 package ssm.utilities;
 
-import ssm.attributes.Attribute;
-import ssm.managers.DamageManager;
-import ssm.managers.DisguiseManager;
-import ssm.Main;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -21,8 +17,13 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
+import ssm.Main;
+import ssm.attributes.Attribute;
+import ssm.managers.DamageManager;
+import ssm.managers.DisguiseManager;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 public class Utils {
 
@@ -367,7 +368,7 @@ public class Utils {
 
     // This will make it so you cannot teleport entities since they have passengers
     public static void attachCustomName(Entity entity, String name) {
-        if(entity == null) {
+        if (entity == null) {
             return;
         }
         net.minecraft.server.v1_8_R3.Entity nms_entity = ((CraftEntity) entity).getHandle();
@@ -389,7 +390,7 @@ public class Utils {
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                if(!entity.isValid()) {
+                if (!entity.isValid()) {
                     DisguiseManager.redirect_melee.remove(squid);
                     DamageManager.invincible_mobs.remove(squid);
                     armor_stand.remove();
@@ -405,14 +406,21 @@ public class Utils {
     }
 
     public static String getAttachedCustomName(Entity entity) {
-        if(entity.getPassenger() == null) {
+        if (entity.getPassenger() == null) {
             return null;
         }
-        if(!(entity.getPassenger().getPassenger() instanceof ArmorStand)) {
+        if (!(entity.getPassenger().getPassenger() instanceof ArmorStand)) {
             return null;
         }
         ArmorStand armor_stand = (ArmorStand) entity.getPassenger().getPassenger();
         return armor_stand.getCustomName();
+    }
+
+    public static double getArmorForExactHP(double health) {
+        //20 / (1 - 0.08 * armor) = health;
+        //20 / health = 1 - 0.08 * armor
+        //(1 - 20 / health) / 0.08 = armor
+        return (1 - 20 / health) / 0.08;
     }
 
 }

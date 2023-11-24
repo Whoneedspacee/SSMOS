@@ -1,14 +1,13 @@
 package ssm.managers.gamemodes;
 
-import org.apache.logging.log4j.core.util.FileUtils;
-import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+import ssm.kits.original.*;
 import ssm.managers.KitManager;
 import ssm.managers.maps.GameMap;
 import ssm.kits.*;
 import org.bukkit.*;
 import org.bukkit.event.Listener;
-import ssm.managers.smashscoreboard.SmashScoreboard;
 import ssm.managers.smashserver.SmashServer;
 
 import java.io.File;
@@ -110,6 +109,47 @@ public abstract class SmashGamemode implements Listener {
         }
     }
 
+    public Location getRandomRespawnPoint(Player player) {
+        if (server.getGameMap().getRespawnPoints().size() == 0) {
+            return server.getGameMap().getWorld().getSpawnLocation();
+        }
+        // Calculate closest player to each respawn point, pick the one furthest from players
+        HashMap<Location, Double> closest_player_distance = new HashMap<>();
+        double maximum = 0;
+        for(Location respawn_point : server.getGameMap().getRespawnPoints()) {
+            double closest = 1000;
+            for(Player check : server.getGameMap().getWorld().getPlayers()) {
+                if(player.equals(check)) {
+                    continue;
+                }
+                if(!server.lives.containsKey(check)) {
+                    continue;
+                }
+                closest = Math.min(closest, respawn_point.distance(check.getLocation()));
+            }
+            maximum = Math.max(maximum, closest);
+            closest_player_distance.put(respawn_point, closest);
+        }
+        Location selected_point = null;
+        for(Location respawn_point : closest_player_distance.keySet()) {
+            if(closest_player_distance.get(respawn_point) >= maximum) {
+                selected_point = respawn_point;
+            }
+        }
+        if(selected_point == null || maximum >= 1000) {
+            selected_point = server.getGameMap().getRespawnPoints().get((int) (Math.random() * server.getGameMap().getRespawnPoints().size()));
+        }
+        // Face towards map center
+        org.bukkit.util.Vector difference = server.getGameMap().getWorld().getSpawnLocation().toVector().subtract(selected_point.toVector());
+        if(Math.abs(difference.getX()) > Math.abs(difference.getZ())) {
+            selected_point.setDirection(new org.bukkit.util.Vector(difference.getX(), 0, 0));
+        }
+        else {
+            selected_point.setDirection(new Vector(0, 0, difference.getZ()));
+        }
+        return selected_point;
+    }
+
     public List<String> getLivesScoreboard() {
         // This is less terrible but still forgive my laziness
         List<Player> least_to_greatest = new ArrayList<Player>();
@@ -136,6 +176,10 @@ public abstract class SmashGamemode implements Listener {
             scoreboard_string.add(server.getLives(add) + " " + server.getScoreboard().getPlayerColor(add, true) + add.getName());
         }
         return scoreboard_string;
+    }
+
+    public void update() {
+        return;
     }
 
     public boolean isGameEnded(HashMap<Player, Integer> lives) {

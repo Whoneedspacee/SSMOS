@@ -1,15 +1,11 @@
 package ssm.managers.smashserver;
 
-import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_8_R3.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -32,10 +28,9 @@ import ssm.events.GameStateChangeEvent;
 import ssm.events.PlayerLostLifeEvent;
 import ssm.events.SmashDamageEvent;
 import ssm.kits.Kit;
-import ssm.kits.KitTemporarySpectator;
+import ssm.kits.original.KitTemporarySpectator;
 import ssm.managers.*;
 import ssm.managers.gamemodes.SmashGamemode;
-import ssm.managers.gamemodes.SoloGamemode;
 import ssm.managers.gamestate.GameState;
 import ssm.managers.maps.GameMap;
 import ssm.managers.maps.LobbyMap;
@@ -43,7 +38,7 @@ import ssm.managers.ownerevents.OwnerDeathEvent;
 import ssm.managers.ownerevents.OwnerKillEvent;
 import ssm.managers.smashmenu.SmashMenu;
 import ssm.managers.smashscoreboard.SmashScoreboard;
-import ssm.managers.teams.SmashTeam;
+import ssm.managers.smashteam.SmashTeam;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.EffectUtil;
 import ssm.utilities.ServerMessageType;
@@ -80,6 +75,7 @@ public class SmashServer implements Listener, Runnable {
 
     @Override
     public void run() {
+        current_gamemode.update();
         if (time_remaining_ms % 1000 == 0 && time_remaining_ms != last_time_update_ms) {
             scoreboard.buildScoreboard();
             last_time_update_ms = time_remaining_ms;
@@ -177,7 +173,7 @@ public class SmashServer implements Listener, Runnable {
                     player.teleport(game_map.getWorld().getSpawnLocation());
                     continue;
                 }
-                Location starting_point = getRandomRespawnPoint(player);
+                Location starting_point = current_gamemode.getRandomRespawnPoint(player);
                 player.teleport(starting_point);
             }
             for (Player player : players) {
@@ -298,7 +294,7 @@ public class SmashServer implements Listener, Runnable {
             scoreboard.buildScoreboard();
             lives.clear();
             deaths = new Player[2];
-            setTimeLeft(15);
+            setTimeLeft(10);
             setState(GameState.GAME_ENDING);
             return;
         }
@@ -323,48 +319,6 @@ public class SmashServer implements Listener, Runnable {
         }
         time_remaining_ms -= 50;
     }
-
-    public Location getRandomRespawnPoint(Player player) {
-        if (game_map.getRespawnPoints().size() == 0) {
-            return game_map.getWorld().getSpawnLocation();
-        }
-        // Calculate closest player to each respawn point, pick the one furthest from players
-        HashMap<Location, Double> closest_player_distance = new HashMap<>();
-        double maximum = 0;
-        for(Location respawn_point : game_map.getRespawnPoints()) {
-            double closest = 1000;
-            for(Player check : game_map.getWorld().getPlayers()) {
-                if(player.equals(check)) {
-                    continue;
-                }
-                if(!lives.containsKey(check)) {
-                    continue;
-                }
-                closest = Math.min(closest, respawn_point.distance(check.getLocation()));
-            }
-            maximum = Math.max(maximum, closest);
-            closest_player_distance.put(respawn_point, closest);
-        }
-        Location selected_point = null;
-        for(Location respawn_point : closest_player_distance.keySet()) {
-            if(closest_player_distance.get(respawn_point) >= maximum) {
-                selected_point = respawn_point;
-            }
-        }
-        if(selected_point == null || maximum >= 1000) {
-            selected_point = game_map.getRespawnPoints().get((int) (Math.random() * game_map.getRespawnPoints().size()));
-        }
-        // Face towards map center
-        Vector difference = game_map.getWorld().getSpawnLocation().toVector().subtract(selected_point.toVector());
-        if(Math.abs(difference.getX()) > Math.abs(difference.getZ())) {
-            selected_point.setDirection(new Vector(difference.getX(), 0, 0));
-        }
-        else {
-            selected_point.setDirection(new Vector(0, 0, difference.getZ()));
-        }
-        return selected_point;
-    }
-
 
     public void death(Player player) {
         if (lives.get(player) == null) {
@@ -433,7 +387,7 @@ public class SmashServer implements Listener, Runnable {
             @Override
             public void run() {
                 if (state == GameState.GAME_PLAYING && lives.get(player) > 0) {
-                    player.teleport(getRandomRespawnPoint(player));
+                    player.teleport(current_gamemode.getRandomRespawnPoint(player));
                     Utils.sendTitleMessage(player, "", SmashScoreboard.getLivesColor(player) +
                                     "" + lives.get(player) + " " + (lives.get(player) == 1 ? "life" : "lives") + " left!",
                             10, 50, 10);
