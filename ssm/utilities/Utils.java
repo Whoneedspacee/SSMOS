@@ -386,8 +386,12 @@ public class Utils {
         DamageManager.invincible_mobs.put(squid, 1);
         // Apply melees from squid to entity
         if(entity instanceof LivingEntity) {
-            DisguiseManager.redirect_damage.put(squid, (LivingEntity) entity);
+            LivingEntity livingEntity = (LivingEntity) entity;
+            livingEntity.setRemoveWhenFarAway(false);
+            DisguiseManager.redirect_damage.put(squid, livingEntity);
         }
+        squid.setRemoveWhenFarAway(false);
+        armor_stand.setRemoveWhenFarAway(false);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {

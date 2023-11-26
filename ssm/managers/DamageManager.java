@@ -147,9 +147,6 @@ public class DamageManager implements Listener {
             return;
         }
         LivingEntity damagee = (LivingEntity) e.getEntity();
-        if(DisguiseManager.redirect_damage.containsKey(damagee)) {
-            damagee = DisguiseManager.redirect_damage.get(damagee);
-        }
         LivingEntity damager = null;
         Projectile projectile = null;
         ChatColor reason_color = ChatColor.GREEN;
@@ -218,6 +215,39 @@ public class DamageManager implements Listener {
         Arrow arrow = (Arrow) e.getProjectile();
         arrow.teleport(new Location(arrow.getWorld(), 0, 0, 0));
         arrow.remove();
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void redirectSmashDamage(SmashDamageEvent e) {
+        if(!DisguiseManager.redirect_damage.containsKey(e.getDamagee())) {
+            return;
+        }
+        boolean old_cancelled = e.isCancelled();
+        e.setCancelled(true);
+        // Be careful not to double up damage on the redirected entity
+        if(e.getDamageCause() == DamageCause.SUFFOCATION) {
+            return;
+        }
+        if(e.getDamageCause() == DamageCause.STARVATION) {
+            return;
+        }
+        if(e.getDamageCause() == DamageCause.LAVA) {
+            return;
+        }
+        if(e.getDamageCause() == DamageCause.VOID) {
+            return;
+        }
+        if(e.getDamageCause() == DamageCause.ENTITY_EXPLOSION) {
+            return;
+        }
+        if(e.getDamageCause() == DamageCause.BLOCK_EXPLOSION) {
+            return;
+        }
+        if(e.getDamageCause() == DamageCause.DROWNING) {
+            return;
+        }
+        e.setCancelled(old_cancelled);
+        e.setDamagee(DisguiseManager.redirect_damage.get(e.getDamagee()));
     }
 
     @EventHandler(priority = EventPriority.LOW)
