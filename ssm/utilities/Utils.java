@@ -23,7 +23,6 @@ import ssm.managers.DamageManager;
 import ssm.managers.DisguiseManager;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 public class Utils {
 
@@ -386,12 +385,14 @@ public class Utils {
         // Invincibility
         DamageManager.invincible_mobs.put(squid, 1);
         // Apply melees from squid to entity
-        DisguiseManager.redirect_melee.put(squid, entity);
+        if(entity instanceof LivingEntity) {
+            DisguiseManager.redirect_damage.put(squid, (LivingEntity) entity);
+        }
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if (!entity.isValid()) {
-                    DisguiseManager.redirect_melee.remove(squid);
+                    DisguiseManager.redirect_damage.remove(squid);
                     DamageManager.invincible_mobs.remove(squid);
                     armor_stand.remove();
                     squid.remove();

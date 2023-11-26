@@ -147,6 +147,9 @@ public class DamageManager implements Listener {
             return;
         }
         LivingEntity damagee = (LivingEntity) e.getEntity();
+        if(DisguiseManager.redirect_damage.containsKey(damagee)) {
+            damagee = DisguiseManager.redirect_damage.get(damagee);
+        }
         LivingEntity damager = null;
         Projectile projectile = null;
         ChatColor reason_color = ChatColor.GREEN;

@@ -1,5 +1,6 @@
 package ssm.managers;
 
+import org.bukkit.entity.LivingEntity;
 import ssm.managers.disguises.Disguise;
 import ssm.Main;
 import ssm.utilities.Utils;
@@ -17,7 +18,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.management.relation.RelationNotFoundException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
@@ -25,7 +25,7 @@ public class DisguiseManager implements Listener, Runnable {
 
     private static DisguiseManager ourInstance;
     public static HashMap<Player, Disguise> disguises = new HashMap<Player, Disguise>();
-    public static HashMap<Entity, Entity> redirect_melee = new HashMap<Entity, Entity>();
+    public static HashMap<Entity, LivingEntity> redirect_damage = new HashMap<Entity, LivingEntity>();
     private JavaPlugin plugin = Main.getInstance();
 
     // Gives disguises to players
@@ -124,12 +124,12 @@ public class DisguiseManager implements Listener, Runnable {
                                 f.setInt(packet, disguise.getOwner().getEntityId());
                             }
                         }
-                        for(Entity redirect_from : redirect_melee.keySet()) {
-                            if(redirect_from == null || redirect_melee.get(redirect_from) == null) {
+                        for(Entity redirect_from : redirect_damage.keySet()) {
+                            if(redirect_from == null || redirect_damage.get(redirect_from) == null) {
                                 continue;
                             }
                             if(redirect_from.getEntityId() == id) {
-                                f.setInt(packet, redirect_melee.get(redirect_from).getEntityId());
+                                f.setInt(packet, redirect_damage.get(redirect_from).getEntityId());
                             }
                         }
                     }
