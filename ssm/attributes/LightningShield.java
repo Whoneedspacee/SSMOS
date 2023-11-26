@@ -1,5 +1,7 @@
 package ssm.attributes;
 
+import net.minecraft.server.v1_8_R3.Entity;
+import org.bukkit.entity.LivingEntity;
 import ssm.events.SmashDamageEvent;
 import ssm.managers.DisguiseManager;
 import ssm.managers.disguises.CreeperDisguise;
@@ -70,13 +72,14 @@ public class LightningShield extends Attribute implements OwnerTakeSmashDamageEv
                 // 1 Second Shock Duration
                 BukkitRunnable shock_runnable = new BukkitRunnable() {
                     int ticks = 0;
+                    LivingEntity damager = e.getDamager();
                     @Override
                     public void run() {
-                        if(ticks >= 20 || e.getDamager() == null) {
+                        if(ticks >= 20 || damager == null) {
                             cancel();
                             return;
                         }
-                        e.getDamager().playEffect(EntityEffect.HURT);
+                        damager.playEffect(EntityEffect.HURT);
                         ticks++;
                     }
                 };

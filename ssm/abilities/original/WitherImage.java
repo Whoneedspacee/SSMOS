@@ -2,6 +2,7 @@ package ssm.abilities.original;
 
 import ssm.abilities.Ability;
 import ssm.events.SmashDamageEvent;
+import ssm.managers.GameManager;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.ServerMessageType;
@@ -104,6 +105,9 @@ public class WitherImage extends Ability implements OwnerRightClickEvent {
             if(player.equals(owner)) {
                 continue;
             }
+            if(!GameManager.isAlive(player)) {
+                continue;
+            }
             wither_image.setTarget(player);
             break;
         }
@@ -117,6 +121,9 @@ public class WitherImage extends Ability implements OwnerRightClickEvent {
         swap_delay_task = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
+                if(owner == null) {
+                    return;
+                }
                 Utils.sendAttributeMessage("You can use", "Wither Swap",
                         owner, ServerMessageType.RECHARGE);
                 can_swap = true;

@@ -75,6 +75,10 @@ public class FishFlurry extends Ability implements OwnerRightClickEvent {
 
             @Override
             public void run() {
+                if(owner == null) {
+                    Bukkit.getScheduler().cancelTask(flurry_task);
+                    return;
+                }
                 if(ticks % 3 == 0) {
                     for(Block block : blocks) {
                         Utils.playParticle(EnumParticle.WATER_SPLASH, block.getLocation().add(0.5, 1, 0.5),
@@ -83,8 +87,7 @@ public class FishFlurry extends Ability implements OwnerRightClickEvent {
                 }
                 Block random = blocks.get((int) (Math.random() * blocks.size()));
                 if(Math.random() > 0.5) {
-                    random.getWorld().playSound(random.getLocation(),
-                            Math.random() > 0.5 ? Sound.SPLASH : Sound.SPLASH2, 0.5f, 0.1f);
+                    random.getWorld().playSound(random.getLocation(), Math.random() > 0.5 ? Sound.SPLASH : Sound.SPLASH2, 0.5f, 1f);
                 }
                 if(System.currentTimeMillis() - activation_time_ms < 1000) {
                     return;

@@ -51,10 +51,6 @@ public class KitManager implements Listener {
             kit.setOwner(player);
         }
         playerKit.put(player, kit);
-        SmashServer server = GameManager.getPlayerServer(player);
-        if(server != null) {
-            server.getScoreboard().buildScoreboard();
-        }
     }
 
     public static void unequipPlayer(Player player) {
@@ -98,9 +94,10 @@ public class KitManager implements Listener {
         }
         int slot = 10;
         int count = 0;
-        Inventory selectKit = Bukkit.createInventory(player, 9 * 5, "Choose a Kit");
+        List<Kit> allowed_kits = server.getCurrentGamemode().getAllowedKits();
+        Inventory selectKit = Bukkit.createInventory(player, (int) (9 * (Math.ceil(allowed_kits.size() / 7.0) + 2)), "Choose a Kit");
         SmashMenu menu = MenuManager.createPlayerMenu(player, selectKit);
-        for (Kit kit : server.getCurrentGamemode().getAllowedKits()) {
+        for (Kit kit : allowed_kits) {
             ItemStack item = kit.getMenuItemStack();
             ItemMeta itemMeta = item.getItemMeta();
             itemMeta.setDisplayName(ChatColor.RESET + kit.getName());
@@ -111,7 +108,6 @@ public class KitManager implements Listener {
                     Player clicked = (Player) e.getWhoClicked();
                     if(server.getState() <= GameState.LOBBY_VOTING) {
                         server.pre_selected_kits.put(clicked, kit);
-                        server.getScoreboard().buildScoreboard();
                     } else {
                         KitManager.equipPlayer(clicked, kit);
                     }

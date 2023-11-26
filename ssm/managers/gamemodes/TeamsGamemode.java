@@ -121,7 +121,6 @@ public class TeamsGamemode extends SmashGamemode {
             team.addPlayer(player);
         }
         preferred_teammate.clear();
-        server.getScoreboard().buildScoreboard();
     }
 
     public List<String> getLivesScoreboard() {

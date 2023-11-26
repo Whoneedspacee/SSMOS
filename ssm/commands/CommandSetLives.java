@@ -42,7 +42,6 @@ public class CommandSetLives implements TabExecutor {
                     Utils.sendServerMessageToPlayer(ChatColor.YELLOW + set.getName() + ChatColor.GRAY +
                             " had their lives set to " + ChatColor.GREEN + number + ChatColor.GRAY + ".", to_message, ServerMessageType.GAME);
                 }
-                server.getScoreboard().buildScoreboard();
                 return true;
             } catch (NumberFormatException e) {
                 player.sendMessage("You need to input a number!");

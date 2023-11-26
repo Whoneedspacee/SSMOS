@@ -28,6 +28,9 @@ public abstract class SmashMap implements Listener {
     public SmashMap(File original_directory) {
         Bukkit.getServer().getPluginManager().registerEvents(this, Main.getInstance());
         File copy_directory = new File("maps/_Copies/" + UUID.randomUUID());
+        if(copy_directory.exists()) {
+            throw new RuntimeException("UUID Collision for Mapfile");
+        }
         if (!copy_directory.exists()) {
             try {
                 FileUtils.copyDirectory(original_directory, copy_directory);

@@ -30,6 +30,11 @@ public class DamageUtil {
         if(last_damage_event != null && last_damage_event.getDamager() instanceof Player) {
             last_damager = (Player) DamageManager.getLastDamageEvent(player).getDamager();
         }
+        SmashServer server = GameManager.getPlayerServer(player);
+        double pre_lives = 0;
+        if(server != null) {
+            pre_lives = server.getLives(player);
+        }
         SmashDamageEvent smashDamageEvent = new SmashDamageEvent(player, last_damager, 1000);
         smashDamageEvent.multiplyKnockback(0);
         smashDamageEvent.setIgnoreArmor(true);
@@ -38,6 +43,12 @@ public class DamageUtil {
         smashDamageEvent.setDamagerName("Void");
         smashDamageEvent.setReason("World Border");
         smashDamageEvent.callEvent();
+        // Only teleport if we died from the damage event
+        if(pre_lives > 0) {
+            if(pre_lives == server.getLives(player)) {
+                return;
+            }
+        }
         player.teleport(player.getWorld().getSpawnLocation());
     }
 

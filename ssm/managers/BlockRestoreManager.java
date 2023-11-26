@@ -1,6 +1,5 @@
 package ssm.managers;
 
-import ssm.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -8,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,9 +15,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
+import ssm.Main;
+import ssm.utilities.VelocityUtil;
 
 import java.util.*;
 
@@ -35,14 +39,11 @@ public class BlockRestoreManager implements Listener, Runnable {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 0L);
     }
 
-    @EventHandler(priority= EventPriority.LOW)
-    public void blockBreak(BlockBreakEvent event)
-    {
-        if (contains(event.getBlock()))
-        {
+    @EventHandler(priority = EventPriority.LOW)
+    public void blockBreak(BlockBreakEvent event) {
+        if (contains(event.getBlock())) {
             BlockRestoreData data = blocks.get(event.getBlock());
-            if (data != null && data.isRestoreOnBreak())
-            {
+            if (data != null && data.isRestoreOnBreak()) {
                 blocks.remove(event.getBlock());
                 data.restore();
             }
@@ -51,29 +52,25 @@ public class BlockRestoreManager implements Listener, Runnable {
         }
     }
 
-    @EventHandler(priority=EventPriority.LOW)
-    public void blockPlace(BlockPlaceEvent event)
-    {
+    @EventHandler(priority = EventPriority.LOW)
+    public void blockPlace(BlockPlaceEvent event) {
         if (contains(event.getBlockPlaced()))
             event.setCancelled(true);
     }
 
-    @EventHandler(priority=EventPriority.LOW)
-    public void piston(BlockPistonExtendEvent event)
-    {
+    @EventHandler(priority = EventPriority.LOW)
+    public void piston(BlockPistonExtendEvent event) {
         if (event.isCancelled())
             return;
 
         Block push = event.getBlock();
-        for (int i=0 ; i<13 ; i++)
-        {
+        for (int i = 0; i < 13; i++) {
             push = push.getRelative(event.getDirection());
 
             if (push.getType() == Material.AIR)
                 return;
 
-            if (contains(push))
-            {
+            if (contains(push)) {
                 push.getWorld().playEffect(push.getLocation(), Effect.STEP_SOUND, push.getTypeId());
                 event.setCancelled(true);
                 return;
@@ -81,8 +78,7 @@ public class BlockRestoreManager implements Listener, Runnable {
         }
     }
 
-    public void run()
-    {
+    public void run() {
         ArrayList<Block> toRemove = new ArrayList<Block>();
 
         for (BlockRestoreData cur : blocks.values())
@@ -95,22 +91,18 @@ public class BlockRestoreManager implements Listener, Runnable {
     }
 
     @EventHandler
-    public void expireUnload(ChunkUnloadEvent event)
-    {
+    public void expireUnload(ChunkUnloadEvent event) {
         Iterator<Map.Entry<Block, BlockRestoreData>> iterator = blocks.entrySet().iterator();
-        while (iterator.hasNext())
-        {
+        while (iterator.hasNext()) {
             Map.Entry<Block, BlockRestoreData> entry = iterator.next();
-            if (entry.getKey().getChunk().equals(event.getChunk()))
-            {
+            if (entry.getKey().getChunk().equals(event.getChunk())) {
                 entry.getValue().restore();
                 iterator.remove();
             }
         }
     }
 
-    public boolean restore(Block block)
-    {
+    public boolean restore(Block block) {
         if (!contains(block))
             return false;
 
@@ -118,22 +110,19 @@ public class BlockRestoreManager implements Listener, Runnable {
         return true;
     }
 
-    public void restoreAll()
-    {
+    public void restoreAll() {
         for (BlockRestoreData data : blocks.values())
             data.restore();
 
         blocks.clear();
     }
 
-    public HashSet<Location> restoreBlockAround(Material type, Location location, int radius)
-    {
+    public HashSet<Location> restoreBlockAround(Material type, Location location, int radius) {
         HashSet<Location> restored = new HashSet<Location>();
 
         Iterator<Block> blockIterator = blocks.keySet().iterator();
 
-        while (blockIterator.hasNext())
-        {
+        while (blockIterator.hasNext()) {
             Block block = blockIterator.next();
 
             if (block.getType() != type)
@@ -152,43 +141,38 @@ public class BlockRestoreManager implements Listener, Runnable {
         return restored;
     }
 
-    public void add(Block block, int toID, byte toData, long expireTime)
-    {
+    public void add(Block block, int toID, byte toData, long expireTime) {
         add(block, toID, toData, expireTime, false);
     }
 
-    public void add(Block block, int toID, byte toData, long expireTime, boolean restoreOnBreak)
-    {
+    public void add(Block block, int toID, byte toData, long expireTime, boolean restoreOnBreak) {
         add(block, toID, toData, block.getTypeId(), block.getData(), expireTime, restoreOnBreak);
     }
 
-    public void add(Block block, int toID, byte toData, int fromID, byte fromData, long expireTime)
-    {
+    public void add(Block block, int toID, byte toData, int fromID, byte fromData, long expireTime) {
         add(block, toID, toData, fromID, fromData, expireTime, false);
     }
 
-    public void add(Block block, int toID, byte toData, int fromID, byte fromData, long expireTime, boolean restoreOnBreak)
-    {
-        if (!contains(block))		getBlocks().put(block, new BlockRestoreData(block, toID, toData, fromID, fromData, expireTime, 0, restoreOnBreak));
-        else
-        {
-            if (getData(block) != null)
-            {
+    public void add(Block block, int toID, byte toData, int fromID, byte fromData, long expireTime, boolean restoreOnBreak) {
+        if (!contains(block))
+            getBlocks().put(block, new BlockRestoreData(block, toID, toData, fromID, fromData, expireTime, 0, restoreOnBreak));
+        else {
+            if (getData(block) != null) {
                 getData(block).update(toID, toData, expireTime);
             }
         }
     }
 
-    public void snow(Block block, byte heightAdd, byte heightMax, long expireTime, long meltDelay, int heightJumps)
-    {
+    public void snow(Block block, byte heightAdd, byte heightMax, long expireTime, long meltDelay, int heightJumps) {
         //Fill Above
-        if (((block.getTypeId() == 78 && block.getData() >= (byte)7) || block.getTypeId() == 80) && getData(block) != null)
-        {
+        if (((block.getTypeId() == 78 && block.getData() >= (byte) 7) || block.getTypeId() == 80) && getData(block) != null) {
             if (getData(block) != null)
                 getData(block).update(78, heightAdd, expireTime, meltDelay);
 
-            if (heightJumps > 0)	snow(block.getRelative(BlockFace.UP), heightAdd, heightMax, expireTime, meltDelay, heightJumps - 1);
-            if (heightJumps == -1)	snow(block.getRelative(BlockFace.UP), heightAdd, heightMax, expireTime, meltDelay, -1);
+            if (heightJumps > 0)
+                snow(block.getRelative(BlockFace.UP), heightAdd, heightMax, expireTime, meltDelay, heightJumps - 1);
+            if (heightJumps == -1)
+                snow(block.getRelative(BlockFace.UP), heightAdd, heightMax, expireTime, meltDelay, -1);
 
             return;
         }
@@ -198,7 +182,7 @@ public class BlockRestoreManager implements Listener, Runnable {
             return;
 
         //Not on Solid Snow
-        if (block.getRelative(BlockFace.DOWN).getTypeId() == 78 && block.getRelative(BlockFace.DOWN).getData() < (byte)7)
+        if (block.getRelative(BlockFace.DOWN).getTypeId() == 78 && block.getRelative(BlockFace.DOWN).getData() < (byte) 7)
             return;
 
         //No Snow on Ice
@@ -224,26 +208,23 @@ public class BlockRestoreManager implements Listener, Runnable {
 
         //Limit Build Height
         if (block.getTypeId() == 78)
-            if (block.getData() >= (byte)(heightMax-1))
+            if (block.getData() >= (byte) (heightMax - 1))
                 heightAdd = 0;
 
         //Snow
         if (!contains(block))
             getBlocks().put(block, new BlockRestoreData(block, 78, (byte) Math.max(0, heightAdd - 1), block.getTypeId(), block.getData(), expireTime, meltDelay, false));
-        else
-        {
+        else {
             if (getData(block) != null)
                 getData(block).update(78, heightAdd, expireTime, meltDelay);
         }
     }
 
-    public boolean contains(Block block)
-    {
+    public boolean contains(Block block) {
         if (getBlocks().containsKey(block))
             return true;
 
-        for (BlockRestoreMap restoreMap : restoreMaps)
-        {
+        for (BlockRestoreMap restoreMap : restoreMaps) {
             if (restoreMap.contains(block))
                 return true;
         }
@@ -251,44 +232,36 @@ public class BlockRestoreManager implements Listener, Runnable {
         return false;
     }
 
-    public BlockRestoreData getData(Block block)
-    {
+    public BlockRestoreData getData(Block block) {
         if (blocks.containsKey(block))
             return blocks.get(block);
         return null;
     }
 
-    public Map<Block, BlockRestoreData> getBlocks()
-    {
+    public Map<Block, BlockRestoreData> getBlocks() {
         return blocks;
     }
 
-    public BlockRestoreMap createMap()
-    {
+    public BlockRestoreMap createMap() {
         BlockRestoreMap map = new BlockRestoreMap(this);
         restoreMaps.add(map);
         return map;
     }
 
-    protected void removeMap(BlockRestoreMap blockRestore)
-    {
+    protected void removeMap(BlockRestoreMap blockRestore) {
         restoreMaps.remove(blockRestore);
     }
 
     @EventHandler
-    public void onBlockPhysics(BlockPhysicsEvent event)
-    {
-        if (blocks.containsKey(event.getBlock()))
-        {
+    public void onBlockPhysics(BlockPhysicsEvent event) {
+        if (blocks.containsKey(event.getBlock())) {
             event.setCancelled(true);
         }
     }
 
-    public void disable()
-    {
+    public void disable() {
         // Clear all restore maps
-        for (BlockRestoreMap restoreMap : restoreMaps)
-        {
+        for (BlockRestoreMap restoreMap : restoreMaps) {
             restoreMap.restoreInstant();
         }
 
@@ -466,6 +439,73 @@ public class BlockRestoreManager implements Listener, Runnable {
             }
         }
 
+    }
+
+    public static void BlockExplosion(Collection<Block> blockSet, Location mid, boolean onlyAbove, boolean removeBlock, long time_restore_ms) {
+        if (blockSet.isEmpty())
+            return;
+
+        int lowestY = Integer.MAX_VALUE;
+
+        for (Block block : blockSet) {
+            int y = block.getLocation().getBlockY();
+
+            if (y < lowestY) {
+                lowestY = y;
+            }
+        }
+
+        //Save
+        final HashMap<Block, Map.Entry<Integer, Byte>> blocks = new HashMap<>();
+
+        for (Block cur : blockSet) {
+            if (cur.getTypeId() == 0 || onlyAbove && cur.getY() < mid.getY())
+                continue;
+
+            blocks.put(cur, new AbstractMap.SimpleEntry<>(cur.getTypeId(), cur.getData()));
+
+            if (removeBlock) {
+                BlockRestoreManager.ourInstance.add(cur, 0, (byte) 0, (long) (time_restore_ms + ((cur.getLocation().getBlockY() - lowestY) * 3000L) + (Math.random() * 1500)));
+            }
+        }
+
+        //DELAY
+        HashSet<FallingBlock> explosionBlocks = new HashSet<FallingBlock>();
+        final Location fLoc = mid;
+        Bukkit.getServer().getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
+            public void run() {
+                //Launch
+                for (Block cur : blocks.keySet()) {
+                    if (blocks.get(cur).getKey() == 98)
+                        if (blocks.get(cur).getValue() == 0 || blocks.get(cur).getValue() == 3)
+                            continue;
+
+                    double chance = 0.2 + (double) explosionBlocks.size() / (double) 80;
+                    if (Math.random() > Math.min(0.98, chance)) {
+                        FallingBlock fall = cur.getWorld().spawnFallingBlock(cur.getLocation().add(0.5, 0.5, 0.5), blocks.get(cur).getKey(), blocks.get(cur).getValue());
+                        fall.setDropItem(false);
+
+                        Vector vec = fall.getLocation().subtract(fLoc).toVector().normalize();
+                        if (vec.getY() < 0) vec.setY(vec.getY() * -1);
+
+                        VelocityUtil.setVelocity(fall, vec, 0.5 + 0.25 * Math.random(), false, 0, 0.4 + 0.20 * Math.random(), 10, false);
+
+                        explosionBlocks.add(fall);
+                    }
+                }
+            }
+        }, 1);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void blockForm(EntityChangeBlockEvent e) {
+        if (!(e.getEntity() instanceof FallingBlock)) {
+            return;
+        }
+        FallingBlock falling = (FallingBlock) e.getEntity();
+        falling.getWorld().playEffect(e.getBlock().getLocation(), Effect.STEP_SOUND, falling.getBlockId());
+        falling.remove();
+        e.setCancelled(true);
     }
 
     public static class BlockRestoreMap {

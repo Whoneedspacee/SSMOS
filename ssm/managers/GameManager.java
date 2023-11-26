@@ -50,6 +50,7 @@ public class GameManager implements Listener {
             server.getLobbyMap().deleteWorld();
         }
         server.getCurrentGamemode().deleteMaps();
+        server.getScoreboard().server = null;
         servers.remove(server);
     }
 
@@ -60,6 +61,11 @@ public class GameManager implements Listener {
             }
         }
         return null;
+    }
+
+    public static boolean isAlive(Player player) {
+        SmashServer server = getPlayerServer(player);
+        return (server != null && server.lives.containsKey(player));
     }
 
     public static void setDefaultKit(Player player, Kit kit) {

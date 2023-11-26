@@ -313,7 +313,7 @@ public class DamageManager implements Listener {
         if (damagee instanceof Player) {
             Player player = (Player) damagee;
             if (KitManager.getPlayerKit((player)) != null) {
-                damageMultiplier = 1 - KitManager.getPlayerKit(player).getArmor() * 0.08f;
+                damageMultiplier = Math.max(0, 1 - KitManager.getPlayerKit(player).getArmor() * 0.08f);
             }
         }
         if (ignoreArmor) {
@@ -373,7 +373,7 @@ public class DamageManager implements Listener {
                 server.death(player);
             }
         }
-        if (damager instanceof Player) {
+        if (damager instanceof Player && cause != DamageCause.VOID) {
             Player player = (Player) damager;
             player.setLevel((int) damage);
         }

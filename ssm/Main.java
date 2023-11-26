@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -51,6 +52,7 @@ public class Main extends JavaPlugin implements Listener {
     public static ItemStack KIT_SELECTOR_ITEM;
     public static ItemStack TELEPORT_HUB_ITEM;
     public static ItemStack VOTING_MENU_ITEM;
+    public static ItemStack SELECT_BOSS_ITEM;
     public static HashMap<Player, DoubleJump> hub_doublejump = new HashMap<Player, DoubleJump>();
     public static HashMap<Player, Long> last_boost_time = new HashMap<Player, Long>();
 
@@ -76,6 +78,10 @@ public class Main extends JavaPlugin implements Listener {
         ItemMeta vote_meta = VOTING_MENU_ITEM.getItemMeta();
         vote_meta.setDisplayName(ChatColor.GREEN + "" + "Vote for the next Map");
         VOTING_MENU_ITEM.setItemMeta(vote_meta);
+        SELECT_BOSS_ITEM = new ItemStack(Material.DRAGON_EGG);
+        ItemMeta boss_meta = SELECT_BOSS_ITEM.getItemMeta();
+        boss_meta.setDisplayName(ChatColor.GREEN + "" + "Choose a Default Boss");
+        SELECT_BOSS_ITEM.setItemMeta(boss_meta);
         new CooldownManager();
         new EventManager();
         new KitManager();
@@ -118,7 +124,7 @@ public class Main extends JavaPlugin implements Listener {
             equipPlayerHub(player);
         }
         if (DEBUG_MODE) {
-            SmashServer server = GameManager.createSmashServer(new BossGamemode());
+            SmashServer server = GameManager.createSmashServer(new TestingGamemode());
             for (Player player : Bukkit.getOnlinePlayers()) {
                 server.teleportToServer(player);
             }
@@ -220,6 +226,13 @@ public class Main extends JavaPlugin implements Listener {
             SmashServer server = GameManager.getPlayerServer(e.getPlayer());
             if (server != null) {
                 server.openVotingMenu(e.getPlayer());
+            }
+        }
+        if (e.getPlayer().getItemInHand().equals(SELECT_BOSS_ITEM)) {
+            SmashServer server = GameManager.getPlayerServer(e.getPlayer());
+            if (server != null && server.getCurrentGamemode() instanceof BossGamemode) {
+                BossGamemode gamemode = (BossGamemode) server.getCurrentGamemode();
+                gamemode.openBossKitMenu(e.getPlayer());
             }
         }
     }

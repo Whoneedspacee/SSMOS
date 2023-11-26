@@ -3,6 +3,12 @@ package ssm.managers.gamemodes;
 import ssm.events.GameStateChangeEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import ssm.kits.Kit;
+import ssm.kits.boss.KitElderGuardian;
+import ssm.kits.boss.KitWitherBoss;
+import ssm.managers.BossBarManager;
+import ssm.managers.KitManager;
+import ssm.managers.gamestate.GameState;
 import ssm.managers.smashserver.SmashServer;
 
 import java.util.HashMap;
@@ -23,12 +29,32 @@ public class TestingGamemode extends SmashGamemode {
     }
 
     @Override
+    public void updateAllowedKits() {
+        super.updateAllowedKits();
+        allowed_kits.add(new KitElderGuardian());
+        allowed_kits.add(new KitWitherBoss());
+    }
+
+    @Override
     public void setPlayerLives(HashMap<Player, Integer> lives) {
         for(Player player : server.players) {
             if (server.isSpectator(player)) {
                 continue;
             }
             lives.put(player, 99);
+        }
+    }
+
+    @Override
+    public void update() {
+        if (server.getState() == GameState.GAME_PLAYING) {
+            for (Player player : server.players) {
+                server.lives.put(player, 99);
+                Kit kit = KitManager.getPlayerKit(player);
+                if(kit == null) {
+                    KitManager.equipPlayer(player, allowed_kits.get(0));
+                }
+            }
         }
     }
 
