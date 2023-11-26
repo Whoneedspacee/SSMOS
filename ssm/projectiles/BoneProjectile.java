@@ -43,9 +43,6 @@ public class BoneProjectile extends SmashProjectile {
 
     @Override
     protected boolean onHitLivingEntity(LivingEntity hit) {
-        if(!(hit instanceof Player)) {
-            return true;
-        }
         SmashDamageEvent smashDamageEvent = new SmashDamageEvent(hit, firer, damage);
         smashDamageEvent.multiplyKnockback(knockback_mult);
         smashDamageEvent.setIgnoreDamageDelay(true);
