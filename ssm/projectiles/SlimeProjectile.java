@@ -1,5 +1,9 @@
 package ssm.projectiles;
 
+import net.minecraft.server.v1_8_R3.EntitySlime;
+import net.minecraft.server.v1_8_R3.PathfinderGoal;
+import net.minecraft.server.v1_8_R3.PathfinderGoalAvoidTarget;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftSlime;
 import ssm.events.SmashDamageEvent;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.Utils;
@@ -114,6 +118,9 @@ public class SlimeProjectile extends SmashProjectile {
     @EventHandler
     public void onSlimeTarget(EntityTargetEvent e) {
         if(firer == null || projectile == null) {
+            return;
+        }
+        if(!projectile.equals(e.getEntity())) {
             return;
         }
         if(e.getTarget() == null) {
