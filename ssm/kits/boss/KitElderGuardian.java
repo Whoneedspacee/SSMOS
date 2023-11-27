@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
-import ssm.Main;
 import ssm.abilities.boss.SuperWaterSplash;
 import ssm.abilities.boss.TargetTractorBeam;
 import ssm.abilities.boss.WhirlpoolShotgun;
@@ -42,7 +41,7 @@ public class KitElderGuardian extends Kit implements BossKitData {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, Sound.GHAST_FIREBALL));
         addAttribute(new NoVoidDeath(2.0, true));
         addAttribute(new NoTrueDamage(3.0));
 

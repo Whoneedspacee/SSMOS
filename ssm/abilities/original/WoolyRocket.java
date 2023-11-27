@@ -55,7 +55,7 @@ public class WoolyRocket extends Ability implements OwnerRightClickEvent {
         if(kit != null) {
             DoubleJump doubleJump = kit.getAttributeByClass(DoubleJump.class);
             if(doubleJump != null) {
-                doubleJump.resetDoubleJumps();
+                owner.setAllowFlight(true);
             }
         }
         setWoolColor(DyeColor.RED);

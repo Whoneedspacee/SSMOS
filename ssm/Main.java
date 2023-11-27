@@ -9,7 +9,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -168,14 +167,14 @@ public class Main extends JavaPlugin implements Listener {
         player.getInventory().setArmorContents(null);
         player.getInventory().setItem(0, SERVER_BROWSER_ITEM);
         Utils.fullHeal(player);
-        DoubleJump double_jump = new DoubleJump(1, 1, 1, Sound.GHAST_FIREBALL) {
+        DoubleJump double_jump = new DoubleJump(1, 1, Sound.GHAST_FIREBALL) {
             @Override
             public boolean groundCheck() {
                 return Utils.entityIsDirectlyOnGround(owner);
             }
 
             @Override
-            protected void jump() {
+            public void activate() {
                 Vector vector = owner.getLocation().getDirection();
                 vector.setY(Math.abs(vector.getY()));
                 VelocityUtil.setVelocity(owner, vector, 1.4, false, 0, 0.2, 1, true);

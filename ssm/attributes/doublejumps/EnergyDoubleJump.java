@@ -1,28 +1,39 @@
 package ssm.attributes.doublejumps;
 
-import ssm.utilities.VelocityUtil;
+import org.bukkit.GameMode;
+import ssm.kits.Kit;
+import ssm.managers.KitManager;
 import org.bukkit.Sound;
 
-public class EnergyDoubleJump extends DoubleJump {
+public abstract class EnergyDoubleJump extends DoubleJump {
 
-    // We need to use a custom exp usage variable here because we subtract after usage
-    protected float expUsed;
-
-    public EnergyDoubleJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound, float expUsed) {
-        super(power, height, maxDoubleJumps, doubleJumpSound);
+    public EnergyDoubleJump(double power, double height, Sound double_jump_sound, float expUsed) {
+        super(power, height, double_jump_sound);
         this.name = "Energy Double Jump";
-        this.recharge_air_ticks = 2;
+        this.recharge_delay_ms = 100;
         this.expUsed = expUsed;
-        this.needs_xp = true;
+        this.needsExactXP = false;
     }
 
     @Override
-    protected void jump() {
-        // For some reason player setVelocity results in the sent packet being reduced
-        // For no real consistent reason due to serverside predictions more than likely
-        // Rather than delve into that, it was far easier to just send the values
-        VelocityUtil.setVelocity(owner, owner.getLocation().getDirection(), power, true, power, 0.15, height, true);
-        owner.setExp(Math.max(0f, owner.getExp() - expUsed));
+    public void run() {
+        if(owner == null) {
+            return;
+        }
+        if(owner.getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
+        Kit kit = KitManager.getPlayerKit(owner);
+        if(kit != null && !kit.isActive()) {
+            owner.setAllowFlight(false);
+            return;
+        }
+        if(groundCheck()) {
+            owner.setAllowFlight(true);
+        }
+        else if(System.currentTimeMillis() - last_jump_time_ms >= recharge_delay_ms && owner.getExp() > 0) {
+            owner.setAllowFlight(true);
+        }
     }
 
 }

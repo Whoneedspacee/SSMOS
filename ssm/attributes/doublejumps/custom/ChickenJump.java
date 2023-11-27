@@ -3,11 +3,12 @@ package ssm.attributes.doublejumps.custom;
 import ssm.attributes.doublejumps.EnergyDoubleJump;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import ssm.utilities.VelocityUtil;
 
 public class ChickenJump extends EnergyDoubleJump {
 
-    public ChickenJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound, float expUsed) {
-        super(power, height, maxDoubleJumps, doubleJumpSound, expUsed);
+    public ChickenJump(double power, double height, Sound double_jump_sound, float expUsed) {
+        super(power, height, double_jump_sound, expUsed);
         this.name = "Flap";
         this.usage = AbilityUsage.PASSIVE;
         this.description = new String[] {
@@ -19,8 +20,13 @@ public class ChickenJump extends EnergyDoubleJump {
     }
 
     @Override
+    public void activate() {
+        VelocityUtil.setVelocity(owner, owner.getLocation().getDirection(), power, true, power, 0.15, height, true);
+    }
+
+    @Override
     public void playDoubleJumpSound() {
-        owner.getWorld().playSound(owner.getLocation(), doubleJumpSound, (float) (0.3 + owner.getExp()), (float) (Math.random() / 2 + 1));
+        owner.getWorld().playSound(owner.getLocation(), double_jump_sound, (float) (0.3 + owner.getExp()), (float) (Math.random() / 2 + 1));
     }
 
 }

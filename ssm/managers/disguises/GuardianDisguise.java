@@ -1,5 +1,6 @@
 package ssm.managers.disguises;
 
+import org.bukkit.Sound;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
@@ -29,6 +30,13 @@ public class GuardianDisguise extends Disguise {
         dw.watch(17, id);
         PacketPlayOutEntityMetadata target_packet = new PacketPlayOutEntityMetadata(living.getId(), dw, true);
         Utils.sendPacketToAll(target_packet);
+    }
+
+    @Override
+    public void playDamageSound() {
+        for(Player player : owner.getWorld().getPlayers()) {
+            player.playSound(owner.getLocation(), "mob.guardian.hit", getVolume(), getPitch());
+        }
     }
 
 }

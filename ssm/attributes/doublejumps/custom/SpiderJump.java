@@ -9,10 +9,10 @@ import org.bukkit.Sound;
 
 public class SpiderJump extends DirectDoubleJump {
 
-    private double energy_per_jump = 0.17;
+    protected double energy_to_jump = 0.17;
 
-    public SpiderJump(double power, double height, int maxDoubleJumps, Sound doubleJumpSound) {
-        super(power, height, maxDoubleJumps, doubleJumpSound);
+    public SpiderJump(double power, double height, Sound double_jump_sound) {
+        super(power, height, double_jump_sound);
         this.name = "Spider Leap";
         this.usage = AbilityUsage.DOUBLE_JUMP;
         this.description = new String[] {
@@ -24,12 +24,16 @@ public class SpiderJump extends DirectDoubleJump {
     }
 
     @Override
-    protected void jump() {
-        if(owner.getExp() < energy_per_jump) {
-            return;
+    public boolean check() {
+        if(owner.getExp() < energy_to_jump) {
+            return false;
         }
-        super.jump();
-        owner.getWorld().playSound(owner.getLocation(), doubleJumpSound, 1f, 1.5f);
+        return super.check();
+    }
+
+    @Override
+    public void activate() {
+        super.activate();
         Kit kit = KitManager.getPlayerKit(owner);
         if(kit == null) {
             return;
@@ -43,7 +47,7 @@ public class SpiderJump extends DirectDoubleJump {
 
     @Override
     public void playDoubleJumpSound() {
-        return;
+        owner.getWorld().playSound(owner.getLocation(), double_jump_sound, 1f, 1.5f);
     }
 
 }

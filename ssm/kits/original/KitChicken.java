@@ -35,7 +35,7 @@ public class KitChicken extends Kit {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new ChickenJump(0.725, 10, Integer.MAX_VALUE, Sound.BAT_TAKEOFF, 0.167f));
+        addAttribute(new ChickenJump(0.725, 10, Sound.BAT_TAKEOFF, 0.167f));
         addAttribute(new ExpCharge(0.03F, 1, false, true, true));
 
         DisguiseManager.addDisguise(owner, new ChickenDisguise(owner));

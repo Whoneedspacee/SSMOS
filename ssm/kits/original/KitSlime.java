@@ -40,7 +40,7 @@ public class KitSlime extends Kit {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(1.2, 1.0, Sound.GHAST_FIREBALL));
         addAttribute(new ExpCharge(0.00321f, 1, true, true, false));
 
         DisguiseManager.addDisguise(owner, new SlimeDisguise(owner));

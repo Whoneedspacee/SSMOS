@@ -194,10 +194,10 @@ public class CycleArts extends Ability implements OwnerRightClickEvent, OwnerDro
             owner.getInventory().setHelmet(null);
             kit.setKnockback(1.45);
             DoubleJump current = kit.getAttributeByClass(DoubleJump.class);
-            int old_jumps = current.getRemainingDoubleJumps();
+            boolean last_flight_state = owner.getAllowFlight();
             kit.removeAttribute(current);
-            DoubleJump doubleJump = new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL);
-            doubleJump.setRemainingDoubleJumps(old_jumps);
+            DoubleJump doubleJump = new GenericDoubleJump(0.9, 0.9, Sound.GHAST_FIREBALL);
+            owner.setAllowFlight(last_flight_state);
             kit.addAttribute(doubleJump);
             Disguise disguise = DisguiseManager.disguises.get(owner);
             if (!(disguise instanceof VillagerDisguise)) {
@@ -234,10 +234,10 @@ public class CycleArts extends Ability implements OwnerRightClickEvent, OwnerDro
             owner.getInventory().setHelmet(null);
             kit.setKnockback(1.45);
             DoubleJump current = kit.getAttributeByClass(DoubleJump.class);
-            int old_jumps = current.getRemainingDoubleJumps();
+            boolean last_flight_state = owner.getAllowFlight();
             kit.removeAttribute(current);
-            DoubleJump doubleJump = new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL);
-            doubleJump.setRemainingDoubleJumps(old_jumps);
+            DoubleJump doubleJump = new GenericDoubleJump(0.9, 0.9, Sound.GHAST_FIREBALL);
+            owner.setAllowFlight(last_flight_state);
             kit.addAttribute(doubleJump);
             Disguise disguise = DisguiseManager.disguises.get(owner);
             if (!(disguise instanceof VillagerDisguise)) {
@@ -286,10 +286,10 @@ public class CycleArts extends Ability implements OwnerRightClickEvent, OwnerDro
             owner.getInventory().setHelmet(null);
             kit.setKnockback(0.9);
             DoubleJump current = kit.getAttributeByClass(DoubleJump.class);
-            int old_jumps = current.getRemainingDoubleJumps();
+            boolean last_flight_state = owner.getAllowFlight();
             kit.removeAttribute(current);
-            DoubleJump doubleJump = new GenericDoubleJump(0.7, 0.7, 1, Sound.GHAST_FIREBALL);
-            doubleJump.setRemainingDoubleJumps(old_jumps);
+            DoubleJump doubleJump = new GenericDoubleJump(0.7, 0.7, Sound.GHAST_FIREBALL);
+            owner.setAllowFlight(last_flight_state);
             kit.addAttribute(doubleJump);
             Disguise disguise = DisguiseManager.disguises.get(owner);
             if (!(disguise instanceof VillagerDisguise)) {
@@ -338,10 +338,10 @@ public class CycleArts extends Ability implements OwnerRightClickEvent, OwnerDro
             owner.getInventory().setHelmet(null);
             kit.setKnockback(1.45);
             DoubleJump current = kit.getAttributeByClass(DoubleJump.class);
-            int old_jumps = current.getRemainingDoubleJumps();
+            boolean last_flight_state = owner.getAllowFlight();
             kit.removeAttribute(current);
-            DoubleJump doubleJump = new DirectDoubleJump(1.1, 1.1, 1, Sound.GHAST_FIREBALL);
-            doubleJump.setRemainingDoubleJumps(old_jumps);
+            DoubleJump doubleJump = new DirectDoubleJump(1.1, 1.1, Sound.GHAST_FIREBALL);
+            owner.setAllowFlight(last_flight_state);
             kit.addAttribute(doubleJump);
             Disguise disguise = DisguiseManager.disguises.get(owner);
             if (!(disguise instanceof VillagerDisguise)) {

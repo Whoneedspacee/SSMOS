@@ -43,7 +43,7 @@ public class KitWitherSkeleton extends Kit {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new WitherSkeletonDisguise(owner));
     }

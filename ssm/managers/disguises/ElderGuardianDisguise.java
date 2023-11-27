@@ -24,4 +24,11 @@ public class ElderGuardianDisguise extends GuardianDisguise {
         return guardian;
     }
 
+    @Override
+    public void playDamageSound() {
+        for(Player player : owner.getWorld().getPlayers()) {
+            player.playSound(owner.getLocation(), "mob.guardian.elder.hit", getVolume(), getPitch());
+        }
+    }
+
 }

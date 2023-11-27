@@ -45,7 +45,7 @@ public class KitSheep extends Kit {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new GenericDoubleJump(1, 1, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(1, 1, Sound.GHAST_FIREBALL));
 
         DisguiseManager.addDisguise(owner, new SheepDisguise(owner));
     }

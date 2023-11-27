@@ -41,7 +41,7 @@ public class KitGuardian extends Kit {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, Sound.GHAST_FIREBALL));
         addAttribute(new Thorns(10, 0.66, 0.66));
 
         DisguiseManager.addDisguise(owner, new GuardianDisguise(owner));

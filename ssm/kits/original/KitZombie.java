@@ -39,7 +39,7 @@ public class KitZombie extends Kit {
         addAttribute(new Hunger());
         addAttribute(new Compass());
         addAttribute(new ItemGenerator(Material.ARROW, 1, 2, 2));
-        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, Sound.GHAST_FIREBALL));
         addAttribute(new DamageBoost(1, 0.25, 6));
         addAttribute(new ArrowDamageModifier(-1));
         addAttribute(new MultiplyArrowKnockback(1.5));

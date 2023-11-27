@@ -62,7 +62,7 @@ public class Climb extends Attribute {
                     KitManager.getPlayerKit(owner).getAttributes().forEach(attribute -> {
                         if (attribute instanceof DoubleJump) {
                             DoubleJump dj = (DoubleJump) attribute;
-                            dj.resetDoubleJumps();
+                            owner.setAllowFlight(true);
                             chargedDoubleJump = true;
                         }
                     });

@@ -37,7 +37,7 @@ public class KitMagmaCube extends Kit {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new GenericDoubleJump(1.2, 1.0, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(1.2, 1.0, Sound.GHAST_FIREBALL));
         addAttribute(new FireImmunity());
         addAttribute(new FuelTheFire());
 

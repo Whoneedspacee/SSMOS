@@ -41,7 +41,7 @@ public class KitCreeper extends Kit {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, Sound.GHAST_FIREBALL));
         addAttribute(new LightningShield());
 
         DisguiseManager.addDisguise(owner, new CreeperDisguise(owner));

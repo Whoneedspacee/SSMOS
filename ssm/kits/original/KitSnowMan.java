@@ -38,7 +38,7 @@ public class KitSnowMan extends Kit {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new GenericDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(0.9, 0.9, Sound.GHAST_FIREBALL));
         addAttribute(new ExpCharge(0.01666666667F, 1, true, true, false));
         addAttribute(new ArcticAura());
         addAttribute(new SnowDamage());

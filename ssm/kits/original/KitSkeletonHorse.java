@@ -41,7 +41,7 @@ public class KitSkeletonHorse extends Kit {
         addAttribute(new Regeneration(regeneration));
         addAttribute(new Hunger());
         addAttribute(new Compass());
-        addAttribute(new GenericDoubleJump(1.0, 1.0, 1, Sound.GHAST_FIREBALL));
+        addAttribute(new GenericDoubleJump(1.0, 1.0, Sound.GHAST_FIREBALL));
         addAttribute(new DeadlyBones());
 
         DisguiseManager.addDisguise(owner, new SkeletonHorseDisguise(owner));
