@@ -3,6 +3,7 @@ package ssm.managers.gamemodes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -294,7 +295,11 @@ public class BossGamemode extends SmashGamemode {
         if (selected_boss == null || !selected_boss.equals(e.getDamagee())) {
             return;
         }
-        if (!(e.getDamager() instanceof Player)) {
+        LivingEntity damager = e.getDamager();
+        if(damager == null) {
+            damager = DamageManager.getLastDamageEvent(selected_boss).getDamager();
+        }
+        if (!(damager instanceof Player)) {
             return;
         }
         double real_damage = e.getDamage();
@@ -306,7 +311,7 @@ public class BossGamemode extends SmashGamemode {
             }
             real_damage = e.getDamage() / damage_multplier;
         }
-        Player player = (Player) e.getDamager();
+        Player player = (Player) damager;
         boss_damage.putIfAbsent(player, 0.0);
         boss_damage.put(player, boss_damage.get(player) + real_damage);
     }
