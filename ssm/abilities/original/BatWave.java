@@ -83,8 +83,9 @@ public class BatWave extends Ability implements OwnerRightClickEvent, OwnerDeath
         bat_task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if(System.currentTimeMillis() - start_time >= 2500) {
+                if(owner == null || System.currentTimeMillis() - start_time >= 2500) {
                     clearBats();
+                    Bukkit.getScheduler().cancelTask(bat_task);
                     return;
                 }
                 Vector bat_vector = new Vector(0, 0, 0);

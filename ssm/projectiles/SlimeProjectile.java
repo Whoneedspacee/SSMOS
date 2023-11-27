@@ -113,23 +113,15 @@ public class SlimeProjectile extends SmashProjectile {
 
     @EventHandler
     public void onSlimeTarget(EntityTargetEvent e) {
-        if(e.getEntity() == null || e.getTarget() == null) {
+        if(firer == null || projectile == null) {
             return;
         }
-        if(!e.getEntity().equals(projectile)) {
+        if(e.getTarget() == null) {
             return;
         }
-        if(e.getTarget().equals(firer)) {
+        if(e.getTarget() instanceof Player && !DamageUtil.canDamage((Player) e.getTarget(), firer) || e.getTarget().equals(firer)) {
             e.setCancelled(true);
-            return;
         }
-        if(!(e.getTarget() instanceof LivingEntity)) {
-            return;
-        }
-        if(DamageUtil.canDamage((LivingEntity) e.getTarget(), firer)) {
-            return;
-        }
-        e.setCancelled(true);
     }
 
     @EventHandler

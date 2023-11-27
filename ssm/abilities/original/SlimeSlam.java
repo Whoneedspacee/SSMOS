@@ -51,7 +51,7 @@ public class SlimeSlam extends Ability implements OwnerRightClickEvent {
                     Bukkit.getScheduler().cancelTask(task);
                     return;
                 }
-                for (Player player : Bukkit.getOnlinePlayers()) {
+                for (Player player : owner.getWorld().getPlayers()) {
                     if (player.equals(owner)) {
                         continue;
                     }

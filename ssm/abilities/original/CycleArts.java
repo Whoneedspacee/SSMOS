@@ -329,7 +329,7 @@ public class CycleArts extends Ability implements OwnerRightClickEvent, OwnerDro
                 return;
             }
             Utils.playFirework(owner.getLocation().add(0., 1, 0), FireworkEffect.Type.BALL, Color.LIME, true, true);
-            owner.setWalkSpeed(0.3f);
+            owner.setWalkSpeed(0.35f);
             kit.setMelee(4.5);
             kit.setArmor(4);
             owner.getInventory().setBoots(null);
@@ -340,7 +340,7 @@ public class CycleArts extends Ability implements OwnerRightClickEvent, OwnerDro
             DoubleJump current = kit.getAttributeByClass(DoubleJump.class);
             int old_jumps = current.getRemainingDoubleJumps();
             kit.removeAttribute(current);
-            DoubleJump doubleJump = new DirectDoubleJump(0.9, 0.9, 1, Sound.GHAST_FIREBALL);
+            DoubleJump doubleJump = new DirectDoubleJump(1.1, 1.1, 1, Sound.GHAST_FIREBALL);
             doubleJump.setRemainingDoubleJumps(old_jumps);
             kit.addAttribute(doubleJump);
             Disguise disguise = DisguiseManager.disguises.get(owner);
