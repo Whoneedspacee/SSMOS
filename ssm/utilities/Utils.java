@@ -130,6 +130,40 @@ public class Utils {
         return false;
     }
 
+    public static boolean entityIsOnBlock(Entity entity) {
+        double xMod = entity.getLocation().getX() % 1;
+        if (entity.getLocation().getX() < 0) {
+            xMod += 1;
+        }
+        double zMod = entity.getLocation().getZ() % 1;
+        if (entity.getLocation().getZ() < 0) {
+            zMod += 1;
+        }
+        int xMin = 0;
+        int xMax = 0;
+        int zMin = 0;
+        int zMax = 0;
+
+        if (xMod < 0.3) xMin = -1;
+        if (xMod > 0.7) xMax = 1;
+        if (zMod < 0.3) zMin = -1;
+        if (zMod > 0.7) zMax = 1;
+
+        for (int x = xMin; x <= xMax; x++) {
+            for (int z = zMin; z <= zMax; z++) {
+                if (entity.getLocation().add(x, -0.5, z).getBlock().getType() != Material.AIR && !entity.getLocation().add(x, -0.5, z).getBlock().isLiquid())
+                    return true;
+                if (entity.getLocation().add(x, 0, z).getBlock().getType() == Material.WATER_LILY)
+                    return true;
+                Material beneath = entity.getLocation().add(x, -1.5, z).getBlock().getType();
+                if (entity.getLocation().getY() % 0.5 == 0 &&
+                        (beneath.toString().contains("FENCE") || beneath == Material.COBBLE_WALL))
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean entityIsDirectlyOnGround(Entity ent) {
         return entityIsOnGround(ent, 0.01);
     }
@@ -385,7 +419,7 @@ public class Utils {
         // Invincibility
         DamageManager.invincible_mobs.put(squid, 1);
         // Apply melees from squid to entity
-        if(entity instanceof LivingEntity) {
+        if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
             livingEntity.setRemoveWhenFarAway(false);
             DisguiseManager.redirect_damage.put(squid, livingEntity);

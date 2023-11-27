@@ -78,7 +78,7 @@ public abstract class DoubleJump extends Attribute {
     }
 
     public boolean groundCheck() {
-        return Utils.entityIsOnGround(owner);
+        return Utils.entityIsOnBlock(owner);
     }
 
     public void playDoubleJumpSound() {
