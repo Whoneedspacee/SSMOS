@@ -153,7 +153,7 @@ public class SmashScoreboard implements Listener {
                 }
                 setScore(scoreboard, "", score++);
                 setScore(scoreboard, ChatColor.YELLOW + "" + ChatColor.BOLD + "Players", score++);
-                setScore(scoreboard, "", score++);
+                setScore(scoreboard, "", score);
                 clearScoresAbove(scoreboard, score);
             }
             if (server.getState() == GameState.GAME_ENDING) {

@@ -12,6 +12,7 @@ import ssm.kits.original.*;
 import ssm.managers.KitManager;
 import ssm.managers.TeamManager;
 import ssm.managers.maps.GameMap;
+import ssm.managers.smashscoreboard.SmashScoreboard;
 import ssm.managers.smashserver.SmashServer;
 import ssm.managers.smashteam.SmashTeam;
 
@@ -206,7 +207,7 @@ public abstract class SmashGamemode implements Listener {
         }
         List<String> scoreboard_string = new ArrayList<String>();
         for (Player add : least_to_greatest) {
-            scoreboard_string.add(server.getLives(add) + " " + server.getScoreboard().getPlayerColor(add, true) + add.getName());
+            scoreboard_string.add(server.getLives(add) + " " + SmashScoreboard.getPlayerColor(add, true) + add.getName());
         }
         return scoreboard_string;
     }
