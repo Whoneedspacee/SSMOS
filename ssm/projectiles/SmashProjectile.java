@@ -54,7 +54,7 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     @Override
     public void run() {
         running = true;
-        if (projectile == null || !projectile.isValid()) {
+        if (projectile == null || !projectile.isValid() || !projectile.getWorld().equals(firer.getWorld())) {
             destroy();
             return;
         }
