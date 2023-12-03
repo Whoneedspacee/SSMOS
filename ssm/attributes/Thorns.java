@@ -32,7 +32,7 @@ public class Thorns extends Attribute {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void checkOwnerDamage(SmashDamageEvent e) {
-        if(e.getDamageCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+        if(e.getDamageCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             return;
         }
         if(!(e.getDamager() instanceof Player)) {
