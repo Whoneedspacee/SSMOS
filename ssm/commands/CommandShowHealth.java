@@ -21,12 +21,12 @@ public class CommandShowHealth implements CommandExecutor {
         }
         Player player = (Player) commandSender;
         if(show_health) {
-            Utils.sendServerMessageToPlayer("Players can now see health.",
+            Utils.sendServerMessageToPlayer("Players can no longer see health.",
                     player, ServerMessageType.ADMIN);
             show_health = false;
             return true;
         }
-        Utils.sendServerMessageToPlayer("Players can no longer see health.",
+        Utils.sendServerMessageToPlayer("Players can now see health.",
                 player, ServerMessageType.ADMIN);
         show_health = true;
         return true;

@@ -164,7 +164,7 @@ public abstract class Disguise {
             String custom_name = "";
             SmashServer server = GameManager.getPlayerServer(viewer);
             if(CommandShowHealth.show_health || (server != null && server.getLives(viewer) <= 0)) {
-                custom_name += ChatColor.RED + "❤ " + String.format("%.2f", owner.getHealth()) + " ";
+                custom_name += ChatColor.RED + "❤ " + ChatColor.WHITE + String.format("%.2f", owner.getHealth()) + " ";
             }
             custom_name += ChatColor.RESET + SmashScoreboard.getPlayerColor(owner, false) + owner.getName();
             DataWatcher watcher = new DataWatcher(null);
