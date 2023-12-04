@@ -119,6 +119,7 @@ public class Main extends JavaPlugin implements Listener {
         this.getCommand("message").setExecutor(new CommandMessage());
         this.getCommand("reply").setExecutor(new CommandReply());
         this.getCommand("showhitboxes").setExecutor(new CommandShowHitboxes());
+        this.getCommand("showhealth").setExecutor(new CommandShowHealth());
         for (Player player : Bukkit.getOnlinePlayers()) {
             equipPlayerHub(player);
         }

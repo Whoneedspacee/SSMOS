@@ -14,7 +14,7 @@ public class BoneProjectile extends SmashProjectile {
     public BoneProjectile(Player firer, String name) {
         super(firer, name);
         this.damage = 0.7;
-        this.hitbox_size = 0.25;
+        this.hitbox_size = 0.125;
         this.knockback_mult = 0;
         this.expiration_ticks = 40;
     }

@@ -119,12 +119,12 @@ public class BossGamemode extends SmashGamemode {
         }
         scoreboard_string.add(ChatColor.WHITE + "" + ChatColor.STRIKETHROUGH + "--------------------");
         for (Player player : boss_team.getPlayersSortedByLives()) {
-            double damage_multplier = 1;
+            double damage_multiplier = 1;
             Kit kit = KitManager.getPlayerKit(player);
             if (kit != null) {
-                damage_multplier = (1 - 0.08 * kit.getArmor());
+                damage_multiplier = (1 - 0.08 * kit.getArmor());
             }
-            scoreboard_string.add(String.format("%d", (int) Math.round(player.getHealth() / damage_multplier)) + ChatColor.RED +
+            scoreboard_string.add(String.format("%d", (int) Math.round(player.getHealth() / damage_multiplier)) + ChatColor.RED +
                     " ❤ " + ChatColor.RESET + SmashScoreboard.getPlayerColor(player, true) + player.getName());
         }
         return scoreboard_string;

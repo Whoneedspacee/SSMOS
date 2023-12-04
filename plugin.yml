@@ -78,5 +78,8 @@ commands:
     usage: /reply
     aliases: [r]
   showhitboxes:
-    description: 'Toggles showing entity projectile hitboxes to the user.'
+    description: 'Toggles showing entity projectile hitboxes to players.'
     usage: /showhitboxes
+  showhealth:
+    description: 'Toggles showing health to players.'
+    usage: /showhealth

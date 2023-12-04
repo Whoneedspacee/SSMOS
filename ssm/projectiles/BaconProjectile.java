@@ -19,7 +19,7 @@ public class BaconProjectile extends SmashProjectile {
     public BaconProjectile(Player firer, String name) {
         super(firer, name);
         this.damage = 4;
-        this.hitbox_size = 0.58;
+        this.hitbox_size = 0.3;
         this.knockback_mult = 1;
         this.expiration_ticks = 100;
     }

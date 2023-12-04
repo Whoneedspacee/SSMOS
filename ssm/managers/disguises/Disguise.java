@@ -1,7 +1,14 @@
 package ssm.managers.disguises;
 
+import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import ssm.commands.CommandShowHealth;
+import ssm.kits.Kit;
+import ssm.kits.original.KitTemporarySpectator;
+import ssm.managers.GameManager;
+import ssm.managers.KitManager;
 import ssm.managers.smashscoreboard.SmashScoreboard;
+import ssm.managers.smashserver.SmashServer;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
@@ -64,8 +71,6 @@ public abstract class Disguise {
         }
         living = newLiving();
         armorstand = new EntityArmorStand(((CraftWorld) owner.getWorld()).getHandle());
-        armorstand.setCustomName(SmashScoreboard.getPlayerColor(owner, false) + owner.getName());
-        armorstand.setCustomNameVisible(true);
         // Had no idea this existed, but seems like this is what other servers must be doing
         ((CraftArmorStand) armorstand.getBukkitEntity()).setMarker(true);
         squid = new EntitySquid(((CraftWorld) owner.getWorld()).getHandle());
@@ -154,8 +159,20 @@ public abstract class Disguise {
         if (living.dead) {
             return;
         }
-        // Update Nametag
-        armorstand.setCustomName(SmashScoreboard.getPlayerColor(owner, false) + owner.getName());
+        // Update nametag
+        for(Player viewer : viewers) {
+            String custom_name = "";
+            SmashServer server = GameManager.getPlayerServer(viewer);
+            if(CommandShowHealth.show_health || (server != null && server.getLives(viewer) <= 0)) {
+                custom_name += ChatColor.RED + "❤ " + String.format("%.2f", owner.getHealth()) + " ";
+            }
+            custom_name += ChatColor.RESET + SmashScoreboard.getPlayerColor(owner, false) + owner.getName();
+            DataWatcher watcher = new DataWatcher(null);
+            watcher.a(2, custom_name);
+            watcher.a(3, (byte) 1);
+            PacketPlayOutEntityMetadata data_packet = new PacketPlayOutEntityMetadata(armorstand.getId(), watcher, true);
+            Utils.sendPacket(viewer, data_packet);
+        }
         living.onGround = Utils.entityIsOnGround(owner);
         if(target != null) {
             Vector direction = target.getLocation().toVector().subtract(location.toVector());
