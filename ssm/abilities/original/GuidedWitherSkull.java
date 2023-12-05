@@ -23,6 +23,7 @@ import java.util.List;
 
 public class GuidedWitherSkull extends Ability implements OwnerRightClickEvent {
 
+    private int skull_amount = 0;
     protected double damage = 10;
     protected double velocity = 0.6;
     protected double knockback = 1.5;
@@ -43,6 +44,10 @@ public class GuidedWitherSkull extends Ability implements OwnerRightClickEvent {
     }
 
     public void onOwnerRightClick(PlayerInteractEvent e) {
+        // Don't print cooldown message unless we have no skulls
+        if(!check() && skull_amount > 0) {
+            return;
+        }
         checkAndActivate();
     }
 
@@ -55,6 +60,7 @@ public class GuidedWitherSkull extends Ability implements OwnerRightClickEvent {
         skull.setVisible(false);
         skull.setMetadata("Wither Skull", new FixedMetadataValue(plugin, 1));
         owner.getWorld().playSound(owner.getLocation(), Sound.WITHER_SHOOT, 1f, 1f);
+        skull_amount++;
         // New runnable for each wither skull since they can stack up
         BukkitRunnable runnable = new BukkitRunnable() {
             private Vector skull_direction = owner.getLocation().getDirection().multiply(velocity);
@@ -64,6 +70,7 @@ public class GuidedWitherSkull extends Ability implements OwnerRightClickEvent {
                 if (owner == null || !owner.isValid() || !skull.isValid()) {
                     skull.remove();
                     cancel();
+                    skull_amount--;
                     return;
                 }
                 if (owner.isBlocking()) {
@@ -116,6 +123,7 @@ public class GuidedWitherSkull extends Ability implements OwnerRightClickEvent {
                 Utils.playParticle(EnumParticle.EXPLOSION_HUGE, location,
                         0, 0, 0, 0, 1, 96, skull.getWorld().getPlayers());
                 skull.remove();
+                skull_amount--;
             }
         };
         runnable.runTaskTimer(plugin, 0L, 0L);

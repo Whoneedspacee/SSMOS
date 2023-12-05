@@ -19,8 +19,11 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 import ssm.Main;
 import ssm.attributes.Attribute;
+import ssm.attributes.ExpCharge;
+import ssm.kits.Kit;
 import ssm.managers.DamageManager;
 import ssm.managers.DisguiseManager;
+import ssm.managers.KitManager;
 
 import java.util.*;
 
@@ -232,6 +235,10 @@ public class Utils {
             player.setSaturation(3);
             player.setLevel(0);
             player.setExp(0);
+            Kit kit = KitManager.getPlayerKit(player);
+            if(kit != null && kit.getAttributeByClass(ExpCharge.class) != null) {
+                player.setExp(1);
+            }
         }
     }
 

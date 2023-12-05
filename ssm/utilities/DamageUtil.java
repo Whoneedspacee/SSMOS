@@ -1,6 +1,7 @@
 package ssm.utilities;
 
 import ssm.events.SmashDamageEvent;
+import ssm.kits.original.KitTemporarySpectator;
 import ssm.managers.DamageManager;
 import ssm.managers.GameManager;
 import ssm.managers.KitManager;
@@ -22,10 +23,11 @@ public class DamageUtil {
     private static HashMap<LivingEntity, DamageRateTracker> damageRateTrackers = new HashMap<LivingEntity, DamageRateTracker>();
 
     public static void borderKill(Player player, boolean lightning) {
-        if(lightning) {
+        SmashServer server = GameManager.getPlayerServer(player);
+        Kit kit = KitManager.getPlayerKit(player);
+        if(lightning && kit != null && !(kit instanceof KitTemporarySpectator)) {
             player.getWorld().strikeLightningEffect(player.getLocation());
         }
-        SmashServer server = GameManager.getPlayerServer(player);
         double pre_lives = 0;
         if(server != null) {
             pre_lives = server.getLives(player);

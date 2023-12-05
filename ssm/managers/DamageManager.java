@@ -270,11 +270,6 @@ public class DamageManager implements Listener {
                 e.setCancelled(true);
                 return;
             }
-            SmashServer server = GameManager.getPlayerServer(damagee);
-            if(server != null && server.isSpectator(damagee)) {
-                e.setCancelled(true);
-                return;
-            }
             // Check if the damagee can be hit by the damager again
             if (!e.getIgnoreDamageDelay()) {
                 if (!DamageUtil.getDamageRateTracker(damagee).canBeHurtBy(e.getDamager())) {

@@ -121,7 +121,22 @@ public class DisguiseManager implements Listener, Runnable {
                             }
                             if (disguise.getLiving().getId() == id ||
                                     disguise.getSquid().getId() == id) {
-                                f.setInt(packet, disguise.getOwner().getEntityId());
+                                //f.setInt(packet, disguise.getOwner().getEntityId());
+                                PacketPlayInUseEntity newPacket = new PacketPlayInUseEntity();
+                                Field b = packet.getClass().getDeclaredField("action");
+                                b.setAccessible(true);
+                                Field c = packet.getClass().getDeclaredField("c");
+                                c.setAccessible(true);
+                                f.setInt(newPacket, disguise.getOwner().getEntityId());
+                                b.set(newPacket, b.get(packet));
+                                c.set(newPacket, c.get(packet));
+                                // Can't send packet when not on main thread
+                                Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((CraftPlayer) player).getHandle().playerConnection.a(newPacket);
+                                    }
+                                }, 0L);
                             }
                         }
                         for(Entity redirect_from : redirect_damage.keySet()) {
