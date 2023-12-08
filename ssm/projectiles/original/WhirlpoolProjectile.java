@@ -1,10 +1,12 @@
-package ssm.projectiles;
+package ssm.projectiles.original;
 
 import ssm.events.SmashDamageEvent;
+import ssm.projectiles.SmashProjectile;
 import ssm.utilities.Utils;
 import ssm.utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -12,35 +14,37 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-public class FishFlurryProjectile extends SmashProjectile {
+public class WhirlpoolProjectile extends SmashProjectile {
 
-    protected Block block;
-
-    public FishFlurryProjectile(Player firer, String name, Block block) {
+    public WhirlpoolProjectile(Player firer, String name) {
         super(firer, name);
-        this.damage = 2;
+        this.damage = 4;
         this.hitbox_size = 0.5;
         this.knockback_mult = 0;
-        this.block = block;
+        this.expiration_ticks = 60;
+    }
+
+    @Override
+    public void launchProjectile() {
+        super.launchProjectile();
+        firer.playSound(firer.getLocation(), Sound.DIG_SNOW, 1f, 1f);
     }
 
     @Override
     protected Entity createProjectileEntity() {
-        ItemStack fish = new ItemStack(Material.RAW_FISH);
-        fish.setDurability((byte) (Math.random() * 4));
-        return block.getWorld().dropItem(block.getLocation().add(0.5, 1.5, 0.5), fish);
+        ItemStack shard = new ItemStack(Material.PRISMARINE_SHARD);
+        return firer.getWorld().dropItem(firer.getEyeLocation(), shard);
     }
 
     @Override
     protected void doVelocity() {
-        Vector random = new Vector(Math.random() - 0.5, 1 + Math.random() * 1, Math.random() - 0.5);
-        VelocityUtil.setVelocity(projectile, random, 0.25 + 0.4 * Math.random(),
-                false, 0, 0.2, 10, false);
+        projectile.setVelocity(firer.getLocation().getDirection().multiply(1.6));
     }
 
     @Override
     protected void doEffect() {
-        return;
+        Utils.playParticle(EnumParticle.DRIP_WATER, projectile.getLocation(),
+                0.0f, 0.0f, 0.0f, 0.01f, 1, 96, projectile.getWorld().getPlayers());
     }
 
     @Override
@@ -53,11 +57,15 @@ public class FishFlurryProjectile extends SmashProjectile {
         SmashDamageEvent smashDamageEvent = new SmashDamageEvent(hit, firer, damage);
         smashDamageEvent.multiplyKnockback(knockback_mult);
         smashDamageEvent.setIgnoreDamageDelay(true);
-        smashDamageEvent.setKnockbackOrigin(hit.getLocation().add(Math.random() - 0.5, -0.1, Math.random() - 0.5));
+        smashDamageEvent.setIgnoreArmor(true);
         smashDamageEvent.setReason(name);
-        Utils.playParticle(EnumParticle.EXPLOSION_NORMAL, hit.getLocation().add(0, 1, 0),
-                1f, 1f, 1f, 0, 12, 96, hit.getWorld().getPlayers());
         smashDamageEvent.callEvent();
+        if(smashDamageEvent.isCancelled()) {
+            return true;
+        }
+        Vector trajectory = firer.getLocation().toVector().subtract(hit.getLocation().toVector()).normalize();
+        trajectory.setY(0.5);
+        VelocityUtil.setVelocity(hit, trajectory);
         return true;
     }
 

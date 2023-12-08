@@ -44,7 +44,7 @@ public class KitBlaze extends Kit {
         addAttribute(new Potion(PotionEffectType.SPEED, 0));
         addAttribute(new Potion(PotionEffectType.FIRE_RESISTANCE, 0));
         addAttribute(new FireImmunity());
-        addAttribute(new FlamingKnockback(1.5));
+        addAttribute(new FlamingKnockback(1.5, false, false));
 
         DisguiseManager.addDisguise(owner, new BlazeDisguise(owner));
     }

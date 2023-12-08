@@ -121,8 +121,9 @@ public class DisguiseManager implements Listener, Runnable {
                             }
                             if (disguise.getLiving().getId() == id ||
                                     disguise.getSquid().getId() == id) {
-                                //f.setInt(packet, disguise.getOwner().getEntityId());
-                                PacketPlayInUseEntity newPacket = new PacketPlayInUseEntity();
+                                f.setInt(packet, disguise.getOwner().getEntityId());
+                                //f.setInt(packet, DisguiseManager.disguises.values();
+                                /*PacketPlayInUseEntity newPacket = new PacketPlayInUseEntity();
                                 Field b = packet.getClass().getDeclaredField("action");
                                 b.setAccessible(true);
                                 Field c = packet.getClass().getDeclaredField("c");
@@ -136,7 +137,7 @@ public class DisguiseManager implements Listener, Runnable {
                                     public void run() {
                                         ((CraftPlayer) player).getHandle().playerConnection.a(newPacket);
                                     }
-                                }, 0L);
+                                }, 0L);*/
                             }
                         }
                         for(Entity redirect_from : redirect_damage.keySet()) {

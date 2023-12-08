@@ -2,7 +2,7 @@ package ssm.abilities.original;
 
 import ssm.abilities.Ability;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
-import ssm.projectiles.IronHookProjectile;
+import ssm.projectiles.original.IronHookProjectile;
 import org.bukkit.ChatColor;
 import org.bukkit.event.player.PlayerInteractEvent;
 

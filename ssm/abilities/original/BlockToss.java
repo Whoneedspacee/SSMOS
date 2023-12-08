@@ -5,7 +5,7 @@ import ssm.managers.DisguiseManager;
 import ssm.managers.disguises.Disguise;
 import ssm.managers.disguises.EndermanDisguise;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
-import ssm.projectiles.BlockProjectile;
+import ssm.projectiles.original.BlockProjectile;
 import ssm.utilities.BlocksUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;

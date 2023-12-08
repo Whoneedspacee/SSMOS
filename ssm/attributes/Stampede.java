@@ -1,5 +1,6 @@
 package ssm.attributes;
 
+import org.bukkit.Bukkit;
 import ssm.events.SmashDamageEvent;
 import ssm.managers.ownerevents.OwnerDealSmashDamageEvent;
 import ssm.managers.ownerevents.OwnerTakeSmashDamageEvent;

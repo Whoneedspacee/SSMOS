@@ -5,7 +5,7 @@ import ssm.attributes.NetherPig;
 import ssm.managers.KitManager;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.kits.Kit;
-import ssm.projectiles.BaconProjectile;
+import ssm.projectiles.original.BaconProjectile;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.EnumParticle;

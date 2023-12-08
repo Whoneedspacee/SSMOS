@@ -8,7 +8,7 @@ import ssm.managers.DisguiseManager;
 import ssm.managers.disguises.Disguise;
 import ssm.managers.disguises.SheepDisguise;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
-import ssm.projectiles.WoolProjectile;
+import ssm.projectiles.original.WoolProjectile;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;

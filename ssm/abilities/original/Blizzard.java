@@ -27,9 +27,10 @@ import java.util.List;
 public class Blizzard extends Ability {
 
     private int tick_count = 0;
-    protected int ticks_to_fire = 3;
-    protected float energy_per_shot = 0.1111111111f;
     protected HashMap<Player, Long> last_damage_time = new HashMap<Player, Long>();
+    public int ticks_to_fire = 3;
+    public float energy_per_shot = 0.1111111111f;
+    public float minimum_energy_required = 0.1f;
 
     public Blizzard() {
         super();
@@ -61,7 +62,7 @@ public class Blizzard extends Ability {
         if (!owner.isBlocking()) {
             return;
         }
-        if (owner.getExp() < 0.1) {
+        if (owner.getExp() < minimum_energy_required) {
             return;
         }
         owner.setExp(Math.max(0, owner.getExp() - energy_per_shot));

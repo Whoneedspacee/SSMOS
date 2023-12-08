@@ -1,11 +1,7 @@
 package ssm.abilities.original;
 
 import net.minecraft.server.v1_8_R3.EntitySlime;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftSlime;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import ssm.abilities.Ability;
 import ssm.attributes.ExpCharge;
@@ -13,8 +9,7 @@ import ssm.managers.CooldownManager;
 import ssm.managers.KitManager;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.kits.Kit;
-import ssm.projectiles.SlimeProjectile;
-import ssm.utilities.DamageUtil;
+import ssm.projectiles.original.SlimeProjectile;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
 import net.minecraft.server.v1_8_R3.EnumParticle;
@@ -22,7 +17,6 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import ssm.utilities.VelocityUtil;
 
 public class SlimeRocket extends Ability implements OwnerRightClickEvent {
 

@@ -29,9 +29,9 @@ public class Firefly extends Ability implements OwnerRightClickEvent, OwnerTakeS
     protected double hitbox_radius = 4;
     protected double velocity = 0.7;
     protected long damage_delay_ms = 2000;
-    protected long warmup_time_ms = 800;
-    protected long end_time_ms = 2750;
     protected double minimum_cancel_damage = 4;
+    public long warmup_time_ms = 800;
+    public long end_time_ms = 2750;
 
     public Firefly() {
         super();
@@ -114,6 +114,9 @@ public class Firefly extends Ability implements OwnerRightClickEvent, OwnerTakeS
 
     @Override
     public void onOwnerTakeSmashDamageEvent(SmashDamageEvent e) {
+        if(e.isCancelled()) {
+            return;
+        }
         if(!Bukkit.getScheduler().isQueued(firefly_task) && !Bukkit.getScheduler().isCurrentlyRunning(firefly_task)) {
             return;
         }

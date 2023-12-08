@@ -9,7 +9,7 @@ import org.bukkit.Sound;
 
 public class SpiderJump extends DirectDoubleJump {
 
-    protected double energy_to_jump = 0.17;
+    public float energy_to_jump = 0.17f;
 
     public SpiderJump(double power, double height, Sound double_jump_sound) {
         super(power, height, double_jump_sound);

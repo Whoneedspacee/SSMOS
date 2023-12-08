@@ -79,7 +79,7 @@ public class SmashScoreboard implements Listener {
                 setScore(scoreboard, server.getActivePlayerCount() + "/" + server.getCurrentGamemode().max_players, 10);
                 setScore(scoreboard, "", 9);
                 setScore(scoreboard, ChatColor.RED + "" + ChatColor.BOLD + "Game", 8);
-                setScore(scoreboard, server.getCurrentGamemode().getName(), 7);
+                setScore(scoreboard, ChatColor.WHITE + server.getCurrentGamemode().getName(), 7);
                 setScore(scoreboard, "", 6);
                 setScore(scoreboard, ChatColor.GOLD + "" + ChatColor.BOLD + "Kit", 5);
                 setScore(scoreboard, kit_name, 4);
@@ -104,7 +104,7 @@ public class SmashScoreboard implements Listener {
                 setScore(scoreboard, server.getActivePlayerCount() + "/" + server.getCurrentGamemode().max_players, 10);
                 setScore(scoreboard, "", 9);
                 setScore(scoreboard, ChatColor.RED + "" + ChatColor.BOLD + "Game", 8);
-                setScore(scoreboard, server.getCurrentGamemode().getName(), 7);
+                setScore(scoreboard, ChatColor.WHITE + server.getCurrentGamemode().getName(), 7);
                 setScore(scoreboard, "", 6);
                 setScore(scoreboard, ChatColor.GOLD + "" + ChatColor.BOLD + "Kit", 5);
                 setScore(scoreboard, kit_name, 4);
@@ -125,7 +125,7 @@ public class SmashScoreboard implements Listener {
                 setScore(scoreboard, server.getActivePlayerCount() + "/" + server.getCurrentGamemode().max_players, 10);
                 setScore(scoreboard, "", 9);
                 setScore(scoreboard, ChatColor.RED + "" + ChatColor.BOLD + "Game", 8);
-                setScore(scoreboard, server.getCurrentGamemode().getName(), 7);
+                setScore(scoreboard, ChatColor.WHITE + server.getCurrentGamemode().getName(), 7);
                 setScore(scoreboard, "", 6);
                 setScore(scoreboard, ChatColor.GOLD + "" + ChatColor.BOLD + "Kit", 5);
                 setScore(scoreboard, kit_name, 4);

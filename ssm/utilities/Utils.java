@@ -116,13 +116,20 @@ public class Utils {
         return entityIsOnGround(ent, 0.5);
     }
 
+    public static boolean entityIsDirectlyOnGround(Entity ent) {
+        return entityIsOnGround(ent, 0.01);
+    }
+
     public static boolean entityIsOnGround(Entity ent, double distance) {
         if (ent == null) {
             return false;
         }
         World world = ent.getWorld();
         // Hitbox Edges
-        double[] coords = {-0.3, 0, 0.3};
+        net.minecraft.server.v1_8_R3.Entity nms_entity = ((CraftEntity) ent).getHandle();
+        double width_radius = (nms_entity.width / 2) * 100;
+        width_radius = Math.round(width_radius) / 100.0;
+        double[] coords = {-width_radius, 0, width_radius};
         for (double x : coords) {
             for (double z : coords) {
                 if (!world.getBlockAt(ent.getLocation().subtract(x, distance, z)).getType().isTransparent()) {
@@ -165,10 +172,6 @@ public class Utils {
             }
         }
         return false;
-    }
-
-    public static boolean entityIsDirectlyOnGround(Entity ent) {
-        return entityIsOnGround(ent, 0.01);
     }
 
     public static HashMap<LivingEntity, Double> getInRadius(Location location, double radius) {

@@ -1,7 +1,8 @@
-package ssm.projectiles;
+package ssm.projectiles.original;
 
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import ssm.events.SmashDamageEvent;
+import ssm.projectiles.SmashProjectile;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.VelocityUtil;
 import org.bukkit.Material;
@@ -96,9 +97,9 @@ public class BaconProjectile extends SmashProjectile {
         Vector projectileVector = projectile.getLocation().toVector();
         Vector pre_velocity = playerVector.subtract(projectileVector).normalize().add(new Vector(0, 0.4, 0)).multiply(mult);
         // Prevent console errors for too high velocity
-        pre_velocity.setX(Math.min(pre_velocity.getX(), 4.0));
-        pre_velocity.setY(Math.min(pre_velocity.getY(), 4.0));
-        pre_velocity.setZ(Math.min(pre_velocity.getZ(), 4.0));
+        pre_velocity.setX(Math.max(Math.min(pre_velocity.getX(), 4.0), -4.0));
+        pre_velocity.setY(Math.max(Math.min(pre_velocity.getY(), 4.0), -4.0));
+        pre_velocity.setZ(Math.max(Math.min(pre_velocity.getZ(), 4.0), -4.0));
         projectile.setVelocity(pre_velocity);
     }
 

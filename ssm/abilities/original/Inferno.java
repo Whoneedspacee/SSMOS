@@ -5,7 +5,7 @@ import ssm.attributes.ExpCharge;
 import ssm.managers.KitManager;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.kits.Kit;
-import ssm.projectiles.FireProjectile;
+import ssm.projectiles.original.FireProjectile;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -13,7 +13,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class Inferno extends Ability implements OwnerRightClickEvent {
 
     private int inferno_task = - 1;
-    protected float energy_per_fire = 0.035f;
+    public float energy_per_fire = 0.035f;
+    public float exp_to_use = 0f;
+    public int fire_ticks_added = 10;
 
     public Inferno() {
         super();
@@ -47,6 +49,9 @@ public class Inferno extends Ability implements OwnerRightClickEvent {
         if(Bukkit.getScheduler().isQueued(inferno_task) || Bukkit.getScheduler().isCurrentlyRunning(inferno_task)) {
             return;
         }
+        if(owner.getExp() < exp_to_use) {
+            return;
+        }
         checkAndActivate();
     }
 
@@ -66,7 +71,7 @@ public class Inferno extends Ability implements OwnerRightClickEvent {
                     Bukkit.getScheduler().cancelTask(inferno_task);
                     return;
                 }
-                FireProjectile projectile = new FireProjectile(owner, name);
+                FireProjectile projectile = new FireProjectile(owner, name, fire_ticks_added);
                 projectile.launchProjectile();
             }
         }, 0L, 0L);

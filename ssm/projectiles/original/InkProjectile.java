@@ -1,6 +1,7 @@
-package ssm.projectiles;
+package ssm.projectiles.original;
 
 import ssm.events.SmashDamageEvent;
+import ssm.projectiles.SmashProjectile;
 import ssm.utilities.Utils;
 import ssm.utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.EnumParticle;

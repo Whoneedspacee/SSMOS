@@ -2,7 +2,7 @@ package ssm.abilities.original;
 
 import ssm.abilities.Ability;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
-import ssm.projectiles.WolfProjectile;
+import ssm.projectiles.original.WolfProjectile;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;

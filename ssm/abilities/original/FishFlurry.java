@@ -2,7 +2,7 @@ package ssm.abilities.original;
 
 import ssm.abilities.Ability;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
-import ssm.projectiles.FishFlurryProjectile;
+import ssm.projectiles.original.FishFlurryProjectile;
 import ssm.utilities.BlocksUtil;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;

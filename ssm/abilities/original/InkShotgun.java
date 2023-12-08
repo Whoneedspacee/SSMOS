@@ -2,7 +2,7 @@ package ssm.abilities.original;
 
 import ssm.abilities.Ability;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
-import ssm.projectiles.InkProjectile;
+import ssm.projectiles.original.InkProjectile;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.event.player.PlayerInteractEvent;

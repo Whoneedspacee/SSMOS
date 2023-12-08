@@ -48,8 +48,8 @@ public abstract class Attribute extends BukkitRunnable implements Listener {
     protected Plugin plugin;
     protected Player owner;
     protected BukkitTask task;
-    protected double cooldownTime = 0;
-    protected float expUsed = 0;
+    public double cooldownTime = 0;
+    public float expUsed = 0;
     protected boolean needsExactXP = true;
     protected AbilityUsage usage = AbilityUsage.RIGHT_CLICK;
     protected String useMessage = "You used";

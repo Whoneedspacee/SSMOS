@@ -38,6 +38,7 @@ public class DamageManager implements Listener {
     private JavaPlugin plugin = Main.getInstance();
     private static List<SmashDamageEvent> damage_record = new ArrayList<>();
     public static HashMap<org.bukkit.entity.Entity, Integer> invincible_mobs = new HashMap<org.bukkit.entity.Entity, Integer>();
+    public static HashMap<FallingBlock, Integer> no_fast_block = new HashMap<FallingBlock, Integer>();
 
     public DamageManager() {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -60,6 +61,9 @@ public class DamageManager implements Listener {
     @EventHandler
     public void preAttack(PrePlayerAttackEntityEvent e) {
         if(!(e.getAttacked() instanceof FallingBlock)) {
+            return;
+        }
+        if(no_fast_block.containsKey((FallingBlock) e.getAttacked())) {
             return;
         }
         e.setCancelled(true);

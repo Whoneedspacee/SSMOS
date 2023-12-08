@@ -3,7 +3,7 @@ package ssm.abilities.original;
 import ssm.abilities.Ability;
 import ssm.managers.CooldownManager;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
-import ssm.projectiles.BoneProjectile;
+import ssm.projectiles.original.BoneProjectile;
 import ssm.utilities.VelocityUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,9 +13,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class BoneRush extends Ability implements OwnerRightClickEvent {
 
     private int rush_task = -1;
-    protected long duration_ms = 1500;
     protected double y_limit = 0.25;
     protected int projectiles_per_tick = 6;
+    public long duration_ms = 1500;
 
     public BoneRush() {
         super();

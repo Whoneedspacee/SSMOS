@@ -5,12 +5,12 @@ import org.bukkit.entity.Player;
 
 public class ExpCharge extends Attribute {
 
-    protected float expAdd;
     protected double delay;
     protected boolean chargeWhenInAir;
     protected boolean chargeWhenSneaking;
     protected boolean startFullEnergy;
     public boolean enabled = true;
+    public float expAdd;
 
     public ExpCharge(float expAdd, double delay, boolean chargeWhenInAir, boolean chargeWhenSneaking, boolean startFullEnergy) {
         super();

@@ -2,7 +2,7 @@ package ssm.abilities.original;
 
 import ssm.abilities.Ability;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
-import ssm.projectiles.WebProjectile;
+import ssm.projectiles.original.WebProjectile;
 import ssm.utilities.VelocityUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;

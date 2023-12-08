@@ -1,42 +1,42 @@
-package ssm.projectiles;
+package ssm.projectiles.original;
 
 import ssm.events.SmashDamageEvent;
+import ssm.projectiles.SmashProjectile;
 import ssm.utilities.Utils;
 import ssm.utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
-public class SulphurProjectile extends SmashProjectile {
+public class FishFlurryProjectile extends SmashProjectile {
 
-    public SulphurProjectile(Player firer, String name) {
+    protected Block block;
+
+    public FishFlurryProjectile(Player firer, String name, Block block) {
         super(firer, name);
-        this.damage = 6.5;
-        this.hitbox_size = 0.65;
-        this.knockback_mult = 2.5;
-    }
-
-    @Override
-    public void launchProjectile() {
-        super.launchProjectile();
-        firer.getWorld().playSound(firer.getLocation(), Sound.CREEPER_DEATH, 2f, 1.5f);
+        this.damage = 2;
+        this.hitbox_size = 0.5;
+        this.knockback_mult = 0;
+        this.block = block;
     }
 
     @Override
     protected Entity createProjectileEntity() {
-        ItemStack coal = new ItemStack(Material.COAL);
-        return firer.getWorld().dropItem(firer.getEyeLocation(), coal);
+        ItemStack fish = new ItemStack(Material.RAW_FISH);
+        fish.setDurability((byte) (Math.random() * 4));
+        return block.getWorld().dropItem(block.getLocation().add(0.5, 1.5, 0.5), fish);
     }
 
     @Override
     protected void doVelocity() {
-        VelocityUtil.setVelocity(projectile, firer.getLocation().getDirection(),
-                1.2, false, 0, 0.2, 10, false);
+        Vector random = new Vector(Math.random() - 0.5, 1 + Math.random() * 1, Math.random() - 0.5);
+        VelocityUtil.setVelocity(projectile, random, 0.25 + 0.4 * Math.random(),
+                false, 0, 0.2, 10, false);
     }
 
     @Override
@@ -46,37 +46,30 @@ public class SulphurProjectile extends SmashProjectile {
 
     @Override
     protected boolean onExpire() {
-        explodeEffect();
         return true;
     }
 
     @Override
     protected boolean onHitLivingEntity(LivingEntity hit) {
-        explodeEffect();
         SmashDamageEvent smashDamageEvent = new SmashDamageEvent(hit, firer, damage);
         smashDamageEvent.multiplyKnockback(knockback_mult);
         smashDamageEvent.setIgnoreDamageDelay(true);
+        smashDamageEvent.setKnockbackOrigin(hit.getLocation().add(Math.random() - 0.5, -0.1, Math.random() - 0.5));
         smashDamageEvent.setReason(name);
+        Utils.playParticle(EnumParticle.EXPLOSION_NORMAL, hit.getLocation().add(0, 1, 0),
+                1f, 1f, 1f, 0, 12, 96, hit.getWorld().getPlayers());
         smashDamageEvent.callEvent();
         return true;
     }
 
     @Override
     protected boolean onHitBlock(Block hit) {
-        explodeEffect();
         return true;
     }
 
     @Override
     protected boolean onIdle() {
-        explodeEffect();
         return true;
-    }
-
-    protected void explodeEffect() {
-        Utils.playParticle(EnumParticle.EXPLOSION_LARGE, projectile.getLocation(),
-                0, 0, 0, 0, 1, 96, projectile.getWorld().getPlayers());
-        projectile.getWorld().playSound(projectile.getLocation(), Sound.EXPLODE, 1f, 1.5f);
     }
 
 }

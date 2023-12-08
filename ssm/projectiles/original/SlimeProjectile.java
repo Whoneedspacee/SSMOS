@@ -1,10 +1,11 @@
-package ssm.projectiles;
+package ssm.projectiles.original;
 
 import net.minecraft.server.v1_8_R3.EntitySlime;
 import net.minecraft.server.v1_8_R3.PathfinderGoal;
 import net.minecraft.server.v1_8_R3.PathfinderGoalAvoidTarget;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftSlime;
 import ssm.events.SmashDamageEvent;
+import ssm.projectiles.SmashProjectile;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.Utils;
 import ssm.utilities.VelocityUtil;

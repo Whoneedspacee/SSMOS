@@ -79,6 +79,7 @@ public class MagmaBlast extends Ability implements OwnerRightClickEvent, OwnerDe
         if (!projectile.getShooter().equals(owner)) {
             return;
         }
+        projectile.removeMetadata("Magma Blast", plugin);
         projectile.remove();
         HashMap<LivingEntity, Double> hit_entities = Utils.getInRadius(projectile.getLocation().subtract(0, 1, 0), velocity_radius);
         for (LivingEntity livingEntity : hit_entities.keySet()) {

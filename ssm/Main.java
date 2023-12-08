@@ -25,10 +25,7 @@ import ssm.commands.*;
 import ssm.kits.Kit;
 import ssm.managers.*;
 import ssm.managers.disguises.Disguise;
-import ssm.managers.gamemodes.BossGamemode;
-import ssm.managers.gamemodes.SoloGamemode;
-import ssm.managers.gamemodes.TeamsGamemode;
-import ssm.managers.gamemodes.TestingGamemode;
+import ssm.managers.gamemodes.*;
 import ssm.managers.smashserver.SmashServer;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.Utils;
@@ -132,8 +129,8 @@ public class Main extends JavaPlugin implements Listener {
             GameManager.createSmashServer(new SoloGamemode());
             GameManager.createSmashServer(new SoloGamemode());
             GameManager.createSmashServer(new SoloGamemode());
-            GameManager.createSmashServer(new SoloGamemode());
-            GameManager.createSmashServer(new SoloGamemode());
+            GameManager.createSmashServer(new SSMOSGamemode());
+            GameManager.createSmashServer(new SSMOSGamemode());
             GameManager.createSmashServer(new TeamsGamemode());
             GameManager.createSmashServer(new TeamsGamemode());
             GameManager.createSmashServer(new BossGamemode());
@@ -198,10 +195,24 @@ public class Main extends JavaPlugin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         equipPlayerHub(e.getPlayer());
         e.setJoinMessage("");
+        for(Player player : Bukkit.getWorlds().get(0).getPlayers()) {
+            if(player.equals(e.getPlayer())) {
+                continue;
+            }
+            player.sendMessage(ChatColor.DARK_GRAY + "Join> " + ChatColor.GRAY + e.getPlayer().getName());
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent e) {
+        if(e.getPlayer().getWorld().equals(Bukkit.getWorlds().get(0))) {
+            for(Player player : Bukkit.getWorlds().get(0).getPlayers()) {
+                if(player.equals(e.getPlayer())) {
+                    continue;
+                }
+                player.sendMessage(ChatColor.DARK_GRAY + "Quit> " + ChatColor.GRAY + e.getPlayer().getName());
+            }
+        }
         e.getPlayer().teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
         unequipPlayerHub(e.getPlayer());
         e.setQuitMessage("");
@@ -241,8 +252,20 @@ public class Main extends JavaPlugin implements Listener {
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e) {
         if (Bukkit.getWorlds().get(0).equals(e.getPlayer().getWorld())) {
             equipPlayerHub(e.getPlayer());
-        } else {
-            unequipPlayerHub(e.getPlayer());
+            for(Player player : Bukkit.getWorlds().get(0).getPlayers()) {
+                if(player.equals(e.getPlayer())) {
+                    continue;
+                }
+                player.sendMessage(ChatColor.DARK_GRAY + "Join> " + ChatColor.GRAY + e.getPlayer().getName());
+            }
+            return;
+        }
+        unequipPlayerHub(e.getPlayer());
+        for(Player player : Bukkit.getWorlds().get(0).getPlayers()) {
+            if(player.equals(e.getPlayer())) {
+                continue;
+            }
+            player.sendMessage(ChatColor.DARK_GRAY + "Quit> " + ChatColor.GRAY + e.getPlayer().getName());
         }
     }
 

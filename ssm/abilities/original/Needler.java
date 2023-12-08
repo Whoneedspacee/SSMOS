@@ -1,5 +1,6 @@
 package ssm.abilities.original;
 
+import org.bukkit.event.EventPriority;
 import ssm.abilities.Ability;
 import ssm.events.SmashDamageEvent;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
@@ -89,7 +90,7 @@ public class Needler extends Ability implements OwnerRightClickEvent {
 
     // Cancel the event after ignoredamagerate is checked so arrows dont deal damage
     // This is also so arrows add a damage rate cooldown even if the custom needler arrows ignore it
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void arrowDamage(SmashDamageEvent e) {
         if (e.getDamageCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
             if (e.getProjectile() instanceof Arrow) {

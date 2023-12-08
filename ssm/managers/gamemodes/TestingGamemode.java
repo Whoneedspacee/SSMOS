@@ -6,6 +6,8 @@ import org.bukkit.event.EventHandler;
 import ssm.kits.Kit;
 import ssm.kits.boss.KitElderGuardian;
 import ssm.kits.boss.KitWitherBoss;
+import ssm.kits.ssmos.OSKitBlaze;
+import ssm.kits.ssmos.OSKitSnowman;
 import ssm.managers.BossBarManager;
 import ssm.managers.KitManager;
 import ssm.managers.gamestate.GameState;
@@ -33,6 +35,8 @@ public class TestingGamemode extends SmashGamemode {
         super.updateAllowedKits();
         allowed_kits.add(new KitElderGuardian());
         allowed_kits.add(new KitWitherBoss());
+        allowed_kits.add(new OSKitBlaze());
+        allowed_kits.add(new OSKitSnowman());
     }
 
     @Override

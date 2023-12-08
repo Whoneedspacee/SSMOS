@@ -1,6 +1,7 @@
-package ssm.projectiles;
+package ssm.projectiles.original;
 
 import ssm.events.SmashDamageEvent;
+import ssm.projectiles.SmashProjectile;
 import ssm.utilities.VelocityUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

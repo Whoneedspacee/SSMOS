@@ -5,7 +5,7 @@ import ssm.attributes.Attribute;
 import ssm.managers.KitManager;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
 import ssm.kits.Kit;
-import ssm.projectiles.ScatterProjectile;
+import ssm.projectiles.original.ScatterProjectile;
 import ssm.utilities.VelocityUtil;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.ChatColor;

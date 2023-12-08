@@ -287,7 +287,9 @@ public class SmashServer implements Listener, Runnable {
                 player.sendMessage(game_map.toString());
                 player.sendMessage(ChatColor.DARK_GREEN + "" + ChatColor.STRIKETHROUGH + "=============================================");
                 current_gamemode.afterGameEnded(player);
-                Utils.fullHeal(player);
+                if(!lives.containsKey(player)) {
+                    Utils.fullHeal(player);
+                }
             }
             lives.clear();
             deaths = new Player[2];

@@ -10,8 +10,8 @@ import java.util.HashMap;
 
 public class ArcticAura extends Attribute {
 
-    private double range = 5;
-    private long duration_ms = 2000;
+    protected double range = 5;
+    protected long duration_ms = 2000;
 
     public ArcticAura() {
         super();
