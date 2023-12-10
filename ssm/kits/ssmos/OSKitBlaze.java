@@ -45,7 +45,7 @@ public class OSKitBlaze extends KitBlaze {
         Inferno inferno = getAttributeByClass(Inferno.class);
         if(inferno != null) {
             inferno.energy_per_fire = 0.1f;
-            inferno.fire_ticks_added = 20;
+            inferno.fire_ticks_added = 16;
         }
     }
 

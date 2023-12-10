@@ -7,6 +7,7 @@ import ssm.kits.Kit;
 import ssm.kits.boss.KitElderGuardian;
 import ssm.kits.boss.KitWitherBoss;
 import ssm.kits.ssmos.OSKitBlaze;
+import ssm.kits.ssmos.OSKitIllusioner;
 import ssm.kits.ssmos.OSKitSnowman;
 import ssm.managers.BossBarManager;
 import ssm.managers.KitManager;
@@ -37,6 +38,7 @@ public class TestingGamemode extends SmashGamemode {
         allowed_kits.add(new KitWitherBoss());
         allowed_kits.add(new OSKitBlaze());
         allowed_kits.add(new OSKitSnowman());
+        allowed_kits.add(new OSKitIllusioner());
     }
 
     @Override

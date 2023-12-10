@@ -4,6 +4,7 @@ import ssm.abilities.Ability;
 import ssm.events.SmashDamageEvent;
 import ssm.managers.GameManager;
 import ssm.managers.ownerevents.OwnerRightClickEvent;
+import ssm.managers.smashscoreboard.SmashScoreboard;
 import ssm.utilities.DamageUtil;
 import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
@@ -79,7 +80,8 @@ public class WitherImage extends Ability implements OwnerRightClickEvent {
         wither_image.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1000, 1, false, false));
         // Custom Nametag Shenanigans (similar to our disguises)
         // Needed since 1.8.8 mobs do not show their custom name unless hovered over
-        Utils.attachCustomName(wither_image, ChatColor.YELLOW + owner.getName());
+        String owner_color = SmashScoreboard.getPlayerColor(owner, false);
+        Utils.attachCustomName(wither_image, owner_color + owner.getName());
         VelocityUtil.setVelocity(wither_image, owner.getLocation().getDirection(),
                 1.6, false, 0, 0.2, 10, true);
         setSwapDelay(swap_cooldown_ticks / 4);

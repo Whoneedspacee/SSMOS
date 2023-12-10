@@ -439,7 +439,7 @@ public class Utils {
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                if (!entity.isValid()) {
+                if (!entity.isValid() || !squid.isValid() || !armor_stand.isValid()) {
                     DisguiseManager.redirect_damage.remove(squid);
                     DamageManager.invincible_mobs.remove(squid);
                     armor_stand.remove();

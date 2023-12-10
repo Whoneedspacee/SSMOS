@@ -1,12 +1,9 @@
 package ssm.managers.disguises;
 
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.event.player.PlayerMoveEvent;
 import ssm.commands.CommandShowHealth;
-import ssm.kits.Kit;
-import ssm.kits.original.KitTemporarySpectator;
 import ssm.managers.GameManager;
-import ssm.managers.KitManager;
 import ssm.managers.gamestate.GameState;
 import ssm.managers.smashscoreboard.SmashScoreboard;
 import ssm.managers.smashserver.SmashServer;
@@ -54,6 +51,10 @@ public abstract class Disguise {
         return owner;
     }
 
+    public boolean isViewer(Player player) {
+        return viewers.contains(player);
+    }
+
     public EntityLiving getLiving() {
         return living;
     }
@@ -83,6 +84,11 @@ public abstract class Disguise {
         }
     }
 
+    public void reloadDisguise(Player player) {
+        hideDisguise(player);
+        showDisguise(player);
+    }
+
     public void showDisguise(Player player) {
         // Do not show disguise to self
         if (player.equals(owner)) {
@@ -102,9 +108,14 @@ public abstract class Disguise {
         // Living Destroy (if player sees them already)
         destroy_packet = new PacketPlayOutEntityDestroy(living.getId());
         Utils.sendPacket(player, destroy_packet);
-        // Living Spawn
-        living.setPositionRotation(owner.getLocation().getX(), owner.getLocation().getY(), owner.getLocation().getZ(),
-                owner.getLocation().getYaw(), owner.getLocation().getPitch());
+        // Living Spawn, do it near the players chunk so the entity loads on their client
+        if(owner.getLocation().distance(player.getLocation()) > 50) {
+            living.setPositionRotation(player.getLocation().getX(), player.getLocation().getY() - 150, player.getLocation().getZ(),
+                    owner.getLocation().getYaw(), owner.getLocation().getPitch());
+        } else {
+            living.setPositionRotation(owner.getLocation().getX(), owner.getLocation().getY(), owner.getLocation().getZ(),
+                    owner.getLocation().getYaw(), owner.getLocation().getPitch());
+        }
         // Set exact head rotation before entity is spawned since setPositionRotation does not do that
         // The body of a mob is rotated on the client so this will make the body spawn already rotated
         living.f(owner.getLocation().getYaw());
@@ -140,7 +151,7 @@ public abstract class Disguise {
         Utils.sendPacket(player, destroy_living_packet);
         Utils.sendPacket(player, destroy_armorstand_packet);
         Utils.sendPacket(player, destroy_squid_packet);
-        player.showPlayer(owner);
+        showOwner();
         viewers.remove(player);
     }
 

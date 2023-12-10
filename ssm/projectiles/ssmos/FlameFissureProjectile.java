@@ -23,7 +23,7 @@ public class FlameFissureProjectile extends SmashProjectile {
     protected Block block;
     protected double angle;
     protected Entity burned_entity = null;
-    protected int burn_ticks = 60;
+    protected int burn_ticks = 20;
 
     public FlameFissureProjectile(Player firer, String name, Block block, double angle) {
         super(firer, name);

@@ -330,8 +330,12 @@ public class SmashServer implements Listener, Runnable {
                 1f, 1f, Material.INK_SACK, (byte) 1, 10, true);
         SmashDamageEvent record = DamageManager.getLastDamageEvent(player);
         for(Player message : players) {
-            message.sendMessage(ServerMessageType.DEATH + " " + ChatColor.YELLOW + player.getName() +
-                    ChatColor.GRAY + " killed by " + ChatColor.YELLOW + record.getDamagerName() +
+            String damager_color = "" + ChatColor.YELLOW;
+            if(record.getDamager() instanceof Player) {
+                damager_color = SmashScoreboard.getPlayerColor((Player) record.getDamager(), false);
+            }
+            message.sendMessage(ServerMessageType.DEATH + " " + SmashScoreboard.getPlayerColor(player, false) + player.getName() +
+                    ChatColor.GRAY + " killed by " + damager_color + record.getDamagerName() +
                     ChatColor.GRAY + " with " + record.getReasonColor() + record.getReason() + ChatColor.GRAY + ".");
         }
         DamageManager.deathReport(player, true);

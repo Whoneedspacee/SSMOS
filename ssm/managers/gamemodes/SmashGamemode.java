@@ -30,6 +30,7 @@ public abstract class SmashGamemode implements Listener {
     protected List<GameMap> allowed_maps = new ArrayList<GameMap>();
     protected List<Kit> allowed_kits = new ArrayList<Kit>();
     protected int players_to_start = 2;
+    protected boolean spawn_near_teammates = true;
     public int max_players = 4;
     public SmashServer server = null;
 
@@ -146,6 +147,10 @@ public abstract class SmashGamemode implements Listener {
                 if (!server.lives.containsKey(check)) {
                     continue;
                 }
+                Kit kit = KitManager.getPlayerKit(check);
+                if(kit instanceof KitTemporarySpectator) {
+                    continue;
+                }
                 if (team != null && team.isOnTeam(check) && server.lives.containsKey(check)) {
                     closest_teammate = Math.min(closest_teammate, respawn_point.distance(check.getLocation()));
                     continue;
@@ -164,7 +169,7 @@ public abstract class SmashGamemode implements Listener {
             }
         }
         // Only run this if we've actually found a teammate
-        if(minimum_teammate_distance < max_distance_check) {
+        if(spawn_near_teammates && minimum_teammate_distance < max_distance_check) {
             for (Location respawn_point : closest_teammate_distance.keySet()) {
                 if (closest_teammate_distance.get(respawn_point) <= minimum_teammate_distance) {
                     selected_point = respawn_point;

@@ -39,9 +39,6 @@ commands:
   randomkit:
     description: 'Sets your kit randomly.'
     usage: /randomkit
-  playerdisguise:
-    description: 'Creates a player disguise using the skin of the name given.'
-    usage: /playerdisguise
   damagelog:
     description: 'Shows a report of damage taken in the last 15 seconds.'
     usage: /damagelog
@@ -83,3 +80,9 @@ commands:
   showhealth:
     description: 'Toggles showing health to players.'
     usage: /showhealth
+  setteamsplayer:
+    description: 'Sets player teams number.'
+    usage: /setteamsplayer
+  ping:
+    description: 'Shows the ping of players in your world.'
+    usage: /ping

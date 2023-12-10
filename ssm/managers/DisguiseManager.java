@@ -183,6 +183,26 @@ public class DisguiseManager implements Listener, Runnable {
         showDisguises(player);
     }
 
+    /*@EventHandler
+    public void playerMoved(PlayerMoveEvent e) {
+        Player player = e.getPlayer();
+        for(Player disguised : e.getPlayer().getWorld().getPlayers()) {
+            if(!disguises.containsKey(disguised)) {
+                continue;
+            }
+            Disguise disguise = disguises.get(disguised);
+            if(player.getLocation().distance(disguised.getLocation()) > 80) {
+                if(disguise.isViewer(player)) {
+                    hideDisguise(player, disguised);
+                }
+                continue;
+            }
+            if(!disguise.isViewer(player)) {
+                showDisguise(player, disguised);
+            }
+        }
+    }*/
+
     @EventHandler
     public void playerChangedWorld(PlayerChangedWorldEvent e) {
         // Reload their disguises, and show their own disguise to other players

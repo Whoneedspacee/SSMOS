@@ -16,6 +16,7 @@ import ssm.utilities.ServerMessageType;
 import ssm.utilities.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class TeamsGamemode extends SmashGamemode {
         };
         this.players_to_start = 3;
         this.max_players = 6;
+        this.spawn_near_teammates = false;
     }
 
     // Even distribution of players across the teams
@@ -50,6 +52,7 @@ public class TeamsGamemode extends SmashGamemode {
             TeamManager.removeTeam(team);
         }
         teams.clear();
+        Arrays.fill(team_deaths, null);
         current_team_data = TeamColor.first();
         for(int i = 0; i < team_amount; i++) {
             teams.add(TeamManager.createTeam(current_team_data.names[name_index], current_team_data.color));
@@ -101,7 +104,15 @@ public class TeamsGamemode extends SmashGamemode {
 
         }
         // Evenly distribute remaining players into teams
+        List<Player> to_assign = new ArrayList<Player>();
         for(Player player : server.players) {
+            if(Math.random() < 0.5) {
+                to_assign.add(player);
+            } else {
+                to_assign.add(0, player);
+            }
+        }
+        for(Player player : to_assign) {
             if (server.isSpectator(player)) {
                 continue;
             }

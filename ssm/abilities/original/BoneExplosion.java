@@ -33,7 +33,6 @@ public class BoneExplosion extends Ability implements OwnerRightClickEvent {
 
     public void activate() {
         Location location = owner.getLocation().add(0, 0.5, 0);
-        owner.getWorld().playSound(owner.getLocation(), Sound.SKELETON_HURT, 2f, 1.2f);
         Utils.itemEffect(owner.getLocation().add(0, 0.5, 0), 48, 0.8,
                 Sound.SKELETON_HURT, 2f, 1.2f, Material.BONE, (byte) 0, 40);
 

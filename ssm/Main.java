@@ -99,7 +99,6 @@ public class Main extends JavaPlugin implements Listener {
         this.getCommand("spectate").setExecutor(new CommandSpectate());
         this.getCommand("setplaying").setExecutor(new CommandSetPlaying());
         this.getCommand("randomkit").setExecutor(new CommandRandomKit());
-        this.getCommand("playerdisguise").setExecutor(new CommandPlayerDisguise());
         this.getCommand("damagelog").setExecutor(new CommandDamageLog());
         CommandSetLives setlives = new CommandSetLives();
         this.getCommand("setlives").setExecutor(setlives);
@@ -117,6 +116,8 @@ public class Main extends JavaPlugin implements Listener {
         this.getCommand("reply").setExecutor(new CommandReply());
         this.getCommand("showhitboxes").setExecutor(new CommandShowHitboxes());
         this.getCommand("showhealth").setExecutor(new CommandShowHealth());
+        this.getCommand("setteamsplayer").setExecutor(new CommandSetTeamsPlayer());
+        this.getCommand("ping").setExecutor(new CommandPing());
         for (Player player : Bukkit.getOnlinePlayers()) {
             equipPlayerHub(player);
         }
@@ -132,7 +133,7 @@ public class Main extends JavaPlugin implements Listener {
             GameManager.createSmashServer(new SSMOSGamemode());
             GameManager.createSmashServer(new SSMOSGamemode());
             GameManager.createSmashServer(new TeamsGamemode());
-            GameManager.createSmashServer(new TeamsGamemode());
+            GameManager.createSmashServer(new SSMOSTeamsGamemode());
             GameManager.createSmashServer(new BossGamemode());
             GameManager.createSmashServer(new TestingGamemode());
         }
@@ -252,20 +253,8 @@ public class Main extends JavaPlugin implements Listener {
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e) {
         if (Bukkit.getWorlds().get(0).equals(e.getPlayer().getWorld())) {
             equipPlayerHub(e.getPlayer());
-            for(Player player : Bukkit.getWorlds().get(0).getPlayers()) {
-                if(player.equals(e.getPlayer())) {
-                    continue;
-                }
-                player.sendMessage(ChatColor.DARK_GRAY + "Join> " + ChatColor.GRAY + e.getPlayer().getName());
-            }
-            return;
-        }
-        unequipPlayerHub(e.getPlayer());
-        for(Player player : Bukkit.getWorlds().get(0).getPlayers()) {
-            if(player.equals(e.getPlayer())) {
-                continue;
-            }
-            player.sendMessage(ChatColor.DARK_GRAY + "Quit> " + ChatColor.GRAY + e.getPlayer().getName());
+        } else {
+            unequipPlayerHub(e.getPlayer());
         }
     }
 
