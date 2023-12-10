@@ -31,7 +31,7 @@ public class Firefly extends Ability implements OwnerRightClickEvent, OwnerTakeS
     protected long damage_delay_ms = 2000;
     protected double minimum_cancel_damage = 4;
     public long warmup_time_ms = 800;
-    public long end_time_ms = 2750;
+    public long end_time_ms = 2050;
 
     public Firefly() {
         super();
