@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class Disguise {
@@ -34,6 +35,7 @@ public abstract class Disguise {
     protected boolean showAttackAnimation = true;
     protected org.bukkit.entity.Entity target = null;
     protected List<Player> viewers = new ArrayList<Player>();
+    protected HashMap<Player, Double> last_viewer_distance = new HashMap<Player, Double>();
 
     public Disguise(Player owner) {
         this.owner = owner;
@@ -89,6 +91,18 @@ public abstract class Disguise {
         showDisguise(player);
     }
 
+    public void reloadLiving(Player player) {
+        // Living Destroy (if player sees them already)
+        PacketPlayOutEntityDestroy destroy_packet = new PacketPlayOutEntityDestroy(living.getId());
+        Utils.sendPacket(player, destroy_packet);
+        // Set exact head rotation before entity is spawned since setPositionRotation does not do that
+        // The body of a mob is rotated on the client so this will make the body spawn already rotated
+        living.f(owner.getLocation().getYaw());
+        // Spawn living
+        PacketPlayOutSpawnEntityLiving living_packet = new PacketPlayOutSpawnEntityLiving(living);
+        Utils.sendPacket(player, living_packet);
+    }
+
     public void showDisguise(Player player) {
         // Do not show disguise to self
         if (player.equals(owner)) {
@@ -108,14 +122,9 @@ public abstract class Disguise {
         // Living Destroy (if player sees them already)
         destroy_packet = new PacketPlayOutEntityDestroy(living.getId());
         Utils.sendPacket(player, destroy_packet);
-        // Living Spawn, do it near the players chunk so the entity loads on their client
-        if(owner.getLocation().distance(player.getLocation()) > 50) {
-            living.setPositionRotation(player.getLocation().getX(), player.getLocation().getY() - 150, player.getLocation().getZ(),
+        // Living Spawn
+        living.setPositionRotation(owner.getLocation().getX(), owner.getLocation().getY(), owner.getLocation().getZ(),
                     owner.getLocation().getYaw(), owner.getLocation().getPitch());
-        } else {
-            living.setPositionRotation(owner.getLocation().getX(), owner.getLocation().getY(), owner.getLocation().getZ(),
-                    owner.getLocation().getYaw(), owner.getLocation().getPitch());
-        }
         // Set exact head rotation before entity is spawned since setPositionRotation does not do that
         // The body of a mob is rotated on the client so this will make the body spawn already rotated
         living.f(owner.getLocation().getYaw());
@@ -170,6 +179,22 @@ public abstract class Disguise {
         // Don't teleport to spectator player if the mob is dead
         if (living.dead) {
             return;
+        }
+        for(Player player : viewers) {
+            if(!player.getWorld().equals(living.getBukkitEntity().getWorld())) {
+                continue;
+            }
+            Location player_xz = player.getLocation();
+            player_xz.setY(0);
+            Location living_xz = living.getBukkitEntity().getLocation();
+            living_xz.setY(0);
+            double distance = player_xz.distance(living_xz);
+            double distance_check = 32;
+            last_viewer_distance.putIfAbsent(player, distance);
+            if(last_viewer_distance.get(player) > distance_check && distance <= distance_check) {
+                reloadLiving(player);
+            }
+            last_viewer_distance.put(player, distance);
         }
         // Update nametag
         for(Player viewer : viewers) {
