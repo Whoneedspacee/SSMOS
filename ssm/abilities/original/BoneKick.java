@@ -48,6 +48,7 @@ public class BoneKick extends Ability implements OwnerRightClickEvent {
     }
 
     public void activate() {
+        owner.damage(5);
         if(DisguiseManager.disguises.get(owner) instanceof SkeletonHorseDisguise) {
             SkeletonHorseDisguise disguise = (SkeletonHorseDisguise) DisguiseManager.disguises.get(owner);
             disguise.setRearing(true);

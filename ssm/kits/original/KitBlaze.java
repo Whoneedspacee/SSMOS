@@ -2,6 +2,7 @@ package ssm.kits.original;
 
 import ssm.abilities.original.Firefly;
 import ssm.abilities.original.Inferno;
+import ssm.abilities.ssmos.SoulDetach;
 import ssm.attributes.*;
 import ssm.attributes.doublejumps.GenericDoubleJump;
 import ssm.kits.Kit;
