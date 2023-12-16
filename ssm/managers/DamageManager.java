@@ -352,7 +352,6 @@ public class DamageManager implements Listener {
         if (damageeLiving != null){
             absorption_health = damageeLiving.getAbsorptionHearts();
         }
-        Bukkit.broadcastMessage(absorption_health+"");
         if (damagee instanceof Player) {
             Player player = (Player) damagee;
             if (KitManager.getPlayerKit((player)) != null) {
