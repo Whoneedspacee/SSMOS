@@ -1,5 +1,7 @@
 package ssm.managers;
 
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import ssm.attributes.Hunger;
 import ssm.events.SmashDamageEvent;
@@ -325,6 +327,10 @@ public class DamageManager implements Listener {
         }*/
         LivingEntity damagee = e.getDamagee();
         LivingEntity damager = e.getDamager();
+        EntityLiving damageeLiving = null;
+        if (damagee instanceof CraftPlayer){
+            damageeLiving = ((CraftPlayer)damagee).getHandle();
+        }
         double damage = e.getDamage();
         double knockbackMultiplier = e.getKnockbackMultiplier();
         boolean ignoreArmor = e.getIgnoreArmor();
@@ -342,6 +348,11 @@ public class DamageManager implements Listener {
         }
         double damageMultiplier = 1;
         double starting_health = damagee.getHealth();
+        float absorption_health = 0f;
+        if (damageeLiving != null){
+            absorption_health = damageeLiving.getAbsorptionHearts();
+        }
+        Bukkit.broadcastMessage(absorption_health+"");
         if (damagee instanceof Player) {
             Player player = (Player) damagee;
             if (KitManager.getPlayerKit((player)) != null) {
@@ -361,7 +372,18 @@ public class DamageManager implements Listener {
         } else {
             dealt = damage * damageMultiplier;
         }
-        new_health = Math.max(damagee.getHealth() - dealt, 0);
+        if (absorption_health > 0){
+            if (dealt > absorption_health){
+                damageeLiving.setAbsorptionHearts(0f);
+                dealt -= absorption_health;
+                new_health = Math.max(damagee.getHealth() - dealt, 0);
+            }else{
+                damageeLiving.setAbsorptionHearts((float) (absorption_health-dealt));
+                new_health = damagee.getHealth();
+            }
+        }else{
+            new_health = Math.max(damagee.getHealth() - dealt, 0);
+        }
         entityDamagee.lastDamage = (float) damage;
         // Avoid really killing the player
         if (new_health <= 0) {
