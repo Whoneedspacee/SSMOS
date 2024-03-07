@@ -369,5 +369,15 @@ public class Main extends JavaPlugin implements Listener {
         e.setCancelled(true);
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void movementDistance(PlayerMoveEvent e) {
+        if(!e.getPlayer().getName().equalsIgnoreCase("Cherripie34")) {
+            return;
+        }
+        Vector difference = e.getTo().clone().subtract(e.getFrom()).toVector();
+        String send = String.format("X: %.5f, Y: %.5f, Z: %.5f, G: %b", difference.getX(), difference.getY(), difference.getZ(), e.getPlayer().isOnGround());
+        Bukkit.broadcastMessage(send);
+    }
+
 }
 
