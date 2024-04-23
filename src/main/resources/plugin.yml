@@ -1,0 +1,89 @@
+main: xyz.whoneedspacee.ssmos.Main
+name: SSMOS
+version: 1
+author: Whoneedspacee, Deidara, YaBoiTim
+description: 'An open source recreation of Super Smash Mobs'
+api-version: 1.8
+
+commands:
+  kit:
+    description: 'Applies the kit of the name entered'
+    usage: /kit
+  vote:
+    description: 'Opens the voting menu'
+    usage: /vote
+  damage:
+    description: 'Inflicts the damage proposed'
+    usage: /damage number
+  setspeed:
+    description: 'Sets the base speed of the player'
+    usage: /setspeed number
+  jump:
+    description: 'Does a jump'
+    usage: /jump
+  move:
+    description: 'Does a move'
+    usage: /move
+  start:
+    description: 'Starts the game.'
+    usage: /start
+  stop:
+    description: 'Stops the game.'
+    usage: /stop
+  spectate:
+    description: 'Toggles whether the player is spectating or not.'
+    usage: /spectate
+    aliases: [spec]
+  setplaying:
+    description: 'Forces a whoneedspacee.ssmos.kits whoneedspacee.ssmos.abilities to be active.'
+    usage: /setplaying
+  randomkit:
+    description: 'Sets your kit randomly.'
+    usage: /randomkit
+  damagelog:
+    description: 'Shows a report of damage taken in the last 15 seconds.'
+    usage: /damagelog
+  setlives:
+    description: 'Sets the lives of the player given to the number given.'
+    usage: /setlives player number
+  setkit:
+    description: 'Sets the kit of the player given by name.'
+    usage: /setkit player name
+  makeserver:
+    description: 'Creates a smash server that can be joined.'
+    usage: /makeserver
+  server:
+    description: 'Opens a browser for all created smash servers.'
+    usage: /server
+  hub:
+    description: 'Teleports the player to the lobby world.'
+    usage: /hub
+  world:
+    description: 'Allows you to interact with SSM Worlds.'
+    usage: /world
+  printentities:
+    description: 'Prints all entities in your current world.'
+    usage: /printentities
+  shout:
+    description: 'Sends a message to players in all worlds.'
+    usage: /shout
+  message:
+    description: 'Sends a private message to a specific player.'
+    usage: /message
+    aliases: [whisper, msg, w]
+  reply:
+    description: 'Sends a private message to the last player who messaged you.'
+    usage: /reply
+    aliases: [r]
+  showhitboxes:
+    description: 'Toggles showing entity projectile hitboxes to players.'
+    usage: /showhitboxes
+  showhealth:
+    description: 'Toggles showing health to players.'
+    usage: /showhealth
+  setteamsplayer:
+    description: 'Sets player teams number.'
+    usage: /setteamsplayer
+  ping:
+    description: 'Shows the ping of players in your world.'
+    usage: /ping
