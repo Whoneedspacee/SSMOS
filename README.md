@@ -8,19 +8,23 @@ https://discord.gg/GSnKwyjyU8
 
 # Dependencies (required)	
 
-PandaSpigot
+PandaSpigot [repo](https://github.com/hpfxd/PandaSpigot)
 
 Spigot 1.8.9
 
-# Server Setup Steps
+# Development Env Setup
 
 1. Download the Source Code from https://github.com/Whoneedspacee/SSMOS
-2. Acquire both a 1.8.8 / 1.8.9 Spigot Jar and Pandaspigot jar
-3. Compile the code with both of these as libraries
-4. Create a minecraft server as normal using the pandaspigot jar
-5. Set allow flight to true in your server properties
-6. Set item drop radius to 0 in spigot.yml
-7. Turn off Nether in server.properties and End in bukkit.yml for extra performance
-8. Set keep spawn chunks loaded to false in paper.yml
-9. Set ticks-per autosave in bukkit.yml to 0 or else maps will autosave and lose their points / be griefed
-10. Set entity tracking range in spigot.yml to a higher amount, I chose 64 for all types
+2. Run your IDE (probably intellij) and open up the SSMOS project
+3. Allow the build scripts to initialize the developer environment
+4. Press "maven" and "reload all maven projects" button (alternatively right-click "SSMOS" in the maven sub-menu and press "generate sources and update folders")
+5. Once this process is finished, the developer environment should be ready and all your libraries compiled and ready to go
+
+# Compiling code & gameplay
+
+1. Press the "maven" menu, expand the "lifecycle" tab and click the "install" button
+2. Wait for the IDE to successfully compile your code, which should end in a "BUILD SUCCESS"
+3*. If you want to quickly and easily test your changes, you can run the start.bat within the "ssmos-template-server", since the .jar automatically builds to the plugins folder
+4*. Alternatively, under the "projects" menu, expand the "target" directory, and copy-paste the file titled "SSMOS-1.0.jar" into your desired plugins folder
+
+note: The template server does not come with maps pre-installed, you will have to gather these yourself. For more information, look at the readme file within that directory

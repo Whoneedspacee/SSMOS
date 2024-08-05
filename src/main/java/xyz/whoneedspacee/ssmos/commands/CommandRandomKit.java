@@ -1,0 +1,37 @@
+package xyz.whoneedspacee.ssmos.commands;
+
+import xyz.whoneedspacee.ssmos.managers.gamemodes.TestingGamemode;
+import xyz.whoneedspacee.ssmos.managers.gamestate.GameState;
+import xyz.whoneedspacee.ssmos.managers.GameManager;
+import xyz.whoneedspacee.ssmos.managers.KitManager;
+import xyz.whoneedspacee.ssmos.kits.Kit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import xyz.whoneedspacee.ssmos.managers.smashserver.SmashServer;
+
+public class CommandRandomKit implements CommandExecutor {
+
+    @Override
+    public boolean onCommand(CommandSender commandSender, Command command, String commandLabel, String[] args) {
+        if (!(commandSender instanceof Player)) {
+            return true;
+        }
+        Player player = (Player) commandSender;
+        SmashServer server = GameManager.getPlayerServer(player);
+        if(server == null) {
+            return true;
+        }
+        if(!(server.getCurrentGamemode() instanceof TestingGamemode)) {
+            if(server.getState() >= GameState.GAME_PLAYING && !commandSender.isOp()) {
+                commandSender.sendMessage("You may not use this command while a game is in progress.");
+                return true;
+            }
+        }
+        Kit random = server.getCurrentGamemode().getAllowedKits().get((int) (Math.random() * server.getCurrentGamemode().getAllowedKits().size()));
+        KitManager.equipPlayer(player, random);
+        commandSender.sendMessage("Equipped: " + random.getName());
+        return true;
+    }
+}
