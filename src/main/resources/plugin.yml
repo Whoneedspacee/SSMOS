@@ -35,7 +35,7 @@ commands:
     usage: /spectate
     aliases: [spec]
   setplaying:
-    description: 'Forces a whoneedspacee.ssmos.kits whoneedspacee.ssmos.abilities to be active.'
+    description: 'Forces a kits abilities to be active.'
     usage: /setplaying
   randomkit:
     description: 'Sets your kit randomly.'
