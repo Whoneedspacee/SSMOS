@@ -191,7 +191,7 @@ public class SmashServer implements Listener, Runnable {
             }
             // Wait until after teleporting to display disguises properly
             for (Player player : players) {
-                // Refresh so people who already had whoneedspacee.ssmos.kits equipped get shown
+                // Refresh so people who already had kits equipped get shown
                 // Unfortunately packet mobs don't transfer when we teleport
                 DisguiseManager.showDisguises(player);
                 if (isSpectator(player)) {
