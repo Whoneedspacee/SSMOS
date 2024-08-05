@@ -388,14 +388,7 @@ public abstract class Disguise {
     }
 
     public void playDamageSound() {
-        if (type == EntityType.GUARDIAN) {
-            ((CraftWorld) owner.getWorld()).getHandle().makeSound(
-                    owner.getLocation().getX(),
-                    owner.getLocation().getY(),
-                    owner.getLocation().getZ(),
-                    "mob.guardian.hit", getVolume(), getPitch());
-        }
-        else owner.getWorld().playSound(owner.getLocation(), getDamageSound(), getVolume(), getPitch());
+        owner.getWorld().playSound(owner.getLocation(), getDamageSound(), getVolume(), getPitch());
     }
 
     // Leashes the living mob to the specified entity
