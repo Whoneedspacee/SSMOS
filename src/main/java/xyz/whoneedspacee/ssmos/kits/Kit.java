@@ -25,7 +25,7 @@ import java.util.List;
 
 public abstract class Kit implements Listener {
 
-    /*  You must add your new whoneedspacee.ssmos.kits to the allkits list in the main SSM.java file! */
+    /*  You must add your new kits to the allkits list in the main SSM.java file! */
 
     // used for finding the kit to equip on command, ex: /kit name
     protected String name = "None";
@@ -90,7 +90,7 @@ public abstract class Kit implements Listener {
             return;
         }
         boolean game_hotbar = GameState.isStarting(new_state) || GameState.isPlaying(new_state) || new_state == GameState.GAME_ENDING;
-        // Set hotbar and register or unregister whoneedspacee.ssmos.events for whoneedspacee.ssmos.attributes
+        // Set hotbar and register or unregister events for attributes
         // Use booleans so we don't re-equip the same hotbar we already did
         if(game_hotbar && (!game_hotbar_equipped || reload_hotbar)) {
             owner.getInventory().clear();
