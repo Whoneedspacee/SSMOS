@@ -33,7 +33,7 @@ public class DisguiseManager implements Listener, Runnable {
     // Player Joining
     // Player Leaving
     // Player Respawning (when a player dies we need to reload all disguises for them)
-    // Everything else should be handled by whoneedspacee.ssmos.kits equipping disguises
+    // Everything else should be handled by kits equipping disguises
     // We just need to make sure they show properly if they exist here
     // This took like a day of constant bug fixing
     // and google reading, 0/10 don't bother touching this - Whoneedspacee
