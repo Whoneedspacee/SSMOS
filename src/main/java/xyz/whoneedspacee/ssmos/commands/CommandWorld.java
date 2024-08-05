@@ -72,7 +72,7 @@ public class CommandWorld implements CommandExecutor {
 
     public static void printHelp(CommandSender commandSender) {
         printHeaderMessage(commandSender, "World Commands");
-        printCommandMessage(commandSender, "/world help", "Displays available whoneedspacee.ssmos.commands");
+        printCommandMessage(commandSender, "/world help", "Displays available commands");
         printCommandMessage(commandSender, "/world list", "Shows currently loaded worlds");
         printCommandMessage(commandSender, "/world create", "Copies a void world directory into the base maps folder with the name given");
         printCommandMessage(commandSender, "/world edit", "Loads and teleports you to one of the maps in the gamemode maps folder");
