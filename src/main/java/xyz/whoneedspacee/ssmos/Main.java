@@ -147,7 +147,6 @@ public class Main extends JavaPlugin implements Listener {
         for (Disguise disguise : DisguiseManager.disguises.values()) {
             disguise.deleteLiving();
         }
-        //List<SmashServer> to_delete = List.copyOf(GameManager.servers);       // gholemFix: replaced because List.copyOf doesn't exist in Java 8
         List<SmashServer> to_delete = new ArrayList<>(GameManager.servers);
         for (SmashServer server : to_delete) {
             GameManager.deleteSmashServer(server);
