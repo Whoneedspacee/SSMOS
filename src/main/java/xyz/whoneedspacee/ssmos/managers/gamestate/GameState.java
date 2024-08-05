@@ -10,7 +10,7 @@ public class GameState {
     public static final short GAME_ENDING = 5;
 
     public static String toString(short state) {
-        switch (state) {   // gholemFix: reverted to regular switch case because enhanced switch doesn't exist in Java 8
+        switch (state) {
             case LOBBY_WAITING:
                 return "Lobby Waiting";
             case LOBBY_VOTING:
