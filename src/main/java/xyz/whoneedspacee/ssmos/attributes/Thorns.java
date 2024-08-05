@@ -21,7 +21,7 @@ public class Thorns extends Attribute {
         this.damage_multiplier = damage_multiplier;
         this.knockback_multiplier = knockback_multiplier;
         this.description = new String[] {
-                ChatColor.RESET + "Takes 66% less damage and knockback from whoneedspacee.ssmos.projectiles",
+                ChatColor.RESET + "Takes 66% less damage and knockback from projectiles",
                 ChatColor.RESET + "when under 10 health.",
         };
     }
