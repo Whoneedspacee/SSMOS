@@ -123,13 +123,13 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     protected LivingEntity checkClosestTarget() {
         // Realistically the fastest both a player and entity will move is about
         // 80 blocks per second or 4 blocks per tick, (hue fast blocking with autoclicker got 3.5)
-        // If we do 15 iterations this should be more than enough for most whoneedspacee.ssmos.projectiles leeway
+        // If we do 15 iterations this should be more than enough for most projectiles leeway
         // If you want to optimize this probably start with checking the magnitude of velocity
         double max_realistic_velocity = 4;
         int max_iterations = 15;
         net.minecraft.server.v1_8_R3.Entity entity = ((CraftEntity) projectile).getHandle();
         //Bukkit.broadcastMessage(entity.getBoundingBox().toString());
-        // Get possible whoneedspacee.ssmos.projectiles that could be hit on this tick
+        // Get possible projectiles that could be hit on this tick
         List<LivingEntity> possible = new ArrayList<LivingEntity>();
         for (Entity check : projectile.getWorld().getNearbyEntities(projectile.getLocation(),
                 entity.motX + hitbox_size + max_realistic_velocity,
@@ -191,7 +191,7 @@ public abstract class SmashProjectile extends BukkitRunnable implements Listener
     }
 
     // This modifies projectile motion and location, this can cause
-    // Bugs with whoneedspacee.ssmos.projectiles that do not delete themselves
+    // Bugs with projectiles that do not delete themselves
     protected Block checkHitBlock() {
         net.minecraft.server.v1_8_R3.World world = ((CraftWorld) projectile.getWorld()).getHandle();
         net.minecraft.server.v1_8_R3.Entity entity = ((CraftEntity) projectile).getHandle();
