@@ -388,7 +388,6 @@ public abstract class Disguise {
     }
 
     public void playDamageSound() {
-        // gholemFix: similar to the damageUtil sound method fix, if its guardian, use NMS make sound with the string, else use bukkit api
         if (type == EntityType.GUARDIAN) {
             ((CraftWorld) owner.getWorld()).getHandle().makeSound(
                     owner.getLocation().getX(),
