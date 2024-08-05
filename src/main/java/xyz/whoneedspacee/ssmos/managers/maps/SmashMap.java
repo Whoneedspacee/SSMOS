@@ -122,7 +122,6 @@ public abstract class SmashMap implements Listener {
         if (world == null) {
             return null;
         }
-        //return List.of(world.getSpawnLocation());                     // gholemFix: replaced because List.of doesn't exist in Java 8
         return Collections.singletonList(world.getSpawnLocation());
     }
 
