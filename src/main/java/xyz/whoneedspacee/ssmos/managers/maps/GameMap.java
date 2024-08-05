@@ -29,7 +29,6 @@ public class GameMap extends SmashMap {
         File created_by_file = new File(map_directory.getPath() + "/created_by.txt");
         try {
             if (name_file.exists() && name_file.length() != 0) {
-                //name = Files.readString(name_file.toPath());          // gholemFix: replaced because Files.readString doesn't exist in Java 8
                 name = FileUtils.readFileToString(name_file);
             }
             else {
@@ -38,7 +37,6 @@ public class GameMap extends SmashMap {
                 }
             }
             if(created_by_file.exists() && created_by_file.length() != 0) {
-                //created_by = Files.readString(created_by_file.toPath());          // gholemFix: replaced because Files.readString doesn't exist in Java 8
                 created_by = FileUtils.readFileToString(created_by_file);
             }
             else {
